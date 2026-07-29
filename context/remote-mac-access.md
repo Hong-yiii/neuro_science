@@ -31,6 +31,7 @@ Status on 2026-07-29:
 - The host key has been accepted into local `known_hosts`.
 - Gateway login is not authorized yet: SSH returns `Permission denied (publickey,password)`.
 - The next step is to send the local RSA public key to a lab member who can add it to the gateway authorized keys.
+- Current workstation IP from Hongyi: `10.0.0.202`.
 
 To copy the public key again:
 
@@ -48,14 +49,15 @@ pbcopy < ~/.ssh/id_rsa.pub
 ssh cortex
 ```
 
-4. Pick the lab workstation number, for example `work25`.
+4. Pick the lab workstation number or IP.
+   - Current workstation IP: `10.0.0.202`.
 5. Open a tunnel from the laptop to the workstation VNC service:
 
 ```sh
-ssh -L 1220:10.0.0.25:5900 cortex
+ssh -L 1220:10.0.0.202:5900 cortex
 ```
 
-For `workXX`, replace `25` with the workstation number.
+For another `workXX`, replace the IP with that workstation's IP.
 
 6. While the tunnel window stays open, connect from Finder:
 
