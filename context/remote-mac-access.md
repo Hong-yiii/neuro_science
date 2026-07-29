@@ -29,8 +29,7 @@ Status on 2026-07-29:
 
 - `cortex.nus.edu.sg` is reachable from this laptop/network.
 - The host key has been accepted into local `known_hosts`.
-- Gateway login is not authorized yet: SSH returns `Permission denied (publickey,password)`.
-- The next step is to send the local RSA public key to a lab member who can add it to the gateway authorized keys.
+- Gateway login works through the local `cortex` SSH shortcut.
 - Current workstation IP from Hongyi: `10.0.0.202`.
 - Current workstation username: `linhongyi`.
 - Local workstation shortcut configured: `ssh lab-mac`.
@@ -143,27 +142,27 @@ Go -> Connect to Server...
 afp://10.0.0.233/Hippocampus
 ```
 
-or, if the lab uses SMB:
+CLI, using an interactive password prompt rather than putting the data-share password into shell history:
+
+```sh
+mkdir -p ~/Hippocampus
+printf "AFP password: "
+stty -echo
+read AFPPASS
+stty echo
+printf "\n"
+mount -t afp "afp://hippocampus:${AFPPASS}@10.0.0.233/Hippocampus" ~/Hippocampus
+```
+
+Confirmed from this laptop on 2026-07-29:
 
 ```text
-smb://10.0.0.233/Hippocampus
+ssh lab-mac
+mount shows //hippocampus@10.0.0.233/Hippocampus on /Users/linhongyi/Hippocampus
+ls ~/Hippocampus/Data shows picasso and picasso-misc
 ```
 
-CLI:
-
-```sh
-mkdir -p ~/Hippocampus
-mount_afp afp://<share-username>@10.0.0.233/Hippocampus ~/Hippocampus
-```
-
-SMB CLI alternative:
-
-```sh
-mkdir -p ~/Hippocampus
-mount_smbfs //<share-username>@10.0.0.233/Hippocampus ~/Hippocampus
-```
-
-Do not put the share password into shell history or this repo; let macOS prompt for it.
+Do not put the share password into shell history or this repo. AFP is deprecated on current macOS, but it is what the lab onboarding docs currently prescribe.
 
 ### From The Laptop Through Cortex
 
@@ -180,17 +179,6 @@ Go -> Connect to Server...
 afp://localhost:1233
 ```
 
-For SMB, try:
-
-```sh
-ssh -L 1445:10.0.0.233:445 cortex
-```
-
-Then Finder:
-
-```text
-smb://localhost:1445/Hippocampus
-```
 
 ## Notes
 
