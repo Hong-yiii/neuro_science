@@ -105,6 +105,24 @@ ssh lab-mac
 
 If it fails with "connection refused", Remote Login is probably not enabled on the workstation.
 
+### Green Prompt For SSH Sessions
+
+Prompt color is configured by the shell on the remote machine. To make SSH sessions visually obvious on the Mac workstation, add this to the end of `~/.zshrc` on the workstation:
+
+```sh
+# Green prompt when this shell is reached over SSH.
+if [[ -n "$SSH_CONNECTION" ]]; then
+    PROMPT='%F{green}%n@%m%f %F{cyan}%~%f %# '
+    RPROMPT='%F{yellow}[SSH]%f'
+fi
+```
+
+Then reload:
+
+```sh
+source ~/.zshrc
+```
+
 ## Mounting The Data Filesystem
 
 Primary data locations once the Hippocampus share is mounted:
