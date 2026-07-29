@@ -66,7 +66,7 @@ In the current code, the default `trial_start` is `2`, so alignment begins at th
 ## Working Guidelines
 
 - Read local context before changing code: `README.md`, this file, and `context/*.md`.
-- For the active RNN/neural-coding project, also read `docs/research-questions.md` and `docs/analysis-contract.md`.
+- For the active RNN/neural-coding project, also read `docs/research-questions.md`, `docs/analysis-contract.md`, and `docs/getting-started-tasks.md`.
 - Prefer adding dated notes under `context/` when learning something durable.
 - Do not commit raw lab data, credentials, private links, tokens, large `.mat`/`.jld2` outputs, or generated figure/video dumps by default.
 - If analyzing data from Hongyi, ask where it should live if unclear. Default to `data/` for ignored local data and `outputs/` for ignored generated results.

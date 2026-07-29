@@ -8,6 +8,7 @@ This folder is the top-level home for neuroscience work, lab context, and refere
 - `context/`: living notes, repo maps, and durable observations.
 - `docs/research-questions.md`: active RNN/neural-coding research framing.
 - `docs/analysis-contract.md`: shared schema for comparing biological cells and RNN units.
+- `docs/getting-started-tasks.md`: individual onboarding and first-analysis tasks.
 - `Hippocampus.jl/`: Julia analysis repo, tracked as a submodule on `updates6`.
 - `PyHipp/`: older Python reference repo, tracked as a submodule.
 
