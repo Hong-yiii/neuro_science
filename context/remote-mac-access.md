@@ -32,6 +32,8 @@ Status on 2026-07-29:
 - Gateway login is not authorized yet: SSH returns `Permission denied (publickey,password)`.
 - The next step is to send the local RSA public key to a lab member who can add it to the gateway authorized keys.
 - Current workstation IP from Hongyi: `10.0.0.202`.
+- Current workstation username: `linhongyi`.
+- Local workstation shortcut configured: `ssh lab-mac`.
 
 To copy the public key again:
 
@@ -89,7 +91,7 @@ If that works, add a local SSH shortcut like:
 ```sshconfig
 Host lab-mac
     HostName 10.0.0.202
-    User <workstation-username>
+    User linhongyi
     ProxyJump cortex
     ServerAliveInterval 30
     ServerAliveCountMax 3
