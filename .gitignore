@@ -1,0 +1,41 @@
+# Local data and generated outputs
+data/
+outputs/
+scratch/
+work/
+figures/
+plots/
+videos/
+
+# Credentials and local secrets
+.env
+.env.*
+*.pem
+*.key
+*credentials*
+*token*
+
+# Large/common analysis artifacts
+*.mat
+*.jld2
+*.h5
+*.hdf5
+*.npy
+*.npz
+*.pkl
+*.pickle
+*.edf
+*.nev
+*.ns*
+*.nwb
+*.csv.gz
+*.tar
+*.tar.gz
+*.zip
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+

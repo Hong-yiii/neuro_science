@@ -1,0 +1,8 @@
+[submodule "Hippocampus.jl"]
+	path = Hippocampus.jl
+	url = https://github.com/grero/Hippocampus.jl
+	branch = updates6
+[submodule "PyHipp"]
+	path = PyHipp
+	url = https://github.com/shihchengyen/PyHipp
+	branch = main
