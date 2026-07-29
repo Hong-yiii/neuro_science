@@ -22,6 +22,8 @@ This is Hongyi's neuroscience workspace. Treat it as a living context repo for l
 
 The lab analyzes neural, behavioral, and eye-tracking data from hippocampus/navigation experiments.
 
+Hongyi is experienced in ML, deep learning, and mostly NLP, but is newer to neuroscience methods, terminology, and the observability limits of brain recordings. Explain neuroscience concepts by bridging from familiar ML ideas when helpful, and clearly separate directly measured signals from inferred constructs.
+
 ## Current Research Direction
 
 Hongyi's current work is about turning a Unity-based RNN navigation environment into a model system that can be compared with neural coding analyses.
@@ -66,8 +68,11 @@ In the current code, the default `trial_start` is `2`, so alignment begins at th
 ## Working Guidelines
 
 - Read local context before changing code: `README.md`, this file, and `context/*.md`.
+- Read `context/learner-profile.md` before teaching or explaining neuroscience methods.
 - For the active RNN/neural-coding project, also read `docs/research-questions.md`, `docs/analysis-contract.md`, and `docs/getting-started-tasks.md`.
 - Prefer adding dated notes under `context/` when learning something durable.
+- Use `learning/` for neuroscience learning scaffolds, glossaries, and method explainers.
+- Use `papers/` for paper notes and reading queues; do not commit copyrighted PDFs by default.
 - Do not commit raw lab data, credentials, private links, tokens, large `.mat`/`.jld2` outputs, or generated figure/video dumps by default.
 - If analyzing data from Hongyi, ask where it should live if unclear. Default to `data/` for ignored local data and `outputs/` for ignored generated results.
 - For code changes inside submodules, work within that submodule's own git history. Do not make parent-repo commits that silently depend on uncommitted submodule changes.

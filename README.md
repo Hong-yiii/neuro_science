@@ -6,6 +6,8 @@ This folder is the top-level home for neuroscience work, lab context, and refere
 
 - `AGENTS.md`: working instructions for coding agents.
 - `context/`: living notes, repo maps, and durable observations.
+- `learning/`: Hongyi's neuroscience learning path, explained from an ML/deep-learning background.
+- `papers/`: paper notes, reading queues, and references.
 - `docs/research-questions.md`: active RNN/neural-coding research framing.
 - `docs/analysis-contract.md`: shared schema for comparing biological cells and RNN units.
 - `docs/getting-started-tasks.md`: individual onboarding and first-analysis tasks.
