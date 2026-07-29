@@ -23,6 +23,14 @@ This is the practical onboarding checklist for the neuroscience/RNN project. Eac
 
 - [ ] Confirm NUS VPN access.
   - Done means: can connect to lab/network-only resources from offsite.
+- [x] Add local `cortex` SSH shortcut.
+  - Configured in `~/.ssh/config`; see `context/remote-mac-access.md`.
+- [ ] Send SSH public key to lab for gateway access.
+  - Done means: key is added to the gateway authorized keys.
+- [ ] Confirm `ssh cortex` login works.
+  - Done means: can enter and exit the lab gateway without typing the gateway password.
+- [ ] Confirm VNC tunnel to one workstation works.
+  - Done means: can connect to `vnc://localhost:1220` while the SSH tunnel is open.
 - [ ] Confirm GitHub access to all relevant repos.
   - Repos to check: `Hippocampus.jl`, `PyHipp`, any RNN/Unity repo, any private lab repos.
 - [ ] Confirm lab workstation access.
