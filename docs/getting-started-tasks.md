@@ -34,13 +34,13 @@ This is the practical onboarding checklist for the neuroscience/RNN project. Eac
 
 ## Phase 2: Codebase Orientation
 
-- [ ] Read `Hippocampus.jl/src/replay.jl` around `ViewAndPlaceRepresentationNew`.
+- [x] Read `Hippocampus.jl/src/replay.jl` around `ViewAndPlaceRepresentationNew`.
   - Output: short note explaining how spikes map to trial behavioral sample indices.
-- [ ] Read `Hippocampus.jl/src/rawdata.jl` around `RippleData`.
+- [x] Read `Hippocampus.jl/src/rawdata.jl` around `RippleData`.
   - Output: short note explaining marker/timestamp shape and trial boundaries.
-- [ ] Read `Hippocampus.jl/src/eyelink.jl` around `EyelinkData`.
+- [x] Read `Hippocampus.jl/src/eyelink.jl` around `EyelinkData`.
   - Output: short note explaining gaze/fixation/saccade fields.
-- [ ] Identify where `UnityRaytraceData` is defined and loaded.
+- [x] Identify where `UnityRaytraceData` is defined and loaded.
   - Output: note its file inputs and time/bin semantics.
 - [ ] Skim `Hippocampus.jl/src/glmfits.jl` for place/view/conjunctive analysis entry points.
   - Output: list candidate functions to revisit.
@@ -98,9 +98,8 @@ This is the practical onboarding checklist for the neuroscience/RNN project. Eac
 
 Start here:
 
-1. [ ] Create `context/code-map.md` from the Julia alignment path.
-2. [ ] Identify `UnityRaytraceData` definition and write down its schema.
+1. [x] Create `context/code-map.md` from the Julia alignment path.
+2. [x] Identify `UnityRaytraceData` definition and write down its schema.
 3. [ ] Ask/confirm where the formatted biological data will arrive.
 4. [ ] Ask/confirm where the RNN/Unity rollout or checkpoint lives.
 5. [ ] Pick the first analysis language: Julia-first, Python-first, or bridge.
-
