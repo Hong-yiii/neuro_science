@@ -68,6 +68,110 @@ vnc://localhost:1220
 
 7. Log into the workstation with the lab-provided workstation account.
 
+## CLI Access To The Workstation
+
+If the lab Mac has Remote Login enabled, CLI access can go through the same gateway without VNC.
+
+One-off command:
+
+```sh
+ssh -J cortex <workstation-username>@10.0.0.202
+```
+
+This means:
+
+```text
+laptop -> cortex gateway -> workstation 10.0.0.202
+```
+
+If that works, add a local SSH shortcut like:
+
+```sshconfig
+Host lab-mac
+    HostName 10.0.0.202
+    User <workstation-username>
+    ProxyJump cortex
+    ServerAliveInterval 30
+    ServerAliveCountMax 3
+```
+
+Then connect with:
+
+```sh
+ssh lab-mac
+```
+
+If it fails with "connection refused", Remote Login is probably not enabled on the workstation.
+
+## Mounting The Data Filesystem
+
+Primary data locations once the Hippocampus share is mounted:
+
+```text
+/Volumes/Hippocampus/Data/picasso-misc
+/Volumes/Hippocampus/Data/picasso
+```
+
+Use `picasso-misc` first unless the lab says otherwise; it contains hippocampus-focused channel subsets.
+
+### From The Lab Mac
+
+Finder:
+
+```text
+Go -> Connect to Server...
+afp://10.0.0.233/Hippocampus
+```
+
+or, if the lab uses SMB:
+
+```text
+smb://10.0.0.233/Hippocampus
+```
+
+CLI:
+
+```sh
+mkdir -p ~/Hippocampus
+mount_afp afp://<share-username>@10.0.0.233/Hippocampus ~/Hippocampus
+```
+
+SMB CLI alternative:
+
+```sh
+mkdir -p ~/Hippocampus
+mount_smbfs //<share-username>@10.0.0.233/Hippocampus ~/Hippocampus
+```
+
+Do not put the share password into shell history or this repo; let macOS prompt for it.
+
+### From The Laptop Through Cortex
+
+Tunnel AFP through the gateway:
+
+```sh
+ssh -L 1233:10.0.0.233:548 cortex
+```
+
+Keep that tunnel open, then Finder:
+
+```text
+Go -> Connect to Server...
+afp://localhost:1233
+```
+
+For SMB, try:
+
+```sh
+ssh -L 1445:10.0.0.233:445 cortex
+```
+
+Then Finder:
+
+```text
+smb://localhost:1445/Hippocampus
+```
+
 ## Notes
 
 - If Finder says someone else is using the computer, choose the option to log in with your own username rather than taking over someone else's session.
