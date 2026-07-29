@@ -42,11 +42,11 @@ This is the practical onboarding checklist for the neuroscience/RNN project. Eac
   - Output: short note explaining gaze/fixation/saccade fields.
 - [x] Identify where `UnityRaytraceData` is defined and loaded.
   - Output: note its file inputs and time/bin semantics.
-- [ ] Skim `Hippocampus.jl/src/glmfits.jl` for place/view/conjunctive analysis entry points.
+- [x] Skim `Hippocampus.jl/src/glmfits.jl` for place/view/conjunctive analysis entry points.
   - Output: list candidate functions to revisit.
-- [ ] Skim `Hippocampus.jl/src/conjunctions.jl`.
+- [x] Skim `Hippocampus.jl/src/conjunctions.jl`.
   - Output: list existing conjunctive-coding concepts or functions.
-- [ ] Skim `PyHipp` for older equivalents.
+- [x] Skim `PyHipp` for older equivalents.
   - Output: map Python reference modules to Julia concepts.
 
 ## Phase 3: Data Contract
