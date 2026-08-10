@@ -2,6 +2,11 @@
 
 This folder is for neuroscience, hippocampus, navigation, neural coding, RNN, and representation-learning papers relevant to Hongyi's lab work.
 
+## Start Here
+
+Read `reading-roadmap.md`. It orders papers by project dependency and states the
+specific knowledge and method to extract from each one.
+
 ## How To Use This Folder
 
 - Store paper notes, BibTeX entries, reading queues, and links here.

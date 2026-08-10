@@ -15,8 +15,18 @@ Learn the neuroscience just in time for the RNN-to-neural-data comparison.
 
 The goal is not to become a general neuroscientist first. The goal is to understand enough measurement, preprocessing, and representational analysis to make careful claims about biological units and model units under matched analysis.
 
-## Suggested Files
+## Start Here
 
-- `glossary.md`: terms like spike train, place cell, fixation, occupancy, rate map, tuning, decoding, null model.
-- `methods-map.md`: how raw neural/behavioral signals become aligned analysis tables.
+- `neural-agent-action-plan.md`: staged curriculum, executable checklist, and
+  definitions of “done” for the current project.
+- `../papers/reading-roadmap.md`: papers ordered by when their methods become
+  useful.
+
+## Possible Later Files
+
+Add these only when the action plan produces enough durable material:
+
+- `glossary.md`: spike train, place cell, fixation, occupancy, rate map, tuning,
+  decoding, and null model;
+- `methods-map.md`: how raw neural/behavioral signals become aligned tables;
 - `questions.md`: open questions to ask the professor or lab.
