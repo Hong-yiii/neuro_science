@@ -11,9 +11,9 @@ Source message from professor:
 
 Local pulled slice:
 
-- `data/lab_exports/place_spatial_bins_f1526be5/place_selective_cells_new.txt`
-- `data/lab_exports/place_spatial_bins_f1526be5/examples/20181105_session01_array01_channel029_cell01/spike_count_per_spatial_bin_f1526be5.jld2`
-- `data/lab_exports/place_spatial_bins_f1526be5/examples/20181105_session01_array02_channel045_cell01/spike_count_per_spatial_bin_921269fc.jld2`
+- `data/raw/lab_exports/place_spatial_bins_f1526be5/place_selective_cells_new.txt`
+- `data/raw/lab_exports/place_spatial_bins_f1526be5/examples/20181105_session01_array01_channel029_cell01/spike_count_per_spatial_bin_f1526be5.jld2`
+- `data/raw/lab_exports/place_spatial_bins_f1526be5/examples/20181105_session01_array02_channel045_cell01/spike_count_per_spatial_bin_921269fc.jld2`
 
 Important path note:
 

@@ -59,12 +59,12 @@ This is the practical onboarding checklist for the neuroscience/RNN project. Eac
 
 ## Phase 3: Data Contract
 
-- [ ] Receive or locate the formatted biological data.
-  - Store under ignored `data/` unless instructed otherwise.
-- [ ] Record biological data provenance.
-  - Output: `context/data-notes.md` with dataset name, source, date received, and schema notes.
-- [ ] Identify the smallest known-good biological subset.
-  - Ideally one session and a few cells.
+- [x] Receive or locate the formatted biological data.
+  - A small place-spatial-bin export is stored under ignored `data/raw/`.
+- [x] Record initial biological data provenance and schema.
+  - See `notes/data_inspection/place_spatial_bins_f1526be5.md`.
+- [x] Identify the smallest known-good biological subset.
+  - One exact-hash cell example has 395 readable trials; a second example uses a different hash.
 - [ ] Confirm whether spike trains are already curated.
   - Done means: know whether spike sorting/manual inspection is out of scope.
 - [ ] Write or verify a loader that produces the biological analysis contract.
@@ -108,6 +108,7 @@ Start here:
 
 1. [x] Create `context/code-map.md` from the Julia alignment path.
 2. [x] Identify `UnityRaytraceData` definition and write down its schema.
-3. [ ] Ask/confirm where the formatted biological data will arrive.
-4. [ ] Ask/confirm where the RNN/Unity rollout or checkpoint lives.
-5. [ ] Pick the first analysis language: Julia-first, Python-first, or bridge.
+3. [x] Receive and inspect a small formatted biological-data example.
+4. [ ] Confirm spatial-bin geometry, bin `0`, synchronized cell trials, and access to a complete session population.
+5. [ ] Ask/confirm where the RNN/Unity rollout or checkpoint lives.
+6. [x] Use Python first for loading, validation, and visualization; retain Julia as the upstream reference.

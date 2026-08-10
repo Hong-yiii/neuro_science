@@ -1,5 +1,6 @@
 # Local data and generated outputs
-data/
+data/*
+!data/README.md
 outputs/
 scratch/
 work/
@@ -32,6 +33,11 @@ videos/
 *.tar
 *.tar.gz
 *.zip
+
+# Python and agent-generated caches
+__pycache__/
+*.py[cod]
+.pi-subagents/
 
 # OS/editor noise
 .DS_Store

@@ -21,10 +21,16 @@ import numpy as np
 def read_trials(fname: Path):
     with h5py.File(fname, "r") as f:
         data = f["data"]
+        if not isinstance(data, h5py.Dataset):
+            raise ValueError(f"expected 'data' to be a dataset in {fname}")
         record = data[()]
         spike_refs = f[record["spikecounts"]]
         bin_refs = f[record["bins"]]
-        if "trialidx" in data.dtype.names:
+        if not isinstance(spike_refs, h5py.Dataset) or not isinstance(
+            bin_refs, h5py.Dataset
+        ):
+            raise ValueError(f"expected spikecounts and bins datasets in {fname}")
+        if data.dtype.names and "trialidx" in data.dtype.names:
             trialidx = np.asarray(f[record["trialidx"]])
         else:
             trialidx = np.arange(len(spike_refs))
@@ -63,7 +69,7 @@ def summarize(fname: Path) -> None:
                     "trialidx": trialidx,
                     "length": len(spikecounts),
                     "spikes": float(spikecounts.sum()),
-                    "unique_bins": int(len(np.unique(spatial_bins))),
+                    "unique_bins": len(np.unique(spatial_bins)),
                     "first_bins": spatial_bins[:8].astype(int).tolist(),
                     "first_spike_locs": [
                         (int(j), float(spikecounts[j]), int(spatial_bins[j]))

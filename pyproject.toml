@@ -1,0 +1,9 @@
+[project]
+name = "neuro-science-workspace"
+version = "0.1.0"
+description = "Reproducible loaders and analyses for the neuroscience workspace"
+requires-python = ">=3.11"
+dependencies = ["h5py>=3.12", "matplotlib>=3.9", "numpy>=2.1"]
+
+[dependency-groups]
+dev = []
