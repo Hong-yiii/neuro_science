@@ -77,10 +77,37 @@ Analyses should be able to build:
 - train/test splits by trial;
 - null distributions.
 
+## Position Representation Decision
+
+Physical units such as meters are not required. Biological and model data may
+use Unity coordinates, normalized coordinates, or shared place-bin IDs as long
+as both sides use the same mapping.
+
+Position decoding should be evaluated at multiple resolutions:
+
+```text
+5 × 5 -> 10 × 10 -> 20 × 20 -> 40 × 40
+```
+
+Start coarse and retain finer resolutions only when training occupancy,
+held-out-trial coverage, and population spike support are adequate. Keep 40 × 40
+as the highest available resolution rather than the mandatory default.
+
+Rules:
+
+- `spatial_bin_id` is categorical/mesh-topological, not an ordinal scalar;
+- bin `0` is invalid/filtered and is not a prediction target;
+- classification requires shared bin labels only;
+- Euclidean error requires shared bin centroids;
+- topology-aware error requires mesh adjacency/geodesic distance;
+- arbitrary coordinate distances should be documented or normalized by maze
+  width/diameter;
+- resolution selection and preprocessing must occur within training data, with
+  complete trials held out for final evaluation.
+
 ## Open Decisions
 
 - Whether model time bins should be exactly 1 ms or resampled to match behaviorally meaningful frames.
 - Whether biological spike counts should be binary per millisecond, binned counts, or smoothed rates for the first analysis.
 - Whether visual coding should be defined by gaze bins, allocentric view bins, object identity, raycast bins, or multiple versions.
 - Whether the first implementation should be in Julia, Python, or a mixed bridge.
-

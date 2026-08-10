@@ -2,6 +2,10 @@
 
 Created: 2026-07-29
 
+## Canonical Dataset Description
+
+Use `docs/dataset-card.md` as the durable, LLM-facing reference for the experimental setup, current data shape, verified dimensions, provenance, and unknowns. Update that card as new lab metadata or exports arrive rather than reconstructing the dataset from conversation history.
+
 ## Current Understanding
 
 The lab analyzes navigation experiments combining:
@@ -39,4 +43,3 @@ Important detail from the code: `trial_start=2` by default. That means the align
 - `Hippocampus.jl` remote has branch `updates6`, not `update6`.
 - The exact URL `https://github.com/shihchengyen/PyHippocampus` was not reachable here.
 - The reachable Python reference repo is `https://github.com/shihchengyen/PyHipp`.
-
