@@ -412,7 +412,8 @@ where the subject or agent is in the task environment.
 The prior write-up describes the original place representation as 40 × 40. This
 is a maximum nominal resolution of 1,600 grid locations; the navigable mesh has
 fewer valid patches because pillars and invalid space are excluded. The verified
-single-cell example visits 453 nonzero bin IDs and contains only 1,441 spikes,
+single-cell example contains 453 unique bin IDs (452 nonzero) and only 1,441
+spikes,
 with strongly uneven occupancy. Therefore 40 × 40 should be retained as the
 highest available resolution, not assumed to be the best first prediction
 target.
