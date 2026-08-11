@@ -244,16 +244,23 @@ trialidx[t]       = source trial index retained in output row t
 The bin ID encodes location indirectly. In the Julia path, position is assigned
 to the nearest element of
 `Shadow("xy")(floor_topology3(nrefinements=nrefinements.p))`; the current
-verified export records `nrefinements.p=3`. For a valid bin `i`, a representative
-coordinate is `Tuple(centroid(m_floor[i]))[1:2]`. This is the center of the
-spatial patch, not the participant's original continuous Unity coordinate.
-Because Julia mesh indices are 1-based, bin `0` is an invalid/filtered sentinel,
-not a valid `(0,0)` location. The previous write-up calls the original navigation
-resolution 40 × 40 place bins; the mesh code represents only navigable floor
-patches around the pillars, explaining why IDs act like a categorical mesh
-index rather than two stored grid coordinates. A stable lookup requires the
-exact mesh-generation code used for the export; its metadata reports a dirty
-Git state.
+verified export records `nrefinements.p=3`. Executing the export-time mesh code
+produced 1,344 navigable elements on 40 × 40 lattice centers: 1,600 nominal cells
+minus four 8 × 8 pillar footprints. For valid mesh ID `i`, the representative
+coordinate is `centroid(m_floor[i])`. This is the center of a 0.625-unit spatial
+patch, not the original continuous Unity coordinate.
+
+The mesh element list is **not row-major**. `divmod(i - 1, 40)` is invalid for
+this JLD2 export because `QuadRefinement` groups children by parent mesh element.
+A Docker reconstruction with Meshes.jl 0.57.25 found no mesh ID equal to its
+corresponding full-grid row-major ID. It also turned the first trial's consecutive
+valid transitions into a median 0.625-unit step; row-major interpretation created
+jumps up to 23.76 units. Bin `0` is an invalid/filtered sentinel, not `(0,0)`.
+
+The previous student's older `vmpv.mat` notebooks did use literal row-major IDs
+from 1 to 1,600. The old and current formats share 40 × 40 geometry but not ID
+ordering. See `notes/data_inspection/spatial_bin_ordering.md` for the executed
+verification, conversion formula, and package-version caveat.
 
 Trials are ragged: `T_t` varies by trial and can be zero. Within each trial,
 `spikecounts[t]` and `bins[t]` have matching lengths.
@@ -529,7 +536,8 @@ data. Distinguish (1) fields actually present in the local derived export,
 (3) unknown metadata. Do not assume that 195 listed cells are simultaneous or
 unbiased; they were selected as place-responsive. Do not treat adjacent 20 ms
 bins as independent samples. Do not infer physical geometry from categorical
-spatial-bin IDs, and treat bin 0 as unknown. For every proposed technique,
+spatial-bin IDs; treat bin 0 as invalid/filtered while noting that lab
+confirmation is pending. For every proposed technique,
 state: direct applicability now, additional data required, necessary adaptation,
 validation unit/split, null controls, sample-size assumptions, and the strongest
 defensible claim. Prefer trial-held-out and session-held-out tests. Explicitly
@@ -541,8 +549,8 @@ reward, raw waveforms/LFP, or causal intervention.
 
 1. Experimental protocol or accessible export of the shared Google Doc.
 2. Species, number of subjects, session-to-subject mapping, and recording site.
-3. An authoritative exported spatial-bin-to-mesh-centroid lookup and
-   confirmation that bin `0` means invalid/filtered.
+3. An authoritative lab-exported spatial-bin-to-mesh-centroid lookup, export
+   environment manifest, and confirmation that bin `0` means invalid/filtered.
 4. Confirmation that `f1526be5` means 20 ms, uncompressed trajectories and an
    explanation of every generation parameter.
 5. Complete session populations, including non-place-selected units, with

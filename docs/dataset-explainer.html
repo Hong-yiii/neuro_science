@@ -1,0 +1,2083 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Hippocampal Navigation Data — Visual Guide</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #08111f;
+        --panel: #101d31;
+        --panel-2: #172842;
+        --ink: #edf6ff;
+        --muted: #9eb2ca;
+        --cyan: #58d7ff;
+        --green: #74e6a4;
+        --yellow: #ffd166;
+        --pink: #ff7aa8;
+        --red: #ff7163;
+        --purple: #b89cff;
+        --line: #2b4361;
+        --shadow: 0 18px 55px rgb(0 0 0 / 28%);
+        --radius: 22px;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        color: var(--ink);
+        background:
+          radial-gradient(
+            circle at 10% 0%,
+            rgb(88 215 255 / 12%),
+            transparent 28rem
+          ),
+          radial-gradient(
+            circle at 90% 12%,
+            rgb(184 156 255 / 10%),
+            transparent 30rem
+          ),
+          var(--bg);
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        line-height: 1.45;
+      }
+      a {
+        color: inherit;
+      }
+      button {
+        font: inherit;
+      }
+      .shell {
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+      .hero {
+        min-height: 92vh;
+        display: grid;
+        align-items: center;
+        padding: 70px 0 40px;
+      }
+      .eyebrow {
+        color: var(--cyan);
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        font-size: 0.76rem;
+        font-weight: 800;
+      }
+      h1 {
+        margin: 12px 0 20px;
+        font-size: clamp(2.8rem, 8vw, 6.8rem);
+        line-height: 0.92;
+        letter-spacing: -0.065em;
+        max-width: 980px;
+      }
+      h2 {
+        margin: 0 0 22px;
+        font-size: clamp(1.9rem, 4vw, 3.3rem);
+        letter-spacing: -0.04em;
+      }
+      h3 {
+        margin: 0 0 10px;
+        font-size: 1.08rem;
+      }
+      p {
+        color: var(--muted);
+      }
+      .hero-flow {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 10px;
+        margin-top: 48px;
+      }
+      .flow-step {
+        min-height: 110px;
+        padding: 16px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: rgb(16 29 49 / 78%);
+        position: relative;
+      }
+      .flow-step:not(:last-child)::after {
+        content: "→";
+        position: absolute;
+        right: -14px;
+        top: 37px;
+        z-index: 2;
+        color: var(--yellow);
+        font-size: 1.35rem;
+      }
+      .flow-step b {
+        display: block;
+        margin-top: 8px;
+      }
+      .icon {
+        font-size: 1.8rem;
+      }
+      .truth-strip {
+        margin-top: 18px;
+        padding: 13px 17px;
+        border-left: 4px solid var(--yellow);
+        background: rgb(255 209 102 / 8%);
+        color: var(--yellow);
+        border-radius: 5px 14px 14px 5px;
+        font-weight: 700;
+      }
+      section {
+        padding: 76px 0;
+      }
+      .section-kicker {
+        color: var(--purple);
+        font-size: 0.76rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        font-weight: 800;
+      }
+      .grid {
+        display: grid;
+        gap: 18px;
+      }
+      .grid.two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .grid.three {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+      .card {
+        background: linear-gradient(
+          145deg,
+          rgb(23 40 66 / 96%),
+          rgb(12 24 42 / 96%)
+        );
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 24px;
+        box-shadow: var(--shadow);
+      }
+      .metric-grid {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 12px;
+      }
+      .metric {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 18px 14px;
+        min-height: 115px;
+      }
+      .metric strong {
+        display: block;
+        font-size: clamp(1.6rem, 3vw, 2.5rem);
+        line-height: 1;
+        color: var(--cyan);
+      }
+      .metric span {
+        display: block;
+        margin-top: 9px;
+        color: var(--muted);
+        font-size: 0.84rem;
+      }
+      .metric.warn strong {
+        color: var(--yellow);
+      }
+      .metric.spike strong {
+        color: var(--pink);
+      }
+      .diagram {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+      .legend {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        color: var(--muted);
+        font-size: 0.82rem;
+        margin-top: 14px;
+      }
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 6px;
+      }
+      .stage {
+        padding: 18px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: rgb(8 17 31 / 55%);
+      }
+      .stage + .stage {
+        margin-top: 12px;
+      }
+      .stage-row {
+        display: grid;
+        grid-template-columns: 118px 1fr;
+        gap: 16px;
+        align-items: center;
+      }
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        border: 1px solid var(--line);
+        background: var(--panel-2);
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        color: var(--muted);
+      }
+      .vector {
+        display: flex;
+        min-height: 38px;
+        gap: 3px;
+        align-items: stretch;
+        overflow: hidden;
+        border-radius: 8px;
+      }
+      .cell {
+        min-width: 13px;
+        flex: 1;
+        display: grid;
+        place-items: center;
+        font-size: 0.65rem;
+        color: #06111d;
+        font-weight: 800;
+        background: var(--cyan);
+      }
+      .cell.same {
+        background: #7eb7d0;
+      }
+      .cell.zero {
+        background: repeating-linear-gradient(
+          45deg,
+          #394b60,
+          #394b60 4px,
+          #26384d 4px,
+          #26384d 8px
+        );
+        color: white;
+      }
+      .cell.fire {
+        background: var(--pink);
+        position: relative;
+      }
+      .cell.fire::after {
+        content: "▲";
+        position: absolute;
+        top: -16px;
+        color: var(--pink);
+      }
+      .tabs {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 18px;
+      }
+      .tab,
+      .resolution-btn {
+        border: 1px solid var(--line);
+        color: var(--muted);
+        background: var(--panel);
+        border-radius: 999px;
+        padding: 9px 14px;
+        cursor: pointer;
+      }
+      .tab[aria-selected="true"],
+      .resolution-btn.active {
+        color: #05111d;
+        background: var(--cyan);
+        border-color: var(--cyan);
+        font-weight: 800;
+      }
+      .shape-view {
+        display: none;
+        min-height: 260px;
+      }
+      .shape-view.active {
+        display: block;
+      }
+      .ragged-stack {
+        display: grid;
+        gap: 8px;
+      }
+      .ragged-row {
+        height: 25px;
+        border-radius: 6px;
+        background: linear-gradient(90deg, var(--green), var(--cyan));
+        position: relative;
+      }
+      .ragged-row::after {
+        content: attr(data-label);
+        position: absolute;
+        right: 8px;
+        top: 3px;
+        color: #06111d;
+        font-size: 0.72rem;
+        font-weight: 800;
+      }
+      .flattened {
+        display: flex;
+        height: 68px;
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .flattened span {
+        flex: 1;
+        background: var(--green);
+        border-right: 1px solid #0b3522;
+      }
+      .flattened span:nth-child(3n) {
+        background: var(--cyan);
+      }
+      .toy-trials {
+        display: grid;
+        gap: 14px;
+      }
+      .toy-trial {
+        display: grid;
+        grid-template-columns: 74px 1fr;
+        gap: 10px;
+        align-items: center;
+        padding: 12px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: rgb(8 17 31 / 45%);
+      }
+      .toy-label {
+        color: var(--yellow);
+        font-weight: 900;
+      }
+      .toy-lanes {
+        display: grid;
+        gap: 5px;
+      }
+      .toy-lane {
+        display: grid;
+        grid-template-columns: 58px repeat(5, minmax(34px, 62px));
+        gap: 4px;
+        align-items: center;
+      }
+      .lane-name {
+        color: var(--muted);
+        font-size: 0.72rem;
+      }
+      .value-box {
+        display: grid;
+        place-items: center;
+        min-height: 30px;
+        border-radius: 6px;
+        background: rgb(88 215 255 / 74%);
+        color: #06111d;
+        font:
+          800 0.76rem ui-monospace,
+          monospace;
+      }
+      .value-box.spike-value {
+        background: rgb(255 122 168 / 78%);
+      }
+      .value-box.pad-value {
+        color: #8193a8;
+        background: repeating-linear-gradient(
+          45deg,
+          #26384d,
+          #26384d 4px,
+          #1b2b3f 4px,
+          #1b2b3f 8px
+        );
+      }
+      .value-box.mask-on {
+        color: #06111d;
+        background: var(--green);
+      }
+      .value-box.mask-off {
+        color: #9eb2ca;
+        background: #30445b;
+      }
+      .flat-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 5px;
+        font:
+          0.8rem ui-monospace,
+          monospace;
+      }
+      .flat-table th {
+        color: var(--muted);
+        text-align: left;
+        padding: 4px 10px;
+      }
+      .flat-table td {
+        padding: 7px 10px;
+        background: var(--panel);
+        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+      }
+      .flat-table td:first-child {
+        border-left: 4px solid var(--cyan);
+        border-radius: 7px 0 0 7px;
+      }
+      .flat-table td:last-child {
+        border-right: 1px solid var(--line);
+        border-radius: 0 7px 7px 0;
+        color: var(--pink);
+        font-weight: 900;
+      }
+      .shape-equivalence {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        margin-top: 16px;
+      }
+      .shape-equivalence span {
+        padding: 9px;
+        border-radius: 10px;
+        text-align: center;
+        color: var(--muted);
+        border: 1px solid var(--line);
+      }
+      .annotation {
+        color: var(--muted);
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.82rem;
+        margin-top: 14px;
+      }
+      .trajectory-summary {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 8px;
+        margin-bottom: 22px;
+      }
+      .trajectory-summary span {
+        padding: 10px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        color: var(--muted);
+        text-align: center;
+      }
+      .trajectory-summary b {
+        display: block;
+        color: var(--cyan);
+        font-size: 1.2rem;
+      }
+      .run-strip-wrap {
+        position: relative;
+        padding-top: 26px;
+      }
+      .run-strip {
+        display: flex;
+        width: 100%;
+        min-height: 74px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: var(--panel);
+      }
+      .run-segment {
+        min-width: 2px;
+        display: grid;
+        place-items: center;
+        color: #06111d;
+        font:
+          900 0.68rem ui-monospace,
+          monospace;
+        border-right: 1px solid rgb(8 17 31 / 45%);
+      }
+      .run-segment.gap-segment {
+        background: repeating-linear-gradient(
+          45deg,
+          #394b60,
+          #394b60 4px,
+          #26384d 4px,
+          #26384d 8px
+        ) !important;
+        color: white;
+      }
+      .run-segment.spike-segment {
+        box-shadow: inset 0 0 0 4px var(--pink);
+      }
+      .trajectory-cursor {
+        position: absolute;
+        z-index: 3;
+        top: 20px;
+        width: 3px;
+        height: 88px;
+        background: white;
+        pointer-events: none;
+        transform: translateX(-1px);
+      }
+      .trajectory-cursor::before {
+        content: "▼";
+        position: absolute;
+        top: -21px;
+        left: -7px;
+        color: white;
+      }
+      .time-axis {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 7px;
+        color: var(--muted);
+        font:
+          0.72rem ui-monospace,
+          monospace;
+      }
+      .trajectory-controls {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 14px;
+        align-items: center;
+        margin-top: 20px;
+      }
+      .play-btn {
+        border: 1px solid var(--cyan);
+        border-radius: 999px;
+        background: var(--cyan);
+        color: #06111d;
+        padding: 9px 16px;
+        font-weight: 900;
+        cursor: pointer;
+      }
+      .trajectory-slider {
+        width: 100%;
+        accent-color: var(--pink);
+      }
+      .trajectory-readout {
+        min-width: 210px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 5px;
+        font:
+          0.75rem ui-monospace,
+          monospace;
+      }
+      .trajectory-readout span {
+        padding: 7px;
+        border-radius: 8px;
+        background: var(--panel);
+        text-align: center;
+      }
+      .trajectory-readout b {
+        display: block;
+        color: var(--yellow);
+      }
+      .route-chain {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        overflow-x: auto;
+        padding: 18px 4px 8px;
+        scrollbar-color: var(--cyan) var(--panel);
+      }
+      .route-node {
+        flex: 0 0 auto;
+        min-width: 62px;
+        padding: 9px;
+        border-radius: 10px;
+        border: 1px solid var(--line);
+        background: var(--panel);
+        text-align: center;
+        font:
+          800 0.75rem ui-monospace,
+          monospace;
+      }
+      .route-node.route-gap {
+        color: var(--red);
+        border-style: dashed;
+      }
+      .route-arrow {
+        flex: 0 0 auto;
+        color: var(--cyan);
+      }
+      .actual-route-layout {
+        display: grid;
+        grid-template-columns: minmax(300px, 0.8fr) minmax(0, 1.2fr);
+        gap: 20px;
+        align-items: center;
+        margin-top: 22px;
+      }
+      .actual-maze {
+        width: min(480px, 100%);
+        height: auto;
+        border-radius: 16px;
+        background: var(--panel);
+      }
+      .route-chain-panel {
+        min-width: 0;
+      }
+      .maze-wrap {
+        display: grid;
+        grid-template-columns: minmax(300px, 1.25fr) minmax(240px, 0.75fr);
+        gap: 20px;
+        align-items: center;
+      }
+      .index-list {
+        display: grid;
+        gap: 9px;
+      }
+      .index-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        padding: 11px;
+        border-radius: 12px;
+      }
+      .index-num {
+        min-width: 62px;
+        color: var(--cyan);
+        font:
+          800 1rem ui-monospace,
+          monospace;
+      }
+      .not-math {
+        color: var(--red);
+        font-weight: 900;
+        font-size: 1.4rem;
+      }
+      .marker-timeline {
+        display: grid;
+        grid-template-columns: 1fr 1fr 2.7fr 0.9fr;
+        gap: 5px;
+        align-items: stretch;
+      }
+      .phase {
+        min-height: 95px;
+        border-radius: 14px;
+        padding: 13px;
+        position: relative;
+        background: var(--panel-2);
+        border: 1px solid var(--line);
+      }
+      .phase.cue {
+        background: rgb(184 156 255 / 15%);
+      }
+      .phase.nav {
+        background: rgb(116 230 164 / 13%);
+      }
+      .phase.end {
+        background: rgb(255 209 102 / 13%);
+      }
+      .marker {
+        position: absolute;
+        left: -8px;
+        top: -12px;
+        width: 27px;
+        height: 27px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        color: #06111d;
+        background: var(--yellow);
+        font-weight: 900;
+      }
+      .resolution-controls {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .resolution-visual {
+        margin-top: 20px;
+        display: grid;
+        grid-template-columns: 1fr 0.8fr;
+        gap: 20px;
+        align-items: center;
+      }
+      .mini-grid {
+        width: min(360px, 100%);
+        aspect-ratio: 1;
+        display: grid;
+        gap: 1px;
+        padding: 2px;
+        background: var(--line);
+        border: 1px solid var(--line);
+      }
+      .mini-grid i {
+        background: rgb(88 215 255 / 42%);
+      }
+      .mini-grid i:nth-child(5n) {
+        background: rgb(116 230 164 / 62%);
+      }
+      .gate {
+        display: grid;
+        gap: 10px;
+      }
+      .gate-row {
+        display: grid;
+        grid-template-columns: 110px 1fr;
+        gap: 10px;
+        align-items: center;
+      }
+      .bar {
+        height: 12px;
+        border-radius: 999px;
+        overflow: hidden;
+        background: #26384e;
+      }
+      .bar span {
+        display: block;
+        height: 100%;
+        width: var(--w);
+        background: var(--green);
+      }
+      .good {
+        color: var(--green);
+      }
+      .bad {
+        color: var(--red);
+      }
+      .missing-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+      }
+      .missing {
+        min-height: 150px;
+        padding: 17px;
+        border: 1px dashed #5a6b80;
+        border-radius: 16px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        background: rgb(255 255 255 / 2%);
+      }
+      .missing .icon {
+        filter: grayscale(1);
+        opacity: 0.75;
+      }
+      .missing b {
+        color: var(--muted);
+      }
+      .end-card {
+        text-align: center;
+        padding: 46px;
+      }
+      .end-card .equation {
+        font-size: clamp(1.1rem, 3vw, 2rem);
+        font-weight: 800;
+        color: var(--cyan);
+      }
+      .tiny {
+        font-size: 0.76rem;
+        color: var(--muted);
+      }
+      footer {
+        padding: 45px 0 70px;
+        color: var(--muted);
+        font-size: 0.8rem;
+      }
+      @media (max-width: 900px) {
+        .hero-flow,
+        .metric-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .grid.two,
+        .grid.three,
+        .maze-wrap,
+        .resolution-visual,
+        .actual-route-layout {
+          grid-template-columns: 1fr;
+        }
+        .missing-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .flow-step:not(:last-child)::after {
+          display: none;
+        }
+      }
+      @media (max-width: 560px) {
+        .shell {
+          width: min(100% - 20px, 1180px);
+        }
+        section {
+          padding: 52px 0;
+        }
+        .hero-flow,
+        .metric-grid,
+        .missing-grid,
+        .trajectory-summary {
+          grid-template-columns: 1fr;
+        }
+        .marker-timeline {
+          grid-template-columns: 1fr;
+        }
+        .stage-row,
+        .toy-trial {
+          grid-template-columns: 1fr;
+        }
+        .toy-lane {
+          grid-template-columns: 48px repeat(5, minmax(34px, 1fr));
+          overflow-x: auto;
+        }
+        .shape-equivalence,
+        .trajectory-controls {
+          grid-template-columns: 1fr;
+        }
+        .trajectory-readout {
+          min-width: 0;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+      }
+      @media print {
+        :root {
+          color-scheme: light;
+          --bg: white;
+          --panel: #f2f6fa;
+          --panel-2: #e6eef5;
+          --ink: #102030;
+          --muted: #42566b;
+          --line: #bac8d5;
+        }
+        body {
+          background: white;
+        }
+        .hero {
+          min-height: auto;
+        }
+        section {
+          break-inside: avoid;
+          padding: 30px 0;
+        }
+        .card {
+          box-shadow: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="hero shell">
+      <div>
+        <div class="eyebrow">
+          One biological cell · virtual navigation · 20 ms clock
+        </div>
+        <h1>From maze movement to a ragged neural dataset.</h1>
+        <div class="hero-flow" aria-label="Data pipeline overview">
+          <div class="flow-step">
+            <span class="icon">🕹️</span><b>Unity</b
+            ><span class="tiny">position · heading · task</span>
+          </div>
+          <div class="flow-step">
+            <span class="icon">👁️</span><b>Eyelink</b
+            ><span class="tiny">gaze · fixation · saccade</span>
+          </div>
+          <div class="flow-step">
+            <span class="icon">⚡</span><b>Ripple + spikes</b
+            ><span class="tiny">markers · sorted events</span>
+          </div>
+          <div class="flow-step">
+            <span class="icon">🔗</span><b>Alignment</b
+            ><span class="tiny">trial · time · behavior</span>
+          </div>
+          <div class="flow-step">
+            <span class="icon">📦</span><b>Current JLD2</b
+            ><span class="tiny">spike count · place-bin ID</span>
+          </div>
+        </div>
+        <div class="truth-strip">
+          Current file ≠ full experiment. It is one processed cell with place
+          labels.
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="shell" id="numbers">
+        <div class="section-kicker">01 · What is physically present</div>
+        <h2>The file at a glance</h2>
+        <div class="metric-grid">
+          <div class="metric">
+            <strong>1</strong><span>sorted cell / neural feature</span>
+          </div>
+          <div class="metric">
+            <strong>395</strong><span>retained trials</span>
+          </div>
+          <div class="metric">
+            <strong>65,576</strong><span>valid time samples</span>
+          </div>
+          <div class="metric">
+            <strong>20 ms</strong><span>per time sample</span>
+          </div>
+          <div class="metric spike">
+            <strong>1,441</strong><span>total spikes</span>
+          </div>
+          <div class="metric warn">
+            <strong>452 + 0</strong
+            ><span>valid place labels + invalid sentinel</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="shell" id="experiment">
+        <div class="section-kicker">02 · Experimental clock</div>
+        <h2>One trial, synchronized by three markers</h2>
+        <div class="card">
+          <div class="marker-timeline">
+            <div class="phase">
+              <span class="marker">1</span>
+              <h3>Trial start</h3>
+              <span class="chip">marker 1x</span>
+            </div>
+            <div class="phase cue">
+              <span class="marker">2</span>
+              <h3>Cue offset</h3>
+              <span class="chip">navigation begins</span>
+            </div>
+            <div class="phase nav">
+              <h3>Navigation samples</h3>
+              <div class="vector" aria-label="Repeated 20 millisecond samples">
+                <span class="cell">20</span><span class="cell same">20</span
+                ><span class="cell">20</span><span class="cell same">20</span
+                ><span class="cell">20</span><span class="cell same">…</span>
+              </div>
+            </div>
+            <div class="phase end">
+              <span class="marker">3</span>
+              <h3>End</h3>
+              <span class="chip">success / timeout</span>
+            </div>
+          </div>
+          <div class="legend">
+            <span><i class="dot" style="background: var(--purple)"></i>cue</span
+            ><span
+              ><i class="dot" style="background: var(--green)"></i>retained
+              navigation window</span
+            ><span
+              ><i class="dot" style="background: var(--yellow)"></i>task
+              markers</span
+            >
+          </div>
+        </div>
+      </section>
+
+      <section class="shell" id="alignment">
+        <div class="section-kicker">03 · Alignment</div>
+        <h2>Three clocks collapse onto one trial-time axis</h2>
+        <div class="grid three">
+          <div class="card">
+            <div class="icon">🧠</div>
+            <h3>Spike events</h3>
+            <svg
+              class="diagram"
+              viewBox="0 0 360 90"
+              role="img"
+              aria-label="Sparse spike events"
+            >
+              <line
+                x1="10"
+                y1="60"
+                x2="350"
+                y2="60"
+                stroke="#2b4361"
+                stroke-width="3"
+              />
+              <g stroke="#ff7aa8" stroke-width="4">
+                <line x1="72" y1="30" x2="72" y2="70" />
+                <line x1="205" y1="22" x2="205" y2="70" />
+                <line x1="216" y1="38" x2="216" y2="70" />
+                <line x1="312" y1="28" x2="312" y2="70" />
+              </g></svg
+            ><span class="chip">Ripple time</span>
+          </div>
+          <div class="card">
+            <div class="icon">🐒</div>
+            <h3>Behavior samples</h3>
+            <svg
+              class="diagram"
+              viewBox="0 0 360 90"
+              role="img"
+              aria-label="Dense behavioral samples"
+            >
+              <line
+                x1="10"
+                y1="60"
+                x2="350"
+                y2="60"
+                stroke="#2b4361"
+                stroke-width="3"
+              />
+              <g fill="#74e6a4">
+                <circle cx="25" cy="60" r="5" />
+                <circle cx="48" cy="60" r="5" />
+                <circle cx="71" cy="60" r="5" />
+                <circle cx="94" cy="60" r="5" />
+                <circle cx="117" cy="60" r="5" />
+                <circle cx="140" cy="60" r="5" />
+                <circle cx="163" cy="60" r="5" />
+                <circle cx="186" cy="60" r="5" />
+                <circle cx="209" cy="60" r="5" />
+                <circle cx="232" cy="60" r="5" />
+                <circle cx="255" cy="60" r="5" />
+                <circle cx="278" cy="60" r="5" />
+                <circle cx="301" cy="60" r="5" />
+                <circle cx="324" cy="60" r="5" />
+              </g></svg
+            ><span class="chip">Unity / raytrace time</span>
+          </div>
+          <div class="card">
+            <div class="icon">👀</div>
+            <h3>Fixation mask</h3>
+            <svg
+              class="diagram"
+              viewBox="0 0 360 90"
+              role="img"
+              aria-label="Boolean fixation mask"
+            >
+              <g>
+                <rect
+                  x="10"
+                  y="40"
+                  width="70"
+                  height="24"
+                  rx="6"
+                  fill="#30445b"
+                />
+                <rect
+                  x="84"
+                  y="40"
+                  width="122"
+                  height="24"
+                  rx="6"
+                  fill="#58d7ff"
+                />
+                <rect
+                  x="210"
+                  y="40"
+                  width="54"
+                  height="24"
+                  rx="6"
+                  fill="#30445b"
+                />
+                <rect
+                  x="268"
+                  y="40"
+                  width="82"
+                  height="24"
+                  rx="6"
+                  fill="#58d7ff"
+                />
+              </g></svg
+            ><span class="chip">Eyelink time</span>
+          </div>
+        </div>
+        <div class="card" style="margin-top: 18px">
+          <svg
+            class="diagram"
+            viewBox="0 0 1000 180"
+            role="img"
+            aria-label="A spike maps to the most recent preceding behavior sample"
+          >
+            <defs>
+              <marker
+                id="arrow"
+                markerWidth="8"
+                markerHeight="8"
+                refX="6"
+                refY="3"
+                orient="auto"
+              >
+                <path d="M0,0 L0,6 L7,3 z" fill="#ffd166" />
+              </marker>
+            </defs>
+            <text x="25" y="35" fill="#9eb2ca" font-size="18">spike</text>
+            <line
+              x1="120"
+              y1="28"
+              x2="960"
+              y2="28"
+              stroke="#2b4361"
+              stroke-width="3"
+            />
+            <line
+              x1="618"
+              y1="10"
+              x2="618"
+              y2="48"
+              stroke="#ff7aa8"
+              stroke-width="5"
+            />
+            <text x="25" y="116" fill="#9eb2ca" font-size="18">behavior</text>
+            <line
+              x1="120"
+              y1="108"
+              x2="960"
+              y2="108"
+              stroke="#2b4361"
+              stroke-width="3"
+            />
+            <g fill="#74e6a4">
+              <circle cx="180" cy="108" r="8" />
+              <circle cx="280" cy="108" r="8" />
+              <circle cx="380" cy="108" r="8" />
+              <circle cx="480" cy="108" r="8" />
+              <circle cx="580" cy="108" r="11" />
+              <circle cx="680" cy="108" r="8" />
+              <circle cx="780" cy="108" r="8" />
+              <circle cx="880" cy="108" r="8" />
+            </g>
+            <path
+              d="M618 48 C618 75 590 76 582 95"
+              fill="none"
+              stroke="#ffd166"
+              stroke-width="4"
+              marker-end="url(#arrow)"
+            />
+            <text x="500" y="155" fill="#ffd166" font-size="18">
+              placeviewidx → preceding sample
+            </text>
+          </svg>
+        </div>
+      </section>
+
+      <section class="shell" id="storage">
+        <div class="section-kicker">04 · Stored shape</div>
+        <h2>A box of unequal-length trial vectors</h2>
+        <div class="grid two">
+          <div class="card">
+            <div class="stage">
+              <div class="stage-row">
+                <b>JLD2 cell file</b><span class="chip">one sorted cell</span>
+              </div>
+            </div>
+            <div class="stage">
+              <div class="stage-row">
+                <b>trialidx</b>
+                <div class="vector">
+                  <span class="cell">2</span><span class="cell">3</span
+                  ><span class="cell">4</span><span class="cell">5</span
+                  ><span class="cell">…</span><span class="cell">404</span>
+                </div>
+              </div>
+            </div>
+            <div class="stage">
+              <div class="stage-row">
+                <b>spikecounts[t]</b>
+                <div class="vector">
+                  <span class="cell same">0</span
+                  ><span class="cell same">0</span
+                  ><span class="cell fire">1</span
+                  ><span class="cell same">0</span
+                  ><span class="cell same">0</span
+                  ><span class="cell same">…</span>
+                </div>
+              </div>
+            </div>
+            <div class="stage">
+              <div class="stage-row">
+                <b>bins[t]</b>
+                <div class="vector">
+                  <span class="cell">509</span><span class="cell">509</span
+                  ><span class="cell">421</span><span class="cell">421</span
+                  ><span class="cell">423</span><span class="cell">…</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <svg
+              class="diagram"
+              viewBox="0 0 500 330"
+              role="img"
+              aria-label="Ragged trial lengths"
+            >
+              <text x="20" y="30" fill="#9eb2ca">trial</text>
+              <text x="395" y="30" fill="#9eb2ca">Tₜ</text>
+              <g fill="#58d7ff">
+                <rect x="90" y="52" width="267" height="30" rx="7" />
+                <rect x="90" y="94" width="223" height="30" rx="7" />
+                <rect x="90" y="136" width="273" height="30" rx="7" />
+                <rect x="90" y="178" width="223" height="30" rx="7" />
+                <rect x="90" y="220" width="373" height="30" rx="7" />
+                <rect x="90" y="262" width="0" height="30" rx="7" />
+              </g>
+              <g fill="#edf6ff" font-size="16">
+                <text x="28" y="73">0</text>
+                <text x="28" y="115">1</text>
+                <text x="28" y="157">2</text>
+                <text x="28" y="199">3</text>
+                <text x="28" y="241">4</text>
+                <text x="28" y="283">…</text>
+                <text x="405" y="73">134</text>
+                <text x="405" y="115">112</text>
+                <text x="405" y="157">137</text>
+                <text x="405" y="199">112</text>
+                <text x="405" y="241">187</text>
+              </g>
+            </svg>
+            <div class="annotation">
+              395 × Tₜ × 1 cell · Tₜ ∈ [0, 433] · median Tₜ = 163
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="shell" id="views">
+        <div class="section-kicker">05 · Same data, three shapes</div>
+        <h2>Switch the representation</h2>
+        <div class="card">
+          <div class="tabs" role="tablist" aria-label="Dataset shape views">
+            <button
+              class="tab"
+              role="tab"
+              aria-selected="true"
+              data-view="ragged"
+            >
+              Ragged
+            </button>
+            <button
+              class="tab"
+              role="tab"
+              aria-selected="false"
+              data-view="flat"
+            >
+              Flattened
+            </button>
+            <button
+              class="tab"
+              role="tab"
+              aria-selected="false"
+              data-view="padded"
+            >
+              Padded + mask
+            </button>
+          </div>
+          <div class="shape-view active" id="view-ragged" role="tabpanel">
+            <div
+              class="toy-trials"
+              aria-label="Three unequal-length example trials"
+            >
+              <div class="toy-trial">
+                <div class="toy-label">
+                  Trial A<br /><span class="tiny">T=3</span>
+                </div>
+                <div class="toy-lanes">
+                  <div class="toy-lane">
+                    <span class="lane-name">place</span
+                    ><span class="value-box">509</span
+                    ><span class="value-box">509</span
+                    ><span class="value-box">421</span>
+                  </div>
+                  <div class="toy-lane">
+                    <span class="lane-name">spikes</span
+                    ><span class="value-box spike-value">0</span
+                    ><span class="value-box spike-value">1</span
+                    ><span class="value-box spike-value">0</span>
+                  </div>
+                </div>
+              </div>
+              <div class="toy-trial">
+                <div class="toy-label">
+                  Trial B<br /><span class="tiny">T=5</span>
+                </div>
+                <div class="toy-lanes">
+                  <div class="toy-lane">
+                    <span class="lane-name">place</span
+                    ><span class="value-box">253</span
+                    ><span class="value-box">165</span
+                    ><span class="value-box">166</span
+                    ><span class="value-box">167</span
+                    ><span class="value-box">1220</span>
+                  </div>
+                  <div class="toy-lane">
+                    <span class="lane-name">spikes</span
+                    ><span class="value-box spike-value">0</span
+                    ><span class="value-box spike-value">0</span
+                    ><span class="value-box spike-value">1</span
+                    ><span class="value-box spike-value">0</span
+                    ><span class="value-box spike-value">1</span>
+                  </div>
+                </div>
+              </div>
+              <div class="toy-trial">
+                <div class="toy-label">
+                  Trial C<br /><span class="tiny">T=2</span>
+                </div>
+                <div class="toy-lanes">
+                  <div class="toy-lane">
+                    <span class="lane-name">place</span
+                    ><span class="value-box">765</span
+                    ><span class="value-box">766</span>
+                  </div>
+                  <div class="toy-lane">
+                    <span class="lane-name">spikes</span
+                    ><span class="value-box spike-value">1</span
+                    ><span class="value-box spike-value">0</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="annotation">
+              native container: 395 separate trials × each trial's own Tₜ × 1
+              cell
+            </div>
+          </div>
+          <div class="shape-view" id="view-flat" role="tabpanel">
+            <table
+              class="flat-table"
+              aria-label="The example trials concatenated into rows"
+            >
+              <thead>
+                <tr>
+                  <th>trial_id</th>
+                  <th>time_bin</th>
+                  <th>place</th>
+                  <th>spikes</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>A</td>
+                  <td>0</td>
+                  <td>509</td>
+                  <td>0</td>
+                </tr>
+                <tr>
+                  <td>A</td>
+                  <td>1</td>
+                  <td>509</td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <td>A</td>
+                  <td>2</td>
+                  <td>421</td>
+                  <td>0</td>
+                </tr>
+                <tr>
+                  <td>B</td>
+                  <td>0</td>
+                  <td>253</td>
+                  <td>0</td>
+                </tr>
+                <tr>
+                  <td>B</td>
+                  <td>1</td>
+                  <td>165</td>
+                  <td>0</td>
+                </tr>
+                <tr>
+                  <td>…</td>
+                  <td>…</td>
+                  <td>…</td>
+                  <td>…</td>
+                </tr>
+                <tr>
+                  <td>C</td>
+                  <td>1</td>
+                  <td>766</td>
+                  <td>0</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="annotation">
+              concatenate only real samples: (65,576 rows, 1 cell) · keep
+              trial_id for grouped train/test splits
+            </div>
+          </div>
+          <div class="shape-view" id="view-padded" role="tabpanel">
+            <div
+              class="toy-trials"
+              aria-label="The example trials padded to five time bins"
+            >
+              <div class="toy-trial">
+                <div class="toy-label">Trial A</div>
+                <div class="toy-lanes">
+                  <div class="toy-lane">
+                    <span class="lane-name">spikes</span
+                    ><span class="value-box spike-value">0</span
+                    ><span class="value-box spike-value">1</span
+                    ><span class="value-box spike-value">0</span
+                    ><span class="value-box pad-value">pad</span
+                    ><span class="value-box pad-value">pad</span>
+                  </div>
+                  <div class="toy-lane">
+                    <span class="lane-name">mask</span
+                    ><span class="value-box mask-on">1</span
+                    ><span class="value-box mask-on">1</span
+                    ><span class="value-box mask-on">1</span
+                    ><span class="value-box mask-off">0</span
+                    ><span class="value-box mask-off">0</span>
+                  </div>
+                </div>
+              </div>
+              <div class="toy-trial">
+                <div class="toy-label">Trial B</div>
+                <div class="toy-lanes">
+                  <div class="toy-lane">
+                    <span class="lane-name">spikes</span
+                    ><span class="value-box spike-value">0</span
+                    ><span class="value-box spike-value">0</span
+                    ><span class="value-box spike-value">1</span
+                    ><span class="value-box spike-value">0</span
+                    ><span class="value-box spike-value">1</span>
+                  </div>
+                  <div class="toy-lane">
+                    <span class="lane-name">mask</span
+                    ><span class="value-box mask-on">1</span
+                    ><span class="value-box mask-on">1</span
+                    ><span class="value-box mask-on">1</span
+                    ><span class="value-box mask-on">1</span
+                    ><span class="value-box mask-on">1</span>
+                  </div>
+                </div>
+              </div>
+              <div class="toy-trial">
+                <div class="toy-label">Trial C</div>
+                <div class="toy-lanes">
+                  <div class="toy-lane">
+                    <span class="lane-name">spikes</span
+                    ><span class="value-box spike-value">1</span
+                    ><span class="value-box spike-value">0</span
+                    ><span class="value-box pad-value">pad</span
+                    ><span class="value-box pad-value">pad</span
+                    ><span class="value-box pad-value">pad</span>
+                  </div>
+                  <div class="toy-lane">
+                    <span class="lane-name">mask</span
+                    ><span class="value-box mask-on">1</span
+                    ><span class="value-box mask-on">1</span
+                    ><span class="value-box mask-off">0</span
+                    ><span class="value-box mask-off">0</span
+                    ><span class="value-box mask-off">0</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="shape-equivalence">
+              <span>1 = real sample</span><span>0 = ignore padding</span
+              ><span>real spike 0 ≠ padding</span>
+            </div>
+            <div class="annotation">
+              rectangular tensor: responses (395, 433, 1) · mask (395, 433) ·
+              65,576 real + 105,459 padded slots
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="shell" id="trajectory">
+        <div class="section-kicker">06 · One real trajectory</div>
+        <h2>Trial 2: 134 ordered samples across 2.68 seconds</h2>
+        <div class="card">
+          <div class="trajectory-summary">
+            <span><b>134</b>20 ms samples</span>
+            <span><b>26</b>contiguous runs</span>
+            <span><b>23</b>unique bin IDs</span>
+            <span><b>1</b>aligned spike</span>
+            <span><b>3</b>invalid gaps</span>
+          </div>
+          <div class="run-strip-wrap">
+            <div class="trajectory-cursor" id="trajectory-cursor"></div>
+            <div
+              class="run-strip"
+              id="run-strip"
+              aria-label="Actual trial 2 trajectory over time"
+            ></div>
+            <div class="time-axis">
+              <span>0.00 s</span><span>time →</span><span>2.68 s</span>
+            </div>
+          </div>
+          <div class="trajectory-controls">
+            <button class="play-btn" id="trajectory-play" type="button">
+              ▶ Play
+            </button>
+            <input
+              class="trajectory-slider"
+              id="trajectory-slider"
+              type="range"
+              min="0"
+              max="133"
+              value="0"
+              aria-label="Trajectory time sample"
+            />
+            <div class="trajectory-readout">
+              <span><b id="trajectory-time">0.00 s</b>time</span
+              ><span><b id="trajectory-bin">509</b>place bin</span
+              ><span><b id="trajectory-spike">0</b>spikes</span>
+            </div>
+          </div>
+          <div class="actual-route-layout">
+            <svg
+              class="actual-maze"
+              viewBox="0 0 500 500"
+              role="img"
+              aria-label="Reconstructed XY path for actual trial 2"
+            >
+              <defs>
+                <pattern
+                  id="actual-grid"
+                  width="12.5"
+                  height="12.5"
+                  patternUnits="userSpaceOnUse"
+                >
+                  <path
+                    d="M12.5 0 L0 0 0 12.5"
+                    fill="none"
+                    stroke="#2b4361"
+                    stroke-width="0.7"
+                  />
+                </pattern>
+              </defs>
+              <rect
+                width="500"
+                height="500"
+                fill="url(#actual-grid)"
+                stroke="#58d7ff"
+                stroke-width="3"
+              />
+              <g fill="#08111f" stroke="#ffd166" stroke-width="3">
+                <rect x="100" y="100" width="100" height="100" />
+                <rect x="300" y="100" width="100" height="100" />
+                <rect x="100" y="300" width="100" height="100" />
+                <rect x="300" y="300" width="100" height="100" />
+              </g>
+              <g id="trajectory-map-paths"></g>
+              <circle
+                id="trajectory-map-cursor"
+                r="8"
+                fill="white"
+                stroke="#08111f"
+                stroke-width="3"
+              />
+              <text x="14" y="24" fill="#9eb2ca" font-size="14">
+                verified mesh-centroid XY · arbitrary Unity units
+              </text>
+            </svg>
+            <div class="route-chain-panel">
+              <div class="annotation">run-length-compressed mesh route</div>
+              <div
+                class="route-chain"
+                id="route-chain"
+                aria-label="Run-length-compressed route"
+              ></div>
+              <div class="truth-strip" style="margin-top: 18px">
+                Mesh IDs index 1,344 navigable patches. They are not row-major
+                40 × 40 IDs.
+              </div>
+            </div>
+          </div>
+          <div class="legend">
+            <span
+              ><i class="dot" style="background: var(--cyan)"></i>segment width
+              = time in bin</span
+            >
+            <span
+              ><i class="dot" style="background: var(--pink)"></i>pink border =
+              run containing spike</span
+            >
+            <span
+              ><i class="dot" style="background: #394b60"></i>0 = invalid
+              gap</span
+            >
+          </div>
+          <div class="truth-strip">
+            Actual exported trial, plotted through the reconstructed mesh-ID →
+            centroid lookup. Invalid gaps remain disconnected.
+          </div>
+        </div>
+      </section>
+
+      <section class="shell" id="space">
+        <div class="section-kicker">07 · Spatial labels</div>
+        <h2>40 × 40 potential grid ≠ 453 observed labels</h2>
+        <div class="card maze-wrap">
+          <svg
+            class="diagram"
+            viewBox="0 0 620 620"
+            role="img"
+            aria-label="Conceptual 40 by 40 maze grid with pillars and a partial route"
+          >
+            <defs>
+              <pattern
+                id="smallGrid"
+                width="15"
+                height="15"
+                patternUnits="userSpaceOnUse"
+              >
+                <path
+                  d="M15 0 L0 0 0 15"
+                  fill="none"
+                  stroke="#2b4361"
+                  stroke-width="1"
+                />
+              </pattern>
+              <pattern
+                id="bigGrid"
+                width="75"
+                height="75"
+                patternUnits="userSpaceOnUse"
+              >
+                <rect width="75" height="75" fill="url(#smallGrid)" />
+                <path
+                  d="M75 0 L0 0 0 75"
+                  fill="none"
+                  stroke="#46617e"
+                  stroke-width="1.6"
+                />
+              </pattern>
+            </defs>
+            <rect
+              x="10"
+              y="10"
+              width="600"
+              height="600"
+              rx="18"
+              fill="url(#bigGrid)"
+              stroke="#58d7ff"
+              stroke-width="3"
+            />
+            <g fill="#08111f" stroke="#ffd166" stroke-width="3">
+              <rect x="130" y="130" width="120" height="120" rx="8" />
+              <rect x="370" y="130" width="120" height="120" rx="8" />
+              <rect x="130" y="370" width="120" height="120" rx="8" />
+              <rect x="370" y="370" width="120" height="120" rx="8" />
+            </g>
+            <path
+              d="M50 570 C110 500 270 535 305 420 S275 260 330 195 S510 160 555 55"
+              fill="none"
+              stroke="#74e6a4"
+              stroke-width="10"
+              stroke-linecap="round"
+              opacity=".92"
+            />
+            <g fill="#ff7aa8">
+              <circle cx="50" cy="570" r="12" />
+              <circle cx="555" cy="55" r="12" />
+            </g>
+            <text x="30" y="35" fill="#9eb2ca" font-size="16">
+              conceptual grid · not reconstructed data
+            </text>
+          </svg>
+          <div class="index-list">
+            <div class="index-item">
+              <span class="index-num">40×40</span
+              ><span>≤ 1,600 nominal cells</span>
+            </div>
+            <div class="index-item">
+              <span class="index-num">pillars</span
+              ><span class="not-math">−</span><span>non-navigable cells</span>
+            </div>
+            <div class="index-item">
+              <span class="index-num">filters</span
+              ><span class="not-math">−</span
+              ><span>invalid / low-speed samples</span>
+            </div>
+            <div class="index-item">
+              <span class="index-num">routes</span
+              ><span class="not-math">−</span><span>unvisited cells</span>
+            </div>
+            <div class="index-item">
+              <span class="index-num">result</span
+              ><b class="good">452 valid IDs observed</b>
+            </div>
+            <div class="index-item">
+              <span class="index-num">ID 0</span
+              ><b class="bad">invalid sentinel</b>
+            </div>
+          </div>
+        </div>
+        <div class="truth-strip">
+          Bin 500 is not numerically “near” bin 501. Geometry lives in the
+          missing bin → mesh-centroid lookup.
+        </div>
+      </section>
+
+      <section class="shell" id="prediction">
+        <div class="section-kicker">08 · Prediction</div>
+        <h2>Choose resolution by support, not by ambition</h2>
+        <div class="card">
+          <div
+            class="resolution-controls"
+            aria-label="Position decoding resolution"
+          >
+            <button class="resolution-btn active" data-n="5">5 × 5</button>
+            <button class="resolution-btn" data-n="10">10 × 10</button>
+            <button class="resolution-btn" data-n="20">20 × 20</button>
+            <button class="resolution-btn" data-n="40">40 × 40</button>
+          </div>
+          <div class="resolution-visual">
+            <div
+              class="mini-grid"
+              id="mini-grid"
+              aria-label="Selected decoding grid"
+            ></div>
+            <div>
+              <div
+                style="font-size: 3rem; font-weight: 900; color: var(--cyan)"
+                id="class-count"
+              >
+                ≤ 25
+              </div>
+              <div class="tiny">nominal position classes</div>
+              <div class="gate" style="margin-top: 24px">
+                <div class="gate-row">
+                  <span>occupancy</span>
+                  <div class="bar">
+                    <span id="bar-occ" style="--w: 90%"></span>
+                  </div>
+                </div>
+                <div class="gate-row">
+                  <span>spike support</span>
+                  <div class="bar">
+                    <span id="bar-spike" style="--w: 78%"></span>
+                  </div>
+                </div>
+                <div class="gate-row">
+                  <span>test coverage</span>
+                  <div class="bar">
+                    <span id="bar-test" style="--w: 88%"></span>
+                  </div>
+                </div>
+              </div>
+              <div class="annotation" id="resolution-note">
+                coarse baseline · strongest support
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="grid two" style="margin-top: 18px">
+          <div class="card">
+            <h3>Current file</h3>
+            <div class="equation annotation">
+              X = (65,576, 1 cell)<br />y = place-bin label
+            </div>
+            <div class="truth-strip">pipeline check · single-cell rate map</div>
+          </div>
+          <div class="card">
+            <h3>Needed for fine decoding</h3>
+            <div class="equation annotation">
+              X = (samples, synchronized cells)<br />y = shared place target
+            </div>
+            <div
+              class="truth-strip"
+              style="
+                border-color: var(--green);
+                color: var(--green);
+                background: rgb(116 230 164 / 8%);
+              "
+            >
+              split complete trials
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="shell" id="missing">
+        <div class="section-kicker">09 · Missing pieces</div>
+        <h2>What the current file cannot show</h2>
+        <div class="missing-grid">
+          <div class="missing">
+            <span class="icon">🗺️</span
+            ><b>authoritative bin → XY centroid lookup</b>
+          </div>
+          <div class="missing">
+            <span class="icon">🧠🧠🧠</span
+            ><b>synchronized multi-cell population</b>
+          </div>
+          <div class="missing">
+            <span class="icon">👁️</span><b>gaze, fixation and view labels</b>
+          </div>
+          <div class="missing">
+            <span class="icon">🧭</span><b>heading, speed and control input</b>
+          </div>
+          <div class="missing">
+            <span class="icon">🎯</span><b>goal, reward and trial phase</b>
+          </div>
+          <div class="missing">
+            <span class="icon">🔬</span><b>spike-sorting quality metadata</b>
+          </div>
+          <div class="missing">
+            <span class="icon">🐒</span
+            ><b>subject and recording-site metadata</b>
+          </div>
+          <div class="missing">
+            <span class="icon">🤖</span
+            ><b>matched RNN rollout and hidden states</b>
+          </div>
+        </div>
+      </section>
+
+      <section class="shell">
+        <div class="card end-card">
+          <div class="section-kicker">The complete mental model</div>
+          <p class="equation">
+            trial → 20 ms sample → {place-bin ID, spike count}
+          </p>
+          <p class="equation">ordered place-bin IDs → coarse trajectory</p>
+          <p class="equation">many synchronized cells → position decoder</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="shell">
+      Visual companion to <code>docs/dataset-card.md</code>. Values describe the
+      verified <code>f1526be5</code> single-cell example. Maze route is
+      conceptual until the authoritative bin-centroid lookup is reconstructed.
+    </footer>
+
+    <script>
+      const tabs = document.querySelectorAll(".tab");
+      const views = document.querySelectorAll(".shape-view");
+      tabs.forEach((tab) =>
+        tab.addEventListener("click", () => {
+          tabs.forEach((item) =>
+            item.setAttribute("aria-selected", String(item === tab)),
+          );
+          views.forEach((view) =>
+            view.classList.toggle(
+              "active",
+              view.id === `view-${tab.dataset.view}`,
+            ),
+          );
+        }),
+      );
+
+      const trajectoryRuns = [
+        { bin: 509, start: 0, end: 14, samples: 14, spikes: 0 },
+        { bin: 421, start: 14, end: 22, samples: 8, spikes: 1 },
+        { bin: 0, start: 22, end: 23, samples: 1, spikes: 0 },
+        { bin: 423, start: 23, end: 25, samples: 2, spikes: 0 },
+        { bin: 0, start: 25, end: 29, samples: 4, spikes: 0 },
+        { bin: 1092, start: 29, end: 35, samples: 6, spikes: 0 },
+        { bin: 1091, start: 35, end: 43, samples: 8, spikes: 0 },
+        { bin: 1096, start: 43, end: 51, samples: 8, spikes: 0 },
+        { bin: 1100, start: 51, end: 53, samples: 2, spikes: 0 },
+        { bin: 1097, start: 53, end: 58, samples: 5, spikes: 0 },
+        { bin: 0, start: 58, end: 59, samples: 1, spikes: 0 },
+        { bin: 1097, start: 59, end: 61, samples: 2, spikes: 0 },
+        { bin: 1117, start: 61, end: 65, samples: 4, spikes: 0 },
+        { bin: 1120, start: 65, end: 70, samples: 5, spikes: 0 },
+        { bin: 1119, start: 70, end: 75, samples: 5, spikes: 0 },
+        { bin: 1121, start: 75, end: 82, samples: 7, spikes: 0 },
+        { bin: 1169, start: 82, end: 85, samples: 3, spikes: 0 },
+        { bin: 1172, start: 85, end: 92, samples: 7, spikes: 0 },
+        { bin: 1171, start: 92, end: 97, samples: 5, spikes: 0 },
+        { bin: 1182, start: 97, end: 101, samples: 4, spikes: 0 },
+        { bin: 1179, start: 101, end: 108, samples: 7, spikes: 0 },
+        { bin: 1178, start: 108, end: 113, samples: 5, spikes: 0 },
+        { bin: 1177, start: 113, end: 118, samples: 5, spikes: 0 },
+        { bin: 1233, start: 118, end: 124, samples: 6, spikes: 0 },
+        { bin: 1264, start: 124, end: 130, samples: 6, spikes: 0 },
+        { bin: 1263, start: 130, end: 134, samples: 4, spikes: 0 },
+      ];
+      const trajectoryXY = new Map([
+        [509, [2.8125, 8.4375]],
+        [421, [2.1875, 8.4375]],
+        [423, [1.5625, 7.8125]],
+        [1092, [1.5625, 7.1875]],
+        [1091, [1.5625, 6.5625]],
+        [1096, [1.5625, 5.9375]],
+        [1100, [0.9375, 5.9375]],
+        [1097, [0.9375, 5.3125]],
+        [1117, [0.9375, 4.6875]],
+        [1120, [0.3125, 4.6875]],
+        [1119, [0.3125, 4.0625]],
+        [1121, [-0.3125, 2.8125]],
+        [1169, [-0.3125, 2.1875]],
+        [1172, [-0.9375, 2.1875]],
+        [1171, [-0.9375, 1.5625]],
+        [1182, [-1.5625, 1.5625]],
+        [1179, [-1.5625, 0.9375]],
+        [1178, [-2.1875, 0.9375]],
+        [1177, [-2.1875, 0.3125]],
+        [1233, [-2.8125, 0.3125]],
+        [1264, [-2.8125, -0.3125]],
+        [1263, [-3.4375, -0.3125]],
+      ]);
+      const spikeSamples = new Map([[14, 1]]);
+      const runStrip = document.querySelector("#run-strip");
+      const routeChain = document.querySelector("#route-chain");
+      const trajectorySlider = document.querySelector("#trajectory-slider");
+      const trajectoryPlay = document.querySelector("#trajectory-play");
+      const trajectoryCursor = document.querySelector("#trajectory-cursor");
+      const trajectoryMapCursor = document.querySelector(
+        "#trajectory-map-cursor",
+      );
+      const trajectoryMapPaths = document.querySelector(
+        "#trajectory-map-paths",
+      );
+      const svgNamespace = document.querySelector(".actual-maze").namespaceURI;
+      const toMapPoint = ([x, y]) => [(x + 12.5) * 20, (12.5 - y) * 20];
+
+      let mapPart = [];
+      const drawMapPart = () => {
+        if (mapPart.length > 1) {
+          const line = document.createElementNS(svgNamespace, "polyline");
+          line.setAttribute(
+            "points",
+            mapPart.map((point) => point.join(",")).join(" "),
+          );
+          line.setAttribute("fill", "none");
+          line.setAttribute("stroke", "#74e6a4");
+          line.setAttribute("stroke-width", "8");
+          line.setAttribute("stroke-linecap", "round");
+          line.setAttribute("stroke-linejoin", "round");
+          trajectoryMapPaths.append(line);
+        }
+        mapPart = [];
+      };
+      trajectoryRuns.forEach((run) => {
+        if (run.bin === 0) {
+          drawMapPart();
+          return;
+        }
+        const point = toMapPoint(trajectoryXY.get(run.bin));
+        mapPart.push(point);
+        const marker = document.createElementNS(svgNamespace, "circle");
+        marker.setAttribute("cx", point[0]);
+        marker.setAttribute("cy", point[1]);
+        marker.setAttribute("r", run.spikes ? "7" : "3.5");
+        marker.setAttribute("fill", run.spikes ? "#ff7aa8" : "#58d7ff");
+        trajectoryMapPaths.append(marker);
+      });
+      drawMapPart();
+
+      trajectoryRuns.forEach((run, index) => {
+        const segment = document.createElement("span");
+        segment.className = `run-segment${run.bin === 0 ? " gap-segment" : ""}${run.spikes ? " spike-segment" : ""}`;
+        segment.style.flexGrow = String(run.samples);
+        if (run.bin !== 0)
+          segment.style.background = `hsl(${(run.bin * 47) % 360} 68% 62%)`;
+        if (run.samples >= 4) segment.textContent = String(run.bin);
+        segment.title = `bin ${run.bin} · ${(run.samples * 0.02).toFixed(2)} s · ${run.spikes} spikes`;
+        runStrip.append(segment);
+
+        const node = document.createElement("span");
+        node.className = `route-node${run.bin === 0 ? " route-gap" : ""}`;
+        node.textContent = `${run.bin} × ${run.samples}`;
+        routeChain.append(node);
+        if (index < trajectoryRuns.length - 1) {
+          const arrow = document.createElement("span");
+          arrow.className = "route-arrow";
+          arrow.textContent = "→";
+          routeChain.append(arrow);
+        }
+      });
+
+      const updateTrajectory = (sample) => {
+        const run = trajectoryRuns.find(
+          (item) => item.start <= sample && sample < item.end,
+        );
+        trajectoryCursor.style.left = `${(sample / 134) * 100}%`;
+        document.querySelector("#trajectory-time").textContent =
+          `${(sample * 0.02).toFixed(2)} s`;
+        document.querySelector("#trajectory-bin").textContent = String(run.bin);
+        document.querySelector("#trajectory-spike").textContent = String(
+          spikeSamples.get(sample) ?? 0,
+        );
+        const xy = trajectoryXY.get(run.bin);
+        if (xy) {
+          const [mapX, mapY] = toMapPoint(xy);
+          trajectoryMapCursor.setAttribute("cx", mapX);
+          trajectoryMapCursor.setAttribute("cy", mapY);
+          trajectoryMapCursor.style.display = "block";
+        } else {
+          trajectoryMapCursor.style.display = "none";
+        }
+      };
+      trajectorySlider.addEventListener("input", () =>
+        updateTrajectory(Number(trajectorySlider.value)),
+      );
+      let trajectoryTimer = null;
+      const stopTrajectory = () => {
+        clearInterval(trajectoryTimer);
+        trajectoryTimer = null;
+        trajectoryPlay.textContent = "▶ Play";
+      };
+      trajectoryPlay.addEventListener("click", () => {
+        if (trajectoryTimer !== null) {
+          stopTrajectory();
+          return;
+        }
+        if (Number(trajectorySlider.value) >= 133) trajectorySlider.value = "0";
+        trajectoryPlay.textContent = "■ Pause";
+        trajectoryTimer = setInterval(() => {
+          const next = Number(trajectorySlider.value) + 1;
+          trajectorySlider.value = String(Math.min(next, 133));
+          updateTrajectory(Number(trajectorySlider.value));
+          if (next >= 133) stopTrajectory();
+        }, 60);
+      });
+      updateTrajectory(0);
+
+      const settings = {
+        5: {
+          count: "≤ 25",
+          occ: 90,
+          spike: 78,
+          test: 88,
+          note: "coarse baseline · strongest support",
+        },
+        10: {
+          count: "≤ 100",
+          occ: 75,
+          spike: 62,
+          test: 73,
+          note: "recommended next resolution",
+        },
+        20: {
+          count: "≤ 400",
+          occ: 50,
+          spike: 39,
+          test: 46,
+          note: "retain only with occupancy gates",
+        },
+        40: {
+          count: "≤ 1,600",
+          occ: 28,
+          spike: 18,
+          test: 24,
+          note: "highest available · requires population support",
+        },
+      };
+      const grid = document.querySelector("#mini-grid");
+      const drawGrid = (n) => {
+        const displayN = Math.min(n, 20);
+        grid.replaceChildren();
+        grid.style.gridTemplateColumns = `repeat(${displayN}, 1fr)`;
+        for (let i = 0; i < displayN * displayN; i += 1)
+          grid.append(document.createElement("i"));
+        const item = settings[n];
+        document.querySelector("#class-count").textContent = item.count;
+        document
+          .querySelector("#bar-occ")
+          .style.setProperty("--w", `${item.occ}%`);
+        document
+          .querySelector("#bar-spike")
+          .style.setProperty("--w", `${item.spike}%`);
+        document
+          .querySelector("#bar-test")
+          .style.setProperty("--w", `${item.test}%`);
+        document.querySelector("#resolution-note").textContent = item.note;
+      };
+      document.querySelectorAll(".resolution-btn").forEach((button) =>
+        button.addEventListener("click", () => {
+          document
+            .querySelectorAll(".resolution-btn")
+            .forEach((item) =>
+              item.classList.toggle("active", item === button),
+            );
+          drawGrid(Number(button.dataset.n));
+        }),
+      );
+      drawGrid(5);
+    </script>
+  </body>
+</html>
