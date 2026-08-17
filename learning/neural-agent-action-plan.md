@@ -1,8 +1,16 @@
 # Neural–Agent Learning and Action Plan
 
-This is a just-in-time curriculum for the current project. The goal is not to
-learn all of neuroscience. The goal is to become able to build, criticize, and
-explain one careful comparison between hippocampal recordings and an RNN agent.
+> **Pre-pivot curriculum retained as supporting material.** Measurement,
+> validation, place/view controls, and population-analysis lessons remain useful,
+> but the staged RNN-comparison plan and eight-week sequence are deprecated.
+> Follow [`docs/getting-started-tasks.md`](../docs/getting-started-tasks.md) for
+> current execution, [`docs/research-questions.md`](../docs/research-questions.md)
+> for H1/H2, and [`docs/analysis-contract.md`](../docs/analysis-contract.md) for
+> required cue-period population and subsequent-path data.
+
+This was a just-in-time curriculum for the pre-pivot neural–agent comparison.
+The goal was to become able to build, criticize, and explain one careful
+comparison between hippocampal recordings and an RNN agent.
 
 ## The mental model
 

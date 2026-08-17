@@ -10,7 +10,7 @@ For this workspace, explanations should:
 - clearly separate what is directly measured from what is inferred;
 - emphasize observability limits of hippocampus and related brain areas;
 - explain preprocessing steps as transformations from raw signals into analysis-ready tensors/tables;
-- connect methods back to the main goal: comparing RNN hidden representations with neural coding data.
+- connect methods first to cue-period path information beyond start and goal, and secondarily to the later artificial-agent comparison.
 
 Important teaching frame:
 
@@ -24,7 +24,9 @@ The user expects to receive higher-level formatted neural data from the professo
 
 Current focus:
 
-- place-like coding;
-- visual/view coding;
-- conjunctive place-view coding;
-- ablations over neural data representations such as bin size, smoothing, fixation filtering, and null controls.
+- cue-period hippocampal information about the subsequently observed path beyond start and goal;
+- reproducible low-dimensional organization of that information;
+- graph-based path measurement as a proposed operationalization;
+- place, view, heading, action, and conjunctive coding as supporting controls;
+- a later artificial-agent comparison as a stretch aim;
+- trial-level validation, null controls, bin-size choices, and other preprocessing ablations.

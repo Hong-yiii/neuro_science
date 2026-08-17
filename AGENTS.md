@@ -26,20 +26,32 @@ Hongyi is experienced in ML, deep learning, and mostly NLP, but is newer to neur
 
 ## Current Research Direction
 
-Hongyi's current work is about turning a Unity-based RNN navigation environment into a model system that can be compared with neural coding analyses.
+The thesis-level question is whether hippocampal population activity during the
+cue period contains information about the subsequently observed navigation path
+beyond start and goal.
 
-The intended comparison is not "RNN units are neurons." The goal is to run matched representational analyses on:
+H1 is one hypothesis with two components:
 
-- biological units: spike trains aligned to behavioral/gaze variables;
-- model units: RNN hidden activations aligned to the same kind of task variables.
+- H1a: incremental held-out path information beyond start and goal;
+- H1b: reproducible low-dimensional organization of that information.
 
-Primary representational classes of interest:
+Use **path** for the ordered movement through the maze. Reserve **trajectory
+class** for the previous analysis's `(start, goal)` category. A maze graph is a
+proposed path measurement method, not part of H1.
 
-- place-like units: encode the animal/agent's position;
-- view/visual-like units: encode visual scene, gaze, or allocentric spatial view;
-- conjunctive units: encode combinations, especially units that carry both place and visual/view information.
+A later comparison with an artificial navigation agent is H2 and a stretch aim.
+The intended comparison is not "RNN units are neurons" and does not claim shared
+mechanisms from similar geometry alone.
 
-The project should emphasize careful controls for correlated variables. Position, view, heading, goal, time in trial, and action can covary, so apparent selectivity must be tested against shuffled/null or conditional models.
+Place-like, view/visual-like, and conjunctive coding remain supporting pipeline
+checks, representation characterization, and confound controls. Position, view,
+heading, goal, time in trial, action, and session can covary, so apparent path
+information must be tested against start-goal baselines and shuffled/null or
+conditional models.
+
+Trial-specific H1 requires cue activity from a verified simultaneous population
+linked to that same trial's start, goal, and observed path. A cross-session
+pseudopopulation cannot support exact trial-specific claims.
 
 Important data streams:
 
@@ -69,7 +81,7 @@ In the current code, the default `trial_start` is `2`, so alignment begins at th
 
 - Read local context before changing code: `README.md`, this file, and `context/*.md`.
 - Read `context/learner-profile.md` before teaching or explaining neuroscience methods.
-- For the active RNN/neural-coding project, also read `docs/research-questions.md`, `docs/analysis-contract.md`, and `docs/getting-started-tasks.md`.
+- For the active prospective-path project, also read `docs/research-questions.md`, `docs/analysis-contract.md`, and `docs/getting-started-tasks.md`.
 - Prefer adding dated notes under `context/` when learning something durable.
 - Use `learning/` for neuroscience learning scaffolds, glossaries, and method explainers.
 - Use `papers/` for paper notes and reading queues; do not commit copyrighted PDFs by default.

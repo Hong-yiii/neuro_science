@@ -1,8 +1,17 @@
 # Analysis Entry Points
 
-Created: 2026-07-29
+> **Supporting pre-pivot code map.** These place/view/conjunctive entry points
+> remain useful for pipeline validation and confound controls, but they are not
+> the active primary analysis. See
+> [`docs/research-questions.md`](../docs/research-questions.md) and
+> [`docs/analysis-contract.md`](../docs/analysis-contract.md) for the prospective
+> cue-period path project.
 
-This note records candidate functions and files for the first place/view/conjunctive analyses. It is not a full API guide yet.
+Created: 2026-07-29
+Status: supporting reference, not current roadmap
+
+This note records candidate functions and files for place/view/conjunctive
+supporting analyses. It is not a full API guide.
 
 ## Julia: GLM And Encoding Models
 
@@ -192,4 +201,3 @@ GLMFitH-like model comparison / conjunctions-like conditioning
 - Are `JointOccupancy` and `JointMap` the right shared abstraction for both biological cells and RNN units?
 - Does the first result need GLM model comparison, or is a simpler occupancy-normalized map plus null test a better first deliverable?
 - Which conjunctive definition should be reported first: interaction GLM, conditional field increase, or both?
-

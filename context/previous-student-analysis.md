@@ -1,5 +1,12 @@
 # Previous Student Analysis Write-up
 
+> **Historical source summary, not current project framing.** “Trajectory” here
+> follows the previous analysis's terminology, often meaning the `(start, goal)`
+> class rather than the observed path. Use
+> [`docs/research-questions.md`](../docs/research-questions.md) for current path
+> terminology and H1/H2, and [`docs/analysis-contract.md`](../docs/analysis-contract.md)
+> for current data requirements.
+
 Source reviewed: `/Users/hongyilin/Downloads/Analysis Write-up.pdf`
 PDF title: `Analysis Write-up`
 Length: 20 pages

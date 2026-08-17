@@ -1,113 +1,156 @@
 # Analysis Contract
 
-This document defines the shared shape that biological and model data should expose before matched analyses are written.
+This document defines the minimum shared data shape for prospective-path
+analysis and the later biological/artificial-agent comparison.
 
 ## Unit Of Analysis
 
-The common unit is:
+The independent unit is a complete behavioral trial. Each trial links two
+aligned sequences:
 
 ```text
-trial x time_bin x unit
+cue-period population activity -> subsequent observed navigation path
 ```
 
-For biological data, `unit` means a curated neuron/cell and values are spike counts or firing rates.
+For biological data, a population feature is a curated neuron/unit represented
+by spike counts or firing rates. For model data, it is an RNN or other agent
+hidden dimension represented by its activation.
 
-For model data, `unit` means an RNN hidden dimension and values are hidden activations.
+Adjacent time bins are not independent samples. All bins from a source trial
+must remain in one validation split.
 
-## Required Trial-Time Variables
+## Required Trial Identity And Events
 
-Each trial should provide a time-indexed table with:
+Each trial should expose:
 
-- `trial_id`
-- `time_ms` or `time_bin`
-- `position_x`
-- `position_y` or `position_z`
-- `heading`
-- `view_bin` or visual-scene identifier
-- `gaze_x`, when available
-- `gaze_y`, when available
-- `fixation_mask`, when available
-- `action`, for model data and biological behavior when defined
-- `goal` or target identity, when available
-- `reward_or_timeout`, when available
+- `source_trial_id`;
+- `session_id`;
+- `simultaneous_recording_group`;
+- `cue_onset` and `cue_offset` in the neural clock;
+- navigation onset and end;
+- `start_id` and `goal_id` as categorical labels;
+- success or timeout status;
+- links between neural, Unity behavior, and path samples.
 
-## Biological Side
+## Cue-Period Population Tensor
 
-Expected source concepts from `Hippocampus.jl`:
-
-- `RippleData`: neural recording markers and timestamps.
-- `EyelinkData`: gaze, fixation, saccade, and marker data.
-- `UnityRaytraceData`: behavioral/view samples.
-- `Spiketrain`: spike timestamps for a cell.
-- `ViewAndPlaceRepresentationNew`: maps spikes to per-trial behavioral sample indices.
-
-Minimum biological export for matched analysis:
+Preferred conceptual shape:
 
 ```text
-trial_id, time_bin, cell_id, spike_count, position, heading, view_bin, fixation_mask
+trial x cue_time_bin x unit
 ```
 
-## Model Side
-
-Expected source concepts from the RNN/Unity environment:
-
-- Unity environment state;
-- agent observation;
-- action;
-- reward;
-- done/trial boundary;
-- RNN hidden state at each time step;
-- task variables that can be binned in the same way as biological data.
-
-Minimum model export for matched analysis:
+Minimum biological fields:
 
 ```text
-trial_id, time_bin, hidden_unit_id, activation, position, heading, view_bin, action, goal
+source_trial_id, session_id, simultaneous_recording_group,
+cue_time_bin, cell_id, spike_count, start_id, goal_id
 ```
 
-## Shared Derived Objects
-
-Analyses should be able to build:
-
-- occupancy maps;
-- unit rate or activation maps;
-- place tuning scores;
-- view/visual tuning scores;
-- joint place-view maps;
-- train/test splits by trial;
-- null distributions.
-
-## Position Representation Decision
-
-Physical units such as meters are not required. Biological and model data may
-use Unity coordinates, normalized coordinates, or shared place-bin IDs as long
-as both sides use the same mapping.
-
-Position decoding should be evaluated at multiple resolutions:
+Minimum model fields for H2:
 
 ```text
-5 × 5 -> 10 × 10 -> 20 × 20 -> 40 × 40
+source_trial_id, cue_time_bin, hidden_unit_id, activation,
+start_id, goal_id
 ```
 
-Start coarse and retain finer resolutions only when training occupancy,
-held-out-trial coverage, and population spike support are adequate. Keep 40 × 40
-as the highest available resolution rather than the mandatory default.
+Cell identities may differ across sessions, but units within one claimed
+population vector must be verified as simultaneous. A cross-session
+pseudopopulation must be labeled as such and cannot answer trial-specific H1.
 
-Rules:
+## Subsequent Path Table
 
-- `spatial_bin_id` is categorical/mesh-topological, not an ordinal scalar;
-- bin `0` is invalid/filtered and is not a prediction target;
-- classification requires shared bin labels only;
-- Euclidean error requires shared bin centroids;
-- topology-aware error requires mesh adjacency/geodesic distance;
-- arbitrary coordinate distances should be documented or normalized by maze
-  width/diameter;
-- resolution selection and preprocessing must occur within training data, with
-  complete trials held out for final evaluation.
+Preferred conceptual shape:
+
+```text
+trial x navigation_sample
+```
+
+Minimum fields:
+
+```text
+source_trial_id, navigation_sample, time_ms,
+position_x, position_y_or_z, spatial_bin_id
+```
+
+Include when available:
+
+- heading and speed;
+- gaze coordinates, fixation mask, view/raycast bin, and viewed object;
+- action or joystick input;
+- reward and timeout details.
+
+These variables can characterize paths and test sensory or motor confounds.
+
+## Path Representation
+
+**Path** means the observed ordered movement through the maze. **Trajectory
+class** is reserved for the previous analysis's `(start, goal)` category.
+
+A maze graph is the current proposed measurement method:
+
+- the maze is one graph;
+- nodes represent spatial regions;
+- edges represent valid transitions;
+- a trial path is an ordered walk through the graph.
+
+Graph granularity, path clustering, the criterion for distinct paths, and the
+primary distance metric remain open. The scientific hypothesis must not depend
+on one graph construction.
+
+Rules inherited from the verified spatial export:
+
+- `spatial_bin_id` is categorical and mesh-topological, not ordinal;
+- bin `0` is invalid/filtered and is not a location;
+- the current refined mesh IDs are not row-major 40 x 40 coordinates;
+- Euclidean analysis requires verified centroids;
+- topology-aware analysis requires verified mesh or graph adjacency.
+
+Path transformations, graph construction learned from data, clustering, and
+other preprocessing must be fitted using training trials only. Target labels
+must be created from behavior alone, never jointly from neural activity.
+
+## Primary Evaluation Objects
+
+Every analysis should be able to produce:
+
+- a start-and-goal-only path baseline;
+- raw-population and PCA neural baselines;
+- a trial-aware CEBRA-Time representation;
+- optionally, a behavior-conditioned CEBRA representation;
+- the same simple downstream path decoder for each neural representation;
+- held-out path predictions and path-appropriate errors;
+- within-start-goal permutation nulls.
+
+In behavior-conditioned CEBRA, path labels or continuous path features supervise
+the embedding. A separate downstream decoder is still required to evaluate
+held-out prediction.
+
+## Supporting Analysis Objects
+
+Where data permits, retain support for:
+
+- occupancy maps and unit rate/activation maps;
+- place, view/visual, and conjunctive tuning;
+- nuisance-variable models for heading, gaze, action, speed, trial time, and
+  session;
+- complete-trial train/test splits and null distributions.
+
+These characterize and control H1; they are not the primary research question.
+
+## Current Data Boundary
+
+The current local JLD2 export starts at cue offset and contains selected
+single-cell navigation-period spike counts plus spatial-bin IDs. It lacks the
+cue period, start/goal labels, and a verified synchronized population matrix.
+It therefore cannot instantiate this contract or test H1.
 
 ## Open Decisions
 
-- Whether model time bins should be exactly 1 ms or resampled to match behaviorally meaningful frames.
-- Whether biological spike counts should be binary per millisecond, binned counts, or smoothed rates for the first analysis.
-- Whether visual coding should be defined by gaze bins, allocentric view bins, object identity, raycast bins, or multiple versions.
-- Whether the first implementation should be in Julia, Python, or a mixed bridge.
+- graph granularity and path-distance metric;
+- whether stable path clusters exist;
+- handling of unsuccessful and timeout trials;
+- cue window and neural bin size;
+- decoder target and primary metric;
+- trial-, session-, and start-goal-held-out evaluation levels;
+- Python, Julia, or mixed implementation.

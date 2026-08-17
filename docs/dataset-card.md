@@ -1,7 +1,12 @@
 # Biological Dataset and Experimental Setup Reference
 
 Last verified from local files: 2026-08-03
-Status: living dataset card; use this as the canonical LLM-facing description
+Status: canonical for dataset facts and limitations only
+
+For the active prospective-path question, use
+[`research-questions.md`](research-questions.md). For the cue-population and
+subsequent-path data required to test H1, use
+[`analysis-contract.md`](analysis-contract.md).
 
 ## Purpose
 

@@ -7,22 +7,30 @@ This folder is the top-level home for neuroscience work, lab context, and refere
 - `AGENTS.md`: working instructions for coding agents.
 - `context/`: living notes, repo maps, and durable observations.
 - `learning/`: Hongyi's neuroscience learning path, explained from an ML/deep-learning background.
+- `notes/data_inspection/`: durable findings from inspecting local datasets.
+- `notes/sessions/`: dated session summaries, diagrams, decisions, and next steps.
 - `papers/`: paper notes, reading queues, and references.
-- `docs/research-questions.md`: active RNN/neural-coding research framing.
-- `docs/analysis-contract.md`: shared schema for comparing biological cells and RNN units.
+- `docs/research-questions.md`: active prospective-path research framing.
+- `docs/analysis-contract.md`: cue-population and subsequent-path data contract.
 - `docs/getting-started-tasks.md`: individual onboarding and first-analysis tasks.
 - `Hippocampus.jl/`: Julia analysis repo, tracked as a submodule on `updates6`.
 - `PyHipp/`: older Python reference repo, tracked as a submodule.
 
 ## Current Project
 
-The active direction is to use a Unity-based RNN navigation environment as a model system and compare its hidden-unit representations with hippocampal neural coding.
+The thesis-level direction is to test whether hippocampal population activity
+during the cue period contains information about the subsequently observed
+navigation path beyond start and goal.
 
-Initial representational targets:
+H1 has two linked components: incremental prospective path information and its
+possible low-dimensional organization. A later comparison with representations
+learned independently by an artificial navigation agent is H2, a stretch aim.
+Place, view, and conjunctive analyses remain supporting validation and confound
+checks rather than the primary question.
 
-- place-like coding;
-- view or visual coding;
-- conjunctive place-and-view coding.
+See [`docs/research-questions.md`](docs/research-questions.md) for the canonical
+framing and [`docs/analysis-contract.md`](docs/analysis-contract.md) for the data
+required to test it.
 
 ## Submodules
 

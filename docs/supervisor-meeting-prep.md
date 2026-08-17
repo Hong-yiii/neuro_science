@@ -1,6 +1,13 @@
 # Supervisor Meeting: Neural–Agent Comparison
 
-Status: working update and discussion scratchpad
+> **Historical — superseded by the 2026-08-17 research pivot.** This pre-pivot
+> scratchpad retains useful dataset and place-analysis background, but its
+> RNN/place-first milestones are no longer the active plan. Use
+> [`research-questions.md`](research-questions.md) for current H1/H2 framing,
+> [`analysis-contract.md`](analysis-contract.md) for required data, and
+> [`getting-started-tasks.md`](getting-started-tasks.md) for current priorities.
+
+Status: archived pre-pivot discussion scratchpad
 Prepared from the currently received place-spatial-bin export
 
 ## 30-second update

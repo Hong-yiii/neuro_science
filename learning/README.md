@@ -5,22 +5,28 @@ This folder is for Hongyi's neuroscience learning path.
 Hongyi's background is strongest in ML, deep learning, and NLP. Explanations should bridge from familiar ML concepts into neuroscience concepts, especially:
 
 - what is directly observed versus inferred;
-- how spikes, behavior, gaze, and task events become analyzable tables;
-- how hippocampal place/view/conjunctive coding relates to representation learning;
-- how binning, smoothing, controls, and null models affect claims.
+- how cue-period spikes and subsequent behavior become trial-linked tables;
+- how prospective path information differs from inferred intention or planning;
+- how place/view/conjunctive coding can expose correlated-variable confounds;
+- how binning, representation learning, controls, and null models affect claims.
 
 ## Working Principle
 
-Learn the neuroscience just in time for the RNN-to-neural-data comparison.
+Learn the neuroscience just in time for H1: cue-period path information beyond
+start and goal. Artificial-agent comparison belongs to the later H2 stretch aim.
 
-The goal is not to become a general neuroscientist first. The goal is to understand enough measurement, preprocessing, and representational analysis to make careful claims about biological units and model units under matched analysis.
+The goal is not to become a general neuroscientist first. The goal is to
+understand enough measurement, preprocessing, and representational analysis to
+make careful claims about prospective hippocampal path information.
 
 ## Start Here
 
-- `neural-agent-action-plan.md`: staged curriculum, executable checklist, and
-  definitions of “done” for the current project.
-- `../papers/reading-roadmap.md`: papers ordered by when their methods become
-  useful.
+- `../docs/research-questions.md`: current H1/H2 and claim boundaries.
+- `../docs/getting-started-tasks.md`: current executable checklist.
+- `neural-agent-action-plan.md`: pre-pivot curriculum retained for supporting
+  measurement and validation lessons.
+- `../papers/reading-roadmap.md`: pre-pivot reading map, now labeled by relevance
+  to H1 versus H2.
 
 ## Possible Later Files
 

@@ -1,6 +1,6 @@
 # Getting Started Tasks
 
-This is the practical onboarding checklist for the neuroscience/RNN project. Each task should be small enough to complete independently and leave behind a note, command, screenshot, or verified outcome.
+This is the practical checklist for the prospective hippocampal path project and its later artificial-agent extension. Each task should be small enough to complete independently and leave behind a note, command, screenshot, or verified outcome.
 
 ## How To Use This
 
@@ -67,48 +67,64 @@ This is the practical onboarding checklist for the neuroscience/RNN project. Eac
   - One exact-hash cell example has 395 readable trials; a second example uses a different hash.
 - [ ] Confirm whether spike trains are already curated.
   - Done means: know whether spike sorting/manual inspection is out of scope.
-- [ ] Write or verify a loader that produces the biological analysis contract.
-  - Target shape: `trial x time_bin x cell`.
-- [ ] Receive or locate RNN/Unity rollout data or checkpoint.
-- [ ] Record model data provenance.
-  - Output: `context/model-notes.md` with environment, checkpoint, seed, observation/action/reward notes.
-- [ ] Write or verify a loader that produces the model analysis contract.
-  - Target shape: `trial x time_bin x hidden_unit`.
+- [ ] Obtain or verify a cue-aligned biological export linked to subsequent paths.
+  - Required: source trial, session, simultaneous group, cue window, start, goal,
+    population spike counts, success/timeout, and subsequent path samples.
+- [ ] Confirm which cells form real simultaneous populations.
+- [ ] Write or verify a loader that produces both analysis-contract objects.
+  - Cue shape: `trial x cue_time_bin x cell`.
+  - Path shape: `trial x navigation_sample`.
 
-## Phase 4: First Matched Analysis
+## Phase 4: Behavioral Feasibility Audit
 
-- [ ] Define place bins.
-  - Output: binning rule and occupancy correction choice.
-- [ ] Define view/visual bins.
-  - Output: decide between raycast bins, object identity, gaze bins, or another visual variable.
-- [ ] Compute occupancy-normalized place maps for biological cells.
-- [ ] Compute occupancy-normalized place maps for RNN hidden units.
-- [ ] Compute view/visual tuning for biological cells.
-- [ ] Compute view/visual tuning for RNN hidden units.
-- [ ] Define conjunctive criterion.
-  - Candidate: model comparison between position-only, view-only, additive, and interaction models.
-- [ ] Run at least one null control.
-  - Candidate: time shift, trial shuffle, or label shuffle.
-- [ ] Produce first figure set in ignored `outputs/`.
-- [ ] Write first interpretation note.
-  - Keep claims descriptive unless controls are already done.
+- [ ] Reconstruct and visualize every available observed path.
+- [ ] Count trials and successful trials per `(start, goal)` condition.
+- [ ] Quantify within-condition path variation before choosing a model.
+- [ ] Construct and verify maze adjacency from authoritative geometry.
+- [ ] Propose a graph resolution without treating it as final.
+- [ ] Compare candidate path representations and distance measures.
+- [ ] Fit a leakage-safe `start + goal -> path` baseline.
+- [ ] Decide what constitutes a meaningfully different path only after the audit.
 
-## Phase 5: Robustness And Scope
+## Phase 5: H1a — Incremental Path Information
 
-- [ ] Repeat first analysis across more biological cells.
-- [ ] Repeat first analysis across more RNN units.
-- [ ] Repeat across multiple RNN seeds or checkpoints, if available.
-- [ ] Check sensitivity to bin size and smoothing.
-- [ ] Check whether position, view, heading, action, goal, and trial time are separable.
-- [ ] Decide whether the first deliverable is a notebook, script, report section, or talk figure.
+- [ ] Define complete-trial train/test splits before preprocessing.
+- [ ] Predict held-out paths from raw cue-period population activity.
+- [ ] Repeat with PCA features and the same simple decoder.
+- [ ] Compare `start + goal` against `start + goal + cue activity`.
+- [ ] Run within-start-goal path/neural permutation controls.
+- [ ] Run a trial-aware CEBRA-Time pilot and use the same downstream decoder.
+- [ ] If justified, train behavior-conditioned CEBRA using path-only context.
+- [ ] Keep path preprocessing and clustering inside training folds.
+
+## Phase 6: H1b — Low-Dimensional Organization
+
+- [ ] Test whether any H1a signal is stable across latent dimensions and sessions.
+- [ ] Compare path-distance and latent-distance geometry on held-out trials.
+- [ ] Separate low-dimensional-method failure from absence of path information.
+- [ ] Characterize place, view, heading, action, speed, and trial-time confounds
+  where those variables are available.
+- [ ] Write a conservative result note with explicit claim boundaries.
+
+## Phase 7: H2 — Artificial-Agent Stretch Aim
+
+- [ ] Receive or locate the Unity agent rollout or checkpoint.
+- [ ] Record environment, checkpoint, seed, observation, action, and reward provenance.
+- [ ] Export cue/planning-equivalent hidden states and subsequent agent paths.
+- [ ] Apply the same path representation, splits, baselines, and controls.
+- [ ] Predefine whether comparison means information, geometry, or dynamics.
+- [ ] Repeat across multiple seeds or checkpoints where available.
 
 ## Immediate Next Tasks
 
 Start here:
 
-1. [x] Create `context/code-map.md` from the Julia alignment path.
-2. [x] Identify `UnityRaytraceData` definition and write down its schema.
-3. [x] Receive and inspect a small formatted biological-data example.
-4. [ ] Confirm spatial-bin geometry, bin `0`, synchronized cell trials, and access to a complete session population.
-5. [ ] Ask/confirm where the RNN/Unity rollout or checkpoint lives.
-6. [x] Use Python first for loading, validation, and visualization; retain Julia as the upstream reference.
+1. [ ] Draft the exact cue-aligned population export request from
+   `docs/analysis-contract.md`.
+2. [ ] Confirm access to all recorded units and real simultaneous groups, not
+   only the selected place-cell files or historical pseudopopulation.
+3. [ ] Confirm authoritative maze geometry/adjacency and the meaning of bin `0`.
+4. [ ] Audit real paths and within-`(start, goal)` variability.
+5. [ ] Choose one provisional path representation and one start-goal baseline.
+6. [x] Use Python first for loading, validation, and visualization; retain Julia
+   as the upstream reference.

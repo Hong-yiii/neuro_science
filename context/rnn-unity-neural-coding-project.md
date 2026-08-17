@@ -1,96 +1,98 @@
-# RNN Unity To Neural Coding Project
+# Prospective Path Representation Project
 
-Created: 2026-07-29
+Updated: 2026-08-17
 
 ## One-Sentence Aim
 
-Use a Unity-based RNN navigation environment as an artificial model system, then compare the model's hidden-unit representations with neural coding patterns observed in hippocampal navigation data.
+Test whether hippocampal cue-period population activity contains information
+about the subsequently observed navigation path beyond start and goal, then—if
+supported—compare that representation with one learned independently by an
+artificial navigation agent.
 
 ## Current Framing
 
-The project is about representational comparison, not primarily about inventing a new RL method.
-
-The working bridge is:
-
-```text
-Unity task variables + RNN hidden activations
-        matched to
-behavior/gaze variables + biological spike trains
-```
-
-The useful scientific question is whether comparable analyses reveal place-like, view/visual-like, or conjunctive coding in both systems, and where the analogy breaks.
-
-## Target Representations
-
-### Place-Like
-
-Signals that vary with the animal/agent's spatial position.
-
-Potential operational tests:
-
-- position-conditioned firing or activation rate maps;
-- decoding position from population state;
-- spatial information score;
-- stability of place-like tuning across trials or task phases.
-
-### View Or Visual-Like
-
-Signals that vary with what the animal/agent sees, attends to, or has in allocentric view.
-
-Potential operational tests:
-
-- view-bin or raycast-bin tuning;
-- gaze-informed visual scene tuning;
-- decoding viewed object/wall/bin from population state;
-- comparing visual selectivity after controlling for position.
-
-### Conjunctive
-
-Signals that carry both spatial and visual/view information, or whose response depends on a joint state.
-
-Potential operational tests:
-
-- joint place-view response maps;
-- GLM or encoding models with position, view, and interaction terms;
-- model comparison between additive and interaction models;
-- selectivity that survives controls for marginal position and marginal view.
-
-## Why The Comparison Is Tricky
-
-The major risk is overclaiming. A hidden RNN unit and a biological neuron can both correlate with position without being the same kind of object.
-
-Important confounds:
-
-- position and view are strongly correlated in a constrained maze;
-- heading, action, goal, reward proximity, and time in trial may explain apparent tuning;
-- occupancy and sampling bias can create fake selectivity;
-- a single RNN seed/checkpoint may be unrepresentative;
-- an RNN may solve the task through a brittle strategy that does not resemble animal behavior.
-
-## First Good Slice
-
-A useful first deliverable should be small and defensible:
+H1 is the thesis core. The artificial-agent comparison is H2, a stretch aim,
+not a requirement for H1 to succeed.
 
 ```text
-one formatted biological subset
-        +
-one RNN rollout/checkpoint
-        +
-one shared analysis schema
-        +
-place/view/conjunctive classification
-        +
-null controls
-        +
-figures with conservative interpretation
+cue-period hippocampal activity
+        -> prospective path information beyond start + goal
+        -> possible low-dimensional organization
+        -> optional comparison with agent hidden states
 ```
 
-This should come before broad claims, new model families, or large infrastructure rewrites.
+This is a representational and predictive study. Decoding an observed future
+path does not establish causal planning or directly measure intention. An
+intended-path interpretation assumes that the maze-familiar animal generally
+executes its intention.
 
-## Pending Inputs
+The canonical hypothesis and controls are maintained in
+[`docs/research-questions.md`](../docs/research-questions.md).
 
-- formatted biological data from the lab;
-- RNN/Unity rollout data or model checkpoint;
-- exact observation/action/reward/task specification for the RNN environment;
-- decision on whether analysis code should live in this parent repo or a separate project repo.
+## H1 Components
 
+H1 remains one hypothesis with two components:
+
+- **H1a:** cue activity adds held-out information about the subsequent path
+  beyond start and goal.
+- **H1b:** that information has reproducible low-dimensional organization.
+
+This distinction protects the biological information claim from depending on
+one representation-learning method.
+
+## Path Language
+
+Use **path** for an observed ordered movement through the maze. Reserve
+**trajectory class** for the previous student's `(start, goal)` category.
+
+The current proposed operationalization treats the maze as one graph and each
+trial path as a walk over it. Graph resolution, path clustering, distinct-route
+criteria, and path distance remain deferred design decisions.
+
+## CEBRA And Decoding
+
+CEBRA learns an encoder from neural activity to a latent representation. In
+CEBRA-Behaviour, a path-derived context shapes that representation during
+training; CEBRA does not by itself demonstrate held-out path prediction.
+
+The intended evaluation is:
+
+```text
+cue activity -> CEBRA latent -> simple held-out path decoder
+```
+
+Path representations or clusters are constructed from behavioral paths only.
+They must never be constructed jointly from neural activity. Clustering is
+optional; graded graph-path distances may be preferable if behavior does not
+show stable route families.
+
+Use CEBRA-Time as a companion analysis without path supervision, and compare all
+representations using the same simple decoder and trial-level splits.
+
+## Role Of Earlier Place/View Work
+
+Place-like, view/visual-like, and conjunctive coding no longer define the primary
+research question. They remain supporting analyses for pipeline validation,
+representation characterization, and control of spatial, sensory, and motor
+confounds.
+
+## Feasibility Gate
+
+Trial-specific H1 requires cue-period activity from a genuinely simultaneous
+population linked to that same trial's start, goal, and subsequent path.
+Cross-session pseudopopulations can support condition-level summaries, not exact
+trial-specific future-path claims.
+
+The current local export is navigation-period, selected single-cell place data.
+A new cue-aligned population export is required before H1 can be tested.
+
+## Deferred Decisions
+
+- maze-graph granularity;
+- what constitutes a meaningfully different path;
+- path representation and distance;
+- treatment of unsuccessful and timeout trials;
+- cue-window and spike-bin resolution;
+- success metrics and required effect size;
+- exact CEBRA configuration and sampler;
+- artificial-agent architecture and comparison metric.

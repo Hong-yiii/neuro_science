@@ -178,9 +178,15 @@ Role:
   6. keep the spike if it maps to a valid sample and either `fixation_only=false` or the sample is a fixation;
   7. store the spike time in `events` and the behavioral sample index in `placeviewidx`.
 
-## First Analysis Implication
+## Alignment Implication For H1 And H2
 
-For a matched biological/RNN analysis, the biological side can be flattened from:
+For H1, the required first object is cue-period activity shaped as
+`trial x cue_time_bin x simultaneously_recorded_cell`, linked by
+`source_trial_id` to the same trial's subsequent path. The navigation-period
+flattening below remains useful for path construction and supporting controls.
+The matched RNN table belongs to the later H2 stretch aim.
+
+The biological navigation side can be flattened from:
 
 ```text
 trial -> spike events -> behavioral sample indices
@@ -204,4 +210,3 @@ trial_id, time_bin, hidden_unit_id, activation, position, head_direction, gaze/v
 - Should view coding be based on `gaze`, `fixated_object`, raycast bins, or all of them as separate analyses?
 - Should the first biological analysis use the default `trial_start=2`, or should this be confirmed with Prof Yen for the formatted data?
 - Does the formatted data already flatten `ViewAndPlaceRepresentationNew`, or will we need to run/load this Julia path directly?
-

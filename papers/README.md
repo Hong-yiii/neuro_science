@@ -1,6 +1,6 @@
 # Papers
 
-This folder is for neuroscience, hippocampus, navigation, neural coding, RNN, and representation-learning papers relevant to Hongyi's lab work.
+This folder is for prospective path prediction, hippocampal navigation, neural coding, representation learning, and the later artificial-agent/RNN comparison.
 
 ## Start Here
 
@@ -24,5 +24,5 @@ link:
 why it matters:
 methods to borrow:
 limits / caveats:
-connection to RNN -> neural data:
+connection to H1/H2:
 ```
