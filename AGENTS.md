@@ -90,6 +90,40 @@ In the current code, the default `trial_start` is `2`, so alignment begins at th
 - For code changes inside submodules, work within that submodule's own git history. Do not make parent-repo commits that silently depend on uncommitted submodule changes.
 - Keep explanations grounded in the actual code. For the Julia alignment path, start with `Hippocampus.jl/src/replay.jl` around `ViewAndPlaceRepresentationNew`.
 
+## Research Rigor
+
+Research code is not complete merely because it runs. Agents must preserve the
+chain from scientific question to data, analysis, evaluation, and claim.
+
+- Label work as a **software smoke test**, **exploratory analysis**, or
+  **confirmatory analysis** before implementation. Do not promote smoke-test or
+  exploratory output into scientific evidence.
+- State the estimand or operational question, independent unit, inclusion and
+  exclusion rules, baseline, null, split, metric, and strongest allowed claim
+  before fitting a model.
+- Audit provenance, schema, units, timing, trial identity, simultaneity, missing
+  values, selection criteria, and preprocessing history. Stop rather than infer
+  missing scientific metadata from filenames or array shapes.
+- Split independent source trials or sessions before learned preprocessing. Fit
+  normalization, dimensionality reduction, path construction learned from data,
+  clustering, representation learning, and decoders on training data only.
+- Keep bootstrapped copies and other derivatives of one source trial in the same
+  fold. Treat adjacent time bins as dependent observations.
+- Predefine simple baselines and falsification controls. Compare methods with a
+  common held-out metric; training loss or an attractive embedding is not, by
+  itself, evidence for the hypothesis.
+- Record data hashes, code revision and dirty state, package versions, complete
+  configuration, random seeds, device, input/output shapes, exclusions, and all
+  attempted runs, including failures and negative results.
+- Distinguish directly measured variables, derived representations, statistical
+  associations, and biological interpretations in every result note.
+- Require an independent review of both code and scientific assumptions before
+  interpreting a new analysis. Review must check leakage, pseudoreplication,
+  confounds, nulls, and whether the written claim exceeds the data.
+- Never describe a pseudopopulation as simultaneous or use it to support exact
+  trial-specific population-state, covariance, dynamics, intention, or mechanism
+  claims.
+
 ## Useful Commands
 
 Initialize this workspace after cloning elsewhere:

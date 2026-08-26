@@ -24,6 +24,37 @@ hypotheses:
 The split prevents failure of one embedding method or dimensionality assumption
 from being mistaken for absence of prospective information.
 
+### Shared Path Components Across Conditions
+
+Limited path variation within one `(start, goal)` condition weakens the exact
+trial-specific H1a comparison, but it creates a complementary question: do cue
+states reflect reusable components shared by paths from different task
+conditions? For example, paths from `A` to `B` and from `A` to `C` may share a
+directed corridor segment before diverging.
+
+This is a candidate structural analysis within H1b and a bridge to H2, not a
+replacement for H1a. Its behavioral object is a shared future path component,
+such as a directed edge, ordered segment, or branch decision. Initial, middle,
+and terminal overlap should be distinguished because an obligatory initial
+segment can be confounded with start location and an obligatory terminal segment
+with goal.
+
+The key comparison is not merely “high-overlap trials have similar cue states.”
+It is whether path overlap explains held-out cue-state similarity after matching
+or controlling same start, same goal, cue identity, session, and other available
+confounds. Stronger contrasts include:
+
+- same start and different goals: high versus low future-path overlap;
+- same goal and different starts: high versus low overlap;
+- different starts and goals that nevertheless share a middle route segment;
+- the limited within-start-goal route variants, where available.
+
+If path overlap is almost completely determined by start and goal, the dataset
+cannot distinguish compositional path structure from task-condition coding.
+The strongest allowed claim is that cue-period population geometry covaries with
+shared components of subsequently observed paths; it does not establish an
+internal graph, intention, or a planning mechanism.
+
 The primary operational comparison is:
 
 ```text
@@ -54,7 +85,9 @@ similarity metric remain open decisions.
 
 If H1 is supported, test whether an artificial navigation agent trained on an
 analogous task independently develops hidden representations with similar
-information content, geometry, or temporal dynamics.
+information content, geometry, or temporal dynamics. Shared directed path
+components provide one common behavioral ruler even when biological units and
+artificial hidden dimensions do not correspond.
 
 This supports a claim of representational convergence only after the comparison
 metric is specified. Similar decodability or geometry does not establish the
@@ -98,15 +131,19 @@ CEBRA intentionally shapes its embedding with the supplied context.
 
 ## Core Nulls And Controls
 
-- keep every sample from a source trial in one validation split;
+- create and hash source-trial train/validation/test assignments before adaptive
+  graph, path-metric, exclusion, or contrast selection;
+- keep every sample and derivative from a source trial in one validation split;
 - compare against start-and-goal-only prediction;
 - shuffle path labels or neural features within start-goal condition;
 - fit path processing, clustering, dimensionality reduction, and decoders using
   training data only;
 - compare raw population and PCA baselines with CEBRA representations;
+- test shared path-component geometry first in raw, PCA, or other representations
+  not trained with future-path labels;
 - use simple downstream decoders before expressive sequence models;
-- control available gaze, heading, cue identity, action, speed, trial time, and
-  session variables;
+- control available gaze, heading, cue identity, action, speed, trial time,
+  session, previous goal/trial, and success-selection variables;
 - do not interpret pseudopopulation covariance as simultaneous population
   dynamics.
 
@@ -136,8 +173,10 @@ test H1.
 Before fitting CEBRA:
 
 1. obtain or verify cue-aligned, trial-linked simultaneous population data;
-2. reconstruct observed paths and audit variation within each start-goal pair;
-3. define one leakage-safe path representation and start-goal baseline;
-4. test raw-neural and PCA incremental prediction;
-5. run a trial-aware CEBRA-Time pilot with the same held-out decoder;
-6. add behavior-conditioned CEBRA only after those checks establish feasibility.
+2. reserve immutable source-trial splits after provenance checks;
+3. reconstruct training/validation observed paths and audit variation within
+   each start-goal pair;
+4. define one leakage-safe path representation and start-goal baseline;
+5. test raw-neural and PCA incremental prediction;
+6. run a trial-aware CEBRA-Time pilot with the same held-out decoder;
+7. add behavior-conditioned CEBRA only after those checks establish feasibility.

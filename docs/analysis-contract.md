@@ -23,14 +23,21 @@ must remain in one validation split.
 
 Each trial should expose:
 
-- `source_trial_id`;
+- `source_trial_id` and `previous_trial_id`;
 - `session_id`;
 - `simultaneous_recording_group`;
+- trial index or time within session;
 - `cue_onset` and `cue_offset` in the neural clock;
 - navigation onset and end;
-- `start_id` and `goal_id` as categorical labels;
-- success or timeout status;
+- `start_id`, `goal_id`, and `cue_id` as categorical labels;
+- previous goal and previous-trial success where trials are sequentially linked;
+- current success or timeout status and inclusion reason;
 - links between neural, Unity behavior, and path samples.
+
+`cue_id` means the identity of the visual/instruction stimulus displayed during
+the cue period. Its relationship to `goal_id` must be verified from the task
+protocol rather than assumed; retain both fields even if they are redundant in
+the current experiment.
 
 ## Cue-Period Population Tensor
 
@@ -44,14 +51,14 @@ Minimum biological fields:
 
 ```text
 source_trial_id, session_id, simultaneous_recording_group,
-cue_time_bin, cell_id, spike_count, start_id, goal_id
+cue_time_bin, cell_id, spike_count, start_id, goal_id, cue_id
 ```
 
 Minimum model fields for H2:
 
 ```text
 source_trial_id, cue_time_bin, hidden_unit_id, activation,
-start_id, goal_id
+start_id, goal_id, cue_id
 ```
 
 Cell identities may differ across sessions, but units within one claimed
@@ -107,12 +114,54 @@ Rules inherited from the verified spatial export:
 - topology-aware analysis requires verified mesh or graph adjacency.
 
 Path transformations, graph construction learned from data, clustering, and
-other preprocessing must be fitted using training trials only. Target labels
-must be created from behavior alone, never jointly from neural activity.
+other preprocessing must be fitted using training trials only. Create and hash
+source-trial train/validation/test assignments before adaptive path-metric or
+contrast selection. Use training/validation behavior to select rules; apply the
+frozen mapping once to the untouched test behavior. Target labels must be
+created from behavior alone, never jointly from neural activity.
+
+## Shared Path Components Across Conditions
+
+When exact route variation within one `(start, goal)` condition is sparse, a
+complementary structural analysis may compare reusable path components across
+conditions. A simple behavior-only representation is a directed-edge indicator
+or count vector
+
+```text
+trial x directed_maze_edge
+```
+
+with ordered edge sequences retained when branch order or repeated visits
+matter. Report initial, middle, and terminal overlap separately. An obligatory
+prefix from one start is not, by itself, evidence beyond start coding; likewise,
+an obligatory suffix can be explained by goal.
+
+A pairwise analysis table should retain at least:
+
+```text
+trial_i, trial_j, session_i, session_j,
+same_start, same_goal, same_start_goal, same_cue,
+initial_edge_overlap, middle_edge_overlap, terminal_edge_overlap,
+full_path_distance, neural_distance
+```
+
+Useful matched contrasts compare high- and low-overlap paths while holding start
+or goal relationships fixed. Where data permit, paths with different starts and
+goals but a shared middle segment provide a stronger separation from endpoint
+identity. Cue identity, session, heading, view, and other available nuisance
+variables must also be controlled.
+
+Pairwise matrix entries are not independent observations. Uncertainty and nulls
+must permute or resample source trials, sessions, or animals rather than treating
+all trial pairs as independent. Before neural fitting, audit whether path-overlap
+features are distinguishable from start and goal; near-collinearity is an
+identifiability limit, not a modeling problem.
 
 ## Primary Evaluation Objects
 
-Every analysis should be able to produce:
+Every analysis should be able to produce results within each verified
+simultaneous-recording group before any group-level synthesis. It should also be
+able to produce:
 
 - a start-and-goal-only path baseline;
 - raw-population and PCA neural baselines;
@@ -120,7 +169,9 @@ Every analysis should be able to produce:
 - optionally, a behavior-conditioned CEBRA representation;
 - the same simple downstream path decoder for each neural representation;
 - held-out path predictions and path-appropriate errors;
-- within-start-goal permutation nulls.
+- within-start-goal permutation nulls;
+- for compositional H1b analyses, matched cross-condition path-component
+  contrasts and target-free neural/path representational dissimilarity matrices.
 
 In behavior-conditioned CEBRA, path labels or continuous path features supervise
 the embedding. A separate downstream decoder is still required to evaluate

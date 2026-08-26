@@ -17,6 +17,7 @@ videos/
 *token*
 
 # Large/common analysis artifacts
+/papers/*.pdf
 *.mat
 *.jld2
 *.h5

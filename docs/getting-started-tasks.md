@@ -77,10 +77,21 @@ This is the practical checklist for the prospective hippocampal path project and
 
 ## Phase 4: Behavioral Feasibility Audit
 
-- [ ] Reconstruct and visualize every available observed path.
+- [ ] Create and hash source-trial train/validation/test assignments before
+  adaptive graph, path-metric, exclusion, or contrast selection.
+- [ ] Reconstruct and visualize training/validation observed paths; keep test
+  behavior untouched until the rules are frozen.
 - [ ] Count trials and successful trials per `(start, goal)` condition.
 - [ ] Quantify within-condition path variation before choosing a model.
 - [ ] Construct and verify maze adjacency from authoritative geometry.
+- [ ] Convert paths to directed edge sequences and mark obligatory versus
+  variable initial, middle, and terminal segments.
+- [ ] Quantify shared path components across different `(start, goal)`
+  conditions.
+- [ ] Compare same-start high/low-overlap, same-goal high/low-overlap, and—where
+  available—different-endpoint paths sharing a middle segment.
+- [ ] Audit correlations among path overlap, start, goal, cue identity, duration,
+  session, and available sensory/motor variables.
 - [ ] Propose a graph resolution without treating it as final.
 - [ ] Compare candidate path representations and distance measures.
 - [ ] Fit a leakage-safe `start + goal -> path` baseline.
@@ -88,7 +99,8 @@ This is the practical checklist for the prospective hippocampal path project and
 
 ## Phase 5: H1a — Incremental Path Information
 
-- [ ] Define complete-trial train/test splits before preprocessing.
+- [ ] Use the immutable complete-trial splits defined before the behavioral
+  audit; keep all source-trial derivatives together.
 - [ ] Predict held-out paths from raw cue-period population activity.
 - [ ] Repeat with PCA features and the same simple decoder.
 - [ ] Compare `start + goal` against `start + goal + cue activity`.
@@ -101,6 +113,10 @@ This is the practical checklist for the prospective hippocampal path project and
 
 - [ ] Test whether any H1a signal is stable across latent dimensions and sessions.
 - [ ] Compare path-distance and latent-distance geometry on held-out trials.
+- [ ] Before path-conditioned CEBRA, test whether raw or PCA cue-state geometry
+  tracks shared directed path components in matched cross-condition contrasts.
+- [ ] Test initial, middle, and terminal path-component overlap separately while
+  matching or controlling start and goal.
 - [ ] Separate low-dimensional-method failure from absence of path information.
 - [ ] Characterize place, view, heading, action, speed, and trial-time confounds
   where those variables are available.
@@ -124,7 +140,9 @@ Start here:
 2. [ ] Confirm access to all recorded units and real simultaneous groups, not
    only the selected place-cell files or historical pseudopopulation.
 3. [ ] Confirm authoritative maze geometry/adjacency and the meaning of bin `0`.
-4. [ ] Audit real paths and within-`(start, goal)` variability.
-5. [ ] Choose one provisional path representation and one start-goal baseline.
+4. [ ] Audit real paths, within-`(start, goal)` variability, and reusable
+   directed path components across conditions.
+5. [ ] Determine whether shared-path metrics are identifiable beyond start and
+   goal before choosing one provisional representation and baseline.
 6. [x] Use Python first for loading, validation, and visualization; retain Julia
    as the upstream reference.

@@ -1,6 +1,10 @@
 # Prospective Path Representation Project
 
-Updated: 2026-08-17
+Updated: 2026-08-25
+
+The 2026-08-25 revision adds the shared-path-component feasibility screen and
+keeps it subordinate to canonical H1a/H1b. Pilot-specific formalization lives in
+[`docs/cebra_pilot/`](../docs/cebra_pilot/README.md).
 
 ## One-Sentence Aim
 
@@ -49,6 +53,25 @@ The current proposed operationalization treats the maze as one graph and each
 trial path as a walk over it. Graph resolution, path clustering, distinct-route
 criteria, and path distance remain deferred design decisions.
 
+## Shared Path Components
+
+When trials with one start and goal show little route variation, paths from
+different conditions may still share reusable directed edges or ordered
+segments. For example, `A -> B` and `A -> C` may share an initial corridor before
+diverging. This motivates a complementary compositional analysis: ask whether
+cue-state similarity tracks shared future path components after controlling
+start, goal, cue identity, session, and available sensory or motor confounds.
+
+An obligatory segment from start `A` is confounded with start coding. Stronger
+evidence comes from matched high/low-overlap paths with the same start or goal,
+or from different-endpoint paths that share a middle segment. If path overlap is
+nearly determined by start and goal, the data cannot identify a distinct
+compositional representation.
+
+This analysis is a candidate test of H1b and a common behavioral ruler for H2.
+It does not replace H1a's incremental held-out prediction and does not imply that
+the hippocampus literally represents a graph.
+
 ## CEBRA And Decoding
 
 CEBRA learns an encoder from neural activity to a latent representation. In
@@ -67,7 +90,9 @@ optional; graded graph-path distances may be preferable if behavior does not
 show stable route families.
 
 Use CEBRA-Time as a companion analysis without path supervision, and compare all
-representations using the same simple decoder and trial-level splits.
+representations using the same simple decoder and trial-level splits. Test
+shared path-component geometry in raw or PCA cue activity before using graph- or
+path-conditioned CEBRA, which remains a secondary supervised probe.
 
 ## Role Of Earlier Place/View Work
 
