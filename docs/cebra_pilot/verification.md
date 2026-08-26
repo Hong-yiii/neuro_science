@@ -3,7 +3,7 @@
 Date: 2026-08-25  
 Scope: literature/API claims, statistical design, documentation coherence, and
 formalization  
-Implementation status: not started
+Implementation status: first approved software framework present; scientific analysis not run
 
 ## Independent Verification Performed
 
@@ -23,7 +23,32 @@ formalization was rewritten:
 
 Targeted web source checks were also performed for CEBRA documentation, dynamic
 time warping, and prospective/path-related hippocampal literature. No model,
-embedding, or data analysis was run.
+embedding, or data analysis was run during that formalization review.
+
+## Implementation Verification
+
+A later implementation-stage researcher rechecked official CEBRA documentation,
+PyPI metadata, and public release source. CEBRA `0.6.1` supports Python 3.12 and
+the public sklearn API supports fit/transform/save/load, but exposes neither
+explicit ragged trial-boundary metadata nor a fully implemented estimator seed.
+The installed preflight therefore uses CPU, contiguous synthetic data, external
+NumPy/Torch seeds, and no scientific determinism or trial-boundary claim.
+
+Two independent method/code reviews were then performed:
+
+1. pre-implementation review fixed the same-trial population gate, bin-by-unit
+   axis, derivative-safe split hash, multi-segment metrics, exposure validation,
+   and software-only current-export boundary before writing code;
+2. first code review found and then verified fixes for package imports,
+   session/group split metadata, output-directory confinement, complete-path
+   classification, runtime package provenance, and save/load transform fidelity.
+
+The executable trail is recorded in `implementation/REVIEW.md`. Eight boundary
+tests, synthetic preprocessing, the current one-cell loader smoke, and the
+CEBRA `256 x 12 -> 256 x 3` fit/transform/save/load smoke passed. A final
+post-fix reviewer reported no findings and gave the software framework a go
+while retaining the scientific H1 no-go. All artifacts remain labelled
+`software_smoke_only`; no biological embedding was fitted.
 
 ## Finding Disposition
 
@@ -125,9 +150,8 @@ These are not documentation defects; they are unresolved research prerequisites:
    null, and effect criterion;
 7. verify adequate matched shared-path contrasts beyond endpoint/nuisance
    structure;
-8. recheck the installed CEBRA version and exact API immediately before coding;
-9. independently review any lower-level boundary-aware or graph sampler; and
-10. obtain explicit approval before implementation.
+8. independently review any lower-level boundary-aware or graph sampler; and
+9. obtain explicit approval before scientific analysis or the next implementation phase.
 
 ## Literature And Official Sources
 
@@ -154,5 +178,6 @@ These are not documentation defects; they are unresolved research prerequisites:
 home, authority order, mathematical specification, source provenance, and gated
 execution plan.
 
-**Implementation: no-go.** The current data fails the hard scientific gate, and
-Hongyi explicitly requested no building yet.
+**Scientific analysis: no-go.** The current data fails the hard scientific gate.
+The approved framework is software-smoke only until adequate cue-linked
+simultaneous population data and review gates exist.

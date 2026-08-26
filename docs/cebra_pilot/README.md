@@ -1,10 +1,12 @@
 # First CEBRA Pilot
 
-Status: **planning and formalization only**  
+Status: **approved software framework and software-only preflights present**
+
 Scientific status: **blocked on cue-aligned, trial-linked simultaneous population data**
 
 This directory is the definitive home for artifacts unique to the first CEBRA
-pilot. No implementation has started.
+pilot. The approved first-run software framework now lives under
+[`implementation/`](implementation/), while scientific analysis remains blocked.
 
 ## Read Order
 
@@ -30,7 +32,7 @@ flowchart LR
     S[Historical sources and literature] --> V[verification.md]
     V --> F
     F --> P[cebra-pilot-plan.md]
-    P -->|future approval only| I[First-run implementation]
+    P --> I[Approved first-run implementation framework]
     I --> O[outputs/cebra_pilot/]
 ```
 
@@ -45,13 +47,13 @@ implementation instructions.
 | `formalization.md` | Pilot-specific mathematical specification | Derived from canonical docs; normative for this pilot |
 | `cebra-pilot-plan.md` | Execution phases and stop/go gates | Operational |
 | `verification.md` | Independent review evidence and dispositions | Audit record |
+| `implementation/` | Approved first-run software framework and docs | Software smoke only; no scientific analysis |
 | `sources/cebra-graph-navigation-handoff.original.txt` | Byte-exact ChatGPT-session handoff | Historical, noncanonical |
 | `sources/cebra-graph-navigation-handoff.md` | Formatting-normalized Markdown mirror | Historical, noncanonical |
 
-When Hongyi approves building, create `implementation/` here for every function,
-configuration, and check unique to this first run. It is intentionally absent
-now. Generated models, arrays, figures, logs, and manifests remain outside this
-directory under ignored `outputs/cebra_pilot/`.
+First-run pilot code now lives in `implementation/`. Generated models, arrays,
+figures, logs, and manifests remain outside this directory under ignored
+`outputs/cebra_pilot/`.
 
 ## Filed Source Provenance
 
@@ -92,8 +94,10 @@ Current state: **No** at the data gate. The local `f1526be5` export is one
 selected cell's navigation-period data and cannot test H1 or the shared-path
 screen.
 
-## No-Build Boundary
+## Build Boundary
 
-This cleanup does not install CEBRA, add dependencies, write model code, process
-raw data, or run an embedding. Building starts only after explicit approval and
-reverification of the installed CEBRA API.
+The approved framework pins CEBRA `0.6.1` in an isolated dependency group and
+has run a synthetic fit/transform/save/load preflight. It does not process raw
+cue data, fit a biological model, or interpret an embedding. See
+`implementation/README.md`, `implementation/API_AND_MATH.md`, and
+`implementation/REVIEW.md`.

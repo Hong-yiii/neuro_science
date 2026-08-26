@@ -1,7 +1,8 @@
 # CEBRA Shared-Path Scientific Feasibility Pilot
 
 Date: 2026-08-25  
-Status: planning only; blocked on scientifically adequate cue-to-path data  
+Status: approved first software framework present; blocked on scientifically adequate cue-to-path data
+
 Scientific status: exploratory feasibility analysis, not confirmatory evidence  
 Scope: behavior audit, direct neural baselines, target-free geometry, then an
 optional supervised CEBRA sensitivity analysis
@@ -411,8 +412,13 @@ geometry.
 The current one-cell navigation export needs only a loader/shape check; fitting
 CEBRA to it is optional and has no scientific value for this hypothesis.
 
-**Gate:** stop and amend this plan if the current CEBRA release or API differs
-from the proposed implementation.
+**Software result (2026-08-26):** CEBRA `0.6.1` passed the bounded CPU
+`256 x 12 -> 256 x 3` fit/transform/save/load smoke. The saved and reloaded
+transforms matched exactly in this run. Artifacts and versions are recorded at
+`outputs/cebra_pilot/trial-20260825-cebra-v2/`. This is not H1 evidence.
+
+**Gate:** stop and amend this plan if a later CEBRA release or API differs from
+the reviewed implementation.
 
 ### Phase 1 — data, provenance, and immutable split audit
 

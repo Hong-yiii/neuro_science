@@ -1,7 +1,8 @@
 # First CEBRA Pilot Formalization
 
 Date: 2026-08-25  
-Status: formalized design; implementation not started  
+Status: formalized design; first software framework implemented
+
 Scientific status: exploratory feasibility; neural analysis blocked by current data
 
 ## Authority And Evidence Labels
@@ -588,12 +589,12 @@ For cue bin \((i,b)\), a temporal positive must satisfy
 \qquad 1\le b+\delta\le B_i.
 \]
 
-No positive crosses a trial boundary. The publicly documented sklearn API does
-not expose explicit trial-boundary metadata; an earlier review of the public
-repository sampler indicated contiguous index offsets. CEBRA is not installed
-in this workspace, so the exact selected release must be reverified before
-implementation. If that installed version cannot express grouped trials, this
-stage remains blocked pending a reviewed boundary-aware lower-level sampler.
+No positive crosses a trial boundary. CEBRA `0.6.1` is now pinned and its
+fit/transform/save/load path has passed a contiguous synthetic smoke test. Its
+public sklearn API does not expose explicit trial-boundary metadata, and public
+source inspection indicates contiguous index offsets. Therefore trial-aware
+CEBRA-Time remains blocked pending a reviewed boundary-aware lower-level sampler;
+the synthetic smoke does not relax this requirement.
 
 ### Path-conditioned sampler
 
@@ -738,7 +739,7 @@ equivalence or a shared mechanism.
 | Primary neural evaluation scope | Fixed | Within verified simultaneous group, then group-level synthesis |
 | H1a estimand | Fixed | \(\Delta_C\), plus nuisance-adjusted sensitivity \(\Delta_{C^+}\) |
 | Shared-path statistic | Provisional | Matched per-anchor \(\delta_i\), source-level resampling/nulls |
-| CEBRA-Time | Blocked until API verification | Requires boundary-aware grouped trials |
+| CEBRA-Time | Blocked with public sklearn API | Installed 0.6.1 preflight passes, but grouped trial boundaries are not exposed |
 | Path-conditioned sampler | Deferred | Requires identifiable contrasts and lower-level implementation review |
 | Cue count/rate/window | Deferred | Requires verified exposure/timing |
 | Graph granularity | Deferred | Training/validation behavior only |

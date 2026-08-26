@@ -97,14 +97,19 @@ Record findings and their disposition in `verification.md`. A blocker or high
 finding remains a stop condition until fixed or explicitly accepted by Hongyi
 with the resulting claim limitation.
 
-## Future Implementation Boundary
+## Implementation Boundary
 
-No implementation directory is created yet. When Hongyi approves building:
+The approved software-smoke framework lives in `implementation/`:
 
-- create `implementation/` inside this directory and keep every function,
-  configuration, and check unique to this first run there;
+- keep every function, configuration, and check unique to this first run there;
 - reuse existing shared loaders instead of copying them;
-- leave one minimal runnable synthetic check;
+- keep synthetic and current-export checks labelled `software_smoke_only`;
+- write generated artifacts only under ignored `outputs/cebra_pilot/`;
 - record versions, hashes, configurations, seeds, shapes, exclusions, failures,
   and negative results; and
-- request independent review before running scientifically interpreted data.
+- request independent review before extending the framework or running
+  scientifically interpreted data.
+
+Raw/PCA decoding, behavior audit, CEBRA-Time, path-conditioned CEBRA, graph-DTW,
+and ANN comparison remain blocked or deferred by the formalization. Do not add
+stubs that silently resolve those decisions.
