@@ -214,6 +214,15 @@ for a positive-control analysis of known place coding. It cannot estimate place
 cell prevalence, population-wide effect sizes, or false-positive rates in all
 recorded units.
 
+The professor clarified on 2026-08-27 that the 195 cells were selected for
+spatial tuning. Individual cells could additionally have view tuning or
+place-view conjunctions, but the amount of overlap was not quantified; the list
+must not be described as a broadly view- or conjunction-selected population. The
+professor recommended the 195 spatial cells as the first set for decoding space.
+A broader all-recorded-cell list is available upstream at
+`/Volumes/Hippocampus/Data/picasso-misc/AnalysisHM/Current Analysis/cell_list.txt`,
+but has not been received or audited locally.
+
 The previous student's broader cue/inter-trial analysis assembled 233 cells from
 July–November 2018 into 314 artificial pseudotrials by matching ordered
 start-goal conditions across sessions. That historical 233-cell

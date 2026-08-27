@@ -40,6 +40,10 @@ Scientific status: software smoke only; H1 analysis remains blocked
 4. The contract now requires those fields—or an explicit audited reason when
    predecessor metadata is unavailable—all manifest writers enforce
    `outputs/cebra_pilot/`, and the complete trial was rerun before final review.
+5. A separate reviewer approved one intact local-data CEBRA smoke as a software
+   check, required hard selector gates, and then identified three low findings:
+   missing selector-edge tests, no explicit expected-embedding-shape assertion,
+   and missing reproduction instructions. All three were fixed.
 
 ## Pre-Review Findings And Dispositions
 
@@ -67,13 +71,17 @@ Scientific status: software smoke only; H1 analysis remains blocked
 
 | Check | Result | Artifact |
 | --- | --- | --- |
-| Boundary tests | 8 tests passed | `docs/cebra_pilot/implementation/tests/test_framework.py` |
+| Boundary tests | 9 tests passed | `docs/cebra_pilot/implementation/tests/test_framework.py` |
 | Synthetic preprocessing | Passed; graph/split/neural/path summaries written | `outputs/cebra_pilot/trial-20260825-preprocessing-v4/` |
 | Current one-cell loader | 395 trials, 65,576 samples, 1,441 spikes; shape aligned | `outputs/cebra_pilot/trial-20260825-current-export-v3/` |
 | Synthetic CEBRA 0.6.1 | `256 x 12 -> 256 x 3`; save/load maximum absolute transform difference `0.0` | `outputs/cebra_pilot/trial-20260825-cebra-v2/` |
+| One intact local trial | Trial index 2, `134 x 1 -> 134 x 3`, one spike; save/load difference `0.0` | `outputs/cebra_pilot/trial-20260826-one-cell-cebra-v1/` |
 
-Every manifest says `software_smoke_only`. The current-export manifest also
-records the missing cue-period/same-trial/simultaneous-population H1 stop.
+Every manifest says `software_smoke_only`. The current-export manifests also
+record the missing cue-period/same-trial/simultaneous-population H1 stop. The
+local training run used the first eligible intact file-order trial, so no
+CEBRA-Time pair crossed a trial boundary. Its one observed spike and one cell
+make it an API/data-shape check, not a representation result.
 Generated embeddings were checked for shape and save/load fidelity only; their
 geometry was not inspected or interpreted. The repeated v1 and v2 CEBRA runs had
 different embedding hashes despite the same recorded external seeds, while each
@@ -88,9 +96,11 @@ NumPy versions and the pinned CEBRA environment completed the trial.
 
 ## Final Independent Verdict
 
-The post-fix reviewer reported no blocker, high, medium, or low findings. It
-verified the same-trial selection-history contract, unexplained-history stop,
-central output-path confinement, package imports, and the eight boundary tests.
+The post-fix reviewers reported no remaining blocker, high, medium, or low
+findings. They verified the same-trial selection-history contract,
+unexplained-history stop, central output-path confinement, package imports, all
+nine boundary tests, expected CEBRA output shape, local-trial selector gates,
+reproduction command, and the non-power wording of the 750-trial coverage floor.
 
 - **Software framework: go.**
 - **Scientific H1 analysis: no-go** until cue-aligned, same-trial,

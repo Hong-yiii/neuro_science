@@ -10,7 +10,8 @@ import argparse
 import hashlib
 import json
 import sys
-from collections.abc import Callable, Iterable, Sequence
+from collections.abc import Callable, Iterable, Mapping, Sequence
+from dataclasses import dataclass
 from importlib import metadata
 from pathlib import Path
 from typing import Any
@@ -41,6 +42,17 @@ SOFTWARE_SMOKE_ONLY = "software_smoke_only"
 PINNED_CEBRA_VERSION = "0.6.1"
 
 TrialReader = Callable[[Path], Iterable[tuple[int, np.ndarray, np.ndarray]]]
+
+
+@dataclass(frozen=True)
+class SelectedOneCellTrial:
+    """One intact navigation trial selected only for a local software smoke."""
+
+    loader_trial_index: int
+    file_order_index: int
+    input_data: np.ndarray
+    total_spikes: float
+    rejection_counts: Mapping[str, int]
 
 
 def run_synthetic_preprocessing_demo(output_dir: Path | str) -> dict[str, Any]:
@@ -194,6 +206,75 @@ def summarize_one_cell_jld2_files(
     }
 
 
+def select_one_cell_smoke_trial(
+    file: Path | str,
+    min_samples: int = 64,
+    reader: TrialReader | None = None,
+) -> SelectedOneCellTrial:
+    """Select the first intact trial eligible for a one-cell CEBRA smoke.
+
+    Eligibility is deliberately mechanical: aligned one-dimensional arrays,
+    finite numeric spike counts, at least ``min_samples`` rows, and nonconstant
+    counts. The spatial-bin values are not used as supervision.
+    """
+
+    if min_samples < 2:
+        raise ValueError("min_samples must be at least 2")
+    path = Path(file)
+    read_trials = reader or _import_jld2_reader()
+    rejected = {
+        "not_one_dimensional": 0,
+        "shape_mismatch": 0,
+        "non_numeric_counts": 0,
+        "non_finite_counts": 0,
+        "negative_counts": 0,
+        "too_short": 0,
+        "constant_counts": 0,
+    }
+    for file_order_index, (trial_index, spikecounts, spatial_bins) in enumerate(
+        read_trials(path)
+    ):
+        spikes = np.asarray(spikecounts)
+        bins = np.asarray(spatial_bins)
+        if spikes.ndim != 1 or bins.ndim != 1:
+            rejected["not_one_dimensional"] += 1
+            continue
+        if spikes.shape != bins.shape:
+            rejected["shape_mismatch"] += 1
+            continue
+        if not np.issubdtype(spikes.dtype, np.number):
+            rejected["non_numeric_counts"] += 1
+            continue
+        if not np.all(np.isfinite(spikes)):
+            rejected["non_finite_counts"] += 1
+            continue
+        if np.any(spikes < 0):
+            rejected["negative_counts"] += 1
+            continue
+        if spikes.size < min_samples:
+            rejected["too_short"] += 1
+            continue
+        if np.all(spikes == spikes[0]):
+            rejected["constant_counts"] += 1
+            continue
+        try:
+            total_spikes = float(np.sum(spikes))
+        except (TypeError, ValueError, OverflowError) as exc:
+            raise ValueError(
+                f"could not summarize trial {trial_index} in {path}"
+            ) from exc
+        return SelectedOneCellTrial(
+            loader_trial_index=trial_index,
+            file_order_index=file_order_index,
+            input_data=spikes.astype(np.float32, copy=True).reshape(-1, 1),
+            total_spikes=total_spikes,
+            rejection_counts=dict(rejected),
+        )
+    raise ValueError(
+        f"no intact trial in {path} passed the one-cell smoke gates: {rejected}"
+    )
+
+
 def run_one_cell_jld2_smoke(
     files: Sequence[Path | str],
     output_dir: Path | str,
@@ -219,6 +300,80 @@ def run_one_cell_jld2_smoke(
     return summary
 
 
+def _fit_save_reload_cebra(
+    input_data: np.ndarray,
+    output_dir: Path,
+    config: Mapping[str, Any],
+    boundary_note: str,
+) -> tuple[dict[str, Any], list[Path]]:
+    """Run the shared CEBRA API check for one contiguous two-dimensional array."""
+
+    if input_data.ndim != 2 or input_data.shape[0] < 2:
+        raise ValueError("CEBRA smoke input must have shape (sample, feature)")
+    if not np.all(np.isfinite(input_data)):
+        raise ValueError("CEBRA smoke input must be finite")
+    installed = metadata.version("cebra")
+    if installed != PINNED_CEBRA_VERSION:
+        raise RuntimeError(
+            f"CEBRA version must be {PINNED_CEBRA_VERSION}, got {installed}"
+        )
+
+    import cebra  # type: ignore[import-not-found]
+    import torch
+
+    torch.manual_seed(config["external_torch_seed"])
+    model = cebra.CEBRA(
+        model_architecture=config["model_architecture"],
+        conditional=config["conditional"],
+        output_dimension=config["output_dimension"],
+        max_iterations=config["max_iterations"],
+        time_offsets=config["time_offsets"],
+        batch_size=config["batch_size"],
+        device=config["device"],
+        verbose=False,
+    )
+    model.fit(input_data)
+    embedding = np.asarray(model.transform(input_data))
+    output_dimension = config["output_dimension"]
+    if isinstance(output_dimension, bool) or not isinstance(output_dimension, int):
+        raise ValueError("output_dimension must be an integer")
+    expected_shape = (input_data.shape[0], output_dimension)
+    if embedding.shape != expected_shape:
+        raise RuntimeError(
+            f"CEBRA embedding shape must be {expected_shape}, got {embedding.shape}"
+        )
+
+    model_path = output_dir / "cebra_model.pt"
+    model.save(model_path)
+    loaded = cebra.CEBRA.load(model_path)
+    reloaded_embedding = np.asarray(loaded.transform(input_data))
+    if embedding.shape != reloaded_embedding.shape:
+        raise RuntimeError("reloaded CEBRA embedding shape changed")
+    if not np.allclose(embedding, reloaded_embedding, rtol=1e-6, atol=1e-7):
+        raise RuntimeError("reloaded CEBRA transform does not match the saved model")
+    try:
+        max_abs_difference = float(np.max(np.abs(embedding - reloaded_embedding)))
+    except (TypeError, ValueError, OverflowError) as exc:
+        raise RuntimeError("could not compare saved and reloaded embeddings") from exc
+
+    embedding_path = output_dir / "embedding.npy"
+    reloaded_path = output_dir / "reloaded_embedding.npy"
+    np.save(embedding_path, embedding)
+    np.save(reloaded_path, reloaded_embedding)
+    summary = {
+        "scientific_status": SOFTWARE_SMOKE_ONLY,
+        "status": "passed",
+        "embedding_shape": list(embedding.shape),
+        "reloaded_embedding_shape": list(reloaded_embedding.shape),
+        "save_load_max_abs_difference": max_abs_difference,
+        "notes": [
+            "External Torch seeding does not make the public sklearn CEBRA API fully deterministic.",
+            boundary_note,
+        ],
+    }
+    return summary, [model_path, embedding_path, reloaded_path]
+
+
 def run_synthetic_cebra_preflight(output_dir: Path | str) -> dict[str, Any]:
     """Fit, transform, save, and reload CEBRA on contiguous synthetic data."""
 
@@ -237,73 +392,24 @@ def run_synthetic_cebra_preflight(output_dir: Path | str) -> dict[str, Any]:
         "external_torch_seed": 0,
     }
     rng = np.random.default_rng(config["numpy_input_seed"])
-    x = rng.normal(size=tuple(config["input_shape"])).astype(np.float32)
-    input_hash = hashlib.sha256(x.tobytes()).hexdigest()
+    input_data = rng.normal(size=tuple(config["input_shape"])).astype(np.float32)
+    input_hash = hashlib.sha256(input_data.tobytes()).hexdigest()
     artifact_paths: list[Path] = []
 
     try:
-        installed = metadata.version("cebra")
-        if installed != PINNED_CEBRA_VERSION:
-            raise RuntimeError(
-                f"CEBRA version must be {PINNED_CEBRA_VERSION}, got {installed}"
-            )
-
-        import cebra  # type: ignore[import-not-found]
-        import torch
-
-        torch.manual_seed(config["external_torch_seed"])
-        model = cebra.CEBRA(
-            model_architecture=config["model_architecture"],
-            conditional=config["conditional"],
-            output_dimension=config["output_dimension"],
-            max_iterations=config["max_iterations"],
-            time_offsets=config["time_offsets"],
-            batch_size=config["batch_size"],
-            device=config["device"],
-            verbose=False,
+        summary, artifact_paths = _fit_save_reload_cebra(
+            input_data,
+            out,
+            config,
+            "No trial-boundary claim is made by this contiguous synthetic time smoke.",
         )
-        model.fit(x)
-        embedding = np.asarray(model.transform(x))
-
-        model_path = out / "cebra_model.pt"
-        model.save(model_path)
-        loaded = cebra.CEBRA.load(model_path)
-        reloaded_embedding = np.asarray(loaded.transform(x))
-        if embedding.shape != reloaded_embedding.shape:
-            raise RuntimeError("reloaded CEBRA embedding shape changed")
-        if not np.allclose(embedding, reloaded_embedding, rtol=1e-6, atol=1e-7):
-            raise RuntimeError(
-                "reloaded CEBRA transform does not match the saved model"
-            )
-        max_abs_difference = float(np.max(np.abs(embedding - reloaded_embedding)))
-
-        embedding_path = out / "embedding.npy"
-        reloaded_path = out / "reloaded_embedding.npy"
-        np.save(embedding_path, embedding)
-        np.save(reloaded_path, reloaded_embedding)
-        artifact_paths.extend((model_path, embedding_path, reloaded_path))
-        summary = {
-            "scientific_status": SOFTWARE_SMOKE_ONLY,
-            "status": "passed",
-            "embedding_shape": list(embedding.shape),
-            "reloaded_embedding_shape": list(reloaded_embedding.shape),
-            "save_load_max_abs_difference": max_abs_difference,
-            "notes": [
-                "NumPy input and external Torch seeds were set, but the public sklearn CEBRA API does not guarantee full training determinism.",
-                "No trial-boundary claim is made by this contiguous synthetic time smoke.",
-            ],
-        }
         manifest_status = "passed"
     except Exception as exc:
         summary = {
             "scientific_status": SOFTWARE_SMOKE_ONLY,
             "status": "failed",
             "error": str(exc),
-            "notes": [
-                "CEBRA synthetic smoke failed before any scientific analysis.",
-                "The public sklearn CEBRA API does not guarantee full training determinism.",
-                "No trial-boundary claim is made.",
-            ],
+            "notes": ["CEBRA synthetic smoke failed before any scientific analysis."],
         }
         manifest_status = "failed"
 
@@ -321,6 +427,98 @@ def run_synthetic_cebra_preflight(output_dir: Path | str) -> dict[str, Any]:
         },
         exclusion_summary={},
         stop_conditions=["synthetic API smoke only; no biological claim"],
+        notes=tuple(summary.get("notes", ())),
+    )
+    write_manifest_file(out, manifest)
+    if manifest_status == "failed":
+        raise RuntimeError(summary["error"])
+    return summary
+
+
+def run_one_cell_cebra_smoke(
+    file: Path | str,
+    output_dir: Path | str,
+    min_samples: int = 64,
+) -> dict[str, Any]:
+    """Run one CEBRA-Time API smoke on one intact navigation-period trial."""
+
+    input_path = Path(file)
+    input_file_hash = sha256_file(input_path)
+    selected = select_one_cell_smoke_trial(input_path, min_samples=min_samples)
+    out = create_output_dir(output_dir)
+    input_data = selected.input_data
+    config = {
+        "cebra_version": PINNED_CEBRA_VERSION,
+        "device": "cpu",
+        "model_architecture": "offset1-model",
+        "conditional": "time",
+        "output_dimension": 3,
+        "max_iterations": 10,
+        "time_offsets": 1,
+        "batch_size": 32,
+        "input_shape": list(input_data.shape),
+        "external_torch_seed": 0,
+        "selection": {
+            "rule": "first reader-order intact trial passing all declared gates",
+            "min_samples": min_samples,
+            "requires_aligned_one_dimensional_arrays": True,
+            "requires_finite_nonnegative_nonconstant_counts": True,
+        },
+    }
+    input_hash = hashlib.sha256(input_data.tobytes()).hexdigest()
+    artifact_paths: list[Path] = []
+    try:
+        summary, artifact_paths = _fit_save_reload_cebra(
+            input_data,
+            out,
+            config,
+            "The input is one intact navigation-period trial, so temporal pairs cannot cross a trial boundary; it is not cue-period or population data.",
+        )
+        manifest_status = "passed"
+    except Exception as exc:
+        summary = {
+            "scientific_status": SOFTWARE_SMOKE_ONLY,
+            "status": "failed",
+            "error": str(exc),
+            "notes": ["One-cell CEBRA smoke failed before any scientific analysis."],
+        }
+        manifest_status = "failed"
+
+    summary.update(
+        {
+            "input_file": str(input_path),
+            "loader_trial_index": selected.loader_trial_index,
+            "file_order_index": selected.file_order_index,
+            "input_shape": list(input_data.shape),
+            "total_spikes": selected.total_spikes,
+            "selection_rejections_before_choice": dict(selected.rejection_counts),
+        }
+    )
+    summary_path = write_json(out / "one_cell_cebra_smoke_summary.json", summary)
+    artifact_paths.append(summary_path)
+    manifest = build_manifest(
+        stage="current_one_cell_navigation_cebra_smoke",
+        status=manifest_status,
+        scientific_status=SOFTWARE_SMOKE_ONLY,
+        input_hashes={
+            str(input_path): input_file_hash,
+            "selected_trial_float32_sha256": input_hash,
+        },
+        artifact_hashes={path.name: sha256_file(path) for path in artifact_paths},
+        config=config,
+        shape_summary={
+            "input_shape": list(input_data.shape),
+            **{
+                key: value
+                for key, value in summary.items()
+                if key.endswith("embedding_shape")
+            },
+        },
+        exclusion_summary=dict(selected.rejection_counts),
+        stop_conditions=[
+            H1_CURRENT_EXPORT_STOP,
+            "one intact trial; software API smoke only",
+        ],
         notes=tuple(summary.get("notes", ())),
     )
     write_manifest_file(out, manifest)
@@ -353,6 +551,11 @@ def main(argv: Sequence[str] | None = None) -> int:
     cebra_parser = subparsers.add_parser("cebra-synthetic")
     cebra_parser.add_argument("--output-dir", required=True, type=Path)
 
+    one_cell_cebra = subparsers.add_parser("cebra-jld2-smoke")
+    one_cell_cebra.add_argument("file", type=Path)
+    one_cell_cebra.add_argument("--min-samples", type=int, default=64)
+    one_cell_cebra.add_argument("--output-dir", required=True, type=Path)
+
     args = parser.parse_args(argv)
     if args.command == "synthetic-preprocessing":
         summary = run_synthetic_preprocessing_demo(args.output_dir)
@@ -360,6 +563,12 @@ def main(argv: Sequence[str] | None = None) -> int:
         summary = run_one_cell_jld2_smoke(args.files, args.output_dir)
     elif args.command == "cebra-synthetic":
         summary = run_synthetic_cebra_preflight(args.output_dir)
+    elif args.command == "cebra-jld2-smoke":
+        summary = run_one_cell_cebra_smoke(
+            args.file,
+            args.output_dir,
+            min_samples=args.min_samples,
+        )
     else:  # pragma: no cover - argparse prevents this.
         parser.error(f"unknown command {args.command!r}")
     print(json.dumps(summary, indent=2, sort_keys=True))

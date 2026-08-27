@@ -23,6 +23,7 @@ from docs.cebra_pilot.implementation.paths import (
 )
 from docs.cebra_pilot.implementation.preflight import (
     SOFTWARE_SMOKE_ONLY,
+    select_one_cell_smoke_trial,
     summarize_one_cell_jld2_files,
 )
 from docs.cebra_pilot.implementation.splits import freeze_splits
@@ -257,6 +258,51 @@ class ManifestTests(unittest.TestCase):
 
 
 class CurrentExportBoundaryTests(unittest.TestCase):
+    def test_local_training_selector_enforces_alignment_and_variation(self) -> None:
+        def fake_reader(_path: Path):
+            yield 10, np.zeros((64, 1)), np.zeros((64, 1))
+            yield 11, np.full(64, "not-a-count", dtype=object), np.arange(64)
+            yield 12, np.r_[np.zeros(63), np.nan], np.arange(64)
+            yield 13, np.r_[np.zeros(63), -1.0], np.arange(64)
+            yield 14, np.zeros(65), np.zeros(64)
+            yield 15, np.zeros(63), np.arange(63)
+            yield 16, np.zeros(64), np.arange(64)
+            yield 17, np.r_[np.zeros(63), 1.0], np.arange(64)
+
+        selected = select_one_cell_smoke_trial(
+            Path("fake.jld2"),
+            reader=fake_reader,
+        )
+        self.assertEqual(selected.loader_trial_index, 17)
+        self.assertEqual(selected.file_order_index, 7)
+        self.assertEqual(selected.input_data.shape, (64, 1))
+        self.assertEqual(selected.total_spikes, 1.0)
+        self.assertEqual(
+            selected.rejection_counts,
+            {
+                "not_one_dimensional": 1,
+                "shape_mismatch": 1,
+                "non_numeric_counts": 1,
+                "non_finite_counts": 1,
+                "negative_counts": 1,
+                "too_short": 1,
+                "constant_counts": 1,
+            },
+        )
+        with self.assertRaisesRegex(ValueError, "min_samples must be at least 2"):
+            select_one_cell_smoke_trial(
+                Path("fake.jld2"), min_samples=1, reader=fake_reader
+            )
+
+        def no_eligible_reader(_path: Path):
+            yield 20, np.zeros(64), np.arange(64)
+
+        with self.assertRaisesRegex(ValueError, "no intact trial"):
+            select_one_cell_smoke_trial(
+                Path("fake.jld2"),
+                reader=no_eligible_reader,
+            )
+
     def test_one_cell_smoke_never_becomes_scientific_contract(self) -> None:
         def fake_reader(_path: Path):
             yield (

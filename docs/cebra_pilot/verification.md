@@ -34,7 +34,7 @@ explicit ragged trial-boundary metadata nor a fully implemented estimator seed.
 The installed preflight therefore uses CPU, contiguous synthetic data, external
 NumPy/Torch seeds, and no scientific determinism or trial-boundary claim.
 
-Two independent method/code reviews were then performed:
+Iterative independent method/code reviews were then performed:
 
 1. pre-implementation review fixed the same-trial population gate, bin-by-unit
    axis, derivative-safe split hash, multi-segment metrics, exposure validation,
@@ -43,18 +43,19 @@ Two independent method/code reviews were then performed:
    session/group split metadata, output-directory confinement, complete-path
    classification, runtime package provenance, and save/load transform fidelity.
 
-The executable trail is recorded in `implementation/REVIEW.md`. Eight boundary
-tests, synthetic preprocessing, the current one-cell loader smoke, and the
-CEBRA `256 x 12 -> 256 x 3` fit/transform/save/load smoke passed. A final
-post-fix reviewer reported no findings and gave the software framework a go
-while retaining the scientific H1 no-go. All artifacts remain labelled
-`software_smoke_only`; no biological embedding was fitted.
+The executable trail is recorded in `implementation/REVIEW.md`. Nine boundary
+tests, synthetic preprocessing, the current one-cell loader smoke, the CEBRA
+`256 x 12 -> 256 x 3` synthetic smoke, and one intact local-data
+`134 x 1 -> 134 x 3` smoke passed. The local run used one navigation-period cell
+and one spike; it has no cue, population, path-decoding, or data-efficiency
+interpretation. Reviewers retained the scientific H1 no-go. All artifacts remain
+labelled `software_smoke_only`; no biological embedding was interpreted.
 
 ## Finding Disposition
 
 | Severity | Finding | Disposition |
 | --- | --- | --- |
-| Blocker | Current local export lacks cue-period simultaneous population data, start/goal linkage, and the same trial's path | **Open scientific blocker.** Preserved as a hard stop in `formalization.md`, the plan, and `README.md`. Current data permits only loader/place-analysis smoke checks. |
+| Blocker | Current local export lacks cue-period simultaneous population data, start/goal linkage, and the same trial's path | **Open scientific blocker.** Preserved as a hard stop in `formalization.md`, the plan, and `README.md`. Current data permits only loader/place/API smoke checks. |
 | High | Historical handoff's implementation order could start graph-conditioned CEBRA before data, behavior, raw, and PCA gates | **Fixed.** Handoff filed verbatim under `sources/`, marked noncanonical/superseded; plan order is now data/split → behavior → raw/PCA → boundary-safe CEBRA-Time → optional supervised CEBRA. |
 | High | Adaptive behavior audit occurred before immutable split reservation | **Fixed.** Canonical docs and plan now reserve and hash source-trial splits before metric/contrast selection; training/validation selects rules; test behavior remains untouched. |
 | High | Purpose implied control beyond cue/session without a formal nuisance estimand | **Fixed.** `formalization.md` defines canonical \(\Delta_C\) and nuisance-adjusted \(\Delta_{C^+}\); wording is limited to available variables, with first-action sensitivity where possible. |

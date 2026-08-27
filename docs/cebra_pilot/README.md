@@ -97,7 +97,8 @@ screen.
 ## Build Boundary
 
 The approved framework pins CEBRA `0.6.1` in an isolated dependency group and
-has run a synthetic fit/transform/save/load preflight. It does not process raw
-cue data, fit a biological model, or interpret an embedding. See
+has run synthetic and one-intact-trial fit/transform/save/load preflights. The
+local trial run is a navigation-period one-cell API smoke, not a scientific
+biological model, and its embedding was not interpreted. See
 `implementation/README.md`, `implementation/API_AND_MATH.md`, and
 `implementation/REVIEW.md`.

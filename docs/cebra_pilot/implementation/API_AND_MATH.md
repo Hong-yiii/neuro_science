@@ -124,6 +124,13 @@ manifest.
 - Synthetic preprocessing writes shape/path/split summaries only.
 - Current JLD2 smoke imports the existing loader and always records the H1 stop
   reason.
+- `select_one_cell_smoke_trial` chooses the first reader-order trial with aligned
+  one-dimensional arrays, finite nonnegative nonconstant counts, and at least 64
+  samples. Rejection counts are recorded. The local input is
+  \(X\in\mathbb R^{T\times1}\), where each row is one navigation-period count
+  from the same intact trial. Time positives can therefore remain within that
+  trial, but the run has no cue-period, population, path, or held-out-trial
+  interpretation.
 - Synthetic CEBRA preflight pins `cebra==0.6.1`, CPU, `offset1-model`,
   `conditional='time'`, `output_dimension=3`, ten iterations, and contiguous
   synthetic input with shape `256 x 12`. It checks that the saved and reloaded

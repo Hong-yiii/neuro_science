@@ -704,6 +704,54 @@ simultaneous covariance, population dynamics, or intention. A CEBRA run on such
 an object is a condition-level or software analysis unless a different valid
 linkage is demonstrated.
 
+### Fixed-195 path-family pseudopopulation
+
+The first exploratory pseudopopulation fixes the 195 cells selected for spatial
+tuning; expansion to all recorded cells is deferred. Let
+
+\[
+f_i=\phi(P_i;s_i,g^*_i)
+\]
+
+be a behavior-only route-family label defined within one start-goal condition.
+The provisional \(\phi\) is the exact ordered directed corridor/branch-decision
+signature after frozen graph cleaning. Distance-based clustering is permitted
+only if the training/validation audit shows that exact signatures are too
+sparse.
+
+Let recording group \(a\) contain unit block \(X_i^{(a)}\). For route family
+\(f\), pseudotrial \(m\) is
+
+\[
+\widetilde X_{s,g^{\star},f,m} = \left[
+X^{(1)}_{\pi_1(s,g^{\star},f,m)},\ldots,
+X^{(R)}_{\pi_R(s,g^{\star},f,m)}
+\right].
+\]
+
+All units in one verified recording group use the same real source trial
+\(\pi_a\); cells are not sampled independently within that group. Every selected
+source trial must share start, goal, and the frozen route-family label, but the
+component trials need not—and generally do not—share one exact path. The target
+attached to \(\widetilde X\) is therefore \(f\), or a frozen family prototype,
+never the exact path of one component trial.
+
+Source-trial splits are fixed before fitting \(\phi\). Pseudotrials are assembled
+separately inside each split, and every source trial and bootstrap derivative
+remains in one split. Design eligibility requires independent training/validation
+source-trial support for each retained route family in every contributing
+recording group. Missing blocks are not imputed. The frozen mapping is applied to
+test behavior once; a predeclared test-support failure makes the affected
+contrast non-evaluable and cannot trigger redesign. The primary null permutes
+route-family labels within recording group, start, and goal before pseudotrial
+reconstruction.
+
+This analysis estimates condition-level route-family discrimination beyond
+endpoints. Because the route label is used to align trials across sessions, it
+is a retrospective pseudopopulation comparison, not online prediction of an
+unknown real trial. It cannot establish trial-specific H1a, simultaneous
+geometry, covariance, population dynamics, or intention.
+
 ## Artificial-Agent Link
 
 Let \(H_i^A\) be an independently task-trained agent's cue/planning-equivalent
@@ -733,7 +781,9 @@ equivalence or a shared mechanism.
 | Independent unit | Fixed | Complete source trial |
 | Scientific order | Fixed | Data/split audit → behavior audit → raw/PCA → boundary-safe CEBRA-Time → optional path-conditioned CEBRA |
 | Current local neural data | Blocked | Does not satisfy cue/simultaneity/path linkage |
-| Pseudopopulation claim | Fixed | Condition-level only |
+| Pseudopopulation claim | Fixed | Condition-level route-family discrimination only; exact path and simultaneous-population claims remain blocked |
+| First pseudopopulation cells | Fixed | 195 spatially selected cells; all-cell expansion is future work |
+| Pseudopopulation route target | Provisional | Exact ordered corridor/branch signature within start-goal; cluster only if the support audit requires it |
 | Graph role | Fixed | Candidate behavioral ruler, not hypothesis |
 | Primary graph cleaning | Provisional | Split invalid gaps; collapse repeats for shape; reject nonadjacent transitions; no primary interpolation |
 | Primary neural evaluation scope | Fixed | Within verified simultaneous group, then group-level synthesis |

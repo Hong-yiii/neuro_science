@@ -116,6 +116,50 @@ A cross-session pseudopopulation also does not pass the trial-specific gate. It
 can support condition-average prototypes, but it cannot recover one real trial's
 population state, covariance, or exact subsequent path.
 
+## Exploratory Fixed-195 Pseudopopulation Track
+
+The first pseudopopulation analysis will use the fixed list of 195 cells selected
+for spatial tuning. The professor noted that some may also have view or
+place-view conjunctive tuning, but that overlap is not quantified. Expanding to
+the upstream all-cell list is future work, not part of this first analysis.
+
+This track asks a narrower condition-level question:
+
+> Within a fixed start-goal condition, do cue-period response distributions
+> distinguish graph-defined route families?
+
+Route families are derived from behavior alone. The provisional first
+representation is an ordered directed corridor/branch-decision signature on a
+verified maze graph. It collapses consecutive repeats and ignores speed, pauses,
+and small within-corridor deviations. The behavior audit must test exact
+signatures before introducing clustering. If exact signatures remain too sparse,
+a small k-medoids or hierarchical sensitivity analysis may use a frozen
+precomputed distance based on directed-edge overlap or ordered sequence edits.
+Directed-edge Jaccard and longest shared directed subpath are simple graded
+comparators; graph-aware DTW remains sensitivity-only.
+
+Pseudotrials are assembled at the recording-group level, not independently per
+cell. All cells verified to share a real recording group use cue activity from
+the same real source trial. One eligible source trial per group and route family
+is then concatenated across groups to form the fixed 195-channel synthetic
+vector. Source-trial splits precede route-family construction; pseudotrials are
+built separately inside each split, and bootstrapped copies never cross splits.
+
+Design eligibility uses only training/validation behavior: every contributing
+recording group must have enough independent source trials for those assignments.
+Missing groups are not mean-filled or imputed. If this design support gate fails,
+merge overly specific route families or restrict eligible start-goal conditions;
+do not silently change the channel set. Apply the frozen family mapping once to
+test behavior. A predeclared test-support failure makes that contrast
+non-evaluable; it must not trigger target merging or redesign.
+
+Evaluation compares a start-goal/majority-family baseline with raw and
+train-fitted PCA cue pseudopopulation decoders before any path-conditioned CEBRA.
+The primary null shuffles route-family assignments within recording group,
+start, and goal before rebuilding pseudotrials. The strongest allowed claim is
+condition-level route-family discrimination beyond endpoints, not exact
+same-trial path prediction, simultaneous population geometry, or intention.
+
 ## Behavioral Object
 
 ### Graph as a candidate ruler
@@ -417,6 +461,13 @@ CEBRA to it is optional and has no scientific value for this hypothesis.
 transforms matched exactly in this run. Artifacts and versions are recorded at
 `outputs/cebra_pilot/trial-20260825-cebra-v2/`. This is not H1 evidence.
 
+A single optional local-data smoke also passed using the first eligible intact
+navigation trial from the verified one-cell export: trial index `2`, input
+`134 x 1`, output `134 x 3`, and one observed spike. No temporal pair crossed a
+trial boundary, and save/reload transforms matched. Artifacts are at
+`outputs/cebra_pilot/trial-20260826-one-cell-cebra-v1/`. This run has no cue,
+population, path-decoding, or data-efficiency interpretation.
+
 **Gate:** stop and amend this plan if a later CEBRA release or API differs from
 the reviewed implementation.
 
@@ -439,11 +490,16 @@ exploratory and cannot become confirmatory evidence.
 2. map paths to candidate directed edges or simpler branch features;
 3. apply and audit the provisional primary cleaning rule;
 4. label obligatory and variable initial, middle, and terminal components;
-5. count trials for every start-goal and matched-overlap stratum;
-6. compute candidate path-distance matrices;
-7. quantify correlations with start, goal, cue, duration, session, previous-trial
+5. derive ordered corridor/branch signatures within each start-goal condition;
+6. count exact-signature repetitions and construct the training/validation
+   `recording_group x start_goal x route_family x design_split` support table
+   required for the fixed 195-cell pseudopopulation;
+7. only if exact signatures are too sparse, evaluate a small predeclared
+   distance-based clustering sensitivity;
+8. compute candidate path-distance matrices;
+9. quantify correlations with start, goal, cue, duration, session, previous-trial
    variables, and available sensory/motor nuisances; and
-8. freeze only the contrasts the training/validation data can identify.
+10. freeze only the contrasts the training/validation data can identify.
 
 Do not inspect test-path results to redesign graph granularity, cleaning,
 exclusions, targets, metrics, or contrasts. Apply the frozen behavior mapping to
@@ -453,7 +509,11 @@ test trials once during final evaluation.
 contrast table. No neural data enters this phase.
 
 **Gate:** if no adequate high/low-overlap contrasts exist, stop the compositional
-analysis and report the identifiability limit.
+analysis and report the identifiability limit. If route families lack
+training/validation support across every contributing recording group, do not
+construct a fixed 195-channel path-matched pseudopopulation. After freezing the
+design, insufficient test support makes the affected contrast non-evaluable and
+cannot be used to revise the family definition.
 
 ### Phase 3 — target and analysis freeze
 

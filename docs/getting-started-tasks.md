@@ -67,10 +67,12 @@ This is the practical checklist for the prospective hippocampal path project and
   - One exact-hash cell example has 395 readable trials; a second example uses a different hash.
 - [ ] Confirm whether spike trains are already curated.
   - Done means: know whether spike sorting/manual inspection is out of scope.
-- [ ] Obtain or verify a cue-aligned biological export linked to subsequent paths.
+- [ ] Obtain or verify cue-aligned data for the fixed 195 spatially selected
+  cells, linked to subsequent paths.
   - Required: source trial, session, simultaneous group, cue window, start, goal,
-    population spike counts, success/timeout, and subsequent path samples.
-- [ ] Confirm which cells form real simultaneous populations.
+    per-cell spike counts, success/timeout, and subsequent path samples.
+  - Expanding to the upstream all-cell list is future work.
+- [ ] Confirm which of the 195 cells form real simultaneous recording groups.
 - [ ] Write or verify a loader that produces both analysis-contract objects.
   - Cue shape: `trial x cue_time_bin x cell`.
   - Path shape: `trial x navigation_sample`.
@@ -86,6 +88,12 @@ This is the practical checklist for the prospective hippocampal path project and
 - [ ] Construct and verify maze adjacency from authoritative geometry.
 - [ ] Convert paths to directed edge sequences and mark obligatory versus
   variable initial, middle, and terminal segments.
+- [ ] Derive ordered corridor/branch signatures within each `(start, goal)` and
+  count exact repeats before attempting clustering.
+- [ ] Build a training/validation
+  `recording_group x start_goal x route_family x design_split` support table and
+  stop if a fixed 195-channel pseudopopulation is not supportable. Apply the
+  frozen mapping to test once; do not redesign around test support.
 - [ ] Quantify shared path components across different `(start, goal)`
   conditions.
 - [ ] Compare same-start high/low-overlap, same-goal high/low-overlap, and—where
@@ -137,12 +145,12 @@ Start here:
 
 1. [ ] Draft the exact cue-aligned population export request from
    `docs/analysis-contract.md`.
-2. [ ] Confirm access to all recorded units and real simultaneous groups, not
-   only the selected place-cell files or historical pseudopopulation.
+2. [ ] Confirm cue-period access, source-trial linkage, and real recording groups
+   for the fixed 195 spatial cells; leave the all-cell expansion for future work.
 3. [ ] Confirm authoritative maze geometry/adjacency and the meaning of bin `0`.
-4. [ ] Audit real paths, within-`(start, goal)` variability, and reusable
-   directed path components across conditions.
-5. [ ] Determine whether shared-path metrics are identifiable beyond start and
-   goal before choosing one provisional representation and baseline.
+4. [ ] Audit within-`(start, goal)` ordered corridor/branch signatures and the
+   support for path-matched pseudotrials across recording groups and splits.
+5. [ ] Determine whether route-family differences are identifiable beyond start
+   and goal before choosing one provisional representation and baseline.
 6. [x] Use Python first for loading, validation, and visualization; retain Julia
    as the upstream reference.
