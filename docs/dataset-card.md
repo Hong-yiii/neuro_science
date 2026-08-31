@@ -1,6 +1,6 @@
 # Biological Dataset and Experimental Setup Reference
 
-Last verified from local files: 2026-08-03
+Last verified from local files: 2026-08-30
 Status: canonical for dataset facts and limitations only
 
 For the active prospective-path question, use
@@ -18,15 +18,22 @@ applicable to this dataset.
 
 The central distinction is:
 
-- **Received data:** a small derived, single-cell, place-bin export that has been
-  inspected locally.
-- **Upstream experiment and processing:** neural, Unity behavior, and Eyelink
-  streams represented in `Hippocampus.jl`, but not all of those streams are in
-  the received export.
+- **Current all-session place195 native snapshot:** an immutable local copy of 58
+  `session01` directories with 195 place-selected spike trains, Ripple markers,
+  Eyelink markers, and native Unity behavior. This supports importer/QC work
+  across the selected-cell set, but not H1 interpretation.
+- **Derived place export:** a small, inspected single-cell place-bin export.
+- **Earlier bounded 20181105 snapshot note:** a prior receipt describes one
+  six-unit 20181105 transfer with raytrace/reference files, but that exact data
+  root is not present in the current checkout.
+- **Upstream experiment and processing:** additional raw acquisition, sorting,
+  geometry, raytrace, and processing artifacts represented on the server or in
+  `Hippocampus.jl`, not all of which were copied.
 - **Unknowns:** experimental metadata that cannot be recovered safely from file
   names or code and must be confirmed with the lab.
 
-Do not describe the current files as a full multimodal or population dataset.
+Do not describe the 195 selected cells—or the earlier six-unit note—as a verified
+simultaneous population until recording metadata or the lab confirms that status.
 
 ## One-paragraph description
 
@@ -37,22 +44,22 @@ represents a square virtual maze with four internal pillars and six animal-image
 landmarks. A trial has three task events: start/cue identity (`1x`), cue offset
 and navigation onset (`2x`), and either successful completion (`3x`) or timeout
 (`4x`), with the same final digit identifying the cue/landmark condition within
-that trial. The main neural-behavior alignment normally analyzes the navigation
-period from event 2 to event 3/4. Sorted spike timestamps are aligned to
-Unity/raycast samples, allowing each spike to be associated with position, head
-direction, three-dimensional gaze target, fixated object, and fixation status.
-The data received so far is much narrower: one JLD2 file per preselected
-place-responsive cell, containing ragged per-trial vectors of spike counts and
-matching spatial-bin IDs. The best-verified example contains 395 retained trials
-and 65,576 samples at an explicit 20 ms bin size. It does not contain raw physical coordinates, gaze/view, heading, actions,
-rewards, participant metadata, or a synchronized multi-cell population matrix.
-Its spatial-bin integer is a 1-based index into a refined floor mesh, so an
-approximate `(x,y)` location can be recovered as that mesh element's centroid
-when the exact mesh version and refinement parameters are available.
+that trial. The current active native snapshot contains 58 sessions and 195
+place-selected spike trains with matching Ripple/Eyelink/Unity trial logs; the
+first all-session importer/QC run parsed 23,901 trial rows, 545,905 cue-period
+spike events, and 5,891,109 native Unity path rows. This enables selected-cell
+cue-to-path import auditing, but it is not yet analysis-ready or a verified
+simultaneous population for H1. A prior receipt separately describes one bounded
+20181105 six-unit/raytrace transfer, but that exact directory is absent from the
+current checkout. The first received JLD2 export remains narrower: one file per
+preselected place-responsive cell, containing ragged per-trial vectors of spike
+counts and matching spatial-bin IDs; its spatial-bin integer is a 1-based index
+into a refined floor mesh, not a row-major coordinate.
 
 ## Evidence labels used below
 
-- **Observed:** directly inspected in the two local JLD2 files or cell list.
+- **Observed:** directly inspected in the local exports, copied 20181105 session
+  files, or cell lists.
 - **Code-established:** explicit in the checked-out `Hippocampus.jl` processing
   code, but not independently verified against the received raw experiment.
 - **Lab-provided:** stated in the professor's message recorded in local notes.
@@ -68,11 +75,11 @@ when the exact mesh version and refinement parameters are available.
 | Property | Current knowledge |
 | --- | --- |
 | Organism | **Unknown.** Code comments refer to a “monkey,” so nonhuman primate is likely, but species and subject count are not present in the received export. |
-| Number, sex, age, or identifiers of subjects | **Unknown.** |
+| Number, sex, age, or identifiers of subjects | The copied 20181105 session note names `Picasso`, plausibly a subject identifier (**observed label, semantic role not yet lab-confirmed**). Number of subjects, sex, and age remain **unknown**. |
 | Neural target | Hippocampus at the workspace/repository level; exact hemisphere, subfield, depth, and anatomical verification are **unknown** for these files. |
 | Recording modality | Extracellular action-potential recordings processed into sorted single-unit spike timestamps (**code-established**). |
-| Electrode/array details | File paths use `array01`–`array03`, `channelNNN`, and `cellNN`; hardware model, channel count, implant geometry, and simultaneous-recording groups are **unknown**. |
-| Spike sorting and curation | Spike timestamps are already represented as cells/units. Sorting algorithm, quality thresholds, manual curation, and whether curation is final are **unknown**. |
+| Electrode/array details | File paths use `arrayNN`, `channelNNN`, and `cellNN`. The copied session has six units across two arrays and four channels; hardware model, implant geometry, and definitive simultaneous-group metadata remain **unknown**. |
+| Spike sorting and curation | The six copied spike files reference `firings.curated2.mda`, so they are derived sorted/curated units. Sorting algorithm, quality thresholds, manual-review status, and whether the six-unit list is complete remain **unknown**. |
 
 A “cell” here is a sorted unit, not a direct measurement of a biological cell's
 identity or morphology.
@@ -196,6 +203,98 @@ be fixed or version-matched before rerunning it.
 
 ## Current local data inventory
 
+### Current all-session place195 snapshot
+
+The current checkout contains an ignored all-session selected-cell snapshot at:
+
+```text
+data/raw/lab_server/cortex_picasso_misc_place195_20260830/
+```
+
+Local inventory for this snapshot:
+
+- 58 `session01` directories from 2018-07-02 through 2018-11-05;
+- 195 `spiketrain.mat` files matching the place-selective cell list;
+- one `rplparallel.mat`, one `eyelink.mat`, and one native Unity
+  `RawData_T1-400/session_*.txt` per session;
+- no `unity_raytrace.jld2` files.
+
+The first all-session importer/QC run uses this snapshot, not the absent
+six-unit directory below. It preserves raw marker codes, native Unity path rows,
+cue-window spike events/counts, unit/session/trial QC, source hashes, and logged
+decisions under ignored `outputs/prospective_path_first_run/`. Its status is
+**data-feasibility audit only**, not H1 evidence.
+
+This snapshot remains selected and incomplete for population claims: it contains
+place-selected cells, not all recorded units, and same-session path hierarchy is
+candidate evidence only until simultaneous recording groups and curation rules
+are lab-confirmed. Because raytrace files are absent, gaze/view/fixation controls
+are deferred for this run.
+
+First importer/QC result:
+
+```text
+outputs/prospective_path_first_run/place195-all-sessions-20260830-v4/
+```
+
+That run parsed 58 sessions, 195 selected units, 23,901 trial rows, 545,905
+cue-period spike events, and 5,891,109 native Unity path rows. It flagged 24
+Ripple/Unity navigation-duration discrepancies, one cue-duration outlier, and
+one Eyelink marker/time anomaly. See
+`notes/data_inspection/place195_all_sessions_import_20260830.md`.
+
+A follow-up exploratory split/audit froze source-trial assignments at
+`outputs/prospective_path_first_run/place195-splits-20260830-v3/` with split hash
+`11237c8c35af4b09b6d81c1994ff3f8b702d245d3a262f70413dab2b182973d1`, then wrote
+train/validation-only native Unity behavior-QC summaries under
+`outputs/prospective_path_first_run/place195-behavior-audit-20260830-v3/`. The
+locked test split was not used for behavior/path metric outputs; 167
+previous-trial-derived marker labels were blanked because the previous source
+trial is locked test. Provisional marker-pair support must not be interpreted as
+true `(start, goal)` support until marker semantics are lab-confirmed; 546
+train/validation rows still have matching provisional start/current marker
+values, which conflicts with the prior-write-up expectation that true starts and
+goals differ.
+
+### Earlier bounded 20181105/session01 multimodal snapshot note
+
+A prior 2026-08-30 note describes a bounded transfer into ignored
+`data/raw/lab_server/cortex_picasso_misc_20260830/`:
+
+- 22 immutable source/derived files totaling 675,994,365 bytes;
+- all six cell-level `spiketrain.mat` files present in the session;
+- session `rplparallel.mat`, native Unity text, `eyelink.mat`, and
+  `unity_raytrace.jld2`;
+- six navigation-period `view_and_place_representation.jld2` reference objects;
+- the broader 364-line analysis cell list and small acquisition/curation notes.
+
+Checksums and sizes are in the ignored local manifest
+`data/manifests/latest.json`. A post-transfer checksum comparison against the
+server reported no file differences. See
+`notes/data_inspection/lab_server_20181105_session01.md` for the exact scope,
+schema audit, and import design.
+
+Observed session facts:
+
+- Ripple, native Unity, and Eyelink each contain 404 ordered three-event trial
+  rows, and all marker-code triplets match exactly across those streams;
+- event families are `1x`, `2x`, and successful `3x` or timeout `4x`, with 400
+  successes and 4 timeouts;
+- the median Ripple event-1-to-event-2 cue interval is 1.021 seconds;
+- half-open event-1-to-event-2 extraction from all six spike trains yields a
+  404 trial x 6 unit cue-count smoke matrix with 4,902 spikes;
+- only one of the six units is in the separate 195-cell place-selective list.
+
+This is a **candidate** simultaneous recording group: shared session placement,
+trial markers, and neural clock provide evidence to audit, not definitive proof
+of simultaneity or complete unit inclusion. Marker minor-digit semantics for
+`cue_id`/`goal_id` and the derivation of `start_id` also remain unconfirmed.
+
+Trial row 178 has a known QC failure. Its Unity navigation interval is 7.660
+seconds, while Ripple/Eyelink span about 305.269 seconds across the same event
+codes; the raytrace row has a missing end marker and empty trial fields. Preserve
+and flag this source trial rather than silently repairing or dropping it.
+
 ### Curated cell list
 
 Observed in
@@ -219,9 +318,13 @@ spatial tuning. Individual cells could additionally have view tuning or
 place-view conjunctions, but the amount of overlap was not quantified; the list
 must not be described as a broadly view- or conjunction-selected population. The
 professor recommended the 195 spatial cells as the first set for decoding space.
-A broader all-recorded-cell list is available upstream at
+A broader 364-line analysis cell list was copied in the earlier bounded
+20181105 note from
 `/Volumes/Hippocampus/Data/picasso-misc/AnalysisHM/Current Analysis/cell_list.txt`,
-but has not been received or audited locally.
+but that list is not part of the current all-session place195 snapshot and its
+completeness/selection criteria have not been confirmed. It listed six cells for
+20181105/session01 in the earlier note; the current place195 snapshot contains
+only the one 20181105 cell that overlaps the 195-cell place-selective list.
 
 The previous student's broader cue/inter-trial analysis assembled 233 cells from
 July–November 2018 into 314 artificial pseudotrials by matching ordered
@@ -408,7 +511,23 @@ The local JLD2 files do not provide:
 
 ## Safe analysis scope with current files
 
-The `f1526be5` example supports a narrow single-cell place-analysis prototype:
+The candidate 20181105/session01 snapshot supports a **software/data-feasibility
+audit** that can:
+
+1. build an explicit Ripple/Unity/Eyelink/raytrace trial crosswalk;
+2. preserve event-1-to-event-2 cue spike events for six units;
+3. preserve the same rows' native Unity navigation paths and heading;
+4. record per-stream QC, including the known trial-178 discontinuity;
+5. test a reusable loader and produce provisional trial/path support tables.
+
+It must not yet be used for an H1 claim. First confirm the six-unit simultaneous
+recording group, task-marker semantics, unit-list completeness/curation, and all
+loader QC; then obtain independent scientific and code review. The optional
+raytrace fields require special caution because trial 178 is empty and the
+checked-out Julia fixation/alignment path has unresolved defects.
+
+Separately, the older `f1526be5` example supports a narrow single-cell
+place-analysis prototype:
 
 1. calculate occupancy per spatial-bin ID from valid 20 ms samples;
 2. calculate firing rate as summed spikes divided by occupancy seconds;
@@ -539,19 +658,26 @@ With current data, a defensible statement is:
 > unbiased population estimate, synchronized population analysis, gaze/view or
 > action-conditioned analysis, or direct comparison to RNN population geometry.
 
+In addition, one copied 404-trial session now contains six sorted-unit timestamp
+streams and matching Ripple/Unity/Eyelink event-code rows, plus native paths and
+derived gaze/raycast data. This supports importer and feasibility work. It does
+not support H1 interpretation until population simultaneity, marker semantics,
+trial QC, and unit-list completeness are independently verified.
+
 ## LLM-ready context block
 
 Copy the following with this document when asking another LLM to compare methods:
 
 ```text
 Treat the attached dataset card as the authoritative description of our current
-data. Distinguish (1) fields actually present in the local derived export,
-(2) multimodal fields available only in the upstream processing design, and
-(3) unknown metadata. Do not assume that 195 listed cells are simultaneous or
-unbiased; they were selected as place-responsive. Do not treat adjacent 20 ms
-bins as independent samples. Do not infer physical geometry from categorical
-spatial-bin IDs; treat bin 0 as invalid/filtered while noting that lab
-confirmation is pending. For every proposed technique,
+data. Distinguish (1) the old single-cell place export, (2) the copied
+20181105/session01 native/derived multimodal snapshot, (3) fields available only
+upstream, and (4) unknown metadata. Do not assume that the 195 selected cells are
+simultaneous or unbiased. Do not yet assume that the six copied session units
+form a complete verified simultaneous group. Preserve the trial-178 QC failure.
+Do not treat adjacent time bins as independent samples. Do not infer physical
+geometry from categorical spatial-bin IDs; treat bin 0 as invalid/filtered while
+noting that lab confirmation is pending. For every proposed technique,
 state: direct applicability now, additional data required, necessary adaptation,
 validation unit/split, null controls, sample-size assumptions, and the strongest
 defensible claim. Prefer trial-held-out and session-held-out tests. Explicitly
@@ -567,12 +693,14 @@ reward, raw waveforms/LFP, or causal intervention.
    environment manifest, and confirmation that bin `0` means invalid/filtered.
 4. Confirmation that `f1526be5` means 20 ms, uncompressed trajectories and an
    explanation of every generation parameter.
-5. Complete session populations, including non-place-selected units, with
-   simultaneous-recording and shared-trial confirmation.
+5. Confirmation that the six copied 20181105/session01 units are the complete
+   curated simultaneous population on one shared Ripple clock, plus the evidence
+   used to define that group.
 6. Spike-sorting/curation and unit-quality metadata.
-7. Trial table with cue, goal, success/timeout, reward, and phase.
-8. Position, heading, speed, gaze/view, fixation, and control/action aligned to
-   the same retained trials.
+7. Authoritative mapping from marker minor digit to cue/goal, the start rule,
+   reward semantics, and an explanation of the trial-178 clock discontinuity.
+8. Confirmation of coordinate axes/units and validation of the copied
+   gaze/view/fixation alignment; action/joystick fields remain absent.
 9. RNN environment specification, rollout schema, checkpoints, and seeds.
 
 ## Provenance and caveats
@@ -580,6 +708,7 @@ reward, raw waveforms/LFP, or causal intervention.
 Local sources:
 
 - `context/previous-student-analysis.md`
+- `notes/data_inspection/lab_server_20181105_session01.md`
 - `notes/data_inspection/place_spatial_bins_f1526be5.md`
 - `data/README.md`
 - `data/manifests/latest.json`

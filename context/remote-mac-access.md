@@ -133,6 +133,23 @@ Primary data locations once the Hippocampus share is mounted:
 
 Use `picasso-misc` first unless the lab says otherwise; it contains hippocampus-focused channel subsets.
 
+### Direct SSH Access On `cortex`
+
+Verified on 2026-08-30: the `cortex` account can read the same share directly
+without logging into or mounting it on `lab-mac`:
+
+```text
+/volume1/Hippocampus/Data/picasso-misc
+/volume1/Hippocampus/Data/picasso
+```
+
+The `/volume1/...` spelling is the server path. `/Volumes/Hippocampus/...` is
+the equivalent macOS mount spelling embedded in cell lists and Julia-era notes.
+For bounded command-line inventories and copies, prefer `ssh cortex` plus the
+server path. Preserve source-relative paths locally under ignored `data/raw/`
+and record checksums; do not recursively copy a day or session without sizing it
+first.
+
 ### From The Lab Mac
 
 Finder:

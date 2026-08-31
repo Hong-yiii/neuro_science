@@ -196,6 +196,24 @@ single-cell navigation-period spike counts plus spatial-bin IDs. It lacks the
 cue period, start/goal labels, and a verified synchronized population matrix.
 It therefore cannot instantiate this contract or test H1.
 
+A separate 2026-08-30 note describes a bounded `20181105/session01` snapshot
+with all six listed spike-timestamp files, 404 matching Ripple/Unity/Eyelink
+trial-code rows, native Unity paths, and derived gaze/raycast data. That exact
+six-unit directory is not present in the current checkout; treat the note as a
+receipt for that earlier transfer, not as the active all-session input root.
+
+The current active native-data root is
+`data/raw/lab_server/cortex_picasso_misc_place195_20260830/`. It contains 58
+sessions, 195 place-selected `spiketrain.mat` files, and one Ripple, Eyelink,
+and native Unity log per session, but no `unity_raytrace.jld2` files. It supports
+all-session importer/QC work: preserving cue-window spike events/counts and
+native Unity path samples by source trial. It still does not pass this contract's
+scientific gate: selected-cell provenance, unverified recording groups,
+marker-label semantics, absent gaze/raycast controls, subject/session metadata,
+and trial-level QC remain open. Clock-discrepant trials such as 20181105 trial
+178 must be retained with explicit QC flags rather than silently repaired or
+dropped.
+
 ## Open Decisions
 
 - graph granularity and path-distance metric;

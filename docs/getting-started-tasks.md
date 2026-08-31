@@ -27,16 +27,20 @@ This is the practical checklist for the prospective hippocampal path project and
   - Configured in `~/.ssh/config`; see `context/remote-mac-access.md`.
 - [ ] Send SSH public key to lab for gateway access.
   - Done means: key is added to the gateway authorized keys.
-- [ ] Confirm `ssh cortex` login works.
+- [x] Confirm `ssh cortex` login works.
   - Done means: can enter and exit the lab gateway without typing the gateway password.
+  - Verified 2026-08-30; the same SSH account can read the lab share directly at
+    `/volume1/Hippocampus/Data/picasso-misc`.
 - [ ] Confirm VNC tunnel to one workstation works.
   - Done means: can connect to `vnc://localhost:1220` while the SSH tunnel is open.
 - [ ] Confirm GitHub access to all relevant repos.
   - Repos to check: `Hippocampus.jl`, `PyHipp`, any RNN/Unity repo, any private lab repos.
 - [ ] Confirm lab workstation access.
   - Done means: can log into assigned Mac workstation.
-- [ ] Confirm data-server access.
+- [x] Confirm data-server access.
   - Done means: can mount or otherwise read the lab data location without exposing credentials in this repo.
+  - Verified through `ssh cortex`; a bounded 20181105/session01 snapshot was
+    copied under ignored `data/raw/lab_server/` and checksum-validated.
 - [ ] Confirm who provides day-to-day unblock help.
   - Names/roles only; no private contact details unless Hongyi wants them stored.
 
@@ -65,6 +69,12 @@ This is the practical checklist for the prospective hippocampal path project and
   - See `notes/data_inspection/place_spatial_bins_f1526be5.md`.
 - [x] Identify the smallest known-good biological subset.
   - One exact-hash cell example has 395 readable trials; a second example uses a different hash.
+- [x] Copy one bounded native/derived session bundle for importer development.
+  - `20181105/session01`: 404 trials, six spike trains, Ripple markers, native
+    Unity behavior, Eyelink, and raytrace data. See
+    `notes/data_inspection/lab_server_20181105_session01.md`.
+  - This is a software/data-feasibility snapshot, not yet a verified
+    simultaneous population for H1.
 - [ ] Confirm whether spike trains are already curated.
   - Done means: know whether spike sorting/manual inspection is out of scope.
 - [ ] Obtain or verify cue-aligned data for the fixed 195 spatially selected
@@ -76,15 +86,34 @@ This is the practical checklist for the prospective hippocampal path project and
 - [ ] Write or verify a loader that produces both analysis-contract objects.
   - Cue shape: `trial x cue_time_bin x cell`.
   - Path shape: `trial x navigation_sample`.
+  - 2026-08-30: first all-session place195 importer/QC smoke passed for the
+    current selected-cell snapshot. It produced cue spike events/counts and
+    native Unity path samples for 58 sessions under
+    `outputs/prospective_path_first_run/place195-all-sessions-20260830-v4/`.
+    This remains a data-feasibility audit, not a verified H1 loader, because
+    recording groups, task-label semantics, splits, graph/path representation,
+    and QC inclusion rules are still open.
 
 ## Phase 4: Behavioral Feasibility Audit
 
 - [ ] Create and hash source-trial train/validation/test assignments before
   adaptive graph, path-metric, exclusion, or contrast selection.
+  - 2026-08-30: exploratory place195 source-trial split frozen at
+    `outputs/prospective_path_first_run/place195-splits-20260830-v3/` with hash
+    `11237c8c35af4b09b6d81c1994ff3f8b702d245d3a262f70413dab2b182973d1`.
+    Keep unchecked for final H1 until labels and recording groups are verified.
 - [ ] Reconstruct and visualize training/validation observed paths; keep test
   behavior untouched until the rules are frozen.
+  - 2026-08-30: train/validation-only native Unity behavior QC summaries written
+    to `outputs/prospective_path_first_run/place195-behavior-audit-20260830-v3/`;
+    no visualization, graph, or route family yet.
 - [ ] Count trials and successful trials per `(start, goal)` condition.
+  - 2026-08-30: counted provisional marker-pair support only; do not treat it as
+    true `(start, goal)` until marker semantics are lab-confirmed.
 - [ ] Quantify within-condition path variation before choosing a model.
+  - 2026-08-30: recorded train/validation native Unity duration/distance/path-row
+    summaries by provisional marker pair; graph/path variation remains blocked on
+    authoritative geometry.
 - [ ] Construct and verify maze adjacency from authoritative geometry.
 - [ ] Convert paths to directed edge sequences and mark obligatory versus
   variable initial, middle, and terminal segments.
