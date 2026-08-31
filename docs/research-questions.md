@@ -168,6 +168,19 @@ The current local place-bin export begins at cue offset and lacks the cue window
 start/goal labels, and a verified synchronized population matrix. It cannot yet
 test H1.
 
+The current all-session `place195` native snapshot contains 58 sessions, 195
+place-selected cue-accessible spike trains, and same-session Ripple/Eyelink/Unity
+trial logs, so a real importer/QC audit can now be run across the selected-cell
+set. It remains below the scientific gate: cells are selected rather than an
+unbiased complete population, simultaneous recording groups are not confirmed,
+marker-label semantics remain unverified, raytrace/gaze controls are absent from
+this snapshot, and clock-discrepant trials such as 20181105 trial 178 require
+explicit QC flags.
+
+An earlier bounded `20181105/session01` six-unit transfer is documented in
+`notes/data_inspection/lab_server_20181105_session01.md`, but that exact data
+root is not present in the current checkout.
+
 ## First Milestone
 
 Before fitting CEBRA:

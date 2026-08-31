@@ -3,7 +3,7 @@ name = "neuro-science-workspace"
 version = "0.1.0"
 description = "Reproducible loaders and analyses for the neuroscience workspace"
 requires-python = ">=3.11"
-dependencies = ["h5py>=3.12", "matplotlib>=3.9", "numpy>=1.26.4"]
+dependencies = ["h5py>=3.12", "matplotlib>=3.9", "numpy>=1.26.4", "scipy>=1.14"]
 
 [dependency-groups]
 cebra-pilot = ["cebra==0.6.1"]
