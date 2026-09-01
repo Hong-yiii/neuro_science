@@ -154,12 +154,17 @@ validation even for old-style `(start, goal)` labels; therefore full 195 cannot
 support `(start, goal, route_family)` without imputation. Receipt:
 `notes/data_inspection/fixed195_pseudopop_support_probe_20260901.md`.
 
-Use support-declared variants instead of imputing missing cells:
+Primary analyses should use support-declared variants instead of silently imputing missing cells:
 
 1. subset pseudopopulations for evaluable route families/conditions;
 2. old-style `(start, goal)` pseudopopulation as a historical baseline;
 3. a new stratified exploratory split if full-195 validation is required;
 4. cross-condition shared-edge/segment contrasts if route-family labels are too sparse.
+
+2026-09-01 user decision: imputation is allowed for exploratory training runs
+only. The first implemented policy is train-fit marginal mean imputation per
+cell, represented as zero after train-set z-scoring, with the imputation burden
+reported. Receipt: `notes/data_inspection/place195_graph_path_baseline_20260901.md`.
 
 ## Cue feature approaches
 

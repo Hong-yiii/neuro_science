@@ -18,20 +18,29 @@ Status: next workflow before PCA/CEBRA
 
 - [x] Build the fine graph from `docs/geometry/maze_mesh_centroids_1344.txt`.
 - [x] Validate 4-neighbor adjacency and record graph hash.
-- [ ] Use only train/validation successful trials for route-design decisions.
-- [ ] Use `success_after_success` when a clean inferred `(start, goal)` label is required.
-- [ ] Map native Unity paths to nearest graph nodes with the documented tolerance.
-- [ ] Plot sample mapped paths by source trial and by provisional `(start, goal)`.
-- [ ] Produce raw mapped paths, cleaned segments, directed edge sequences, and exact signatures.
-- [ ] Count exact route signatures before trying clustering.
-- [ ] Build support tables for:
+- [x] Use only train/validation successful trials for route-design decisions.
+- [x] Use `success_after_success` when a clean inferred `(start, goal)` label is required.
+- [x] Map native Unity paths to nearest graph nodes with the documented tolerance.
+- [x] Plot sample mapped paths by source trial and by provisional `(start, goal)`.
+- [x] Produce raw mapped paths, cleaned segments, directed edge sequences, and exact signatures.
+- [x] Count exact route signatures before trying clustering.
+- [x] Build support tables for:
   - old-style `(start, goal)` pseudopopulation baseline;
   - fixed-195 `(start, goal, route_family)` pseudopopulation;
   - smaller support-declared pseudopopulations if full 195 fails;
   - cross-condition shared-edge/middle-segment contrasts.
 - [x] Decide whether all 195 cells are supportable without imputation under current split: no.
-- [ ] Freeze only route families/contrasts supportable in train/validation.
-- [ ] Get independent review before PCA.
+- [x] Freeze exploratory model route-family vocabulary from train support only; final route families remain review-gated.
+- [x] Get independent review before PCA; reviewer accepted as somewhat validated exploratory output.
+
+Receipt: `notes/data_inspection/place195_graph_path_baseline_20260901.md`. Output: `outputs/prospective_path_first_run/place195-graph-path-baseline-20260901-v4/`.
+
+## Current exploratory neural baseline
+
+- [x] Fit total-cue-count selected-cell nearest-centroid baseline with train-fit marginal imputation.
+- [x] Validate against start-goal majority baseline on validation only.
+- [x] Record imputation burden: 98.29% of global trial × 195-cell entries imputed.
+- [x] Keep claim ceiling: exploratory only, not H1 evidence.
 
 ## Later: neural baselines
 
