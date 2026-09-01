@@ -6,7 +6,7 @@ Status: next workflow before PCA/CEBRA
 
 - [x] Treat geometry file as authoritative: `docs/geometry/maze_mesh_centroids_1344.txt`.
 - [x] Hash geometry file: `479f0df501e92e167206248eff2d0a44ba5f26cd62cfcc879dcaad979d7a7e66`.
-- [x] Build/hash fine 4-neighbor graph: `1e7804c5d2167dcd8709a9760d8917034cb60e36e936229fad9056b1dae0f9ad`.
+- [x] Build/hash fine 4-neighbor graph. Current script hash is `f83908e027012e49f1be2396bb0f7aeb514b807c43b6e703625a40647a3738a0`; legacy pinned receipt hash `1e7804c5d2167dcd8709a9760d8917034cb60e36e936229fad9056b1dae0f9ad` still needs provenance reconciliation.
 - [x] Use success-only trials for the experiment; drop timeout trials from analysis for now.
 - [x] Probe marker semantics against Unity starts/ends: `notes/data_inspection/place195_marker_semantics_probe_20260901.md`.
 - [x] Document graph/path formalization: `docs/graph-path-formalization.md`.
@@ -33,14 +33,18 @@ Status: next workflow before PCA/CEBRA
 - [x] Freeze exploratory model route-family vocabulary from train support only; final route families remain review-gated.
 - [x] Get independent review before PCA; reviewer accepted as somewhat validated exploratory output.
 
-Receipt: `notes/data_inspection/place195_graph_path_baseline_20260901.md`. Output: `outputs/prospective_path_first_run/place195-graph-path-baseline-20260901-v4/`.
+V4 receipt: `notes/data_inspection/place195_graph_path_baseline_20260901.md`. Output: `outputs/prospective_path_first_run/place195-graph-path-baseline-20260901-v4/`.
 
 ## Current exploratory neural baseline
 
-- [x] Fit total-cue-count selected-cell nearest-centroid baseline with train-fit marginal imputation.
-- [x] Validate against start-goal majority baseline on validation only.
-- [x] Record imputation burden: 98.29% of global trial × 195-cell entries imputed.
+- [x] Replace crude source-trial × 195 imputation baseline with condition-matched pseudopopulation rows.
+- [x] Match pseudopop rows on `(split, start, goal, route_family)`.
+- [x] Keep missing cells masked; no cell-value imputation in V5 neural distance.
+- [x] Validate against pseudopop start-goal majority baseline on validation only.
+- [x] Record coverage: 908 pseudopop rows, 195 features, 25.72% observed entries, 74.28% missing/masked.
 - [x] Keep claim ceiling: exploratory only, not H1 evidence.
+
+V5 receipt: `notes/data_inspection/place195_graph_path_baseline_v5_20260901.md`. Output: `outputs/prospective_path_first_run/place195-graph-path-baseline-20260901-v5/`.
 
 ## Later: neural baselines
 

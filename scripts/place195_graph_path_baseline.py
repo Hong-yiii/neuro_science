@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Behavior-only graph-path audit plus first exploratory imputed cue baseline.
+"""Behavior-only graph-path audit plus condition-matched pseudopop baseline.
 
-This is not H1 evidence. Route labels are behavior-derived from train+validation,
-and the neural baseline uses train-fit marginal imputation for missing selected
-cells only as an exploratory sensitivity run.
+This is not H1 evidence. Route labels are behavior-derived from behavior, and
+V5 assembles cross-session pseudopopulation rows matched by
+(start, goal, route_family) instead of imputing one real trial across all 195
+selected cells.
 """
 
 from __future__ import annotations
@@ -39,22 +40,35 @@ from scripts.import_place195_sessions import (
     sha256_file,
     validate_output_dir,
 )
-from scripts.place195_split_and_behavior_audit import read_csv, read_json, write_csv, write_json
+from scripts.place195_split_and_behavior_audit import (
+    read_csv,
+    read_json,
+    write_csv,
+    write_json,
+)
 
 DEFAULT_IMPORT_DIR = DEFAULT_OUTPUT_PARENT / "place195-all-sessions-20260830-v4"
 DEFAULT_SPLIT_DIR = DEFAULT_OUTPUT_PARENT / "place195-splits-20260830-v3"
 DEFAULT_GEOMETRY = ROOT / "docs/geometry/maze_mesh_centroids_1344.txt"
-DEFAULT_OUTPUT_DIR = DEFAULT_OUTPUT_PARENT / "place195-graph-path-baseline-20260901-v4"
-DEFAULT_RECEIPT = ROOT / "notes/data_inspection/place195_graph_path_baseline_20260901.md"
+DEFAULT_OUTPUT_DIR = DEFAULT_OUTPUT_PARENT / "place195-graph-path-baseline-20260901-v5"
+DEFAULT_RECEIPT = (
+    ROOT / "notes/data_inspection/place195_graph_path_baseline_v5_20260901.md"
+)
 
 GEOMETRY_SHA256 = "479f0df501e92e167206248eff2d0a44ba5f26cd62cfcc879dcaad979d7a7e66"
-PINNED_PRIMARY_GRAPH_HASH = "1e7804c5d2167dcd8709a9760d8917034cb60e36e936229fad9056b1dae0f9ad"
-SCRIPT_PRIMARY_GRAPH_HASH = "f83908e027012e49f1be2396bb0f7aeb514b807c43b6e703625a40647a3738a0"
+PINNED_PRIMARY_GRAPH_HASH = (
+    "1e7804c5d2167dcd8709a9760d8917034cb60e36e936229fad9056b1dae0f9ad"
+)
+SCRIPT_PRIMARY_GRAPH_HASH = (
+    "f83908e027012e49f1be2396bb0f7aeb514b807c43b6e703625a40647a3738a0"
+)
 GRAPH_SCHEMA = "maze_graph_1344_4neighbor_v1"
 GRID_STEP = 0.625
 MAPPING_TOLERANCE = math.sqrt(2) * GRID_STEP / 2
 ROUTE_OTHER = "__other_within_start_goal__"
-SCIENTIFIC_STATUS = "exploratory_graph_path_and_imputed_selected_cell_baseline_not_h1_evidence"
+SCIENTIFIC_STATUS = (
+    "exploratory_graph_path_condition_matched_pseudopop_baseline_not_h1_evidence"
+)
 
 
 @dataclass(frozen=True)
@@ -77,6 +91,14 @@ class TrialLabel:
     trial_index: str
     start: str
     goal: str
+
+
+@dataclass(frozen=True)
+class Pseudopopulation:
+    rows: list[dict[str, Any]]
+    components: list[dict[str, Any]]
+    x: np.ndarray
+    observed: np.ndarray
 
 
 def open_text(path: Path, mode: str = "rt") -> TextIO:
@@ -123,7 +145,9 @@ def format_coord(value: float) -> str:
     return "0" if text == "-0" else text
 
 
-def parse_centroids(path: Path) -> tuple[dict[int, tuple[float, float]], dict[tuple[float, float], int]]:
+def parse_centroids(
+    path: Path,
+) -> tuple[dict[int, tuple[float, float]], dict[tuple[float, float], int]]:
     centroids: dict[int, tuple[float, float]] = {}
     coord_to_node: dict[tuple[float, float], int] = {}
     with open_text(path) as handle:
@@ -134,8 +158,13 @@ def parse_centroids(path: Path) -> tuple[dict[int, tuple[float, float]], dict[tu
             try:
                 x, y = ast.literal_eval(text)
             except (SyntaxError, ValueError, TypeError) as exc:
-                raise ValueError(f"invalid centroid line {line_number}: {text!r}") from exc
-            coord = (round(parse_float(x, f"centroid {line_number} axis1"), 4), round(parse_float(y, f"centroid {line_number} axis2"), 4))
+                raise ValueError(
+                    f"invalid centroid line {line_number}: {text!r}"
+                ) from exc
+            coord = (
+                round(parse_float(x, f"centroid {line_number} axis1"), 4),
+                round(parse_float(y, f"centroid {line_number} axis2"), 4),
+            )
             centroids[line_number] = coord
             if coord in coord_to_node:
                 raise ValueError(f"duplicate centroid coordinate: {coord}")
@@ -143,7 +172,12 @@ def parse_centroids(path: Path) -> tuple[dict[int, tuple[float, float]], dict[tu
     return centroids, coord_to_node
 
 
-def primary_graph_hash(geometry: Path, geometry_sha: str, centroids: Mapping[int, tuple[float, float]], directed_edges: Sequence[tuple[int, int]]) -> str:
+def primary_graph_hash(
+    geometry: Path,
+    geometry_sha: str,
+    centroids: Mapping[int, tuple[float, float]],
+    directed_edges: Sequence[tuple[int, int]],
+) -> str:
     try:
         geometry_file = str(geometry.resolve().relative_to(ROOT))
     except ValueError:
@@ -172,7 +206,12 @@ def build_graph(geometry: Path) -> GraphSpec:
     centroids, coord_to_node = parse_centroids(geometry)
     directed_edges: list[tuple[int, int]] = []
     for node_id, (x, y) in centroids.items():
-        for dx, dy in ((GRID_STEP, 0.0), (-GRID_STEP, 0.0), (0.0, GRID_STEP), (0.0, -GRID_STEP)):
+        for dx, dy in (
+            (GRID_STEP, 0.0),
+            (-GRID_STEP, 0.0),
+            (0.0, GRID_STEP),
+            (0.0, -GRID_STEP),
+        ):
             neighbor = coord_to_node.get((round(x + dx, 4), round(y + dy, 4)))
             if neighbor is not None:
                 directed_edges.append((node_id, neighbor))
@@ -181,10 +220,17 @@ def build_graph(geometry: Path) -> GraphSpec:
         (min(left, right), max(left, right)) for left, right in directed_edges
     }
     components = connected_component_count(set(centroids), undirected)
-    computed_primary_hash = primary_graph_hash(geometry, geometry_sha, centroids, directed_edges)
+    computed_primary_hash = primary_graph_hash(
+        geometry, geometry_sha, centroids, directed_edges
+    )
     if computed_primary_hash != SCRIPT_PRIMARY_GRAPH_HASH:
         raise ValueError(f"script primary graph hash mismatch: {computed_primary_hash}")
-    if (len(centroids), len(undirected), len(directed_edges), components) != (1344, 2544, 5088, 1):
+    if (len(centroids), len(undirected), len(directed_edges), components) != (
+        1344,
+        2544,
+        5088,
+        1,
+    ):
         raise ValueError(
             "graph facts mismatch: "
             f"nodes={len(centroids)} undirected={len(undirected)} "
@@ -202,7 +248,9 @@ def build_graph(geometry: Path) -> GraphSpec:
     )
 
 
-def connected_component_count(nodes: set[int], undirected_edges: set[tuple[int, int]]) -> int:
+def connected_component_count(
+    nodes: set[int], undirected_edges: set[tuple[int, int]]
+) -> int:
     neighbors: dict[int, list[int]] = {node: [] for node in nodes}
     for left, right in undirected_edges:
         neighbors[left].append(right)
@@ -252,7 +300,9 @@ def load_trial_labels(import_dir: Path, split_dir: Path) -> dict[str, TrialLabel
             continue
         if not previous_row or previous_row.get("outcome") != "success":
             continue
-        start = row.get("inferred_start_id_from_previous_marker", "").replace("marker_", "")
+        start = row.get("inferred_start_id_from_previous_marker", "").replace(
+            "marker_", ""
+        )
         goal = row.get("marker_minor_digit", "")
         if not start or not goal:
             continue
@@ -285,7 +335,9 @@ def coarse5_signature(path: CleanedPath, graph_spec: GraphSpec) -> str:
     for segment in path.route_shape_segments:
         coarse_segment: list[str] = []
         for node in segment:
-            coarse = coarse5_for_node(parse_int(cast(Any, node), "route node"), graph_spec)
+            coarse = coarse5_for_node(
+                parse_int(cast(Any, node), "route node"), graph_spec
+            )
             if not coarse_segment or coarse_segment[-1] != coarse:
                 coarse_segment.append(coarse)
         if coarse_segment:
@@ -293,7 +345,9 @@ def coarse5_signature(path: CleanedPath, graph_spec: GraphSpec) -> str:
     return "|".join("-".join(segment) for segment in coarse_segments)
 
 
-def route_support(rows: Sequence[Mapping[str, Any]], signature_field: str) -> list[dict[str, Any]]:
+def route_support(
+    rows: Sequence[Mapping[str, Any]], signature_field: str
+) -> list[dict[str, Any]]:
     counts: dict[tuple[str, str, str], Counter[str]] = defaultdict(Counter)
     sessions: dict[tuple[str, str, str, str], set[str]] = defaultdict(set)
     for row in rows:
@@ -311,11 +365,22 @@ def route_support(rows: Sequence[Mapping[str, Any]], signature_field: str) -> li
                 "train_trials": by_split["train"],
                 "validation_trials": by_split["validation"],
                 "train_sessions": len(sessions[(start, goal, signature, "train")]),
-                "validation_sessions": len(sessions[(start, goal, signature, "validation")]),
-                "has_train_validation_support": str(bool(by_split["train"] and by_split["validation"])).lower(),
+                "validation_sessions": len(
+                    sessions[(start, goal, signature, "validation")]
+                ),
+                "has_train_validation_support": str(
+                    bool(by_split["train"] and by_split["validation"])
+                ).lower(),
             }
         )
-    out.sort(key=lambda r: (-(r["train_trials"] + r["validation_trials"]), r["start"], r["goal"], r[signature_field]))
+    out.sort(
+        key=lambda r: (
+            -(r["train_trials"] + r["validation_trials"]),
+            r["start"],
+            r["goal"],
+            r[signature_field],
+        )
+    )
     return out
 
 
@@ -324,8 +389,13 @@ def supportable_signatures(
 ) -> set[tuple[str, str, str]]:
     supported: set[tuple[str, str, str]] = set()
     for row in route_support(rows, "coarse5_signature"):
-        if row["train_trials"] >= min_train and row["validation_trials"] >= min_validation:
-            supported.add((str(row["start"]), str(row["goal"]), str(row["coarse5_signature"])))
+        if (
+            row["train_trials"] >= min_train
+            and row["validation_trials"] >= min_validation
+        ):
+            supported.add(
+                (str(row["start"]), str(row["goal"]), str(row["coarse5_signature"]))
+            )
     return supported
 
 
@@ -336,7 +406,9 @@ def apply_route_family(
     for row in rows:
         copied = dict(row)
         key = (str(row["start"]), str(row["goal"]), str(row["coarse5_signature"]))
-        route_family = str(row["coarse5_signature"]) if key in supported else ROUTE_OTHER
+        route_family = (
+            str(row["coarse5_signature"]) if key in supported else ROUTE_OTHER
+        )
         copied["route_family"] = route_family
         copied["target_label"] = f"{row['start']}->{row['goal']}|{route_family}"
         out.append(copied)
@@ -362,7 +434,9 @@ def iter_mapped_trials(
     current_source = ""
     current_label: TrialLabel | None = None
     current_nodes: list[int] = []
-    with gzip.open(mapped_sample_path, "wt", encoding="utf-8", newline="") as sample_handle:
+    with gzip.open(
+        mapped_sample_path, "wt", encoding="utf-8", newline=""
+    ) as sample_handle:
         writer = csv.DictWriter(sample_handle, fieldnames=fieldnames)
         writer.writeheader()
         with open_text(path) as handle:
@@ -377,8 +451,14 @@ def iter_mapped_trials(
                     current_label = label
                 if source != current_source:
                     if current_label is None:
-                        raise RuntimeError("missing current trial label while flushing mapped path")
-                    yield current_label, current_nodes, clean_path(current_nodes, graph_spec.graph)
+                        raise RuntimeError(
+                            "missing current trial label while flushing mapped path"
+                        )
+                    yield (
+                        current_label,
+                        current_nodes,
+                        clean_path(current_nodes, graph_spec.graph),
+                    )
                     current_source = source
                     current_label = label
                     current_nodes = []
@@ -402,11 +482,18 @@ def iter_mapped_trials(
 
 
 def build_trial_rows(
-    import_dir: Path, labels: Mapping[str, TrialLabel], graph_spec: GraphSpec, output_dir: Path
+    import_dir: Path,
+    labels: Mapping[str, TrialLabel],
+    graph_spec: GraphSpec,
+    output_dir: Path,
 ) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
-    mapped_path = output_dir / "mapped_path_samples_train_validation_success_after_success.csv.gz"
-    for label, _nodes, path in iter_mapped_trials(import_dir, labels, graph_spec, mapped_path):
+    mapped_path = (
+        output_dir / "mapped_path_samples_train_validation_success_after_success.csv.gz"
+    )
+    for label, _nodes, path in iter_mapped_trials(
+        import_dir, labels, graph_spec, mapped_path
+    ):
         fine_signature = signature_from_segments(path.route_shape_segments)
         edge_count = sum(len(edges) for edges in directed_edge_sequences(path))
         coarse_signature = coarse5_signature(path, graph_spec)
@@ -426,7 +513,9 @@ def build_trial_rows(
                 "raw_valid_segment_count": path.audit.raw_valid_segment_count,
                 "route_shape_segment_count": path.audit.route_shape_segment_count,
                 "repeated_sample_count": path.audit.repeated_sample_count,
-                "route_shape_node_count": sum(len(segment) for segment in path.route_shape_segments),
+                "route_shape_node_count": sum(
+                    len(segment) for segment in path.route_shape_segments
+                ),
                 "directed_edge_count": edge_count,
                 "fine_signature_sha256": signature_sha256(fine_signature),
                 "fine_signature": fine_signature,
@@ -470,20 +559,31 @@ def load_units_by_session(import_dir: Path) -> tuple[list[str], dict[str, set[st
 
 
 def pseudopop_cell_support(
-    rows: Sequence[Mapping[str, Any]], units: Sequence[str], units_by_session: Mapping[str, set[str]]
+    rows: Sequence[Mapping[str, Any]],
+    units: Sequence[str],
+    units_by_session: Mapping[str, set[str]],
 ) -> list[dict[str, Any]]:
     sessions_by_key: dict[tuple[str, str, str, str], set[str]] = defaultdict(set)
     trials_by_key: Counter[tuple[str, str, str, str]] = Counter()
     all_units = set(units)
     for row in rows:
-        key = (str(row["start"]), str(row["goal"]), str(row["route_family"]), str(row["split"]))
+        key = (
+            str(row["start"]),
+            str(row["goal"]),
+            str(row["route_family"]),
+            str(row["split"]),
+        )
         sessions_by_key[key].add(str(row["session_id"]))
         trials_by_key[key] += 1
     out: list[dict[str, Any]] = []
     for key in sorted(sessions_by_key):
         start, goal, route_family, split = key
         sessions = sessions_by_key[key]
-        observed_units = set().union(*(units_by_session[session] for session in sessions)) if sessions else set()
+        observed_units = (
+            set().union(*(units_by_session[session] for session in sessions))
+            if sessions
+            else set()
+        )
         missing_units = sorted(all_units - observed_units)
         out.append(
             {
@@ -495,36 +595,158 @@ def pseudopop_cell_support(
                 "sessions_observed": len(sessions),
                 "cells_observed": len(observed_units),
                 "missing_cells_for_full195": len(missing_units),
-                "full195_imputed_cell_fraction": round(len(missing_units) / len(all_units), 6),
+                "missing_cell_fraction_for_full195": round(
+                    len(missing_units) / len(all_units), 6
+                ),
                 "missing_cell_ids": ";".join(missing_units),
-                "missing_session_ids": ";".join(sorted(set(units_by_session) - sessions)),
+                "missing_session_ids": ";".join(
+                    sorted(set(units_by_session) - sessions)
+                ),
             }
         )
-    out.sort(key=lambda r: (-r["trial_count"], r["start"], r["goal"], r["route_family"], r["split"]))
+    out.sort(
+        key=lambda r: (
+            -r["trial_count"],
+            r["start"],
+            r["goal"],
+            r["route_family"],
+            r["split"],
+        )
+    )
     return out
 
 
-def load_cue_feature_matrix(
-    import_dir: Path, rows: Sequence[Mapping[str, Any]], units: Sequence[str]
-) -> tuple[np.ndarray, np.ndarray]:
-    row_index = {str(row["source_trial_id"]): i for i, row in enumerate(rows)}
-    unit_index = {unit: i for i, unit in enumerate(units)}
-    x = np.full((len(rows), len(units)), np.nan, dtype=np.float64)
-    observed = np.zeros((len(rows), len(units)), dtype=bool)
+def load_cue_counts_by_source_cell(import_dir: Path) -> dict[tuple[str, str], float]:
+    counts: dict[tuple[str, str], float] = {}
     with open_text(import_dir / "cue_counts.csv.gz") as handle:
         reader = csv.DictReader(handle)
         for row in reader:
-            source = row["source_trial_id"]
-            if source not in row_index:
-                continue
-            i = row_index[source]
-            j = unit_index[row["cell_id"]]
-            x[i, j] = parse_float(row["cue_spike_count"], "cue_spike_count")
-            observed[i, j] = True
-    return x, observed
+            counts[(row["source_trial_id"], row["cell_id"])] = parse_float(
+                row["cue_spike_count"], "cue_spike_count"
+            )
+    return counts
 
 
-def train_fit_impute_zscore(x: np.ndarray, observed: np.ndarray, split: Sequence[str]) -> tuple[np.ndarray, dict[str, Any]]:
+def pseudopop_target_count(session_trial_counts: Sequence[int], max_rows: int) -> int:
+    if not session_trial_counts:
+        return 0
+    ordered = sorted(session_trial_counts)
+    q1 = ordered[len(ordered) // 4]
+    return max(1, min(max_rows, q1))
+
+
+def build_condition_pseudopopulation(
+    rows: Sequence[Mapping[str, Any]],
+    units: Sequence[str],
+    units_by_session: Mapping[str, set[str]],
+    cue_counts: Mapping[tuple[str, str], float],
+    max_rows_per_condition: int = 10,
+) -> Pseudopopulation:
+    unit_index = {unit: index for index, unit in enumerate(units)}
+    grouped: dict[tuple[str, str], dict[str, list[Mapping[str, Any]]]] = defaultdict(
+        lambda: defaultdict(list)
+    )
+    row_by_label: dict[tuple[str, str], Mapping[str, Any]] = {}
+    for row in rows:
+        key = (str(row["split"]), str(row["target_label"]))
+        grouped[key][str(row["session_id"])].append(row)
+        row_by_label.setdefault(key, row)
+    for by_session in grouped.values():
+        for trial_rows in by_session.values():
+            trial_rows.sort(
+                key=lambda row: (
+                    parse_int(row["trial_index"], "trial_index"),
+                    str(row["source_trial_id"]),
+                )
+            )
+
+    pseudo_rows: list[dict[str, Any]] = []
+    components: list[dict[str, Any]] = []
+    x_rows: list[np.ndarray] = []
+    observed_rows: list[np.ndarray] = []
+    all_sessions = set(units_by_session)
+    pseudo_index = 0
+    for split_label in sorted(grouped):
+        split, target_label = split_label
+        template = row_by_label[split_label]
+        by_session = grouped[split_label]
+        target_n = pseudopop_target_count(
+            [len(items) for items in by_session.values()], max_rows_per_condition
+        )
+        for k in range(target_n):
+            row_id = f"pp_{pseudo_index:06d}"
+            pseudo_index += 1
+            x = np.full(len(units), np.nan, dtype=np.float64)
+            observed = np.zeros(len(units), dtype=bool)
+            component_sessions: list[str] = []
+            bootstrapped_sessions: list[str] = []
+            source_trials: list[str] = []
+            for session_id, trial_rows in sorted(by_session.items()):
+                trial = trial_rows[k % len(trial_rows)]
+                bootstrapped = k >= len(trial_rows)
+                if bootstrapped:
+                    bootstrapped_sessions.append(session_id)
+                component_sessions.append(session_id)
+                source_id = str(trial["source_trial_id"])
+                source_trials.append(source_id)
+                session_cells = sorted(
+                    units_by_session[session_id], key=lambda cell: unit_index[cell]
+                )
+                cell_count = 0
+                for cell in session_cells:
+                    value = cue_counts.get((source_id, cell))
+                    if value is None:
+                        continue
+                    x[unit_index[cell]] = value
+                    observed[unit_index[cell]] = True
+                    cell_count += 1
+                components.append(
+                    {
+                        "pseudopop_row_id": row_id,
+                        "split": split,
+                        "target_label": target_label,
+                        "session_id": session_id,
+                        "source_trial_id": source_id,
+                        "cell_count": cell_count,
+                        "bootstrapped_component": str(bootstrapped).lower(),
+                    }
+                )
+            observed_count = parse_int(observed.sum().item(), "observed cells")
+            missing_sessions = sorted(all_sessions - set(component_sessions))
+            pseudo_rows.append(
+                {
+                    "pseudopop_row_id": row_id,
+                    "split": split,
+                    "start": template["start"],
+                    "goal": template["goal"],
+                    "route_family": template["route_family"],
+                    "target_label": target_label,
+                    "pseudopop_index_within_condition": k,
+                    "observed_cells": observed_count,
+                    "missing_cells": len(units) - observed_count,
+                    "observed_cell_fraction": observed_count / len(units),
+                    "component_sessions": len(component_sessions),
+                    "missing_sessions": len(missing_sessions),
+                    "bootstrapped_component_sessions": len(bootstrapped_sessions),
+                    "component_session_ids": ";".join(component_sessions),
+                    "missing_session_ids": ";".join(missing_sessions),
+                    "component_source_trial_ids": ";".join(source_trials),
+                    "row_unit": "condition_matched_pseudopopulation",
+                }
+            )
+            x_rows.append(x)
+            observed_rows.append(observed)
+    return Pseudopopulation(
+        rows=pseudo_rows,
+        components=components,
+        x=np.vstack(x_rows) if x_rows else np.empty((0, len(units))),
+        observed=np.vstack(observed_rows) if observed_rows else np.empty((0, len(units)), dtype=bool),
+    )
+
+
+def train_fit_masked_zscore(
+    x: np.ndarray, observed: np.ndarray, split: Sequence[str]
+) -> tuple[np.ndarray, dict[str, Any]]:
     train_mask = np.array([item == "train" for item in split], dtype=bool)
     train_observed = observed & train_mask[:, None]
     means = np.zeros(x.shape[1], dtype=np.float64)
@@ -535,18 +757,129 @@ def train_fit_impute_zscore(x: np.ndarray, observed: np.ndarray, split: Sequence
             means[col] = np.mean(values).item()
             std = np.std(values).item()
             stds[col] = std if std > 1e-12 else 1.0
-    z = (x - means[None, :]) / stds[None, :]
-    z[~observed] = 0.0
-    z[~np.isfinite(z)] = 0.0
-    burden = {
+    z = np.full_like(x, np.nan, dtype=np.float64)
+    z[observed] = ((x - means[None, :]) / stds[None, :])[observed]
+    observed_entries = parse_int(observed.sum().item(), "observed entries")
+    total_entries = observed.size
+    return z, {
         "rows": x.shape[0],
         "features": x.shape[1],
-        "observed_entries": parse_int(observed.sum().item(), "observed entries"),
-        "imputed_entries": parse_int((~observed).sum().item(), "imputed entries"),
-        "imputed_fraction": parse_int((~observed).sum().item(), "imputed entries") / observed.size,
-        "train_fit_policy": "observed train marginal mean per cell, represented as zero after train z-scoring",
+        "observed_entries": observed_entries,
+        "missing_entries": total_entries - observed_entries,
+        "observed_fraction": observed_entries / total_entries if total_entries else None,
+        "missing_fraction": 1 - (observed_entries / total_entries) if total_entries else None,
+        "normalization_policy": "per-cell mean/std fit on observed train pseudopop values only",
+        "imputation_policy": "none; missing cells stay masked and distances use overlap only",
     }
-    return z, burden
+
+
+def masked_nearest_centroid_predictions(
+    z: np.ndarray,
+    observed: np.ndarray,
+    rows: Sequence[Mapping[str, Any]],
+    min_overlap: int = 5,
+) -> tuple[list[str], list[int], list[bool]]:
+    labels = np.array([str(row["target_label"]) for row in rows], dtype=object)
+    starts_goals = np.array(
+        [f"{row['start']}->{row['goal']}" for row in rows], dtype=object
+    )
+    split = np.array([str(row["split"]) for row in rows], dtype=object)
+    train_mask = split == "train"
+    centroids: dict[str, np.ndarray] = {}
+    centroid_observed: dict[str, np.ndarray] = {}
+    centroid_start_goal: dict[str, str] = {}
+    for label in sorted(set(labels[train_mask])):
+        mask = train_mask & (labels == label)
+        obs_counts = observed[mask].sum(axis=0)
+        sums = np.nansum(np.where(observed[mask], z[mask], 0.0), axis=0)
+        centroid = np.full(z.shape[1], np.nan, dtype=np.float64)
+        valid = obs_counts > 0
+        centroid[valid] = sums[valid] / obs_counts[valid]
+        centroids[label] = centroid
+        centroid_observed[label] = valid
+        centroid_start_goal[label] = str(starts_goals[mask][0])
+
+    predictions: list[str] = []
+    overlaps: list[int] = []
+    supported: list[bool] = []
+    global_labels = sorted(centroids)
+    for i, _row in enumerate(rows):
+        candidates = [
+            label
+            for label in global_labels
+            if centroid_start_goal[label] == starts_goals[i]
+        ]
+        best_label = ""
+        best_distance = math.inf
+        best_overlap = 0
+        for label in candidates:
+            overlap = observed[i] & centroid_observed[label]
+            overlap_n = parse_int(overlap.sum().item(), "overlap cells")
+            if overlap_n < min_overlap:
+                continue
+            distance = np.mean((z[i, overlap] - centroids[label][overlap]) ** 2).item()
+            if distance < best_distance:
+                best_distance = distance
+                best_label = label
+                best_overlap = overlap_n
+        predictions.append(best_label)
+        overlaps.append(best_overlap)
+        supported.append(bool(best_label))
+    return predictions, overlaps, supported
+
+
+def pseudopop_prediction_rows(
+    rows: Sequence[Mapping[str, Any]],
+    baseline: Sequence[str],
+    neural: Sequence[str],
+    overlaps: Sequence[int],
+    supported: Sequence[bool],
+) -> list[dict[str, Any]]:
+    out: list[dict[str, Any]] = []
+    for row, base_pred, neural_pred, overlap, is_supported in zip(
+        rows, baseline, neural, overlaps, supported, strict=True
+    ):
+        if row["split"] != "validation":
+            continue
+        out.append(
+            {
+                "pseudopop_row_id": row["pseudopop_row_id"],
+                "start": row["start"],
+                "goal": row["goal"],
+                "route_family": row["route_family"],
+                "target_label": row["target_label"],
+                "observed_cells": row["observed_cells"],
+                "missing_cells": row["missing_cells"],
+                "start_goal_majority_prediction": base_pred,
+                "condition_matched_pseudopop_neural_prediction": neural_pred,
+                "neural_overlap_cells": overlap,
+                "neural_prediction_supported": str(is_supported).lower(),
+                "baseline_correct": str(base_pred == row["target_label"]).lower(),
+                "neural_correct": str(neural_pred == row["target_label"]).lower(),
+            }
+        )
+    return out
+
+
+def neural_support_summary(
+    rows: Sequence[Mapping[str, Any]], overlaps: Sequence[int], supported: Sequence[bool]
+) -> dict[str, Any]:
+    validation = [
+        (row, overlap, ok)
+        for row, overlap, ok in zip(rows, overlaps, supported, strict=True)
+        if row["split"] == "validation"
+    ]
+    validation_overlaps = [overlap for _row, overlap, ok in validation if ok]
+    return {
+        "validation_supported_rows": sum(1 for _row, _overlap, ok in validation if ok),
+        "validation_unsupported_rows": sum(1 for _row, _overlap, ok in validation if not ok),
+        "validation_mean_overlap_cells_when_supported": (
+            sum(validation_overlaps) / len(validation_overlaps)
+            if validation_overlaps
+            else None
+        ),
+        "validation_min_overlap_cells_when_supported": min(validation_overlaps) if validation_overlaps else None,
+    }
 
 
 def majority_predictions(rows: Sequence[Mapping[str, Any]]) -> list[str]:
@@ -566,32 +899,12 @@ def majority_predictions(rows: Sequence[Mapping[str, Any]]) -> list[str]:
     return predictions
 
 
-def nearest_centroid_predictions(x: np.ndarray, rows: Sequence[Mapping[str, Any]]) -> list[str]:
-    labels = np.array([str(row["target_label"]) for row in rows], dtype=object)
-    starts_goals = np.array([f"{row['start']}->{row['goal']}" for row in rows], dtype=object)
-    split = np.array([str(row["split"]) for row in rows], dtype=object)
-    train_mask = split == "train"
-    centroids: dict[str, np.ndarray] = {}
-    centroid_start_goal: dict[str, str] = {}
-    for label in sorted(set(labels[train_mask])):
-        mask = train_mask & (labels == label)
-        centroids[label] = x[mask].mean(axis=0)
-        centroid_start_goal[label] = str(starts_goals[mask][0])
-    global_labels = sorted(centroids)
-    predictions: list[str] = []
-    for i, _row in enumerate(rows):
-        same_endpoint = [label for label in global_labels if centroid_start_goal[label] == starts_goals[i]]
-        candidates = same_endpoint or global_labels
-        distances = [
-            (np.sum((x[i] - centroids[label]) ** 2).item(), label)
-            for label in candidates
-        ]
-        predictions.append(min(distances)[1])
-    return predictions
-
-
-def metrics(rows: Sequence[Mapping[str, Any]], predictions: Sequence[str], model_name: str) -> dict[str, Any]:
-    validation_indices = [i for i, row in enumerate(rows) if row["split"] == "validation"]
+def metrics(
+    rows: Sequence[Mapping[str, Any]], predictions: Sequence[str], model_name: str
+) -> dict[str, Any]:
+    validation_indices = [
+        i for i, row in enumerate(rows) if row["split"] == "validation"
+    ]
     correct = 0
     by_class: dict[str, list[bool]] = defaultdict(list)
     by_start_goal: dict[str, list[bool]] = defaultdict(list)
@@ -604,15 +917,29 @@ def metrics(rows: Sequence[Mapping[str, Any]], predictions: Sequence[str], model
     return {
         "model": model_name,
         "validation_rows": len(validation_indices),
-        "validation_accuracy": correct / len(validation_indices) if validation_indices else None,
-        "validation_macro_class_accuracy": mean_or_none([mean_or_none([1.0 if ok else 0.0 for ok in v]) or 0.0 for v in by_class.values()]),
-        "validation_macro_start_goal_accuracy": mean_or_none([mean_or_none([1.0 if ok else 0.0 for ok in v]) or 0.0 for v in by_start_goal.values()]),
+        "validation_accuracy": correct / len(validation_indices)
+        if validation_indices
+        else None,
+        "validation_macro_class_accuracy": mean_or_none(
+            [
+                mean_or_none([1.0 if ok else 0.0 for ok in v]) or 0.0
+                for v in by_class.values()
+            ]
+        ),
+        "validation_macro_start_goal_accuracy": mean_or_none(
+            [
+                mean_or_none([1.0 if ok else 0.0 for ok in v]) or 0.0
+                for v in by_start_goal.values()
+            ]
+        ),
         "validation_classes": len(by_class),
         "validation_start_goal_pairs": len(by_start_goal),
     }
 
 
-def confusion_rows(rows: Sequence[Mapping[str, Any]], predictions: Sequence[str], model_name: str) -> list[dict[str, Any]]:
+def confusion_rows(
+    rows: Sequence[Mapping[str, Any]], predictions: Sequence[str], model_name: str
+) -> list[dict[str, Any]]:
     counts: Counter[tuple[str, str]] = Counter()
     for row, pred in zip(rows, predictions, strict=True):
         if row["split"] != "validation":
@@ -620,33 +947,15 @@ def confusion_rows(rows: Sequence[Mapping[str, Any]], predictions: Sequence[str]
         counts[(str(row["target_label"]), pred)] += 1
     return [
         {"model": model_name, "truth": truth, "prediction": pred, "count": count}
-        for (truth, pred), count in sorted(counts.items(), key=lambda item: (-item[1], item[0][0], item[0][1]))
+        for (truth, pred), count in sorted(
+            counts.items(), key=lambda item: (-item[1], item[0][0], item[0][1])
+        )
     ]
 
 
-def prediction_rows(rows: Sequence[Mapping[str, Any]], baseline: Sequence[str], neural: Sequence[str]) -> list[dict[str, Any]]:
-    out: list[dict[str, Any]] = []
-    for row, base_pred, neural_pred in zip(rows, baseline, neural, strict=True):
-        if row["split"] != "validation":
-            continue
-        out.append(
-            {
-                "source_trial_id": row["source_trial_id"],
-                "session_id": row["session_id"],
-                "start": row["start"],
-                "goal": row["goal"],
-                "route_family": row["route_family"],
-                "target_label": row["target_label"],
-                "start_goal_majority_prediction": base_pred,
-                "imputed_neural_nearest_centroid_prediction": neural_pred,
-                "baseline_correct": str(base_pred == row["target_label"]).lower(),
-                "neural_correct": str(neural_pred == row["target_label"]).lower(),
-            }
-        )
-    return out
-
-
-def shared_edge_candidates(rows: Sequence[Mapping[str, Any]], graph_spec: GraphSpec, limit: int = 120) -> list[dict[str, Any]]:
+def shared_edge_candidates(
+    rows: Sequence[Mapping[str, Any]], graph_spec: GraphSpec, limit: int = 120
+) -> list[dict[str, Any]]:
     top_by_condition: dict[tuple[str, str, str], Mapping[str, Any]] = {}
     counts: Counter[tuple[str, str, str]] = Counter()
     for row in rows:
@@ -660,7 +969,11 @@ def shared_edge_candidates(rows: Sequence[Mapping[str, Any]], graph_spec: GraphS
         segments = []
         for segment in str(row["fine_signature"]).split("|"):
             if segment:
-                segments.extend(parse_int(node, "fine signature node") for node in segment.split("-") if node)
+                segments.extend(
+                    parse_int(node, "fine signature node")
+                    for node in segment.split("-")
+                    if node
+                )
             segments.append(0)
         cleaned[key] = clean_path(segments, graph_spec.graph)
     out: list[dict[str, Any]] = []
@@ -668,7 +981,9 @@ def shared_edge_candidates(rows: Sequence[Mapping[str, Any]], graph_spec: GraphS
         for right_key in selected[i + 1 :]:
             if left_key[:2] == right_key[:2]:
                 continue
-            shared = longest_shared_contiguous_directed_segment(cleaned[left_key], cleaned[right_key])
+            shared = longest_shared_contiguous_directed_segment(
+                cleaned[left_key], cleaned[right_key]
+            )
             if shared.length <= 0:
                 continue
             out.append(
@@ -686,25 +1001,51 @@ def shared_edge_candidates(rows: Sequence[Mapping[str, Any]], graph_spec: GraphS
                     "shared_edges": json.dumps(shared.edges),
                 }
             )
-    out.sort(key=lambda r: (-r["shared_directed_edges"], r["shared_segment_classification"]))
+    out.sort(
+        key=lambda r: (-r["shared_directed_edges"], r["shared_segment_classification"])
+    )
     return out[:limit]
 
 
-def plot_sample_paths(rows: Sequence[Mapping[str, Any]], graph_spec: GraphSpec, output_dir: Path) -> list[Path]:
+def plot_sample_paths(
+    rows: Sequence[Mapping[str, Any]], graph_spec: GraphSpec, output_dir: Path
+) -> list[Path]:
     figure_dir = output_dir / "figures"
     figure_dir.mkdir(exist_ok=True)
     paths: list[Path] = []
-    samples = sorted(rows, key=lambda row: (row["split"] != "validation", row["start"], row["goal"], row["source_trial_id"]))[:12]
-    paths.append(plot_rows(samples, graph_spec, figure_dir / "sample_mapped_paths_by_source_trial.png"))
+    samples = sorted(
+        rows,
+        key=lambda row: (
+            row["split"] != "validation",
+            row["start"],
+            row["goal"],
+            row["source_trial_id"],
+        ),
+    )[:12]
+    paths.append(
+        plot_rows(
+            samples, graph_spec, figure_dir / "sample_mapped_paths_by_source_trial.png"
+        )
+    )
     top_pairs = Counter((row["start"], row["goal"]) for row in rows).most_common(6)
     pair_rows = []
     for pair, _count in top_pairs:
-        pair_rows.extend([row for row in rows if (row["start"], row["goal"]) == pair][:2])
-    paths.append(plot_rows(pair_rows[:12], graph_spec, figure_dir / "sample_mapped_paths_by_start_goal.png"))
+        pair_rows.extend(
+            [row for row in rows if (row["start"], row["goal"]) == pair][:2]
+        )
+    paths.append(
+        plot_rows(
+            pair_rows[:12],
+            graph_spec,
+            figure_dir / "sample_mapped_paths_by_start_goal.png",
+        )
+    )
     return paths
 
 
-def plot_rows(rows: Sequence[Mapping[str, Any]], graph_spec: GraphSpec, path: Path) -> Path:
+def plot_rows(
+    rows: Sequence[Mapping[str, Any]], graph_spec: GraphSpec, path: Path
+) -> Path:
     cols = 3
     rows_n = max(1, math.ceil(len(rows) / cols))
     fig, axes = plt.subplots(rows_n, cols, figsize=(12, rows_n * 3.5), squeeze=False)
@@ -717,12 +1058,19 @@ def plot_rows(rows: Sequence[Mapping[str, Any]], graph_spec: GraphSpec, path: Pa
         ax.set_yticks([])
     for ax, row in zip(axes.flat, rows, strict=False):
         for segment in str(row["fine_signature"]).split("|"):
-            nodes = [parse_int(node, "plot node") for node in segment.split("-") if node]
+            nodes = [
+                parse_int(node, "plot node") for node in segment.split("-") if node
+            ]
             if not nodes:
                 continue
             coords = [graph_spec.centroids[node] for node in nodes]
-            ax.plot([x for x, _ in coords], [y for _, y in coords], marker=".", linewidth=1)
-        ax.set_title(f"{row['source_trial_id']}\n{row['split']} {row['start']}→{row['goal']}", fontsize=8)
+            ax.plot(
+                [x for x, _ in coords], [y for _, y in coords], marker=".", linewidth=1
+            )
+        ax.set_title(
+            f"{row['source_trial_id']}\n{row['split']} {row['start']}→{row['goal']}",
+            fontsize=8,
+        )
     fig.tight_layout()
     fig.savefig(path, dpi=150)
     plt.close(fig)
@@ -744,7 +1092,9 @@ def run_audit(
     labels = load_trial_labels(import_dir, split_dir)
     trial_rows = build_trial_rows(import_dir, labels, graph_spec, output_dir)
     train_supported = supportable_signatures(trial_rows, min_train, 0)
-    train_validation_supported = supportable_signatures(trial_rows, min_train, min_validation)
+    train_validation_supported = supportable_signatures(
+        trial_rows, min_train, min_validation
+    )
     training_rows = apply_route_family(trial_rows, train_supported)
     units, units_by_session = load_units_by_session(import_dir)
 
@@ -777,7 +1127,14 @@ def run_audit(
     start_goal_path = write_csv(
         output_dir / "support_start_goal.csv",
         start_goal_support(training_rows),
-        ("start", "goal", "train_trials", "validation_trials", "train_sessions", "validation_sessions"),
+        (
+            "start",
+            "goal",
+            "train_trials",
+            "validation_trials",
+            "train_sessions",
+            "validation_sessions",
+        ),
     )
     fine_support_path = write_csv(
         output_dir / "fine_signature_support.csv",
@@ -828,7 +1185,7 @@ def run_audit(
         ),
     )
     cell_support_path = write_csv(
-        output_dir / "pseudopop_cell_support_and_imputation_burden.csv",
+        output_dir / "pseudopop_cell_support.csv",
         pseudopop_cell_support(training_rows, units, units_by_session),
         (
             "start",
@@ -839,7 +1196,7 @@ def run_audit(
             "sessions_observed",
             "cells_observed",
             "missing_cells_for_full195",
-            "full195_imputed_cell_fraction",
+            "missing_cell_fraction_for_full195",
             "missing_cell_ids",
             "missing_session_ids",
         ),
@@ -862,32 +1219,111 @@ def run_audit(
         ),
     )
 
-    baseline_pred = majority_predictions(training_rows)
-    x, observed = load_cue_feature_matrix(import_dir, training_rows, units)
-    z, imputation_burden = train_fit_impute_zscore(x, observed, [str(row["split"]) for row in training_rows])
-    neural_pred = nearest_centroid_predictions(z, training_rows)
-    baseline_metrics = metrics(training_rows, baseline_pred, "start_goal_majority")
-    neural_metrics = metrics(training_rows, neural_pred, "imputed_cue_counts_nearest_centroid_within_start_goal")
-    predictions_path = write_csv(
-        output_dir / "validation_predictions.csv",
-        prediction_rows(training_rows, baseline_pred, neural_pred),
+    cue_counts = load_cue_counts_by_source_cell(import_dir)
+    pseudopop = build_condition_pseudopopulation(
+        training_rows, units, units_by_session, cue_counts
+    )
+    pseudopop_rows_path = write_csv(
+        output_dir / "condition_pseudopopulation_rows.csv",
+        pseudopop.rows,
         (
-            "source_trial_id",
-            "session_id",
+            "pseudopop_row_id",
+            "split",
             "start",
             "goal",
             "route_family",
             "target_label",
+            "pseudopop_index_within_condition",
+            "observed_cells",
+            "missing_cells",
+            "observed_cell_fraction",
+            "component_sessions",
+            "missing_sessions",
+            "bootstrapped_component_sessions",
+            "component_session_ids",
+            "missing_session_ids",
+            "component_source_trial_ids",
+            "row_unit",
+        ),
+    )
+    pseudopop_components_path = write_csv(
+        output_dir / "condition_pseudopopulation_components.csv",
+        pseudopop.components,
+        (
+            "pseudopop_row_id",
+            "split",
+            "target_label",
+            "session_id",
+            "source_trial_id",
+            "cell_count",
+            "bootstrapped_component",
+        ),
+    )
+    feature_matrix_path = output_dir / "condition_pseudopopulation_features.npz"
+    np.savez_compressed(
+        feature_matrix_path,
+        x=pseudopop.x,
+        observed=pseudopop.observed,
+        unit_ids=np.array(units, dtype=object),
+        split=np.array([row["split"] for row in pseudopop.rows], dtype=object),
+        target_label=np.array(
+            [row["target_label"] for row in pseudopop.rows], dtype=object
+        ),
+        pseudopop_row_id=np.array(
+            [row["pseudopop_row_id"] for row in pseudopop.rows], dtype=object
+        ),
+    )
+
+    baseline_pred = majority_predictions(pseudopop.rows)
+    z, pseudopop_coverage = train_fit_masked_zscore(
+        pseudopop.x,
+        pseudopop.observed,
+        [str(row["split"]) for row in pseudopop.rows],
+    )
+    neural_pred, neural_overlaps, neural_supported = masked_nearest_centroid_predictions(
+        z, pseudopop.observed, pseudopop.rows
+    )
+    baseline_metrics = metrics(
+        pseudopop.rows, baseline_pred, "pseudopop_start_goal_majority"
+    )
+    neural_metrics = metrics(
+        pseudopop.rows,
+        neural_pred,
+        "condition_matched_pseudopop_nearest_centroid_within_start_goal",
+    ) | neural_support_summary(pseudopop.rows, neural_overlaps, neural_supported)
+    predictions_path = write_csv(
+        output_dir / "validation_predictions.csv",
+        pseudopop_prediction_rows(
+            pseudopop.rows,
+            baseline_pred,
+            neural_pred,
+            neural_overlaps,
+            neural_supported,
+        ),
+        (
+            "pseudopop_row_id",
+            "start",
+            "goal",
+            "route_family",
+            "target_label",
+            "observed_cells",
+            "missing_cells",
             "start_goal_majority_prediction",
-            "imputed_neural_nearest_centroid_prediction",
+            "condition_matched_pseudopop_neural_prediction",
+            "neural_overlap_cells",
+            "neural_prediction_supported",
             "baseline_correct",
             "neural_correct",
         ),
     )
     confusion_path = write_csv(
         output_dir / "validation_confusion.csv",
-        confusion_rows(training_rows, baseline_pred, "start_goal_majority")
-        + confusion_rows(training_rows, neural_pred, "imputed_cue_counts_nearest_centroid_within_start_goal"),
+        confusion_rows(pseudopop.rows, baseline_pred, "pseudopop_start_goal_majority")
+        + confusion_rows(
+            pseudopop.rows,
+            neural_pred,
+            "condition_matched_pseudopop_nearest_centroid_within_start_goal",
+        ),
         ("model", "truth", "prediction", "count"),
     )
     metrics_path = output_dir / "validation_metrics.json"
@@ -895,8 +1331,8 @@ def run_audit(
         metrics_path,
         {
             "baseline": baseline_metrics,
-            "imputed_neural_nearest_centroid": neural_metrics,
-            "imputation_burden": imputation_burden,
+            "condition_matched_pseudopop_nearest_centroid": neural_metrics,
+            "pseudopop_coverage": pseudopop_coverage,
         },
     )
     figure_paths = plot_sample_paths(training_rows, graph_spec, output_dir)
@@ -904,9 +1340,12 @@ def run_audit(
     split_summary = read_json(split_dir / "split_summary.json")
     import_summary = read_json(import_dir / "summary.json")
     class_counts = Counter(row["target_label"] for row in training_rows)
-    validation_labels = {row["target_label"] for row in training_rows if row["split"] == "validation"}
+    validation_labels = {
+        row["target_label"] for row in training_rows if row["split"] == "validation"
+    }
     artifact_paths = [
-        output_dir / "mapped_path_samples_train_validation_success_after_success.csv.gz",
+        output_dir
+        / "mapped_path_samples_train_validation_success_after_success.csv.gz",
         trial_path,
         start_goal_path,
         fine_support_path,
@@ -914,11 +1353,19 @@ def run_audit(
         training_table_path,
         cell_support_path,
         shared_path,
+        pseudopop_rows_path,
+        pseudopop_components_path,
+        feature_matrix_path,
         predictions_path,
         confusion_path,
         metrics_path,
         *figure_paths,
     ]
+    def artifact_key(path: Path) -> str:
+        if path.is_relative_to(output_dir):
+            return path.relative_to(output_dir).as_posix()
+        return path.as_posix()
+
     summary: dict[str, Any] = {
         "created_utc": datetime.now(UTC).isoformat(),
         "status": "completed_exploratory_training_run",
@@ -930,10 +1377,16 @@ def run_audit(
         "receipt_path": str(receipt_path),
         "input_artifact_hashes": {
             "trials.csv": import_summary.get("artifact_hashes", {}).get("trials.csv"),
-            "path_samples.csv.gz": import_summary.get("artifact_hashes", {}).get("path_samples.csv.gz"),
-            "cue_counts.csv.gz": import_summary.get("artifact_hashes", {}).get("cue_counts.csv.gz"),
+            "path_samples.csv.gz": import_summary.get("artifact_hashes", {}).get(
+                "path_samples.csv.gz"
+            ),
+            "cue_counts.csv.gz": import_summary.get("artifact_hashes", {}).get(
+                "cue_counts.csv.gz"
+            ),
             "units.csv": import_summary.get("artifact_hashes", {}).get("units.csv"),
-            "source_trial_splits.csv": split_summary.get("artifact_hashes", {}).get("source_trial_splits.csv"),
+            "source_trial_splits.csv": split_summary.get("artifact_hashes", {}).get(
+                "source_trial_splits.csv"
+            ),
             "geometry": graph_spec.geometry_sha256,
         },
         "split_hash": split_summary.get("split_hash"),
@@ -941,7 +1394,8 @@ def run_audit(
             "schema": GRAPH_SCHEMA,
             "script_primary_graph_hash": graph_spec.primary_graph_hash,
             "pinned_primary_graph_hash_from_receipt": PINNED_PRIMARY_GRAPH_HASH,
-            "script_hash_matches_pinned_receipt_hash": graph_spec.primary_graph_hash == PINNED_PRIMARY_GRAPH_HASH,
+            "script_hash_matches_pinned_receipt_hash": graph_spec.primary_graph_hash
+            == PINNED_PRIMARY_GRAPH_HASH,
             "node_count": len(graph_spec.centroids),
             "undirected_edge_count": graph_spec.undirected_edge_count,
             "directed_edge_count": len(graph_spec.directed_edges),
@@ -963,22 +1417,50 @@ def run_audit(
             "descriptive_support_min_validation_trials": min_validation,
             "unsupported_policy": ROUTE_OTHER,
             "train_supported_route_families_for_model": len(train_supported),
-            "train_validation_supported_route_families_descriptive": len(train_validation_supported),
+            "train_validation_supported_route_families_descriptive": len(
+                train_validation_supported
+            ),
             "target_classes": len(class_counts),
             "validation_target_classes": len(validation_labels),
         },
         "counts": {
             "endpoint_labelled_train_validation_trials": len(training_rows),
             "train_trials": sum(1 for row in training_rows if row["split"] == "train"),
-            "validation_trials": sum(1 for row in training_rows if row["split"] == "validation"),
-            "fine_signatures": len({row["fine_signature_sha256"] for row in training_rows}),
-            "coarse5_signatures": len({row["coarse5_signature"] for row in training_rows}),
-            "trials_collapsed_to_other": sum(1 for row in training_rows if row["route_family"] == ROUTE_OTHER),
+            "validation_trials": sum(
+                1 for row in training_rows if row["split"] == "validation"
+            ),
+            "fine_signatures": len(
+                {row["fine_signature_sha256"] for row in training_rows}
+            ),
+            "coarse5_signatures": len(
+                {row["coarse5_signature"] for row in training_rows}
+            ),
+            "trials_collapsed_to_other": sum(
+                1 for row in training_rows if row["route_family"] == ROUTE_OTHER
+            ),
+            "pseudopopulation_rows": len(pseudopop.rows),
+            "pseudopopulation_train_rows": sum(
+                1 for row in pseudopop.rows if row["split"] == "train"
+            ),
+            "pseudopopulation_validation_rows": sum(
+                1 for row in pseudopop.rows if row["split"] == "validation"
+            ),
+        },
+        "pseudopopulation": {
+            "row_unit": "condition_matched_pseudopopulation",
+            "assembly": "one or more deterministic pseudopop rows per split and target_label; each session contributes one same-condition source trial per row, and that session's cells use that trial's cue count",
+            "target_count_rule": "25th-percentile session trial count per condition, capped at 10, with deterministic within-session cycling when needed",
+            "cell_imputation": "none in V5; missing cells remain masked",
+            "neural_distance_min_overlap_cells": 5,
+            "target_classes": len({row["target_label"] for row in pseudopop.rows}),
+            "validation_target_classes": len(
+                {row["target_label"] for row in pseudopop.rows if row["split"] == "validation"}
+            ),
         },
         "validation": {
             "baseline": baseline_metrics,
-            "imputed_neural_nearest_centroid": neural_metrics,
-            "imputation_burden": imputation_burden,
+            "condition_matched_pseudopop_nearest_centroid": neural_metrics,
+            "pseudopop_coverage": pseudopop_coverage,
         },
         "commands": {
             "test": "uv run python -m unittest scripts.test_import_place195_sessions scripts.test_place195_split_and_behavior_audit scripts.test_place195_graph_path_baseline docs.cebra_pilot.implementation.tests.test_framework",
@@ -986,10 +1468,11 @@ def run_audit(
             f"--import-dir {import_dir} --split-dir {split_dir} --geometry {geometry} "
             f"--output-dir {output_dir} --receipt {receipt_path} "
             f"--min-train {min_train} --min-validation {min_validation}",
-            "post_run_validation": "artifact hashes recomputed; supportable_training_table.csv and validation_predictions.csv checked for zero test rows",
+            "post_run_validation": "artifact hashes recomputed; supportable_training_table.csv, condition_pseudopopulation_rows.csv, and validation_predictions.csv checked for zero test rows",
         },
         "guardrails": {
             "test_rows_in_outputs": False,
+            "cell_imputation_used_in_v5_neural_model": False,
             "imputation_is_primary_evidence": False,
             "claims_h1_evidence": False,
             "claims_simultaneous_population": False,
@@ -1000,16 +1483,18 @@ def run_audit(
             "stop if no train/validation route-family support remains",
             "stop before H1 claims until marker semantics and simultaneity are independently verified",
         ],
-        "artifact_hashes": {path.name: sha256_file(path) for path in artifact_paths},
-        "code_hashes": {"scripts/place195_graph_path_baseline.py": sha256_file(Path(__file__))},
+        "artifact_hashes": {artifact_key(path): sha256_file(path) for path in artifact_paths},
+        "code_hashes": {
+            "scripts/place195_graph_path_baseline.py": sha256_file(Path(__file__))
+        },
         "git": git_state(),
         "package_versions": package_versions(),
     }
     decisions_path = output_dir / "decisions.md"
     write_decisions(decisions_path, summary)
     write_receipt(receipt_path, summary)
-    summary["artifact_hashes"][decisions_path.name] = sha256_file(decisions_path)
-    summary["artifact_hashes"][receipt_path.name] = sha256_file(receipt_path)
+    summary["artifact_hashes"][artifact_key(decisions_path)] = sha256_file(decisions_path)
+    summary["artifact_hashes"][artifact_key(receipt_path)] = sha256_file(receipt_path)
     write_json(output_dir / "graph_path_baseline_summary.json", summary)
     return summary
 
@@ -1020,7 +1505,7 @@ def write_decisions(path: Path, summary: Mapping[str, Any]) -> None:
         "",
         f"Created UTC: {summary['created_utc']}",
         "",
-        "Status: exploratory support audit plus imputed selected-cell baseline; not H1 evidence.",
+        "Status: exploratory support audit plus condition-matched pseudopop baseline; not H1 evidence.",
         "",
         "## Decisions",
         "",
@@ -1029,8 +1514,9 @@ def write_decisions(path: Path, summary: Mapping[str, Any]) -> None:
         "- Endpoint-labelled rows use success_after_success.",
         "- Fine graph uses the pinned 1,344-node 4-neighbor centroid geometry.",
         "- Route family is exploratory fixed 5x5 graph-node signature; unsupported signatures collapse to __other_within_start_goal__.",
-        "- Missing selected-cell cue counts use train-fit marginal mean imputation, represented as zero after train z-scoring.",
-        "- Nearest-centroid classifier is constrained within start-goal at prediction time.",
+        "- V5 assembles condition-matched pseudopopulation rows instead of a source_trial x 195 matrix.",
+        "- Missing cells remain masked; no cell-value imputation is used in the V5 neural distance.",
+        "- Nearest-centroid classifier is constrained within start-goal at prediction time and uses overlapping observed cells only.",
         "",
         "## Commands",
         "",
@@ -1099,8 +1585,9 @@ def write_receipt(path: Path, summary: Mapping[str, Any]) -> None:
         "",
         "## Decision log",
         "",
-        "- Imputation was used only for the exploratory selected-cell cue baseline.",
-        "- The imputed baseline is not primary evidence because most global trial×cell entries are structurally missing.",
+        "- V5 replaces the trial-wise imputed baseline with condition-matched pseudopopulation rows.",
+        "- Missing cells stay masked; the neural distance uses overlapping observed cells only.",
+        "- This remains a cross-session pseudopopulation, not a simultaneous 195-cell population.",
         "- Marker semantics and simultaneous-population metadata remain unverified.",
         "- Locked test is still untouched for final evaluation.",
     ]
@@ -1133,7 +1620,17 @@ def main(argv: Sequence[str] | None = None) -> int:
             args.min_train,
             args.min_validation,
         )
-        print(json.dumps({"status": summary["status"], "output_dir": summary["output_dir"], "validation": summary["validation"]}, indent=2, sort_keys=True))
+        print(
+            json.dumps(
+                {
+                    "status": summary["status"],
+                    "output_dir": summary["output_dir"],
+                    "validation": summary["validation"],
+                },
+                indent=2,
+                sort_keys=True,
+            )
+        )
         return 0
     raise ValueError(args.command)
 

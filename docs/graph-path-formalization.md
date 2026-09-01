@@ -162,9 +162,17 @@ Primary analyses should use support-declared variants instead of silently imputi
 4. cross-condition shared-edge/segment contrasts if route-family labels are too sparse.
 
 2026-09-01 user decision: imputation is allowed for exploratory training runs
-only. The first implemented policy is train-fit marginal mean imputation per
+only. The first implemented policy was train-fit marginal mean imputation per
 cell, represented as zero after train-set z-scoring, with the imputation burden
 reported. Receipt: `notes/data_inspection/place195_graph_path_baseline_20260901.md`.
+
+2026-09-01 V5 pivot: the current baseline replaces the crude
+`source_trial × 195 cells` matrix with condition-matched pseudopopulation rows.
+Rows are matched on `(split, start, goal, route_family)`; each contributing
+session supplies one same-condition source trial, and that session's cells take
+cue counts from that trial. Missing cells stay masked; no V5 neural score uses
+cell-value imputation. Receipt:
+`notes/data_inspection/place195_graph_path_baseline_v5_20260901.md`.
 
 ## Cue feature approaches
 
