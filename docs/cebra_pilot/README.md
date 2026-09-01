@@ -10,13 +10,14 @@ pilot. The approved first-run software framework now lives under
 
 ## Read Order
 
-1. [`AGENTS.md`](AGENTS.md) — local rules and authority order.
-2. [`formalization.md`](formalization.md) — mathematical objects, estimands,
+0. `../prospective-path-research-flow-review.md` — pinned current-state review.
+1. `AGENTS.md` — local rules and authority order.
+2. `formalization.md` — mathematical objects, estimands,
    nulls, and fixed/deferred decisions.
-3. [`cebra-pilot-plan.md`](cebra-pilot-plan.md) — gated execution order.
-4. [`verification.md`](verification.md) — independent findings, corrections,
+3. `cebra-pilot-plan.md` — gated execution order.
+4. `verification.md` — independent findings, corrections,
    and unresolved blockers.
-5. [`sources/`](sources/) — historical source material; noncanonical.
+5. `sources/` — historical source material; noncanonical.
 
 Canonical workspace documents remain:
 

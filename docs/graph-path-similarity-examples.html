@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Graph Path Similarity Examples</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        margin: 32px;
+        color: #1f2937;
+        line-height: 1.45;
+      }
+      h1,
+      h2 {
+        color: #111827;
+      }
+      code,
+      pre {
+        background: #f3f4f6;
+        padding: 2px 5px;
+        border-radius: 4px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+        gap: 18px;
+      }
+      .card {
+        border: 1px solid #d1d5db;
+        border-radius: 12px;
+        padding: 16px;
+        background: #fff;
+      }
+      .good {
+        border-left: 6px solid #16a34a;
+      }
+      .warn {
+        border-left: 6px solid #f59e0b;
+      }
+      .bad {
+        border-left: 6px solid #dc2626;
+      }
+      svg {
+        width: 100%;
+        height: 220px;
+        background: #faf7ef;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+      }
+      .wall {
+        fill: #9ca3af;
+        opacity: 0.75;
+      }
+      .node {
+        fill: #e5e7eb;
+        stroke: #9ca3af;
+      }
+      .p1 {
+        fill: none;
+        stroke: #2563eb;
+        stroke-width: 6;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .p2 {
+        fill: none;
+        stroke: #dc2626;
+        stroke-width: 4;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-dasharray: 9 6;
+      }
+      .shared {
+        fill: none;
+        stroke: #16a34a;
+        stroke-width: 9;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        opacity: 0.35;
+      }
+      .label {
+        font-size: 13px;
+        font-weight: 700;
+        fill: #111827;
+      }
+      .small {
+        font-size: 12px;
+        fill: #374151;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-top: 12px;
+      }
+      th,
+      td {
+        border: 1px solid #d1d5db;
+        padding: 7px;
+        text-align: left;
+      }
+      th {
+        background: #f9fafb;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Graph Path Similarity Examples</h1>
+
+    <p>
+      This page uses toy paths on a simplified maze. It illustrates the rules
+      for the real graph-path audit, where the real nodes come from
+      <code>docs/geometry/maze_mesh_centroids_1344.txt</code>.
+    </p>
+
+    <pre>
+raw Unity path -> nearest graph nodes -> split invalid gaps -> collapse repeats -> directed edge sequence -> route signature</pre>
+
+    <h2>Primary rule</h2>
+    <ul>
+      <li>Use successful trials only.</li>
+      <li>
+        Use <code>success_after_success</code> when inferred start labels are
+        needed.
+      </li>
+      <li>Do route-definition work on train/validation only.</li>
+      <li>Do not bridge invalid gaps or invent edges.</li>
+    </ul>
+
+    <div class="grid">
+      <section class="card good">
+        <h2>1. Same start/goal, same route</h2>
+        <svg viewBox="0 0 300 180" role="img" aria-label="two identical paths">
+          <rect class="wall" x="115" y="65" width="28" height="28" />
+          <rect class="wall" x="158" y="65" width="28" height="28" />
+          <text class="label" x="18" y="154">S</text>
+          <text class="label" x="260" y="30">G</text>
+          <path
+            class="shared"
+            d="M35 145 L90 145 L90 108 L210 108 L210 35 L260 35"
+          />
+          <path
+            class="p1"
+            d="M35 145 L90 145 L90 108 L210 108 L210 35 L260 35"
+          />
+          <path
+            class="p2"
+            d="M35 145 L90 145 L90 108 L210 108 L210 35 L260 35"
+          />
+        </svg>
+        <p>
+          <b>Use:</b> exact route-family repeat inside one
+          <code>(start, goal)</code>.
+        </p>
+        <p>
+          <b>Claim:</b> useful for within-condition route decoding, but endpoint
+          confounds remain controlled by design only if alternatives exist.
+        </p>
+      </section>
+
+      <section class="card warn">
+        <h2>2. Same start, different goal, shared initial segment</h2>
+        <svg viewBox="0 0 300 180" role="img" aria-label="shared prefix">
+          <rect class="wall" x="120" y="55" width="35" height="35" />
+          <rect class="wall" x="165" y="95" width="35" height="35" />
+          <text class="label" x="18" y="154">S</text>
+          <text class="label" x="255" y="35">G1</text>
+          <text class="label" x="252" y="158">G2</text>
+          <path class="shared" d="M35 145 L90 145 L90 100" />
+          <path class="p1" d="M35 145 L90 145 L90 100 L220 100 L260 35" />
+          <path class="p2" d="M35 145 L90 145 L90 100 L220 135 L260 150" />
+        </svg>
+        <p>
+          <b>Use:</b> tests shared future movement, but initial overlap may just
+          be start/view/first-action coding.
+        </p>
+        <p><b>Verdict:</b> good sensitivity case, weak standalone evidence.</p>
+      </section>
+
+      <section class="card warn">
+        <h2>3. Different start, same goal, shared terminal segment</h2>
+        <svg viewBox="0 0 300 180" role="img" aria-label="shared suffix">
+          <rect class="wall" x="115" y="65" width="30" height="30" />
+          <rect class="wall" x="160" y="65" width="30" height="30" />
+          <text class="label" x="16" y="35">S1</text>
+          <text class="label" x="16" y="154">S2</text>
+          <text class="label" x="260" y="92">G</text>
+          <path class="shared" d="M150 90 L220 90 L260 90" />
+          <path class="p1" d="M35 35 L80 35 L80 90 L150 90 L220 90 L260 90" />
+          <path class="p2" d="M35 145 L80 145 L80 90 L150 90 L220 90 L260 90" />
+        </svg>
+        <p><b>Use:</b> terminal overlap across starts.</p>
+        <p>
+          <b>Verdict:</b> useful, but may be goal coding unless matched against
+          same-goal low-overlap paths.
+        </p>
+      </section>
+
+      <section class="card good">
+        <h2>4. Different endpoints, shared middle segment</h2>
+        <svg
+          viewBox="0 0 300 180"
+          role="img"
+          aria-label="shared middle segment"
+        >
+          <rect class="wall" x="118" y="35" width="32" height="32" />
+          <rect class="wall" x="118" y="115" width="32" height="32" />
+          <text class="label" x="16" y="35">S1</text>
+          <text class="label" x="16" y="154">S2</text>
+          <text class="label" x="255" y="35">G1</text>
+          <text class="label" x="255" y="154">G2</text>
+          <path class="shared" d="M95 90 L155 90 L205 90" />
+          <path class="p1" d="M35 35 L95 90 L155 90 L205 90 L260 35" />
+          <path class="p2" d="M35 145 L95 90 L155 90 L205 90 L260 145" />
+        </svg>
+        <p><b>Use:</b> best compositional test if enough data exists.</p>
+        <p>
+          <b>Claim:</b> cue geometry covaries with a reusable future path
+          component beyond endpoints.
+        </p>
+      </section>
+
+      <section class="card warn">
+        <h2>5. Same edge set, different order</h2>
+        <svg
+          viewBox="0 0 300 180"
+          role="img"
+          aria-label="same edge set but different order"
+        >
+          <text class="label" x="38" y="35">A</text>
+          <text class="label" x="140" y="35">B</text>
+          <text class="label" x="240" y="35">C</text>
+          <text class="label" x="38" y="145">D</text>
+          <text class="label" x="140" y="145">E</text>
+          <text class="label" x="240" y="145">F</text>
+          <path class="p1" d="M45 40 L145 40 L245 40 L245 140 L145 140" />
+          <path class="p2" d="M145 140 L245 140 L245 40 L145 40 L45 40" />
+        </svg>
+        <p>
+          <b>Lesson:</b> directed-edge Jaccard can say paths are similar even
+          when traversal order differs.
+        </p>
+        <p>
+          <b>Fix:</b> keep ordered signatures and shared contiguous segments.
+        </p>
+      </section>
+
+      <section class="card bad">
+        <h2>6. Invalid gap: do not bridge</h2>
+        <svg viewBox="0 0 300 180" role="img" aria-label="invalid gap split">
+          <rect class="wall" x="122" y="72" width="55" height="36" />
+          <text class="label" x="18" y="92">A</text>
+          <text class="label" x="258" y="92">B</text>
+          <path class="p1" d="M35 90 L92 90" />
+          <path class="p1" d="M205 90 L265 90" />
+          <line
+            x1="96"
+            y1="90"
+            x2="201"
+            y2="90"
+            stroke="#dc2626"
+            stroke-width="3"
+            stroke-dasharray="5 5"
+          />
+          <text class="small" x="110" y="68">invalid/unmapped</text>
+        </svg>
+        <p>
+          <b>Rule:</b> split into two segments. No edge is added across
+          missing/invalid samples.
+        </p>
+        <p>
+          <b>Reason:</b> interpolation can invent a route the monkey did not
+          take.
+        </p>
+      </section>
+    </div>
+
+    <h2>Similarity features</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>Captures</th>
+          <th>Failure mode</th>
+          <th>Use now?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Exact corridor/branch signature</td>
+          <td>Same ordered coarse route</td>
+          <td>Too sparse if graph too fine</td>
+          <td>Primary first count</td>
+        </tr>
+        <tr>
+          <td>Directed-edge Jaccard</td>
+          <td>Shared directed edges, ignores timing</td>
+          <td>Ignores order and repeats</td>
+          <td>Good support metric</td>
+        </tr>
+        <tr>
+          <td>Shared contiguous segment</td>
+          <td>Reusable path component</td>
+          <td>Initial/terminal overlap confounded by start/goal</td>
+          <td>Best for examples and H1b screen</td>
+        </tr>
+        <tr>
+          <td>Graph-DTW</td>
+          <td>Soft sequence alignment</td>
+          <td>More assumptions; can hide overfitting</td>
+          <td>Sensitivity only</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Pseudopopulation example</h2>
+    <pre>
+route_family R inside start=P2, goal=P5
+session 20180702 contributes its selected cells from one eligible source trial
+session 20180705 contributes its selected cells from one eligible source trial
+...
+concatenate selected-cell blocks -> synthetic cue vector labelled R</pre>
+
+    <p>
+      The label is the shared route family, not one real trial's exact path.
+      This can test condition-level route-family discrimination, not intention
+      or simultaneous population dynamics.
+    </p>
+  </body>
+</html>

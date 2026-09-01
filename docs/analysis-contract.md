@@ -63,7 +63,10 @@ start_id, goal_id, cue_id
 
 Cell identities may differ across sessions, but units within one claimed
 population vector must be verified as simultaneous. A cross-session
-pseudopopulation must be labeled as such and cannot answer trial-specific H1.
+pseudopopulation must be labeled as such and cannot answer trial-specific H1. The
+planned fixed-195 design is therefore a condition-level route-family analysis:
+trials are matched by behavior-defined route family, not claimed to be one real
+simultaneous 195-cell trial.
 
 ## Subsequent Path Table
 
@@ -119,6 +122,14 @@ source-trial train/validation/test assignments before adaptive path-metric or
 contrast selection. Use training/validation behavior to select rules; apply the
 frozen mapping once to the untouched test behavior. Target labels must be
 created from behavior alone, never jointly from neural activity.
+
+Current exploratory place195 path work uses
+`docs/geometry/maze_mesh_centroids_1344.txt` as the authoritative fine centroid
+map: line number is node ID, `0` is invalid, and primary fine adjacency is
+cardinal 4-neighbor adjacency at `0.625` Unity-coordinate spacing. Timeout trials
+are dropped for the planned experiment. When `start_id` is inferred from the
+previous goal, the primary endpoint-labelled subset is `success_after_success`:
+the previous and current trials both ended successfully.
 
 ## Shared Path Components Across Conditions
 
