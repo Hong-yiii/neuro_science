@@ -108,12 +108,17 @@ This is the practical checklist for the prospective hippocampal path project and
     to `outputs/prospective_path_first_run/place195-behavior-audit-20260830-v3/`;
     no visualization, graph, or route family yet.
 - [ ] Count trials and successful trials per `(start, goal)` condition.
-  - 2026-08-30: counted provisional marker-pair support only; do not treat it as
-    true `(start, goal)` until marker semantics are lab-confirmed.
+  - 2026-08-30: counted provisional marker-pair support only.
+  - 2026-09-01: marker probe supports current minor digit as cue/goal and
+    previous successful trial's minor digit as start; use `success_after_success`
+    for endpoint-labelled primary audits. See
+    `notes/data_inspection/place195_marker_semantics_probe_20260901.md`.
 - [ ] Quantify within-condition path variation before choosing a model.
   - 2026-08-30: recorded train/validation native Unity duration/distance/path-row
-    summaries by provisional marker pair; graph/path variation remains blocked on
-    authoritative geometry.
+    summaries by provisional marker pair.
+  - 2026-09-01: authoritative fine geometry is filed at
+    `docs/geometry/maze_mesh_centroids_1344.txt`; next step is train/validation
+    mapped-path and route-signature support audit.
 - [ ] Construct and verify maze adjacency from authoritative geometry.
 - [ ] Convert paths to directed edge sequences and mark obligatory versus
   variable initial, middle, and terminal segments.
@@ -177,8 +182,12 @@ Start here:
 2. [ ] Confirm cue-period access, source-trial linkage, and real recording groups
    for the fixed 195 spatial cells; leave the all-cell expansion for future work.
 3. [ ] Confirm authoritative maze geometry/adjacency and the meaning of bin `0`.
+   - 2026-09-01: centroid map accepted as authoritative; `0` is invalid; still
+     record a graph hash and verify mapped-path behavior before freezing route
+     families.
 4. [ ] Audit within-`(start, goal)` ordered corridor/branch signatures and the
    support for path-matched pseudotrials across recording groups and splits.
+   - Active checklist: `todo/graph-path-pseudopopulation.md`.
 5. [ ] Determine whether route-family differences are identifiable beyond start
    and goal before choosing one provisional representation and baseline.
 6. [x] Use Python first for loading, validation, and visualization; retain Julia

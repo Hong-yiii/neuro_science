@@ -115,14 +115,16 @@ X^{\mathrm{rate}}_{iu}
      {\sum_bM_{ib}\Delta t_{ib}}.
 \]
 
-Count versus rate and the cue window are deferred until timing and missingness
-are verified. If all valid trials have equal exposure, counts preserve the
-Poisson observation scale most directly. If exposure differs, rates or a count
-model with exposure must be considered.
+For the current exploratory path-family work, use `100 ms` cue-time bins as the
+primary neural feature so temporal cue dynamics are preserved. The total-count
+collapse remains a sanity baseline, and exposure-normalized rates or count models
+with exposure offsets are sensitivities if cue-bin exposure differs materially.
 
 The independent evaluation unit is source trial \(i\), not bin \((i,b)\). All
 bins, windows, augmentations, and bootstrapped derivatives of one source trial
-remain in one split.
+remain in one split. A later CEBRA-Time or behavior-conditioned CEBRA pass may
+use `(trial, cue_bin)` samples only with explicit trial-boundary handling so
+positive pairs never cross source trials.
 
 ## Sequential Dependence And Selection
 
@@ -168,6 +170,28 @@ exploratory and a later confirmatory claim requires a new untouched session or
 dataset.
 
 ## Graph And Path Construction
+
+Current exploratory decisions from 2026-09-01 are documented in
+`../graph-path-formalization.md`. The authoritative centroid map is
+`../geometry/maze_mesh_centroids_1344.txt` with SHA-256
+`479f0df501e92e167206248eff2d0a44ba5f26cd62cfcc879dcaad979d7a7e66`.
+For the current path-family audit, line number `1..1344` is the fine graph node
+ID, coordinates are Unity-space centroids, `0` is invalid, and primary fine-graph
+adjacency is directed cardinal 4-neighbor adjacency at `0.625` coordinate-unit
+spacing. The primary graph hash is
+`1e7804c5d2167dcd8709a9760d8917034cb60e36e936229fad9056b1dae0f9ad`.
+Unity `position_axis1, position_axis2` are treated as aligned to these geometry
+axes for this exploratory phase.
+
+The current marker minor digit is accepted for exploratory work as the current
+cue/goal poster ID. When a start label is required, infer it from the previous
+successful trial's marker digit; first trials and trials after timeouts are not
+eligible for start-goal matched primary analyses unless a separate verified start
+source is supplied.
+
+The primary experiment drops current timeout trials. Analyses using inferred
+start labels should use the stricter `success_after_success` subset: current
+trial success and previous trial success.
 
 ### Authoritative graph
 
@@ -706,8 +730,11 @@ linkage is demonstrated.
 
 ### Fixed-195 path-family pseudopopulation
 
-The first exploratory pseudopopulation fixes the 195 cells selected for spatial
-tuning; expansion to all recorded cells is deferred. Let
+The first exploratory pseudopopulation starts from the 195 cells selected for
+spatial tuning, but the 2026-09-01 support probe shows the current split cannot
+support full-195 validation without imputation even for `(start, goal)` labels.
+Use support-declared subsets or a new explicitly exploratory stratified split if
+full-195 validation is required. Expansion to all recorded cells is deferred. Let
 
 \[
 f_i=\phi(P_i;s_i,g^*_i)
@@ -740,11 +767,14 @@ Source-trial splits are fixed before fitting \(\phi\). Pseudotrials are assemble
 separately inside each split, and every source trial and bootstrap derivative
 remains in one split. Design eligibility requires independent training/validation
 source-trial support for each retained route family in every contributing
-recording group. Missing blocks are not imputed. The frozen mapping is applied to
-test behavior once; a predeclared test-support failure makes the affected
-contrast non-evaluable and cannot trigger redesign. The primary null permutes
-route-family labels within recording group, start, and goal before pseudotrial
-reconstruction.
+recording group or session-level selected-cell block. Missing blocks are not
+imputed. If the full 195-cell design is unsupported, the audit may declare
+smaller evaluable pseudopopulations or merge route families, but it may not
+silently change channels after inspecting test support. The frozen mapping is
+applied to test behavior once; a predeclared test-support failure makes the
+affected contrast non-evaluable and cannot trigger redesign. The primary null
+permutes route-family labels within recording group/session block, start, and
+goal before pseudotrial reconstruction.
 
 This analysis estimates condition-level route-family discrimination beyond
 endpoints. Because the route label is used to align trials across sessions, it
@@ -761,10 +791,7 @@ baselines, and held-out metrics to biology and agent separately.
 For condition/path RDMs \(D^B,D^A\), a descriptive comparison is
 
 \[
-\rho_{BA}
-=
-
-\rho(\operatorname{vec}D^B,\operatorname{vec}D^A).
+\rho_{BA}=\rho(\operatorname{vec}D^B,\operatorname{vec}D^A).
 \]
 
 Use predeclared matched conditions, endpoint controls, biological
@@ -782,16 +809,18 @@ equivalence or a shared mechanism.
 | Scientific order | Fixed | Data/split audit → behavior audit → raw/PCA → boundary-safe CEBRA-Time → optional path-conditioned CEBRA |
 | Current local neural data | Blocked | Does not satisfy cue/simultaneity/path linkage |
 | Pseudopopulation claim | Fixed | Condition-level route-family discrimination only; exact path and simultaneous-population claims remain blocked |
-| First pseudopopulation cells | Fixed | 195 spatially selected cells; all-cell expansion is future work |
-| Pseudopopulation route target | Provisional | Exact ordered corridor/branch signature within start-goal; cluster only if the support audit requires it |
+| First pseudopopulation cells | Fixed | Start from the 195 spatially selected cells, but current split fails full-195 validation even for `(start, goal)`; use support-declared subsets or a new exploratory stratified split; all-cell expansion is future work |
+| Pseudopopulation route target | Provisional | Exact ordered corridor/branch signature within start-goal; cluster only if the train/validation support audit requires it |
 | Graph role | Fixed | Candidate behavioral ruler, not hypothesis |
-| Primary graph cleaning | Provisional | Split invalid gaps; collapse repeats for shape; reject nonadjacent transitions; no primary interpolation |
+| Authoritative geometry | Fixed for exploratory audit | `../geometry/maze_mesh_centroids_1344.txt`; line number is node ID; 4-neighbor `0.625` adjacency |
+| Trial outcome inclusion | Fixed for current experiment | Drop current timeout trials; use `success_after_success` when inferred start labels are required |
+| Primary graph cleaning | Provisional | Map Unity samples to nearest centroid; split invalid gaps; collapse repeats for shape; reject nonadjacent transitions; no primary interpolation |
 | Primary neural evaluation scope | Fixed | Within verified simultaneous group, then group-level synthesis |
 | H1a estimand | Fixed | \(\Delta_C\), plus nuisance-adjusted sensitivity \(\Delta_{C^+}\) |
 | Shared-path statistic | Provisional | Matched per-anchor \(\delta_i\), source-level resampling/nulls |
 | CEBRA-Time | Blocked with public sklearn API | Installed 0.6.1 preflight passes, but grouped trial boundaries are not exposed |
 | Path-conditioned sampler | Deferred | Requires identifiable contrasts and lower-level implementation review |
-| Cue count/rate/window | Deferred | Requires verified exposure/timing |
+| Cue feature/window | Provisional | Primary `100 ms` cue-time bins; total-count collapse baseline; rate/exposure sensitivity if needed |
 | Graph granularity | Deferred | Training/validation behavior only |
 | Primary path target/loss | Deferred | Freeze before final test |
 | Effect threshold | Deferred | Freeze with target/null before final test |

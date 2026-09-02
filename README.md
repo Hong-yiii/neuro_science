@@ -28,9 +28,10 @@ learned independently by an artificial navigation agent is H2, a stretch aim.
 Place, view, and conjunctive analyses remain supporting validation and confound
 checks rather than the primary question.
 
-See [`docs/research-questions.md`](docs/research-questions.md) for the canonical
-framing and [`docs/analysis-contract.md`](docs/analysis-contract.md) for the data
-required to test it.
+Start with [`docs/prospective-path-research-flow-review.md`](docs/prospective-path-research-flow-review.md)
+for the pinned current-state review. See [`docs/research-questions.md`](docs/research-questions.md)
+for the canonical framing and [`docs/analysis-contract.md`](docs/analysis-contract.md)
+for the data required to test it.
 
 ## Submodules
 
