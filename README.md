@@ -28,10 +28,21 @@ learned independently by an artificial navigation agent is H2, a stretch aim.
 Place, view, and conjunctive analyses remain supporting validation and confound
 checks rather than the primary question.
 
-Start with [`docs/prospective-path-research-flow-review.md`](docs/prospective-path-research-flow-review.md)
-for the pinned current-state review. See [`docs/research-questions.md`](docs/research-questions.md)
-for the canonical framing and [`docs/analysis-contract.md`](docs/analysis-contract.md)
-for the data required to test it.
+Latest exploratory results: [`V6–V9 teaching and audit report`](docs/reports/place195-v6-v9-autoresearch-20260906.md)
+(2026-09-06): geometry graph, pseudopopulation support, cue bins, PCA, and GPU CEBRA.
+The bounded benchmark was nonpositive; the report documents sparse source support
+and an early holdout-exposure incident, so it is not confirmatory H1 evidence.
+
+- [Professor HTML report](docs/professor_updates/place195_v6_v9_20260906/place195-v6-v9-professor-methods-results-validity-20260906.html): download for offline reading with embedded figures.
+- [Audit instructions and non-pseudopopulation next steps](docs/reports/place195-audit-and-next-steps-20260907.md).
+- [Data-volume comparison with CEBRA and hippocampal studies](docs/reports/cebra-data-volume-comparison-20260907.md).
+
+Raw data, detailed run artifacts, and runtime environments remain local/ignored;
+links into `outputs/` in the audit Markdown require the data-equipped checkout.
+
+For earlier context, see [`docs/prospective-path-research-flow-review.md`](docs/prospective-path-research-flow-review.md).
+See [`docs/research-questions.md`](docs/research-questions.md) for the canonical framing
+and [`docs/analysis-contract.md`](docs/analysis-contract.md) for the data required to test it.
 
 ## Submodules
 
