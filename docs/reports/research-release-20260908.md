@@ -36,13 +36,15 @@ The pre-existing main-checkout baseline formatting patch remains local and was n
 
 ## Checks actually rerun for this package
 
-All below read accepted saved outputs; none refits a biological model, reloads checkpoints, reads raw/importer tables or materializes original split assignments.
+The checks below read accepted saved outputs or shipped files; none refits a biological model, reloads checkpoints, reads raw/importer tables or materializes original split assignments.
 
 | Check | Verified outcome | Boundary |
 | --- | --- | --- |
 | Existing V6–V9 helper | Report/code/source-tensor hashes; 52 fit records, 52,000 loss rows, saved reload receipts; 24 observed CEBRA metric rows recomputed; eight non-fitting tests passed | Saved reload receipts checked, not checkpoint reload repeated. |
 | Path verifier | 342 fit records; 510,000 updates; 4,488 hashed artifacts; 42 prefix receipts; exact weighted predictions, source separation and null recalculation | Exact observed maximum 7/12, 18 inclusive exceedances, family p **19/21**. Track C null table consistency is also checked; not lab metadata or every possible analysis invariant. |
 | Bounded endpoint verifier | **2,251 baseline hashes + 5,515 study hashes**; **690 baseline + 1,618 follow-up metric rows** independently recalculated | Does not repeat original-split, source-assembly, scaler or checkpoint-reload checks. Those have historical receipts, not newly claimed coverage. |
+
+The final merged package also passed **98 shipped-file checksums**, preserved all **9 numerical path-report tables and 12 figures**, and matched **5,253 retained local path-artifact hashes**. Both verification CLIs rejected `-O` as intended. An initial local-inventory command used the release checkout instead of the owning path worktree and failed on missing paths; the corrected command passed without changing artifacts or the inventory.
 
 Hash counts are manifest entries, not counts of independent experiments or necessarily unique files. Software checks and AI-assisted reviews are not biological replication or external human peer review. The original holdout remains exposed.
 
@@ -68,7 +70,39 @@ RELEASE=/home/hongyi-home-lab/neuro_science-release-20260908
   /home/hongyi-home-lab/neuro_science-start-goal-cebra/outputs/start-goal-autoresearch-20260907
 ```
 
-The integrated code-only suite also passed **82 tests** in 2.806 seconds. It excludes two local-input tests (`test_actual_input_gate` and `test_saved_manifest_has_seven_session_components_per_pseudorow`); the latter was separately covered by the original V6–V9 artifact helper. The suite includes tiny CPU optimization tests on invented data, not biological model fits. All active Python scripts parsed. LSP checks were partly inconclusive; a sklearn `zero_division=0` stub warning was classified as a false positive against the supported, successfully executed runtime API. No full-project type-clean claim is made. Logs and copy identities are under [release receipts](release-20260908/).
+The final merged-tree code-only suite passed **82 tests** in 2.879 seconds; the earlier 2.806-second candidate check is preserved separately. It excludes two local-input tests (`test_actual_input_gate` and `test_saved_manifest_has_seven_session_components_per_pseudorow`); the latter was separately covered by the original V6–V9 artifact helper. The suite includes tiny CPU optimization tests on invented data, not biological model fits. All active Python scripts parsed. LSP checks were partly inconclusive; a sklearn `zero_division=0` stub warning was classified as a false positive against the supported, successfully executed runtime API. No full-project type-clean claim is made. Logs and copy identities are under [release receipts](release-20260908/).
+
+Package and local-inventory commands (different working-directory requirements):
+
+```sh
+python "$RELEASE/scripts/verify_path_generalization_package.py"
+(cd /home/hongyi-home-lab/neuro_science-path-diagnosis && \
+  sha256sum --status -c "$RELEASE/docs/professor_updates/path_generalization_20260907/LOCAL_SHA256SUMS")
+```
+
+To repeat the bounded software suite for this release (uses the runtime above, including synthetic CPU optimizers):
+
+```sh
+cd "$RELEASE"
+"$PY" - <<'PY'
+import unittest
+
+def flatten(item):
+    if isinstance(item, unittest.TestSuite):
+        for child in item:
+            yield from flatten(child)
+    else:
+        yield item
+
+omit = {'test_actual_input_gate',
+        'test_saved_manifest_has_seven_session_components_per_pseudorow'}
+suite = unittest.defaultTestLoader.discover('scripts', pattern='test_*.py')
+cases = [case for case in flatten(suite)
+         if case.id().rsplit('.', 1)[-1] not in omit]
+result = unittest.TextTestRunner().run(unittest.TestSuite(cases))
+raise SystemExit(not result.wasSuccessful())
+PY
+```
 
 The endpoint verifier is a small read-only packaging check, not a replacement for the fuller historical scientific audit. Its synthetic regression tests cover metric calculation, changed-file detection and rejecting a manifest path outside its allowed artifact root. Missing/corrupt artifacts intentionally fail the command; it never rewrites a receipt to make verification pass.
 
@@ -81,4 +115,4 @@ The endpoint verifier is a small read-only packaging check, not a replacement fo
 - Some historical local links necessarily remain local. The portable HTML copies and this index remove dependence on a running cmux viewer for the delivered reports; they do not make model reproduction data-free.
 - The small original path contrast, the 30-class endpoint task and broader real-trial Track C are different estimands. No favorable endpoint setting, flipped validation label, selected threshold or synthetic sample count converts this package into confirmation of H1.
 
-Concurrent source-worktree packaging changes are reconciled at release review rather than overwritten. The final PR description records verification/review status; this document is not authorization for further fitting, new data access, cleanup, service changes or an external artifact upload.
+The reviewed path leaf was merged as exact commit `9e0457438c901ad6aa0c06be107d2cc130e7a884`. Four documentation checksum entries were resealed for combined navigation/scope; protected report/code/archive bytes and the local inventory were unchanged. See [leaf integration](release-20260908/leaf-integration.json) and [preservation manifest](release-20260908/preservation-manifest.json). An ensuing formatting-only difference in the leaf working verifier was observed (AST identical); the release retains the committed bytes and does not restore another session's working files. The final PR description records verification/review status; this document is not authorization for further fitting, new data access, cleanup, service changes or an external artifact upload.

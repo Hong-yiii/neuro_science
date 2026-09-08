@@ -1,0 +1,15 @@
+{
+  "status": "verified",
+  "files": 98,
+  "unchanged_tables": 9,
+  "figures": 12
+}
+
+PASS: retained path-study local inventory hashes from owning worktree
+.....................................................................{"case": "test", "seed": 0, "target": "joint", "balanced_accuracy": 0.03333333333333333}
+.............
+----------------------------------------------------------------------
+Ran 82 tests in 2.879s
+
+OK
+PASS: 82 code-only tests; all scripts parse; both -O negative controls rejected.
