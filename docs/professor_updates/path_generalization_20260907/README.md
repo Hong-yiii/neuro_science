@@ -23,7 +23,9 @@ The preceding [V6–V9 report](../../reports/place195-v6-v9-autoresearch-2026090
 
 All work stays within the195 selected-unit scope. No excluded supplement was restored. Original test exposure is permanent; no new test-model evaluation or pristine confirmation occurred. Pseudopopulations do not reconstruct simultaneous cross-session dynamics, and BA here is binary component classification—not full-path accuracy.
 
-## What this PR actually contains
+## What this path-study subpackage contains
+
+The combined PR also includes endpoint research and the cross-study synthesis. This directory's evidence inventory and local-output checksums cover the path study only; use the [global handoff](../../reports/README.md) for the complete package.
 
 | Included in Git | Retained locally, NOT uploaded by this package |
 | --- | --- |

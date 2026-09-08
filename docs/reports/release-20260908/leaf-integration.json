@@ -7,11 +7,22 @@
       "combined_sha256": "81293b5e542a1ab05abd9b8120ffb472d5c30262986a53047f40893baab039e3"
     },
     {
+      "path": "docs/professor_updates/path_generalization_20260907/README.md",
+      "leaf_sha256": "48c4f9dd187492c0cfc57c365ac29eb1556685d186d62ec0c70a783fe6e25d7e",
+      "combined_sha256": "283790b822637a6dc62c05b980e179f436b641cf5037b6e137ded3a890b2f167"
+    },
+    {
+      "path": "docs/professor_updates/path_generalization_20260907/STATUS.md",
+      "leaf_sha256": "264259a73ffd1e36bf08b7b6daea1b04c5e8f002375515448a73b961e162ce76",
+      "combined_sha256": "ab8a7da04cedd80efc552984557e1f60e33dd55dc49333fea09d3aa8864b5da4"
+    },
+    {
       "path": "docs/reports/place195-audit-and-next-steps-20260907.md",
       "leaf_sha256": "ed468e72bf3d823f30ca1a88e307d52406d88b6d5a428afdbbe6175099ca9c0e",
       "combined_sha256": "414ee50651444bbe4d67a3bb8947c49a69043b98a1b1bf64d1f0b9b92866ec7a"
     }
   ],
+  "reason": "Merge global navigation and clarify subpackage versus umbrella scope only; no numerical/report/source changes",
   "protected_report_and_code_bytes_unchanged": true,
   "local_inventory_unchanged": true
 }
