@@ -1,0 +1,48 @@
+......................................
+----------------------------------------------------------------------
+Ran 38 tests in 0.419s
+
+OK
+{
+  "status": "verified",
+  "fits": 342,
+  "updates": 510000,
+  "hashed_artifacts": 4488,
+  "numeric_prefix_pairs": 42,
+  "exact_observed_family_max": "7/12",
+  "inclusive_exceedances": 18,
+  "exact_family_p": "19/21",
+  "family_p": 0.9047619047619048,
+  "new_fits": 0
+}
+{
+  "assets_dir": "/home/hongyi-home-lab/neuro_science-path-diagnosis/outputs/path-generalization-20260907/results-20260907T081200Z/report_assets/path_generalization_20260907",
+  "dry_run": true,
+  "mode": "final",
+  "output": "/home/hongyi-home-lab/neuro_science-path-diagnosis/docs/professor_updates/path_generalization_20260907/path-generalization-teaching-audit-20260907.html",
+  "track_b_final_ready": true,
+  "validation_checks": [
+    "Track A V2 complete and exact-Q products are 24 absent / 6 present",
+    "Track C complete; guarded export skipped 12,486 test rows and yielded zero forbidden rows",
+    "Track B observed fit_info inventory is 50+6+4+2 and primary sampled-train BA is 1 for all 50",
+    "Assembly-transfer replay used 50 CPU-forward checkpoint evaluations and zero new fits"
+  ]
+}
+All checks passed!
+test_assemble_pseudo_uses_one_source_per_session_for_all_cells_bins (scripts.test_place195_v7_v8_neural_experiments.V7V8NeuralExperimentsTest.test_assemble_pseudo_uses_one_source_per_session_for_all_cells_bins) ... ok
+test_half_open_bin_events_and_conservation (scripts.test_place195_v7_v8_neural_experiments.V7V8NeuralExperimentsTest.test_half_open_bin_events_and_conservation) ... ok
+test_source_shuffle_preserves_session_split_counts (scripts.test_place195_v7_v8_neural_experiments.V7V8NeuralExperimentsTest.test_source_shuffle_preserves_session_split_counts) ... ok
+test_flatten_rows_preserves_trial_bins_and_labels (scripts.test_place195_v8b_v9_cebra.V8bV9CebraTest.test_flatten_rows_preserves_trial_bins_and_labels) ... ok
+test_time_loader_samples_only_within_trial_offset_one (scripts.test_place195_v8b_v9_cebra.V8bV9CebraTest.test_time_loader_samples_only_within_trial_offset_one) ... ok
+test_offset1_fast_path_matches_cebra_trial_expansion (scripts.test_place195_v8b_v9_cebra.V8bV9CebraTest.test_offset1_fast_path_matches_cebra_trial_expansion) ... ok
+test_behavior_loader_samples_matching_labels (scripts.test_place195_v8b_v9_cebra.V8bV9CebraTest.test_behavior_loader_samples_matching_labels) ... ok
+test_saved_manifest_has_seven_session_components_per_pseudorow (scripts.test_place195_v8b_v9_cebra.V8bV9CebraTest.test_saved_manifest_has_seven_session_components_per_pseudorow) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 1.276s
+
+OK
+PASS: two reports, two experiment scripts, and primary source tensor hashes
+PASS: 52 final fit records, 52,000 saved loss rows, all saved reload receipts zero
+PASS: all 24 observed CEBRA train/validation metric rows recomputed from predictions
+PASS: eight non-fitting tests. This checks implementation/artifact consistency, not biological validity.

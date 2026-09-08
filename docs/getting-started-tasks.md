@@ -1,5 +1,13 @@
 # Getting Started Tasks
 
+> **Historical onboarding ledger; current next steps updated 2026-09-08.**
+> Earlier unchecked items below are not evidence that the completed V6–V9 and
+> path-generalization experiments never ran, nor that confirmatory H1 gates have
+> passed. Start with the [completed-study/status index](professor_updates/path_generalization_20260907/README.md)
+> and [current proposed study](reports/path-generalization-next-steps-20260908.md).
+> Fixed195 is a scope restriction, not a requirement for a195-column common panel.
+> Original test exposure is permanent; old “locked/untouched” statements are dated.
+
 This is the practical checklist for the prospective hippocampal path project and its later artificial-agent extension. Each task should be small enough to complete independently and leave behind a note, command, screenshot, or verified outcome.
 
 ## How To Use This
@@ -173,22 +181,22 @@ This is the practical checklist for the prospective hippocampal path project and
 - [ ] Predefine whether comparison means information, geometry, or dynamics.
 - [ ] Repeat across multiple seeds or checkpoints where available.
 
-## Immediate Next Tasks
+## Immediate Next Tasks — Proposed 2026-09-08
 
-Start here:
+1. [ ] Freeze a meaningful route-component definition and cue window using task
+   meaning and training support, not a neural-outcome winner. Distinguish
+   interior from anywhere presence explicitly.
+2. [ ] Resolve outstanding task/clock/recording-group and nuisance metadata
+   within the195 selected units; no excluded-unit recovery or scope expansion.
+3. [ ] Measure independent-source population-pattern reproducibility and simple
+   regularized decoding, with a neural-only positive control across conditions
+   where its target varies. Individual-cell significance is not a gate.
+4. [ ] Preserve the existing source-first, session-block/bin-aware pseudopopulation
+   construction; quantify source uncertainty separately from synthetic-row noise.
+5. [ ] Define a bounded comparison of representations and matched nulls, plus
+   source-level reliability/injected-signal checks for any proposed collection.
+6. [ ] Reserve genuinely unexposed observations prospectively if confirmation is
+   intended. Do not rename inspected development resplits as pristine test data.
 
-1. [ ] Draft the exact cue-aligned population export request from
-   `docs/analysis-contract.md`.
-2. [ ] Confirm cue-period access, source-trial linkage, and real recording groups
-   for the fixed 195 spatial cells; leave the all-cell expansion for future work.
-3. [ ] Confirm authoritative maze geometry/adjacency and the meaning of bin `0`.
-   - 2026-09-01: centroid map accepted as authoritative; `0` is invalid; still
-     record a graph hash and verify mapped-path behavior before freezing route
-     families.
-4. [ ] Audit within-`(start, goal)` ordered corridor/branch signatures and the
-   support for path-matched pseudotrials across recording groups and splits.
-   - Active checklist: `todo/graph-path-pseudopopulation.md`.
-5. [ ] Determine whether route-family differences are identifiable beyond start
-   and goal before choosing one provisional representation and baseline.
-6. [x] Use Python first for loading, validation, and visualization; retain Julia
-   as the upstream reference.
+A large simultaneous population is not required for this condition-level lane.
+The stricter exact-trial population/dynamics contract remains unchanged.

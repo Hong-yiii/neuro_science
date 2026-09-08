@@ -1,0 +1,10 @@
+# Keep checksummed evidence byte-exact (including CSV CRLF and SVG path spaces).
+** -text
+# Fold generated payloads/historical snapshots in GitHub; inspect active source instead.
+*.html -whitespace linguist-generated=true
+archive/** -whitespace linguist-generated=true
+evidence/** -whitespace linguist-generated=true
+LOCAL_SHA256SUMS linguist-generated=true
+SHA256SUMS linguist-generated=true
+promoted-files.json linguist-generated=true
+*.summary.json linguist-generated=true

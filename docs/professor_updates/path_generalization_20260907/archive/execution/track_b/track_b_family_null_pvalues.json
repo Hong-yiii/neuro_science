@@ -1,0 +1,35 @@
+{
+  "family_config_count": 14,
+  "family_max_pvalue": {
+    "exceedances": 17,
+    "nulls": 20,
+    "observed": 0.5833333333333334,
+    "p_value": 0.8571428571428571
+  },
+  "null_family_max_balanced_accuracy": {
+    "0": 1.0,
+    "1": 1.0,
+    "10": 0.5833333333333334,
+    "11": 0.5833333333333334,
+    "12": 1.0,
+    "13": 1.0,
+    "14": 0.8125,
+    "15": 0.5,
+    "16": 0.5,
+    "17": 1.0,
+    "18": 1.0,
+    "19": 0.5833333333333333,
+    "2": 0.6666666666666666,
+    "3": 0.8541666666666667,
+    "4": 0.75,
+    "5": 0.875,
+    "6": 1.0,
+    "7": 0.9375,
+    "8": 0.6458333333333334,
+    "9": 0.8333333333333333
+  },
+  "null_permutations_scored": 20,
+  "observed_family_configs_scored": 14,
+  "observed_family_max_balanced_accuracy": 0.5833333333333334,
+  "policy": "one-sided exceedance of max validation_exact_q BA across the 14 fixed family configs"
+}

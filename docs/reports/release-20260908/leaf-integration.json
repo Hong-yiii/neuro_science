@@ -1,0 +1,17 @@
+{
+  "leaf_commit": "9e0457438c901ad6aa0c06be107d2cc130e7a884",
+  "changed_shared_document_checksums": [
+    {
+      "path": "README.md",
+      "leaf_sha256": "bf39c300ee5164a119f8ebce197dc8b94fb6d8160953e68ecdc27ba243076fb1",
+      "combined_sha256": "81293b5e542a1ab05abd9b8120ffb472d5c30262986a53047f40893baab039e3"
+    },
+    {
+      "path": "docs/reports/place195-audit-and-next-steps-20260907.md",
+      "leaf_sha256": "ed468e72bf3d823f30ca1a88e307d52406d88b6d5a428afdbbe6175099ca9c0e",
+      "combined_sha256": "414ee50651444bbe4d67a3bb8947c49a69043b98a1b1bf64d1f0b9b92866ec7a"
+    }
+  ],
+  "protected_report_and_code_bytes_unchanged": true,
+  "local_inventory_unchanged": true
+}

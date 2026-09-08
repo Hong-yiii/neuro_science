@@ -51,7 +51,15 @@ conditional models.
 
 Trial-specific H1 requires cue activity from a verified simultaneous population
 linked to that same trial's start, goal, and observed path. A cross-session
-pseudopopulation cannot support exact trial-specific claims.
+pseudopopulation cannot support exact trial-specific claims. It remains a central,
+valid candidate for **condition-level** prospective-path coding under source-safe
+splits and endpoint/nuisance controls; a large simultaneous195 recording is not
+a prerequisite for that work. Per-unit real-trial checks are complementary, not
+an individual-cell-significance gate. Follow the current proposed direction in
+`docs/reports/path-generalization-next-steps-20260908.md` and the evidence/status
+index in `docs/professor_updates/path_generalization_20260907/README.md`. Frozen
+protocols, failed attempts, historical reviews, and current recommendations must
+not be conflated; never pool superseded output directories with accepted runs.
 
 Important data streams:
 

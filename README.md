@@ -38,12 +38,15 @@ holdout-exposure record remains in force.
 - [Current human synthesis](docs/reports/recent-learnings-20260908.md) and [agent brief](docs/reports/recent-learnings-20260908-agent.md).
 - [PCA and below-chance explanation with plots](learning/place195-pca-and-below-chance-20260908.md).
 - [Artifact preservation and verification](docs/reports/research-release-20260908.md): Git is not a backup of ignored data/models.
+- [Path-generalization package](docs/professor_updates/path_generalization_20260907/README.md): corrected self-contained report, code, evidence and historical status labels. Its 342 CEBRA fits transfer across mixtures of training sources, but not reliably across source pools. Corrected family p is **19/21**; the cause of the gap is not uniquely established.
+- [Current condition-level proposal](docs/reports/path-generalization-next-steps-20260908.md): source-safe pseudopopulations, independent-source replication and endpoint controls; per-unit checks are complementary, not individual-significance gates. Exact same-trial claims retain their stronger recording contract.
+- [Path-study status/deprecation ledger](docs/professor_updates/path_generalization_20260907/STATUS.md) and [presentation corrections](docs/professor_updates/path_generalization_20260907/CORRECTIONS.md).
 
 The [V6–V9 teaching and audit report](docs/reports/place195-v6-v9-autoresearch-20260906.md)
 remains the accepted historical account of geometry, support, cue bins, PCA, and GPU CEBRA.
 
 - [Professor HTML report](docs/professor_updates/place195_v6_v9_20260906/place195-v6-v9-professor-methods-results-validity-20260906.html): download for offline reading with embedded figures.
-- [Audit instructions and non-pseudopopulation next steps](docs/reports/place195-audit-and-next-steps-20260907.md).
+- [Earlier audit guide and alternatives to forced common-panel pseudopopulations](docs/reports/place195-audit-and-next-steps-20260907.md).
 - [Data-volume comparison with CEBRA and hippocampal studies](docs/reports/cebra-data-volume-comparison-20260907.md).
 
 Raw data, detailed run artifacts, and runtime environments remain local/ignored;

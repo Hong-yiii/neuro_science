@@ -164,7 +164,31 @@ condition-average analyses, but cannot reconstruct the exact neural population
 state or path of one real trial. Multi-session representation learning does not
 restore simultaneity that was never recorded.
 
-The current local place-bin export begins at cue offset and lacks the cue window,
+### Current condition-level pseudopopulation lane (2026-09-08)
+
+Given the operational difficulty of large simultaneous monkey recordings,
+pseudopopulations remain central to a complementary question: do independent
+source-trial sets reproduce population response differences associated with
+future path components after endpoint/nuisance control? This is related evidence
+for prospective coding, not fulfillment of the exact same-trial population-state
+contract above. It does not redefine H1 or prove H1b from a supervised embedding.
+
+Use behavior-only targets with explicit interior/anywhere semantics, source
+splits before assembly, session-block/cue-bin preservation, training-only
+preprocessing, and coherent source/session/temporal nulls. Do not fill missing
+recordings with zero or count synthetic rows as independent trials. Per-unit
+checks complement population analyses; no individually significant-neuron gate
+is required. More data or another CEBRA formulation may help, but neither is a
+proven remedy for the observed source-pool gap.
+
+The [completed study and status index](professor_updates/path_generalization_20260907/README.md)
+separates accepted results, corrected inference, failed attempts, and proposals.
+The [current next-study plan](reports/path-generalization-next-steps-20260908.md)
+replaces the earlier simultaneous-data-first milestone for this condition-level
+lane. Original test exposure remains permanent; development resplits do not
+restore confirmation.
+
+The legacy local place-bin export begins at cue offset and lacks the cue window,
 start/goal labels, and a verified synchronized population matrix. It cannot yet
 test H1.
 
@@ -181,15 +205,25 @@ An earlier bounded `20181105/session01` six-unit transfer is documented in
 `notes/data_inspection/lab_server_20181105_session01.md`, but that exact data
 root is not present in the current checkout.
 
-## First Milestone
+## Next Milestone — Proposed, Not Yet Executed
 
-Before fitting CEBRA:
+V6–V9 and the path-generalization follow-up have already completed bounded
+exploratory raw/PCA/CEBRA experiments. Their nonpositive/unstable results do not
+confirm H1 or verify missing laboratory metadata. The next condition-level study
+should:
 
-1. obtain or verify cue-aligned, trial-linked simultaneous population data;
-2. reserve immutable source-trial splits after provenance checks;
-3. reconstruct training/validation observed paths and audit variation within
-   each start-goal pair;
-4. define one leakage-safe path representation and start-goal baseline;
-5. test raw-neural and PCA incremental prediction;
-6. run a trial-aware CEBRA-Time pilot with the same held-out decoder;
-7. add behavior-conditioned CEBRA only after those checks establish feasibility.
+1. freeze a meaningful route contrast, cue window, cohort and endpoint controls
+   using task meaning and training support rather than neural outcomes;
+2. audit source-trial support and recording provenance without requiring every
+   selected cell in a common195-column panel;
+3. measure independent-source population-pattern reproducibility and neural-only
+   positive controls, with simple regularized baselines;
+4. separate pseudorow sampling from source/session uncertainty and preserve
+   within-session cells/bins through construction and splits;
+5. compare CEBRA only in a bounded, matched evaluation family, and use reliability
+   or injected-signal checks to inform any additional trial collection;
+6. reserve genuinely unexposed observations before adapting to them if a new
+   confirmatory evaluation is intended.
+
+Exact trial-specific population/dynamics claims still require the verified
+simultaneous-trial contract; condition-level progress need not wait for that.

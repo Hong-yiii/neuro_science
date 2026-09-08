@@ -1,0 +1,68 @@
+{
+  "component_count": 24,
+  "direction_source_note": "Prefit behavior audit found selected-edge traversals use direction_source=adjacent_nodes; no extra direction filter added.",
+  "expected_supported_middle_component_id": "D_N_C_M__N_C_B",
+  "route_signature_caveat": "route_signature is treated as a sequence of inferred corridor directions, not a guaranteed exact graph walk; binary selected-edge evidence is stronger than complete-route reconstruction.",
+  "selected_matches_expected": true,
+  "selected_supported_middle_component_id": "D_N_C_M__N_C_B",
+  "selection_rule": "rank the fixed 24 static directed components by sessions with >=20 eligible training sources after context >=3/class, then training sources in those qualifying sessions, then component ID; training behavior only, no neural response values",
+  "source_csv_sha256": "986ddae40d9dbff8a66765368067ef0480d1ec2716c24ff497b0cb6065bea667",
+  "stage": "track_c_supported_middle_behavior_only_target_ranking",
+  "top5": [
+    {
+      "component_id": "D_N_C_M__N_C_B",
+      "eligible_context_count": 49,
+      "eligible_session_count": 35,
+      "eligible_train_source_count_total": 507,
+      "qualified_train_source_count_total": 267,
+      "rank": 1,
+      "sessions_meeting_unit_source_gate": 11,
+      "train_absent_sources": 14824,
+      "train_present_sources": 1123
+    },
+    {
+      "component_id": "D_N_C_M__N_C_T",
+      "eligible_context_count": 41,
+      "eligible_session_count": 30,
+      "eligible_train_source_count_total": 445,
+      "qualified_train_source_count_total": 157,
+      "rank": 2,
+      "sessions_meeting_unit_source_gate": 6,
+      "train_absent_sources": 14661,
+      "train_present_sources": 1286
+    },
+    {
+      "component_id": "D_N_C_M__N_R_M",
+      "eligible_context_count": 40,
+      "eligible_session_count": 31,
+      "eligible_train_source_count_total": 459,
+      "qualified_train_source_count_total": 151,
+      "rank": 3,
+      "sessions_meeting_unit_source_gate": 6,
+      "train_absent_sources": 14754,
+      "train_present_sources": 1193
+    },
+    {
+      "component_id": "D_N_C_T__N_C_M",
+      "eligible_context_count": 39,
+      "eligible_session_count": 31,
+      "eligible_train_source_count_total": 442,
+      "qualified_train_source_count_total": 145,
+      "rank": 4,
+      "sessions_meeting_unit_source_gate": 5,
+      "train_absent_sources": 14296,
+      "train_present_sources": 1651
+    },
+    {
+      "component_id": "D_N_R_T__N_R_M",
+      "eligible_context_count": 38,
+      "eligible_session_count": 30,
+      "eligible_train_source_count_total": 408,
+      "qualified_train_source_count_total": 134,
+      "rank": 5,
+      "sessions_meeting_unit_source_gate": 5,
+      "train_absent_sources": 15313,
+      "train_present_sources": 634
+    }
+  ]
+}

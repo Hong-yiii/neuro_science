@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/hongyi-home-lab/neuro_science-path-diagnosis/scripts/replay_path_generalization_assemblies.py", line 166, in <module>
+    main(Path(sys.argv[1]))
+    ~~~~^^^^^^^^^^^^^^^^^^^
+  File "/home/hongyi-home-lab/neuro_science-path-diagnosis/scripts/replay_path_generalization_assemblies.py", line 69, in main
+    raise ValueError("first 50 receipts are not exactly the crossed-seed grid")
+ValueError: first 50 receipts are not exactly the crossed-seed grid

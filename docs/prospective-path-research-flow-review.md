@@ -1,11 +1,19 @@
 # Prospective-Path Research Flow Review
 
+> **Historical 2026-08-31 flow; superseded as the start-here roadmap.**
+> The later approved V6–V9 and path-generalization studies completed exploratory
+> PCA/decoder/CEBRA work. Their results do not confirm H1 or resolve all laboratory
+> metadata. Use the [current study/status index](professor_updates/path_generalization_20260907/README.md)
+> and [current next steps](reports/path-generalization-next-steps-20260908.md).
+> The blockers and “locked test” wording below are dated provenance, not present
+> execution status: the original holdout was subsequently exposed in early V6.
+
 Date pinned: 2026-08-31  
 Status: high-level review of completed work; next step is behavior-only graph/path design  
 Branch/commit pinned from previous session: `place195-import-qc-splits` / `c517b91 Add place195 import QC and split audit`  
 PR: <https://github.com/Hong-yiii/neuro_science/pull/1>
 
-This is the single start-here review doc. It summarizes the work already done and points to the detailed receipts instead of replacing them.
+This was the single start-here review doc at the pinned date. It summarizes the work already done and points to the detailed receipts instead of replacing them.
 
 ## Current verdict
 
