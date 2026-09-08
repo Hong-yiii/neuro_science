@@ -1,0 +1,368 @@
+"""Exploratory 30-way endpoint decoding; no path matching or original test access."""
+from __future__ import annotations
+
+import argparse
+import csv
+import importlib.metadata
+import json
+import platform
+import shlex
+import shutil
+import sys
+import traceback
+from collections import Counter, defaultdict
+from dataclasses import asdict
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any
+
+import matplotlib
+
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+import numpy as np
+import torch
+from sklearn.decomposition import PCA
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import (
+    accuracy_score,
+    balanced_accuracy_score,
+    confusion_matrix,
+    f1_score,
+    log_loss,
+)
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+
+from scripts.place195_split_filtered_access import SplitFilteredAccess
+from scripts.place195_v7_v8_neural_experiments import (
+    SourceMeta,
+    assemble_pseudo,
+    git,
+    load_cue_data,
+    session_from_cell,
+    sha256_file,
+    source_level_shuffle,
+    source_reuse,
+    write_csv,
+    write_json,
+)
+from scripts.place195_v8b_v9_cebra import embed_rows, make_solver, train_cebra
+
+PAIRS = tuple((s, g) for s in range(1, 7) for g in range(1, 7) if s != g)
+LABELS = tuple(f"{s}->{g}" for s, g in PAIRS)
+REPOSITORY = Path(__file__).resolve().parents[1]
+
+
+def eligible_trials(rows):
+    """Derive provisional endpoints without reading a previous held-out trial."""
+    by_id = {r["source_trial_id"]: r for r in rows}
+    if len(by_id) != len(rows):
+        raise ValueError("duplicate trial identity")
+    kept, exclusions = [], []
+    for r in rows:
+        sid = r["source_trial_id"]
+        p = by_id.get(r["previous_source_trial_id"])
+        if r["split"] != "train":
+            raise ValueError("original non-training row reached eligibility")
+        reason = ""
+        if r["outcome"] != "success":
+            reason = "current_not_success"
+        elif p is None or p["outcome"] != "success":
+            reason = "previous_unavailable_or_not_success"
+        elif p["session_id"] != r["session_id"] or int(p["trial_index"]) + 1 != int(r["trial_index"]):
+            raise ValueError(f"invalid previous-trial linkage: {sid}")
+        elif r["qc_flags"] or p["qc_flags"]:
+            reason = "current_or_previous_qc"
+        elif not 1.0 <= float(r["ripple_cue_duration_s"]) <= 1.5:
+            reason = "cue_not_full_nominal_second"
+        if reason:
+            exclusions.append({"source_trial_id": sid, "reason": reason})
+            continue
+        assert p is not None  # excluded above; keeps the previous-trial invariant explicit
+        start, goal = int(p["marker_minor_digit"]), int(r["marker_minor_digit"])
+        if (start, goal) not in PAIRS:
+            raise ValueError(f"invalid ordered endpoints: {sid}")
+        if r["inferred_start_id_from_previous_marker"] != f"marker_{start}" or r["inferred_goal_id"] != f"marker_{goal}":
+            raise ValueError(f"importer endpoint disagreement: {sid}")
+        for row in (p, r):
+            g = int(row["marker_minor_digit"])
+            expected = [10 + g, 20 + g, 30 + g]
+            if any(list(map(int, row[k].split())) != expected for k in ("ripple_codes", "unity_codes", "eyelink_codes")):
+                raise ValueError(f"marker disagreement: {row['source_trial_id']}")
+        kept.append(SourceMeta(sid, r["session_id"], "train", f"{start}->{goal}"))
+    return kept, exclusions
+
+
+def inner_split(sources, sessions, seed):
+    """Split real sources first; require a fixed panel across all 30 classes."""
+    pools = defaultdict(list)
+    for m in sources:
+        pools[m.session_id, m.label].append(m)
+    rng = np.random.default_rng(seed)
+    result, support = [], []
+    for session in sorted(sessions):
+        for label in LABELS:
+            pool = sorted(pools[session, label], key=lambda m: m.source_trial_id)
+            if len(pool) < 2:
+                raise ValueError(f"cannot split fixed panel: {session}/{label} has {len(pool)} sources")
+            order = rng.permutation(len(pool))
+            nval = max(1, len(pool) // 4)
+            for i, ix in enumerate(order):
+                m = pool[int(ix)]
+                result.append(SourceMeta(m.source_trial_id, session, "validation" if i < nval else "train", label))
+            support.append({"session_id": session, "label": label, "train": len(pool) - nval, "validation": nval})
+    return sorted(result, key=lambda m: m.source_trial_id), support
+
+
+def assemble_dataset(Xsrc, mask, source_index, metadata, cells, train_rows, validation_rows, seed, shuffled=None):
+    arrays, manifest = {}, []
+    for split, nrows in (("train", train_rows), ("validation", validation_rows)):
+        xs, ys = [], []
+        for label_id, label in enumerate(LABELS):
+            # ponytail: reuse session-block assembler; the older wrapper is binary-only.
+            draw_seed = seed * 1000 + label_id * 2 + int(split == "validation")
+            x, components = assemble_pseudo(Xsrc, mask, source_index, metadata, cells, split, label, nrows, draw_seed, shuffled)
+            for row in components:
+                row["pseudo_row"] = str(label_id * nrows + int(row["pseudo_row"]))
+                row["assembly_seed"] = str(seed)
+            xs.append(x)
+            ys.extend([label_id] * nrows)
+            manifest.extend(components)
+        arrays[split] = (np.concatenate(xs), np.asarray(ys, dtype=np.int64))
+    used = {split: {r["source_trial_id"] for r in manifest if r["split"] == split} for split in arrays}
+    if used["train"] & used["validation"]:
+        raise ValueError("source leakage across inner split")
+    if not all(np.isfinite(x).all() for x, _ in arrays.values()):
+        raise ValueError("nonfinite pseudo feature; missing cells must not be imputed")
+    return arrays, manifest
+
+
+def score(y, pred, prob):
+    pairs = np.asarray(PAIRS)
+    return {
+        "joint_balanced_accuracy": float(balanced_accuracy_score(y, pred)),
+        "joint_accuracy": float(accuracy_score(y, pred)),
+        "joint_macro_f1": float(f1_score(y, pred, average="macro", zero_division=0)),  # type: ignore[reportArgumentType]  # sklearn accepts numeric zero
+        "joint_log_loss": float(log_loss(y, prob, labels=np.arange(len(PAIRS)))),
+        "start_accuracy": float(accuracy_score(pairs[y, 0], pairs[pred, 0])),
+        "goal_accuracy": float(accuracy_score(pairs[y, 1], pairs[pred, 1])),
+    }
+
+
+def decode(features, labels, outdir, representation, seed, null_id, lda=False):
+    scaler = StandardScaler()
+    decoder = LinearDiscriminantAnalysis(solver="lsqr", shrinkage="auto") if lda else LogisticRegression(C=1.0, max_iter=2000, solver="lbfgs")
+    model = make_pipeline(scaler, decoder).fit(features["train"], labels["train"])
+    if isinstance(decoder, LogisticRegression) and np.max(decoder.n_iter_) >= 2000:
+        raise RuntimeError("logistic decoder did not converge")
+    outdir.mkdir(parents=True, exist_ok=True)
+    metrics, saved = [], {}
+    predictions = []
+    for split, x in features.items():
+        y = labels[split]
+        prob = model.predict_proba(x)
+        pred = model.classes_[np.argmax(prob, axis=1)]
+        metrics.append({"representation": representation, "seed": seed, "null_id": null_id, "split": split, **score(y, pred, prob)})
+        saved[f"prob_{split}"] = prob
+        saved[f"y_{split}"] = y
+        saved[f"features_{split}"] = x
+        if null_id == -1:
+            np.savetxt(outdir / f"confusion_{split}.csv", confusion_matrix(y, pred, labels=np.arange(30)), fmt="%d", delimiter=",")
+            for i, (yy, pp) in enumerate(zip(y, pred, strict=True)):
+                predictions.append({"split": split, "pseudo_row": i, "true_pair": LABELS[int(yy)], "predicted_pair": LABELS[int(pp)], "true_start": PAIRS[yy][0], "true_goal": PAIRS[yy][1], "predicted_start": PAIRS[pp][0], "predicted_goal": PAIRS[pp][1]})
+    np.savez_compressed(outdir / "decoder.npz", **saved, classes=decoder.classes_, coef=decoder.coef_, intercept=decoder.intercept_, scaler_mean=np.asarray(scaler.mean_), scaler_scale=np.asarray(scaler.scale_))
+    if predictions:
+        write_csv(outdir / "predictions.csv", predictions)
+    write_json(outdir / "metrics.json", metrics)
+    return metrics
+
+
+def representations(arrays, outdir, args, seed):
+    """Fit representations on inner training only, yielding a common decoder API."""
+    xs = {k: v[0] for k, v in arrays.items()}
+    yield "raw_total", {k: x.sum(axis=2) for k, x in xs.items()}
+    yield "raw_binned", {k: x.reshape(len(x), -1) for k, x in xs.items()}
+    flat = {k: x.transpose(0, 2, 1).reshape(-1, x.shape[1]) for k, x in xs.items()}
+    scaler = StandardScaler().fit(flat["train"])
+    pca = PCA(n_components=8, svd_solver="full").fit(scaler.transform(flat["train"]))
+    pca_features = {k: pca.transform(scaler.transform(x)).reshape(len(xs[k]), -1) for k, x in flat.items()}
+    np.savez_compressed(outdir / "pca.npz", components=np.asarray(pca.components_), mean=np.asarray(pca.mean_), explained_variance_ratio=np.asarray(pca.explained_variance_ratio_), scaler_mean=np.asarray(scaler.mean_), scaler_scale=np.asarray(scaler.scale_))
+    yield "pca8", pca_features
+    for variant in ("cebra_time", "cebra_behavior"):
+        target = outdir / variant
+        solver, cscaler, info = train_cebra(xs["train"], arrays["train"][1], variant=variant, dim=8, seed=seed, outdir=target, iterations=args.iterations, batch_size=args.batch_size, lr=0.001, hidden=32, device=args.device)
+        features = {k: embed_rows(solver, cscaler, x, device=args.device, dim=8) for k, x in xs.items()}
+        reloaded = make_solver(xs["train"].shape[1], 8, 32, 0.001, args.device)
+        reloaded.load_state_dict(torch.load(target / "checkpoint_final.pth", map_location=args.device, weights_only=False), strict=True)
+        reloaded.n_features = xs["train"].shape[1]
+        z2 = embed_rows(reloaded, cscaler, xs["validation"], device=args.device, dim=8)
+        diff = float(np.max(np.abs(z2 - features["validation"])))
+        if not np.isfinite(diff) or diff > 1e-6:
+            raise RuntimeError(f"CEBRA save/load mismatch: {diff}")
+        info["save_load_max_abs_embedding_diff"] = diff
+        write_json(target / "fit_info.json", info)
+        np.savez_compressed(target / "input_scaler.npz", mean=np.asarray(cscaler.mean_), scale=np.asarray(cscaler.scale_))
+        del reloaded, solver
+        yield variant, features
+
+
+def verify_inputs(args):
+    summary = json.loads((args.import_dir / "summary.json").read_text())
+    split_summary = json.loads((args.split_dir / "split_summary.json").read_text())
+    hashes = {}
+    for name in ("trials.csv", "units.csv", "cue_counts.csv.gz", "cue_spike_events.csv.gz", "source_files.csv"):
+        observed = sha256_file(args.import_dir / name)
+        if observed != summary["artifact_hashes"][name]:
+            raise ValueError(f"importer hash mismatch: {name}")
+        hashes[str(args.import_dir / name)] = observed
+    path = args.split_dir / "source_trial_splits.csv"
+    observed = sha256_file(path)
+    if observed != split_summary["artifact_hashes"][path.name]:
+        raise ValueError("original split hash mismatch")
+    hashes[str(path)] = observed
+    for path in (args.import_dir / "summary.json", args.split_dir / "split_summary.json"):
+        hashes[str(path)] = sha256_file(path)
+    return hashes
+
+
+def prepare(args):
+    input_hashes = verify_inputs(args)
+    access = SplitFilteredAccess(args.import_dir, args.split_dir, allowed_splits=("train",))
+    with (args.import_dir / "units.csv").open(newline="") as f:
+        units = list(csv.DictReader(f))
+    cells = sorted(r["cell_id"] for r in units)
+    if len(cells) != 195 or len(set(cells)) != 195:
+        raise ValueError("this baseline requires exactly the existing 195 selected units")
+    if any(session_from_cell(r["cell_id"]) != r["session_id"] or r["selection_provenance"] != "place_selective_195_snapshot" for r in units):
+        raise ValueError("unit/session/selection metadata mismatch")
+    sources, excluded = eligible_trials(list(access.iter_trials()))
+    metadata, support = inner_split(sources, {r["session_id"] for r in units}, args.split_seed)
+    out = args.output_dir
+    write_csv(out / "source_splits.csv", [dict(asdict(m), original_split="train") for m in metadata])
+    write_csv(out / "source_exclusions.csv", excluded)
+    write_csv(out / "source_support.csv", support)
+    split_hash = sha256_file(out / "source_splits.csv")
+    # Freeze the inner split and provenance before any neural values are loaded.
+    write_json(out / "inputs.json", {"input_hashes": input_hashes, "original_logical_split_hash": access.split_hash, "inner_split_sha256": split_hash})
+    x, exposure, mask, index, metadata, audit = load_cue_data(access, {m.source_trial_id: m for m in metadata}, cells, 0.1)
+    if audit["full_window_event_count_mismatch_count"] or not np.allclose(exposure, 0.1):
+        raise ValueError("cue event/count conservation or full exposure failed")
+    if access.audit.as_dict()["forbidden_rows_yielded"] != 0:
+        raise ValueError("forbidden outer split exposed")
+    np.savez_compressed(out / "source_tensor.npz", counts=x, observed=mask, exposure=exposure, source_ids=np.array([m.source_trial_id for m in metadata]), cells=np.array(cells))
+    audit.pop("duration_values", None)
+    write_json(out / "source_audit.json", {"counts_shape": x.shape, "sessions": len({m.session_id for m in metadata}), "sources_by_inner_split": Counter(m.split for m in metadata), "exclusions": Counter(r["reason"] for r in excluded), "cue_audit": audit, "access_audit": access.audit.as_dict(), "no_replacement_rows_per_class_ceiling": {split: min(r[split] for r in support) for split in ("train", "validation")}})
+    return x, mask, index, metadata, cells
+
+
+def summarize(rows, outdir):
+    groups = defaultdict(list)
+    for r in rows:
+        if r["split"] == "validation":
+            groups[r["representation"], r["null_id"]].append(r)
+    summary = {}
+    for name in sorted({k[0] for k in groups}):
+        observed = groups[name, -1]
+        keys = list(score(np.arange(30), np.arange(30), np.eye(30)))
+        result: dict[str, Any] = {k: {"mean": float(np.mean([r[k] for r in observed])), "min": float(min(r[k] for r in observed)), "max": float(max(r[k] for r in observed))} for k in keys}
+        null_means = [float(np.mean([r["joint_balanced_accuracy"] for r in v])) for (n, i), v in groups.items() if n == name and i >= 0]
+        if null_means:
+            value = result["joint_balanced_accuracy"]["mean"]
+            result["source_shuffle_diagnostic"] = {"null_mean_scores": null_means, "tail_fraction_plus_one": (1 + sum(v >= value for v in null_means)) / (len(null_means) + 1), "not_serial_dependence_calibrated": True}
+        summary[name] = result
+    write_json(outdir / "summary.json", {"scientific_status": "exploratory_inner_validation_only", "claim": "condition-matched synthetic population endpoint decoding; not H1", "uniform_chance": {"joint": 1 / 30, "start": 1 / 6, "goal": 1 / 6}, "representations": summary})
+    names = [n for n in summary if not n.startswith("lda_")]
+    fig, ax = plt.subplots(figsize=(9, 4))
+    means = [summary[n]["joint_balanced_accuracy"]["mean"] for n in names]
+    ax.bar(names, means)
+    for i, n in enumerate(names):
+        ax.scatter([i] * len(groups[n, -1]), [r["joint_balanced_accuracy"] for r in groups[n, -1]], color="black", s=16)
+    ax.axhline(1 / 30, color="red", linestyle="--", label="uniform chance (1/30)")
+    ax.set(ylabel="Inner-validation joint balanced accuracy", ylim=(0, 1), title="Start–goal synthetic population (exploratory)")
+    ax.legend()
+    fig.tight_layout()
+    fig.savefig(outdir / "joint_accuracy.png", dpi=150)
+    plt.close(fig)
+    return summary
+
+
+def run(args):
+    torch.set_num_threads(2)
+    data = prepare(args)
+    rows = []
+    for null_id in range(-1, args.nulls):
+        shuffled = None if null_id == -1 else source_level_shuffle(data[3], 10000 + null_id)
+        root = args.output_dir / ("observed" if null_id == -1 else f"null_{null_id:03d}")
+        root.mkdir(parents=True)
+        if shuffled is not None:
+            write_csv(root / "shuffled_source_labels.csv", [{"source_trial_id": k, "label": v} for k, v in sorted(shuffled.items())])
+        for seed in args.seeds:
+            target = root / f"seed{seed}"
+            target.mkdir()
+            print(f"START null={null_id} seed={seed}", flush=True)
+            arrays, components = assemble_dataset(*data, args.train_rows, args.validation_rows, seed, shuffled)
+            write_csv(target / "pseudo_components.csv", components)
+            write_json(target / "reuse.json", source_reuse(components))
+            np.savez_compressed(target / "pseudo_arrays.npz", **{f"{k}_{split}": v for split, pair in arrays.items() for k, v in zip(("X", "y"), pair, strict=True)})
+            labels = {k: v[1] for k, v in arrays.items()}
+            for name, features in representations(arrays, target, args, seed):
+                metrics = decode(features, labels, target / name, name, seed, null_id)
+                rows.extend(metrics)
+                write_csv(args.output_dir / "metrics.csv", rows)
+                print(f"DONE null={null_id} seed={seed} {name}: joint={metrics[1]['joint_balanced_accuracy']:.4f}", flush=True)
+            if null_id == -1:
+                for b in range(10):
+                    name = f"lda_bin{b:02d}"
+                    features = {k: x[:, :, b] for k, (x, _) in arrays.items()}
+                    rows.extend(decode(features, labels, target / name, name, seed, null_id, lda=True))
+    write_csv(args.output_dir / "metrics.csv", rows)
+    return summarize(rows, args.output_dir)
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--import-dir", type=Path, required=True)
+    parser.add_argument("--split-dir", type=Path, required=True)
+    parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument("--split-seed", type=int, default=20260907)
+    parser.add_argument("--seeds", type=int, nargs="+", default=[0, 1, 2])
+    parser.add_argument("--train-rows", type=int, default=16)
+    parser.add_argument("--validation-rows", type=int, default=8)
+    parser.add_argument("--iterations", type=int, default=1000)
+    parser.add_argument("--batch-size", type=int, default=256)
+    parser.add_argument("--nulls", type=int, default=20)
+    parser.add_argument("--device", choices=("cuda", "cpu"), default="cuda")
+    args = parser.parse_args(argv)
+    if min(args.train_rows, args.validation_rows, args.iterations, args.batch_size) < 1 or args.nulls < 0 or min(args.seeds) < 0 or len(set(args.seeds)) != len(args.seeds):
+        parser.error("positive sizes, nonnegative null count, and unique nonnegative seeds required")
+    for name in ("import_dir", "split_dir", "output_dir"):
+        setattr(args, name, getattr(args, name).resolve())
+    args.output_dir.mkdir(parents=True, exist_ok=False)
+    manifest = {"created_utc": datetime.now(timezone.utc).isoformat(), "status": "running", "config": vars(args), "command": shlex.join(sys.argv), "python": platform.python_version(), "executable": sys.executable, "git_revision": git(["-C", str(REPOSITORY), "rev-parse", "HEAD"]), "git_status": git(["-C", str(REPOSITORY), "status", "--short"]), "packages": {d.metadata["Name"]: d.version for d in importlib.metadata.distributions()}, "device": torch.cuda.get_device_name(0) if args.device == "cuda" and torch.cuda.is_available() else args.device}
+    write_json(args.output_dir / "manifest.json", manifest)
+    snapshot = args.output_dir / "code"
+    snapshot.mkdir()
+    files = [Path(__file__), REPOSITORY / "scripts/test_start_goal_cebra_baseline.py", REPOSITORY / "scripts/place195_split_filtered_access.py", REPOSITORY / "scripts/place195_v7_v8_neural_experiments.py", REPOSITORY / "scripts/place195_v8b_v9_cebra.py", REPOSITORY / "docs/reports/start-goal-cebra-baseline.md", REPOSITORY / "pyproject.toml", REPOSITORY / "uv.lock"]
+    for path in files:
+        shutil.copy2(path, snapshot / path.name)
+    write_json(snapshot / "hashes.json", {p.name: sha256_file(p) for p in files})
+    (snapshot / "dirty.patch").write_text(git(["-C", str(REPOSITORY), "diff", "HEAD"]), encoding="utf-8")
+    try:
+        if args.device == "cuda" and not torch.cuda.is_available():
+            raise RuntimeError("requested CUDA unavailable; no silent device fallback")
+        run(args)
+        manifest["status"] = "completed"
+    except Exception:
+        manifest["status"] = "failed"
+        manifest["error"] = traceback.format_exc()
+        raise
+    finally:
+        manifest["finished_utc"] = datetime.now(timezone.utc).isoformat()
+        write_json(args.output_dir / "manifest.json", manifest)
+    write_json(args.output_dir / "artifact_hashes.json", {str(p.relative_to(args.output_dir)): sha256_file(p) for p in sorted(args.output_dir.rglob("*")) if p.is_file()})
+
+
+if __name__ == "__main__":
+    main()

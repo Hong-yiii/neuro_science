@@ -1,0 +1,286 @@
+from pathlib import Path
+from html import escape
+from html.parser import HTMLParser
+from datetime import datetime, timezone
+import base64
+import collections
+import csv
+import hashlib
+import json
+import math
+import re
+import shutil
+
+repo = Path('/home/hongyi-home-lab/neuro_science')
+root = repo / 'outputs/prospective_path_first_run/place195-v6-v9-autoresearch-20260906'
+final = root / 'v8b-v9-cebra-final-20260905T224554Z'
+base = root / 'v7-v8-neural-experiments/primary29_min3train_min1val/bin100ms'
+source = Path('/tmp/pi-teach/20260906T013539Z-place195-findings-max.html')
+target = repo / 'docs/professor_updates/place195_v6_v9_20260906/place195-v6-v9-professor-methods-results-validity-20260906.html'
+preview = Path('/tmp/pi-teach') / target.name
+s = source.read_text()
+assert hashlib.sha256(source.read_bytes()).hexdigest() == '6244de37cf6f798fc25aa44a53c6e108c8db91a041cba8b2493032c47162f170'
+
+
+def section(name):
+    match = re.search(r'<section id="' + re.escape(name) + r'">(.*?)</section>', s, re.S)
+    assert match, name
+    return match.group(0)
+
+
+def replace_once(text, old, new):
+    assert text.count(old) == 1, old[:100]
+    return text.replace(old, new, 1)
+
+
+def rows(path):
+    with path.open(newline='') as f:
+        return list(csv.DictReader(f))
+
+
+def png(path, alt, caption):
+    data = path.read_bytes()
+    assert data.startswith(b'\x89PNG\r\n\x1a\n')
+    return '<figure><img alt="' + escape(alt, quote=True) + '" src="data:image/png;base64,' + base64.b64encode(data).decode() + '"><figcaption>' + caption + '</figcaption></figure>'
+
+
+# Presentation-time counting checks on saved artifacts; no raw data or new fits.
+counts = rows(final / 'v8b/v8b_session_label_bin2_source_counts.csv')
+assert len(counts) == 28
+pools = {lab: [int(r['source_count']) for r in counts if r['split'] == 'validation' and r['label'] == lab] for lab in ('present', 'absent')}
+assert (sum(pools['present']), sum(pools['absent'])) == (10, 12)
+assert (math.prod(pools['present']), math.prod(pools['absent'])) == (6, 24)
+combinations = {}
+for seed in (0, 1, 2):
+    grouped = collections.defaultdict(list)
+    for r in rows(base / f'pseudo_manifest_seed{seed}.csv'):
+        if r['split'] == 'validation':
+            grouped[(r['label'], r['pseudo_row'])].append((r['session_id'], r['source_trial_id']))
+    for lab in ('present', 'absent'):
+        values = [tuple(sorted(v)) for (label, _), v in grouped.items() if label == lab]
+        assert len(values) == 64 and all(len(v) == 7 for v in values)
+        combinations[f'{seed}|{lab}'] = len(set(values))
+assert [combinations[f'{i}|present'] for i in (0, 1, 2)] == [6, 6, 6]
+assert [combinations[f'{i}|absent'] for i in (0, 1, 2)] == [23, 23, 22]
+
+head = s.split('<body>', 1)[0]
+head = re.sub(r'<title>.*?</title>', '<title>Place195 V6–V9 | Professor methods, results and validity review</title>', head, flags=re.S)
+head = head.replace('</style>', '''
+header{max-width:none;background:linear-gradient(125deg,#102437,#184466);color:white;padding:40px max(28px,calc((100vw - 1074px)/2))}header p,header .small{color:#e4eef6}header .kicker{color:#c4e3fb}header a{color:#d7ebfd}header h1{max-width:1050px;font-size:clamp(2rem,3.7vw,2.8rem)}header .callout{background:#fff1e9;color:#492718;border-color:#d4955d}header .callout p{color:inherit}.status{letter-spacing:.03em;font-size:.84rem;font-weight:750}.compact td,.compact th{padding:8px}.paper-reference{font-size:.94rem}figure img{margin:auto}thead{display:table-header-group}.prof-asks li{margin:1em 0}.audit-note{background:#f5f7fa;padding:15px;border:1px solid var(--line)}
+@media print{@page{size:A4;margin:15mm}header{padding:0 0 12px;color:#172838;background:white}header p,header .small,header .kicker{color:#172838}header .callout{background:white;border:1px solid #999}main{max-width:none}h2,h3{break-after:avoid}tr{break-inside:avoid}figure img{max-height:205mm;object-fit:contain}details{border:0;padding:0}footer{font-size:9pt}.table-wrap{overflow:visible}table{font-size:9pt}.source code{font-size:8pt}}
+</style>''')
+header = '''<body><header>
+<div class="kicker">Research progress report · Place195 · V6–V9 · 6 September 2026</div>
+<h1>Prospective path information from cue-period hippocampal recordings</h1>
+<p class="lead">Methods, results and validity review: from geometry-defined route components to time-resolved PCA and a first GPU CEBRA benchmark.</p>
+<p><strong>Purpose:</strong> explain the scientific question, the reasoning behind each iteration, and the evidence needed to judge the findings—without assuming familiarity with the analysis code or the cited representation-learning methods.</p>
+<div class="callout"><strong>Interpretation boundary:</strong> this is an exploratory, condition-level pseudopopulation study, not a trial-specific H1 demonstration. An early behavioral probe exposed the original holdout; all subsequent reported model evaluation used development validation. No pristine confirmatory test result is claimed.</div>
+<p class="small">Prepared for professor discussion. This document presents existing analyses plus deterministic checks of their saved artifacts; it is not a new fitting run. The V5 professor report is a historical presentation reference, not the current validity status.</p>
+<nav aria-label="Report sections"><a href="#what-i-understand">Question &amp; foundations</a><a href="#prior-context">Prior knowledge</a><a href="#executive-summary">Findings</a><a href="#system-diagram">Dataflow</a><a href="#story">Iteration review</a><a href="#review-notes">Validity</a><a href="#discussion">Critique requested</a><a href="#audit-tables">Full results &amp; provenance</a><a href="#source-map">Evidence map</a><a href="#references">References</a></nav>
+</header><main>'''
+
+foundations = section('what-i-understand')
+foundations = replace_once(foundations, '1. Zoom out: this is a measurement-and-evaluation system', '1. Scientific question and foundations')
+foundations = replace_once(foundations, 'For an NLP comparison, a model’s hidden-state tensor is readily accessible. Here, the experiment does not hand us the brain’s hidden state.', 'The experiment does not directly observe a complete neural population state.')
+foundations = replace_once(foundations, 'Two read-only cross-checks informed this review; their agreement was not used as a substitute for personally reading the load-bearing code and results.', 'Code and artifact cross-checks support the computational account; they do not substitute for protocol verification, external peer review, or biological replication.')
+objective = section('objective')
+objective = replace_once(objective, '3. Narrow the objective before choosing a model', '1.1 The operational objective and solution method')
+
+prior = '''<section id="prior-context"><h2>2. What was known before the outcomes?</h2>
+<p>The broad question predates these models: does cue-period activity contain information about a later path beyond start and goal? Earlier place/view/goal analyses and reports of prospective spatial representations motivate the question, but do not establish the result in this dataset. A successful prediction would still need interpretation against sensory, behavioral and history alternatives; it would not establish intention or causal planning.</p>
+<div class="table-wrap"><table><thead><tr><th>Knowledge available entering V6</th><th>Implication for the next design</th></tr></thead><tbody>
+<tr><td>195 selected cue-accessible cells across 58 sessions; 1–8 selected units per session. Simultaneous recording groups were not verified.</td><td>Do not equate the selected-cell union with one 195-dimensional real-trial population. Determine support at the source/session/condition level.</td></tr>
+<tr><td>Imported cue-relative events, count windows, source IDs and later Unity paths were available. Task-marker semantics remained provisional.</td><td>Time binning was technically possible, but correct cue/end-point interpretation remained a metadata condition, not a consequence of array shape.</td></tr>
+<tr><td>The maze was a broad 40×40 floor grid with four 8×8 pillar footprints: 1,344 walkable centroids, at 0.625 Unity-coordinate spacing.</td><td>A grid node’s degree is not a cognitive decision count. Use explicit spatial regions/corridors while retaining raw paths. Do not assume coordinates are meters.</td></tr>
+<tr><td>V5 had fragmented route labels and 74.28% masked entries in its older pseudopopulation.</td><td>Shared components and an observed common panel could improve the measurement problem; more complex neural models would not repair missing support.</td></tr>
+</tbody></table></div>
+<h3>The chronology matters</h3>
+<p>The initial V6 endpoint probe was not split-filtered. Its aggregates exposed held-out behavior and may have influenced design expectations. That worker was stopped before producing accepted graph artifacts; derivation was restarted using static geometry and guarded development inputs. This reset did <strong>not</strong> undo the exposure. The older V5 report’s statement that the test was untouched describes its earlier stage and is <strong>not current</strong>.</p>
+<p>After accepted geometry/support review, the 29-cell panel and bounded raw/PCA comparisons were fixed. V7/V8 ran together in one predeclared job. The perfect individual-bin result and missing training metrics then prompted V8b diagnostics. The whole-cue input was retained for V9; neither a favorable bin nor a favorable seed replaced the primary specification.</p>
+<p><strong>Comparison with V5:</strong> the target changed from an older multiclass route/signature problem to a within-endpoint binary component contrast. Accuracy values from those versions are not a common performance trend. The meaningful progression is in measurement, support accounting, temporal features, and evaluation discipline.</p>
+</section>'''
+
+executive = '''<section id="executive-summary"><h2>3. Executive findings: what changed, and what did not</h2>
+<div class="grid"><div class="card"><div class="number">9 / 12</div><strong>Junction regions / corridors</strong><p>A geometry-based behavioral ruler, not evidence of a neural graph.</p></div><div class="card"><div class="number">29 / 7</div><strong>Selected cells / sessions</strong><p>Primary observed panel; not a verified simultaneous population.</p></div><div class="card"><div class="number">82 / 22</div><strong>Training / validation sources</strong><p>Distinct source IDs, with session dependence; resampling does not increase these counts.</p></div></div>
+<div class="table-wrap"><table><thead><tr><th>Scientific or methodological question</th><th>Observed result</th><th>Interpretation</th></tr></thead><tbody>
+<tr><td>Can routes be represented by reusable, geometry-defined components?</td><td>A fixed-endpoint present/absent contrast was identified and mapped with complete operational coverage.</td><td>Behavioral measurement and feasibility improved; cognition was not measured by the graph itself.</td></tr>
+<tr><td>Does the whole-cue count pattern generalize in the primary synthetic benchmark?</td><td>Raw ten-bin mean BA 0.474; PCA-3 0.521 with a 0.258–0.789 seed range; PCA-8 0.453.</td><td>No stable whole-cue improvement was established. A favorable mean/seed is not sufficient.</td></tr>
+<tr><td>Does the perfect 200–300 ms bin provide a convincing timing result?</td><td>BA 1.0 in three seeds; pointwise source-null p=0.099; max-over-ten-bin p=0.218.</td><td>The score is reproducible on these synthetic arrays, but not persuasive after the specified selection-aware null.</td></tr>
+<tr><td>Does the first CEBRA benchmark improve the result?</td><td>12 observed and 40 full-pipeline null fits; predeclared dim8/seed0 p=0.857 for Time and 0.619 for Behavior.</td><td>The bounded comparison was nonpositive. It does not establish general failure of CEBRA or absence of a biological code.</td></tr>
+</tbody></table></div>
+<p class="verdict">The defensible conclusion is progress in behavioral measurement and validation design, together with unstable/nonpositive evidence in this particular source-label-conditioned pseudopopulation benchmark—not a demonstration or refutation of trial-specific hippocampal path coding.</p>
+<p>Full probability scores, all observed CEBRA runs, the finite null scope and known failed attempts are retained below. Isolated high AUROC and below-chance inversions are discussed rather than hidden.</p></section>'''
+
+flow = section('system-diagram').replace('2. Follow the data—and notice where the answer enters', '4. End-to-end dataflow and the evaluation object')
+flow = flow.replace('Follow the data', 'Dataflow')
+story = section('story').replace('4. Walk through the findings as a chain of decisions', '5. Iteration-by-iteration methods, results and decisions')
+story = story.replace('A concrete consequence, checked in this max pass:', 'Additional deterministic check of the saved validation manifests:')
+story = story.replace('what evidential weight it deserves', 'what evidential weight it carries')
+story = story.replace('<details><summary>Read the actual learning curves: optimization success is not route-prediction success</summary>', '<details open><summary>Training evidence: optimization progress is not route-prediction success</summary>')
+story = story.replace('<details><summary>A useful complication: BA 0.5 alongside AUROC 0.946</summary>', '<details open><summary>Secondary-metric qualification: BA 0.5 alongside AUROC 0.946</summary>')
+raw_overlay = png(root/'v6-reset-graph-support-audit/v6a_geometry_mapping/figures/raw_path_overlays_train_validation_examples.png', 'Accepted train and validation raw path overlays on the operational graph', 'Selected development-path overlays permit visual inspection of the continuous movement behind a coarse graph label; they do not establish every label as correct, validate intention, or constitute untouched-test evidence.')
+story = replace_once(story, '<p><span class="tag fact">RESULT</span> It mapped 19,162', raw_overlay + '<p><span class="tag fact">RESULT</span> It mapped 19,162')
+pca_plot = png(root/'v7-v8-neural-experiments/figures/primary100_balanced_accuracy.png', 'Primary whole-cue raw and PCA validation balanced accuracy by representation and assembly seed', 'The saved V7/V8 plot shows representation/seed combinations on the x-axis and validation balanced accuracy on the y-axis; the isolated high PCA-3 bar is not consistent across seeds, and the bars are not independent biological replications.')
+story = replace_once(story, '<p><span class="tag inference">MEANING</span> One favorable projection/assembly', pca_plot + '<p><span class="tag inference">MEANING</span> One favorable projection/assembly')
+benchmark_plot = png(final/'report_assets/v9_same_array_validation_ba_seed_range.png', 'Same-array whole-cue model comparison with seed mean and range', 'The saved final comparison places methods on the x-axis and validation balanced accuracy on the y-axis; whiskers are observed three-seed ranges, not confidence intervals. Differences between means do not establish a general ranking of algorithms.')
+story = replace_once(story, '<p>The predeclared dimension-eight, seed-zero source-null comparisons', benchmark_plot + '<p>The predeclared dimension-eight, seed-zero source-null comparisons')
+review = section('review-notes').replace('5. Now critique it: assumptions, bad design, and failure modes', '6. Validity assessment, assumptions and failure modes')
+review = review.replace('<h3>Bad design should be named plainly</h3>', '<h3>Invalid inferential shortcuts and their smallest safeguards</h3><p>The following shortcuts were not adopted in the accepted V6–V9 benchmark. Introducing them would invalidate the corresponding interpretation; the consequences and repairs are stated explicitly.</p>')
+review = review.replace('This is bad design because treating', 'Treating').replace('This is bad design because filling', 'Filling').replace('This is bad design because selecting', 'Selecting')
+review = review.replace('two-step synthetic fitting test', 'two-step synthetic fitting test')
+
+asks = '''<section id="discussion"><h2>7. Specific critique requested from the professor</h2>
+<p>The main decisions are about observability and evaluation, rather than another architecture search. The following questions identify what would change the scientific status of the work.</p>
+<ol class="prof-asks">
+<li><strong>Confirm task semantics.</strong> Does the current minor marker identify the goal/cue as assumed, and does the previous successful goal identify the next start? Which cue and navigation events should define the neural window? Is any cue-identity variation left within an endpoint pair?</li>
+<li><strong>Confirm recording groups and selection.</strong> Which units were acquired simultaneously, how were units curated, and how was the 195-cell cohort selected? Can a real-trial feature matrix be obtained without conditioning its construction on the future label?</li>
+<li><strong>Critique the behavioral ruler.</strong> Are the proposed junction/plaza and corridor regions appropriate for this task? Which reversals, within-plaza choices or path distinctions must be retained before defining the next operational target?</li>
+<li><strong>Choose the next estimand and independent unit.</strong> Should the next gate be a within-session real-source baseline, a condition-mean analysis, or a jointly endpoint-controlled shared-component comparison? Specify the minimum route-variant support and source/session-held-out scheme before model fitting.</li>
+<li><strong>Identify controls and genuinely unexposed evaluation.</strong> Which gaze, view, heading, action, history and clock-quality variables are available? Can new/unexposed observations be reserved before the next adaptive choices? Resplitting inspected observations cannot restore pristine confirmation.</li>
+</ol>
+<div class="callout"><strong>Proposed next gate:</strong> verify a dataset/design in which each feature row can be constructed from one real trial before its future label is known; establish adequate controlled route variation; then test a simple source-aware baseline with appropriate nuisance controls and an unexposed confirmation plan. Additional development work on existing data may be useful but should remain labelled as such.</div>
+<p><strong>Discussion question:</strong> What additional observation would materially strengthen the H1a claim, compared with increasing the number of synthetic draws from the same 22 validation source trials?</p>
+</section>'''
+
+metrics = rows(final/'report_assets/final_same_array_validation_summary.csv')
+assert len(metrics) == 10
+
+def mr(row, key):
+    return f"{float(row[key+'_mean']):.6f} ({float(row[key+'_min']):.6f}–{float(row[key+'_max']):.6f})"
+
+metric_body = ''
+for r in metrics:
+    cols = [r['label'], r['balanced_accuracy_values'].replace(';',' / '), mr(r,'balanced_accuracy'), mr(r,'log_loss'), mr(r,'brier'), mr(r,'auroc')]
+    metric_body += '<tr>' + ''.join('<td>'+escape(c)+'</td>' for c in cols) + '</tr>\n'
+infos = json.loads((final/'v9/v9_fit_infos.json').read_text())
+assert len(infos) == 12
+all_fit_paths = list((final/'v9').rglob('fit_info.json'))
+assert len(all_fit_paths) == 52
+for p in all_fit_paths:
+    info = json.loads(p.read_text())
+    assert info['save_load_max_abs_embedding_diff'] == 0.0
+    loss = rows(p.parent/'loss_trace.csv')
+    assert len(loss) == 1000
+train_body = ''
+for r in sorted(infos,key=lambda x:(x['variant'],x['dim'],x['seed'])):
+    cols = [r['variant'].replace('cebra_','').title(),str(r['dim']),str(r['seed']),f"{r['wall_seconds']:.3f}",f"{r['loss_first']:.6f} → {r['loss_last']:.6f}",f"{r['loss_last100_mean']:.6f}",f"{r['peak_allocated_bytes']:,} / {r['peak_reserved_bytes']:,}",str(r['save_load_max_abs_embedding_diff'])]
+    train_body += '<tr>' + ''.join('<td>'+escape(c)+'</td>' for c in cols) + '</tr>\n'
+summary = json.loads((final/'summary.json').read_text())
+assert summary['status'] == 'complete'
+assert abs(summary['runtime_seconds']-363.99903750419617)<1e-5
+v8p=json.loads((final/'v8b/v8b_source_label_null_pvalues.json').read_text())
+v9p=json.loads((final/'v9/v9_null_pvalues.json').read_text())
+assert v8p['raw_bin_max_over10_mean_ba']['exceedances']==21
+assert v9p['cebra_time']['exceedances']==17 and v9p['cebra_behavior']['exceedances']==12
+
+ledger_rows = [
+('Initial V6 probe','Rejected','Unfiltered endpoint aggregates exposed held-out behavior. Stopped before accepted graph artifacts; later reset did not undo exposure.'),
+('V6 slow support / edge-hash / review-fix / interrupted reruns','Preserved; not final','Separate failed/superseded/interrupted directories remain in the run root; final graph/support output is v6-reset-graph-support-audit.'),
+('V7 first tee attempt','Shell failure; overwritten artifact gap','Missing log directory; first outputs overwritten by rerun. Exact first-run artifact hashes were not recovered.'),
+('V7/V8 baseline job','Accepted with diagnostic follow-up','Raw/PCA/time-bin outputs retained. Underreported perfect bin and missing training metrics prompted V8b.'),
+('V8b/V9 20260905T215838Z','Failed setup; preserved','No-clobber/log-directory attempt, not a successful model result.'),
+('V8b/V9 20260905T215914Z','Slow partial; stopped and preserved','Used for the old/new engineering parity comparison; not pooled with final corrected-code nulls.'),
+('V8b/V9 fast 20260905T223541Z','Completed but superseded','Speed-fixed run superseded by the final test/assert-cleanup revision.'),
+('V8b/V9 final 20260905T224554Z','Accepted final analysis','12 observed + 40 null fits at 1,000 updates each. Same corrected code revision for observed and null fits.'),
+('Professor-facing HTML preparation','Document/artifact checks only','No new biological model fits, raw/test inspection, installations or changes to analysis code.')]
+ledger=''.join('<tr>'+''.join('<td>'+escape(c)+'</td>' for c in row)+'</tr>' for row in ledger_rows)
+
+appendix = '''<section id="audit-tables"><h2>8. Complete results, protocol and provenance</h2>
+<h3>8.1 Primary matched comparison</h3><p>Values below are copied from the accepted same-array summary. Three values refer to seeds 0/1/2. Ranges are seed sensitivities, not confidence intervals. Ordinary accuracy equals balanced accuracy because each synthetic split is class-balanced. Log loss and Brier assess probability predictions, not calibration alone; AUROC assesses ranking. No secondary metric replaced the declared BA criterion.</p>
+<div class="table-wrap"><table class="compact"><thead><tr><th>Representation</th><th>BA by seed</th><th>BA mean (range)</th><th>Log loss mean (range)</th><th>Brier mean (range)</th><th>AUROC mean (range)</th></tr></thead><tbody>''' + metric_body + '''</tbody></table></div>
+<h3>8.2 Preprocessing and training specification</h3>
+<div class="table-wrap"><table><thead><tr><th>Item</th><th>Accepted specification / scope</th></tr></thead><tbody>
+<tr><td>Behavior contrast</td><td>Directed middle component D_N_R_T__N_R_M, within provisional endpoint pair 4→3. Geometry/support choices made without neural predictive-performance selection.</td></tr>
+<tr><td>Neural panel and source unit</td><td>29 cells / 7 sessions; 82 training and 22 validation source IDs. Source storage 104×29×10 is masked, not 104 simultaneous 29-cell trials.</td></tr>
+<tr><td>Assembly</td><td>64 rows/class/split, seeds 0/1/2. One source per session block, same source across its cells and cue bins. No missing-value-as-zero imputation.</td></tr>
+<tr><td>Time</td><td>Nominal first second; ten 100 ms bins primary, 50/200 ms sensitivities. Exposure stored. Variable full-cue duration was not silently treated as exactly one second.</td></tr>
+<tr><td>PCA</td><td>Training-only scaler/PCA on 1,280×29 bin vectors; dimensions 3/8 reused across time; whole-cue readout has 30/80 features. Derived vectors remain dependent.</td></tr>
+<tr><td>CEBRA</td><td>Native offset1-model, hidden width 32, output dimensions 3/8, batch 256, 1,000 updates, Adam learning rate 3e-4, fixed cosine temperature 1.0. Time uses same-pseudorow +1-bin positives; Behavior uses same-label positives.</td></tr>
+<tr><td>Decoder</td><td>Logistic regression C=1 with training-only standardization. C=0.1/0.01 were V8b sensitivities, not validation-selected replacements.</td></tr>
+<tr><td>V8b null</td><td>100 source-label permutations with reassembly/refitting; mean over seeds and max-over-ten-bin statistics matched to the inspected family. Not a correction for every adaptive study choice.</td></tr>
+<tr><td>V9 null</td><td>20 per variant, dimension eight / seed zero only; source-label permutation, reassembly, scaler/encoder/decoder refit, same 1,000-update budget.</td></tr>
+<tr><td>Hardware / software</td><td>V6 and raw/PCA CPU work; native CEBRA on RTX 2070. Python 3.13.2, NumPy 2.3.4, sklearn 1.7.2, CEBRA 0.6.1, torch 2.12.0+cu130; driver 580.173.02. No environment changes for this document.</td></tr>
+</tbody></table></div>
+<h3>8.3 Observed CEBRA training evidence</h3><p>Each row is an observed fit, not a null fit. Peak values are torch allocated/reserved bytes, not total GPU-board memory. Checkpoint parity is maximum absolute validation-embedding difference after reload. The index file lists these 12 observed fits; 40 other fits have separate null-directory records. All 52 loss traces contain 1,000 rows.</p>
+<div class="table-wrap"><table class="compact"><thead><tr><th>Objective</th><th>Dim</th><th>Seed</th><th>Wall s</th><th>First → last loss</th><th>Last-100 mean</th><th>Peak allocated / reserved bytes</th><th>Reload difference</th></tr></thead><tbody>''' + train_body + '''</tbody></table></div>
+<p>V6 CPU runtime was 4m33s and V7/V8 baseline runtime 44.210 s. The final V8b/V9 run lasted 363.999 s. These are stage timings, not a reconstructed total workflow or total GPU cost. Full first-run V7 timing/artifact provenance is unavailable after its overwrite; it is not retrospectively fabricated.</p>
+<h3>8.4 Attempt history and deviations</h3><div class="table-wrap"><table><thead><tr><th>Attempt</th><th>Status</th><th>Implication / evidence retained</th></tr></thead><tbody>''' + ledger + '''</tbody></table></div>
+<p>The exact V6 intermediate directory identities, stage commands, hashes and all source-output links remain in the long-form Markdown review at <code>docs/reports/place195-v6-v9-autoresearch-20260906.md</code>, Appendices C–F. The data and output directories are local/ignored, not publicly hosted by this report. Reproduction commands must use the isolated runtime and fresh output directories; copying an accepted output path into a new run is not acceptable.</p>
+<h3>8.5 Identity and review scope</h3>
+<p><strong>Accepted run root:</strong> <code>outputs/prospective_path_first_run/place195-v6-v9-autoresearch-20260906/v8b-v9-cebra-final-20260905T224554Z</code>.</p>
+<ul><li>Recorded Git HEAD: <code>c4eec752a0eab95e5c48300bc327191aefa57778</code>; the tree was dirty. A revision alone is not sufficient provenance.</li><li>V9 source-code SHA-256: <code>737ad148dcc261c3ec1bbbd1ada395b34b47b2b37c5920370d3107c209976f9a</code>.</li><li>V7/V8 source-code SHA-256: <code>39ed10704d7b3258a4d7109c9c4ce7ddecc5de98d4c11efe66f019d3cb973089</code>.</li><li>Primary source NPZ SHA-256: <code>688e3b52f69a872c7aec420da99ebb6f0b80464351ded3813b077cd7ed3cf567</code>.</li><li>V6 static graph SHA-256: <code>301519ec5fc45cea6aa663eb3c9d9d7cbf2d84af264ff5998f89de3e741ea496</code>.</li><li>Frozen split semantic hash: <code>11237c8c35af4b09b6d81c1994ff3f8b702d245d3a262f70413dab2b182973d1</code>; frozen assignment is not proof of an unexposed holdout.</li></ul>
+<p>Historical software checks: 26 focused tests and compilation of eight source/test files passed. In the later code-grounded teaching review, eight selected non-fitting checks were rerun and passed; this is not 34 distinct scientific tests. Earlier project LSP checking had three timeouts; no full-project type-clean claim is made. The current presentation checks transcriptions, embedded assets, source-combination counts, fit-record completeness and source hashes without fitting.</p>
+<p>Separate read-only AI-agent reviews were used for code/report quality control. These are not external human peer review, independent biological replication, or authoritative verification of laboratory metadata. The earlier report rewrite received separate pedagogical and factual checks; its factual check corrected two unsafe reproduction-command destinations. This professor-facing HTML requires its own final artifact/content check before release.</p>
+<div class="audit-note"><strong>Document integrity:</strong> the delivered HTML contains its figures, diagrams and styling, with no remote scripts/styles or automatically loaded external resources. Its exact hash and final review/check receipts are saved under the run root’s <code>audits/</code> directory. The previous V5 report, the long-form Markdown report, and analysis outputs are preserved unchanged.</div>
+</section>'''
+
+source_map = section('source-map').replace('6. Evidence map: what each source establishes', '9. Evidence map: sources and their inferential roles')
+source_map = source_map.replace('not decorative filenames', 'locations for inspection')
+source_map = source_map.replace('Code was personally read at these seams; the read-only fanout checked for missed constraints. The existing long report was used as an index, not as sole proof.', 'The code-grounded review read these seams and checked the corresponding saved results. The long report is an index to the evidence, not a substitute for it.')
+source_map = source_map.replace('<strong>8 selected tests rerun and passed.</strong>', '<strong>8 selected tests passed in the preceding code-grounded review.</strong>')
+source_map = source_map.replace('checked in this max pass', 'checked against saved artifacts')
+source_map = source_map.replace('This is new arithmetic on existing manifests', 'This is deterministic arithmetic on existing manifests')
+source_map = source_map.replace('this lesson uses', 'this report uses')
+source_map = source_map.replace('This lesson', 'This report').replace('this lesson', 'this report')
+source_map = source_map.replace('No remote image, stylesheet or script is loaded.', 'No remote image, stylesheet or script is automatically loaded.')
+source_map = source_map.replace('parent read', 'the code-grounded review read')
+source_map = source_map.replace('Two fresh read-only passes cross-checked seams and claim limits.', 'Separate read-only AI-assisted passes cross-checked seams and claim limits, without substituting for direct code/artifact inspection.')
+source_map = source_map.replace('Eight focused tests passed in this max pass', 'Eight focused tests passed in that preceding review')
+source_map = source_map.replace('this unit reviews the local finding-to-claim chain', 'this document reviews the local finding-to-claim chain')
+source_map = source_map.replace('in this pass', 'for this presentation')
+
+references = '''<section id="references"><h2>10. Method context and reading references</h2>
+<p>The explanations above stand on their own. The following sources motivate the choice of measurements and models; they do not transfer their biological conclusions to the Place195 benchmark.</p>
+<ul class="paper-reference">
+<li><strong>Johnson &amp; Redish (2007).</strong> Prospective spatial representations in rat CA3 during decisions motivate asking whether activity relates to locations beyond the animal’s current position. Task, timing and recording differences prevent assuming the same phenomenon here. <a href="https://doi.org/10.1523/JNEUROSCI.3761-07.2007">doi:10.1523/JNEUROSCI.3761-07.2007</a>.</li>
+<li><strong>Cunningham &amp; Yu (2014).</strong> Dimensionality reduction organizes shared variation in neural populations. The relevant distinction here is explained variance versus task-specific information, and synthetic versus simultaneously measured covariance. <a href="https://doi.org/10.1038/nn.3776">doi:10.1038/nn.3776</a>.</li>
+<li><strong>Schneider et al. (2023), CEBRA.</strong> Contrastive learning uses temporal or behavioral relationships to organize embeddings. A chosen positive-pair rule shapes the learned representation; held-out readout remains necessary. <a href="https://doi.org/10.1038/s41586-023-06031-6">doi:10.1038/s41586-023-06031-6</a>.</li>
+<li><strong>Kobak et al. (2016).</strong> Demixed population analyses provide context for separating task-related factors. Demixed PCA was not fitted in this run. <a href="https://doi.org/10.7554/eLife.10989">doi:10.7554/eLife.10989</a>.</li>
+<li><strong>Loren Frank Lab track_linearization.</strong> A graph-linked spatial ruler and progress variable are useful precedents. A narrow-track HMM mapper was not adopted wholesale for the broad floor. <a href="https://github.com/LorenFrankLab/track_linearization">Repository and method documentation</a>.</li>
+</ul>
+<p>The primary-paper scope was verified during the research/planning work and documented in its notes. This presentation does not claim a new exhaustive literature review or proof of every CEBRA theoretical assumption.</p>
+</section>'''
+
+footer = '''</main><footer><p><strong>Place195 V6–V9 · internal methods/results/validity review · 6 September 2026.</strong></p><p>Prepared for discussion, not as a confirmatory claim. The original holdout-exposure incident, selected/non-simultaneous recording limits, and source-label-conditioned assembly remain central to interpretation. No new biological fit or raw/test inspection was performed for this document.</p><p class="small">Single-file HTML: figures and styling are embedded for offline review and browser printing. The document is a professor-facing companion to the detailed Markdown teaching/audit report and does not overwrite it.</p></footer></body></html>'''
+out = head + header + foundations + objective + prior + executive + flow + story + review + asks + appendix + source_map + references + footer
+assert 'delete me' not in out.lower() and 'Delete me:' not in out
+assert 'Your turn' not in out and 'Teach-back' not in out
+
+class Checker(HTMLParser):
+    def __init__(self):
+        super().__init__(); self.ids=[]; self.links=[]; self.images=[]; self.text=[]; self.in_style=False
+    def handle_starttag(self,tag,attrs):
+        a=dict(attrs)
+        assert tag not in ('script','iframe','object','embed','form','link'),tag
+        assert not any(k.startswith('on') for k in a),tag
+        if tag=='style':self.in_style=True
+        if 'id' in a:self.ids.append(a['id'])
+        if tag=='a':
+            href=a.get('href');assert isinstance(href,str);self.links.append(href)
+        if tag=='img':
+            src=a.get('src')
+            assert a.get('alt') and isinstance(src,str) and src.startswith('data:image/png;base64,')
+            data=base64.b64decode(src.split(',',1)[1],validate=True)
+            assert data.startswith(b'\x89PNG\r\n\x1a\n')
+            self.images.append(hashlib.sha256(data).hexdigest())
+    def handle_endtag(self,tag):
+        if tag=='style':self.in_style=False
+    def handle_data(self,data):
+        if not self.in_style:self.text.append(data)
+check=Checker();check.feed(out)
+assert len(check.ids)==len(set(check.ids))
+assert all((u[1:] in check.ids) if u.startswith('#') else u.startswith('https://') for u in check.links)
+assert len(check.images)==5 and len(set(check.images))==5
+assert len(metrics)==10 and len(infos)==12 and len(all_fit_paths)==52
+for path,expected in [('scripts/place195_v7_v8_neural_experiments.py','39ed10704d7b3258a4d7109c9c4ce7ddecc5de98d4c11efe66f019d3cb973089'),('scripts/place195_v8b_v9_cebra.py','737ad148dcc261c3ec1bbbd1ada395b34b47b2b37c5920370d3107c209976f9a')]:
+    assert hashlib.sha256((repo/path).read_bytes()).hexdigest()==expected
+md_manifest=json.loads((root/'final_report_manifest.json').read_text())
+assert hashlib.sha256((repo/md_manifest['report_path']).read_bytes()).hexdigest()==md_manifest['report_sha256']
+target.parent.mkdir(parents=True,exist_ok=True)
+assert not target.exists(), 'Refusing to overwrite an existing professor report'
+target.write_text(out)
+shutil.copyfile(target,preview)
+report_sha=hashlib.sha256(target.read_bytes()).hexdigest()
+receipt={'created_utc':datetime.now(timezone.utc).isoformat(),'status':'document_checks_passed_independent_content_review_pending','report_path':str(target.relative_to(repo)),'preview_path':str(preview),'sha256':report_sha,'bytes':target.stat().st_size,'approx_text_word_count_including_tables':len(' '.join(check.text).split()),'embedded_pngs':5,'remote_auto_loaded_resources':0,'scripts':0,'primary_comparator_rows':len(metrics),'observed_training_rows':len(infos),'complete_fit_records':len(all_fit_paths),'loss_rows_each':1000,'checkpoint_reload_differences_all_zero':True,'validation_source_combination_bounds':{'present':6,'absent':24},'saved_validation_combinations':combinations,'biological_fits_run_for_report':0,'raw_or_test_inspection_for_report':False,'analysis_code_unchanged':True,'markdown_report_unchanged':True,'image_sha256':check.images}
+(root/'audits/professor-html-validation.json').write_text(json.dumps(receipt,indent=2)+'\n')
+print(json.dumps(receipt,indent=2))

@@ -174,4 +174,29 @@ The write-up links the prior student's scripts at:
 
 `https://github.com/josephchengyx/Hippocampus_Decoding`
 
-This repository has not yet been cloned or audited locally.
+A bounded read-only source inspection was performed on 2026-09-07 at commit
+`2f12016c58472888b83298d163be1daaf5291a1e`; historical notebooks were not executed
+against the missing original data. In `neurosci_2023_pseudopop.ipynb`, the custom
+10-fold helper uses deterministic row modulo, not source-trial groups. The
+pooled-bin cell 70 splits different bins of the same trial across folds; the
+separate per-bin LDA cells 72/73 are different code paths whose bootstrap-source
+reuse requires tracing. Do not generalize that pooled-bin issue to every
+historical result. See the [CEBRA diagnosis and comparison note](../docs/reports/start-goal-cebra-diagnosis.md)
+for the bounded audit and a fair source-safe comparison plan.
+
+### Matched adaptation completed, 2026-09-07
+
+The [autonomous endpoint study](../docs/reports/start-goal-autoresearch.md) now
+includes separate start/goal/joint SVD LDA on identical 195-unit source-safe
+arrays and ten 100 ms cue bins. Three-seed development goal accuracy peaks
+at 81.25% in 0.4–0.5 s; joint LDA in that bin is 37.22%. Whole-cue SVD LDA
+is 48.47% joint; PCA8/bin + logistic C=.01 is 83.61% joint. These are different
+input/target comparisons, not historical accuracy replication or evidence
+that LDA/PCA generally dominates CEBRA.
+
+The report also includes cross-temporal goal readouts, shrinkage joint LDA,
+and an explicitly modern factorized two-head comparator. It retains the
+known-condition pseudopopulation and inspected-development caveats. The
+student's original 233-cell selection, preprocessing artifacts and source-safe
+historical folds remain unavailable. Notebook cell numbers above are zero-based
+indices in the notebook JSON, not execution counters.

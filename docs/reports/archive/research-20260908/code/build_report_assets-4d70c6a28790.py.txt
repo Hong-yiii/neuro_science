@@ -1,0 +1,191 @@
+#!/usr/bin/env python3
+"""Build final-report figures from accepted V6-V9 artifacts only.
+
+No fitting and no raw data access. Inputs are CSV/JSON/NPZ arrays already produced by
+accepted stage runs. The assertions are intentionally boring: they catch schema drift
+and prevent silently plotting the wrong run.
+"""
+from __future__ import annotations
+
+import csv
+import json
+from collections import defaultdict
+from pathlib import Path
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+RUN_ROOT = Path(__file__).resolve().parents[1]
+PROJECT = RUN_ROOT.parents[3]
+V7_ROOT = PROJECT / "outputs/prospective_path_first_run/place195-v6-v9-autoresearch-20260906/v7-v8-neural-experiments"
+OUT = RUN_ROOT / "report_assets"
+
+
+def read_csv(path: Path) -> list[dict[str, str]]:
+    with path.open(newline="") as f:
+        rows = list(csv.DictReader(f))
+    assert rows, f"empty csv: {path}"
+    return rows
+
+
+def f(row: dict[str, str], key: str) -> float:
+    return float(row[key])
+
+
+def mean_range(vals: list[float]) -> tuple[float, float, float]:
+    assert len(vals) == 3, vals
+    return float(np.mean(vals)), float(np.min(vals)), float(np.max(vals))
+
+
+def collect_validation_metrics() -> list[dict[str, object]]:
+    comp_rows = read_csv(RUN_ROOT / "v8b/v8b_v9_same_array_comparator_baselines.csv")
+    v9_rows = read_csv(RUN_ROOT / "v9/v9_cebra_metrics.csv")
+
+    records: list[dict[str, object]] = []
+    # Predeclared C=1 raw/PCA comparators on the exact same pseudo arrays.
+    for rep, label in [
+        ("constant_p0_5", "Constant p=0.5"),
+        ("selected_panel_train_source_prior", "Train-source prior"),
+        ("raw_total", "Raw total"),
+        ("raw_binned", "Raw 10-bin"),
+        ("pca_cellspace_3", "PCA-3"),
+        ("pca_cellspace_8", "PCA-8"),
+    ]:
+        rows = [r for r in comp_rows if r["split"] == "validation" and r["representation"] == rep]
+        if rep.startswith("raw") or rep.startswith("pca"):
+            rows = [r for r in rows if r["C"] == "1.0"]
+        assert len(rows) == 3, (rep, len(rows))
+        bas = [f(r, "balanced_accuracy") for r in sorted(rows, key=lambda x: int(x["seed"]))]
+        acc = [f(r, "accuracy") for r in sorted(rows, key=lambda x: int(x["seed"]))]
+        ll = [f(r, "log_loss") for r in sorted(rows, key=lambda x: int(x["seed"]))]
+        br = [f(r, "brier") for r in sorted(rows, key=lambda x: int(x["seed"]))]
+        au = [f(r, "auroc") for r in sorted(rows, key=lambda x: int(x["seed"]))]
+        m, lo, hi = mean_range(bas)
+        records.append({
+            "label": label, "family": "baseline", "seeds": "0,1,2",
+            "balanced_accuracy_values": bas, "balanced_accuracy_mean": m,
+            "balanced_accuracy_min": lo, "balanced_accuracy_max": hi,
+            "accuracy_mean": float(np.mean(acc)), "accuracy_min": float(np.min(acc)), "accuracy_max": float(np.max(acc)),
+            "log_loss_mean": float(np.mean(ll)), "log_loss_min": float(np.min(ll)), "log_loss_max": float(np.max(ll)),
+            "brier_mean": float(np.mean(br)), "brier_min": float(np.min(br)), "brier_max": float(np.max(br)),
+            "auroc_mean": float(np.mean(au)), "auroc_min": float(np.min(au)), "auroc_max": float(np.max(au)),
+        })
+
+    for variant, dim, label in [
+        ("cebra_time", "3", "CEBRA-Time-3"),
+        ("cebra_time", "8", "CEBRA-Time-8"),
+        ("cebra_behavior", "3", "CEBRA-Behavior-3"),
+        ("cebra_behavior", "8", "CEBRA-Behavior-8"),
+    ]:
+        rows = [r for r in v9_rows if r["split"] == "validation" and r["representation"] == variant and r["dim"] == dim]
+        assert len(rows) == 3, (variant, dim, len(rows))
+        rows = sorted(rows, key=lambda x: int(x["seed"]))
+        bas = [f(r, "balanced_accuracy") for r in rows]
+        acc = [f(r, "accuracy") for r in rows]
+        ll = [f(r, "log_loss") for r in rows]
+        br = [f(r, "brier") for r in rows]
+        au = [f(r, "auroc") for r in rows]
+        m, lo, hi = mean_range(bas)
+        records.append({
+            "label": label, "family": "cebra", "seeds": "0,1,2",
+            "balanced_accuracy_values": bas, "balanced_accuracy_mean": m,
+            "balanced_accuracy_min": lo, "balanced_accuracy_max": hi,
+            "accuracy_mean": float(np.mean(acc)), "accuracy_min": float(np.min(acc)), "accuracy_max": float(np.max(acc)),
+            "log_loss_mean": float(np.mean(ll)), "log_loss_min": float(np.min(ll)), "log_loss_max": float(np.max(ll)),
+            "brier_mean": float(np.mean(br)), "brier_min": float(np.min(br)), "brier_max": float(np.max(br)),
+            "auroc_mean": float(np.mean(au)), "auroc_min": float(np.min(au)), "auroc_max": float(np.max(au)),
+        })
+    return records
+
+
+def write_metrics(records: list[dict[str, object]]) -> None:
+    keys = [
+        "label", "family", "seeds", "balanced_accuracy_values", "balanced_accuracy_mean",
+        "balanced_accuracy_min", "balanced_accuracy_max", "accuracy_mean", "accuracy_min", "accuracy_max",
+        "log_loss_mean", "log_loss_min", "log_loss_max", "brier_mean", "brier_min", "brier_max",
+        "auroc_mean", "auroc_min", "auroc_max",
+    ]
+    with (OUT / "final_same_array_validation_summary.csv").open("w", newline="") as fobj:
+        w = csv.DictWriter(fobj, fieldnames=keys)
+        w.writeheader()
+        for r in records:
+            row = dict(r)
+            row["balanced_accuracy_values"] = ";".join(f"{x:.6f}" for x in row["balanced_accuracy_values"])
+            w.writerow(row)
+    (OUT / "final_same_array_validation_summary.json").write_text(json.dumps(records, indent=2) + "\n")
+
+
+def plot_benchmark(records: list[dict[str, object]]) -> None:
+    labels = [r["label"] for r in records]
+    means = np.array([r["balanced_accuracy_mean"] for r in records], float)
+    lows = np.array([r["balanced_accuracy_min"] for r in records], float)
+    highs = np.array([r["balanced_accuracy_max"] for r in records], float)
+    x = np.arange(len(records))
+    colors = ["#777777" if r["family"] == "baseline" else "#2a6fbb" for r in records]
+    plt.figure(figsize=(11.5, 5.5))
+    plt.bar(x, means, color=colors, alpha=0.82)
+    plt.errorbar(x, means, yerr=np.vstack([means - lows, highs - means]), fmt="none", ecolor="black", capsize=4, lw=1.4)
+    plt.axhline(0.5, color="black", linestyle="--", linewidth=1, label="balanced chance")
+    plt.ylim(0, 1.05)
+    plt.ylabel("Validation balanced accuracy (mean; whiskers = seed range, not CI)")
+    plt.xticks(x, labels, rotation=35, ha="right")
+    plt.title("Primary 29-cell/7-session 100 ms whole-cue benchmark on the same pseudo arrays")
+    plt.legend(loc="upper right")
+    plt.tight_layout()
+    plt.savefig(OUT / "v9_same_array_validation_ba_seed_range.png", dpi=180)
+    plt.close()
+
+
+def plot_loss_curves() -> None:
+    infos = json.loads((RUN_ROOT / "v9/v9_fit_infos.json").read_text())
+    observed = [i for i in infos if "null_index" not in i]
+    assert len(observed) == 12, len(observed)
+    plt.figure(figsize=(11.5, 6.5))
+    styles = {"cebra_time": "-", "cebra_behavior": "--"}
+    colors = {3: "#1f77b4", 8: "#d62728"}
+    for info in sorted(observed, key=lambda x: (x["variant"], x["dim"], x["seed"])):
+        loss_path = RUN_ROOT / "v9/observed" / info["variant"] / f"dim{info['dim']}" / f"seed{info['seed']}" / "loss_trace.csv"
+        rows = read_csv(loss_path)
+        assert len(rows) == 1000, (loss_path, len(rows))
+        steps = np.array([int(r["step"]) for r in rows])
+        losses = np.array([float(r["total"]) for r in rows])
+        assert steps[0] == 1 and steps[-1] == 1000
+        label = f"{info['variant'].replace('cebra_', '')} dim{info['dim']} seed{info['seed']}"
+        plt.plot(steps, losses, styles[info["variant"]], color=colors[int(info["dim"])], alpha=0.38, linewidth=1.2, label=label)
+    plt.xlabel("Training iteration")
+    plt.ylabel("InfoNCE loss")
+    plt.title("Observed V9 CEBRA training loss curves (12 fits, all 1000 steps)")
+    # Compact legend outside; crowded but auditable.
+    plt.legend(fontsize=7, ncol=2, bbox_to_anchor=(1.02, 1), loc="upper left")
+    plt.tight_layout()
+    plt.savefig(OUT / "v9_observed_cebra_loss_curves.png", dpi=180, bbox_inches="tight")
+    plt.close()
+
+
+def main() -> None:
+    OUT.mkdir(parents=True, exist_ok=True)
+    summary = json.loads((RUN_ROOT / "summary.json").read_text())
+    assert summary["status"] == "complete"
+    assert summary["hashes"]["script_sha256"] == "737ad148dcc261c3ec1bbbd1ada395b34b47b2b37c5920370d3107c209976f9a"
+    source = np.load(V7_ROOT / "primary29_min3train_min1val/bin100ms/source_level_cue_tensors.npz")
+    assert source["X_source_cell_bin"].shape == (104, 29, 10)
+    assert int(np.sum(source["source_splits"] == "train")) == 82
+    assert int(np.sum(source["source_splits"] == "validation")) == 22
+    for seed in (0, 1, 2):
+        pseudo = np.load(V7_ROOT / f"primary29_min3train_min1val/bin100ms/pseudo_arrays_seed{seed}.npz")
+        assert pseudo["X_train"].shape == (128, 29, 10)
+        assert pseudo["X_validation"].shape == (128, 29, 10)
+        assert np.bincount(pseudo["y_train"].astype(int)).tolist() == [64, 64]
+        assert np.bincount(pseudo["y_validation"].astype(int)).tolist() == [64, 64]
+    records = collect_validation_metrics()
+    write_metrics(records)
+    plot_benchmark(records)
+    plot_loss_curves()
+    print("report assets ok")
+    print(OUT / "final_same_array_validation_summary.csv")
+    print(OUT / "v9_same_array_validation_ba_seed_range.png")
+    print(OUT / "v9_observed_cebra_loss_curves.png")
+
+
+if __name__ == "__main__":
+    main()

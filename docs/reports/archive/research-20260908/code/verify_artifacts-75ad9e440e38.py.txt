@@ -1,0 +1,106 @@
+"""Local completed-run verification. Does not train or read original holdout features."""
+import ast
+from collections import Counter, defaultdict
+import csv
+import hashlib
+import json
+from pathlib import Path
+
+import numpy as np
+from sklearn.metrics import accuracy_score, balanced_accuracy_score, f1_score, log_loss
+
+ROOT = Path(__file__).resolve().parents[2]
+RUN = ROOT / "outputs/start-goal-cebra-20260907"
+
+def digest(path):
+    h = hashlib.sha256()
+    with path.open("rb") as f:
+        for chunk in iter(lambda: f.read(1048576), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+def read_csv(path):
+    with path.open(newline="") as f:
+        return list(csv.DictReader(f))
+
+def verify():
+    manifest = json.loads((RUN / "manifest.json").read_text())
+    assert manifest["status"] == "completed"
+    hashes = json.loads((RUN / "artifact_hashes.json").read_text())
+    for name, expected in hashes.items():
+        assert digest(RUN / name) == expected, name
+    for name, expected in json.loads((RUN / "inputs.json").read_text())["input_hashes"].items():
+        assert digest(Path(name)) == expected, name
+    old = (RUN / "code/start_goal_cebra_baseline.py").read_text()
+    new = (ROOT / "scripts/start_goal_cebra_baseline.py").read_text()
+    assert ast.dump(ast.parse(old)) == ast.dump(ast.parse(new))
+    rows = read_csv(RUN / "metrics.csv")
+    assert len(rows) == 690
+    fits = list(RUN.glob("*/seed*/cebra_*/fit_info.json"))
+    assert len(fits) == 126
+    for path in fits:
+        assert json.loads(path.read_text())["save_load_max_abs_embedding_diff"] <= 1e-6
+        assert len(read_csv(path.parent / "loss_trace.csv")) == 1000
+    pairs = np.array([(s, g) for s in range(1, 7) for g in range(1, 7) if s != g])
+    label_id = {f"{s}->{g}": i for i, (s, g) in enumerate(pairs)}
+    # Independently recompute all 690 metrics from persisted probabilities.
+    for r in rows:
+        stage = "observed" if int(r["null_id"]) == -1 else f"null_{int(r['null_id']):03d}"
+        path = RUN / stage / f"seed{r['seed']}" / r["representation"] / "decoder.npz"
+        with np.load(path) as d:
+            y, prob = d[f"y_{r['split']}"], d[f"prob_{r['split']}"]
+            assert np.isfinite(prob).all() and np.allclose(prob.sum(axis=1), 1)
+            pred = d["classes"][prob.argmax(axis=1)]
+            values = {"joint_accuracy": accuracy_score(y, pred), "joint_balanced_accuracy": balanced_accuracy_score(y, pred), "joint_macro_f1": f1_score(y, pred, average="macro", zero_division=0), "joint_log_loss": log_loss(y, prob, labels=np.arange(30)), "start_accuracy": accuracy_score(pairs[y, 0], pairs[pred, 0]), "goal_accuracy": accuracy_score(pairs[y, 1], pairs[pred, 1])}
+            for key, value in values.items():
+                assert np.isclose(float(r[key]), value, atol=1e-10), (path, key)
+    sources = {r["source_trial_id"]: r for r in read_csv(RUN / "source_splits.csv")}
+    outer = {r["source_trial_id"]: r["split"] for r in read_csv(Path(manifest["config"]["split_dir"]) / "source_trial_splits.csv")}
+    assert all(outer[s] == "train" for s in sources)
+    train = {s for s, r in sources.items() if r["split"] == "train"}
+    val = set(sources) - train
+    assert not train & val
+    before = Counter((r["session_id"], r["split"], r["label"]) for r in sources.values())
+    for path in RUN.glob("null_*/shuffled_source_labels.csv"):
+        labels = {r["source_trial_id"]: r["label"] for r in read_csv(path)}
+        assert set(labels) == set(sources)
+        after = Counter((r["session_id"], r["split"], labels[s]) for s, r in sources.items())
+        assert before == after
+    with np.load(RUN / "source_tensor.npz") as tensor:
+        index = {s: i for i, s in enumerate(tensor["source_ids"])}
+        cells = list(tensor["cells"])
+        sessions = defaultdict(list)
+        for i, cell in enumerate(cells):
+            day, session = cell.split("/")[:2]
+            sessions[f"{day}_{session}"].append(i)
+        counts = tensor["counts"]
+        reuse = {}
+        # Every observed row and one complete null stage are checked against real sources.
+        for stage in ("observed", "null_000"):
+            labels = {s: r["label"] for s, r in sources.items()} if stage == "observed" else {r["source_trial_id"]: r["label"] for r in read_csv(RUN / stage / "shuffled_source_labels.csv")}
+            for seed in (0, 1, 2):
+                target = RUN / stage / f"seed{seed}"
+                components = read_csv(target / "pseudo_components.csv")
+                groups, used = defaultdict(set), defaultdict(set)
+                with np.load(target / "pseudo_arrays.npz") as stored:
+                    arr = {key: stored[key] for key in stored.files}
+                    assert arr["X_train"].shape == (480, 195, 10)
+                    assert arr["X_validation"].shape == (240, 195, 10)
+                    for r in components:
+                        s, split, sess, row = r["source_trial_id"], r["split"], r["session_id"], int(r["pseudo_row"])
+                        assert sources[s]["split"] == split and sources[s]["session_id"] == sess
+                        assert labels[s] == r["label"]
+                        assert label_id[r["label"]] == arr[f"y_{split}"][row]
+                        assert sess not in groups[split, row]
+                        groups[split, row].add(sess)
+                        used[split].add(s)
+                        np.testing.assert_array_equal(arr[f"X_{split}"][row, sessions[sess], :], counts[index[s], sessions[sess], :])
+                    assert len(groups) == 720 and all(len(v) == 58 for v in groups.values())
+                    assert not used["train"] & used["validation"]
+                    reuse[f"{stage}/seed{seed}"] = {k: len(v) for k, v in used.items()}
+    return {"status": "passed", "artifact_hashes_verified": len(hashes), "fits_verified": len(fits), "metric_rows_recomputed": len(rows), "sources": len(sources), "original_nontraining_sources": 0, "inner_train_sources": len(train), "inner_validation_sources": len(val), "observed_and_first_null_used_sources": reuse, "current_main_ast_matches_run_snapshot": True}
+
+if __name__ == "__main__":
+    result = verify()
+    (Path(__file__).parent / "artifact-verification.json").write_text(json.dumps(result, indent=2) + "\n")
+    print(json.dumps(result, indent=2))

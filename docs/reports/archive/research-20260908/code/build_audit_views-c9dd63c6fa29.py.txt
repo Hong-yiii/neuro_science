@@ -1,0 +1,107 @@
+"""Serve an explicit allowlist of audit documents, never the entire repository."""
+from pathlib import Path
+from html import escape
+from html.parser import HTMLParser
+import hashlib
+import json
+import shutil
+
+repo = Path('/home/hongyi-home-lab/neuro_science')
+work = Path('/tmp/neuro-audit-next-20260906')
+out = Path('/tmp/pi-teach/place195-audit')
+root = 'outputs/prospective_path_first_run/place195-v6-v9-autoresearch-20260906/'
+final = root + 'v8b-v9-cebra-final-20260905T224554Z/'
+entries = [
+ ('1. Question and provenance','questions','Scientific question','docs/research-questions.md'),
+ ('1. Question and provenance','contract','Analysis contract','docs/analysis-contract.md'),
+ ('1. Question and provenance','dataset','Dataset/protocol facts and unknowns','docs/dataset-card.md'),
+ ('1. Question and provenance','transfer','Latest selected-data integrity and supplement removal','context/2026-09-06-place-data-transfer-audit.md'),
+ ('2. Earlier work — historical','previous-student','Previous student analysis (not current H1 evidence)','context/previous-student-analysis.md'),
+ ('2. Earlier work — historical','earlier-flow','Earlier research flow and V1–V5 context','docs/prospective-path-research-flow-review.md'),
+ ('2. Earlier work — historical','import','All-session importer/QC note','notes/data_inspection/place195_all_sessions_import_20260830.md'),
+ ('2. Earlier work — historical','split','Original split/behavior audit','notes/data_inspection/place195_split_behavior_audit_20260830.md'),
+ ('2. Earlier work — historical','v4','Earlier graph-path baseline note','notes/data_inspection/place195_graph_path_baseline_20260901.md'),
+ ('2. Earlier work — historical','v5-note','V5 graph-path baseline note','notes/data_inspection/place195_graph_path_baseline_v5_20260901.md'),
+ ('2. Earlier work — historical','v5','Historical professor HTML — test status later superseded','docs/professor_updates/place195_v5_20260902/place195-v5-professor-methods-results-validity-20260902.html'),
+ ('3. Current account and validity','professor','Current professor HTML','docs/professor_updates/place195_v6_v9_20260906/place195-v6-v9-professor-methods-results-validity-20260906.html'),
+ ('3. Current account and validity','full-report','Full V6–V9 teaching/audit Markdown, including complete ledger','docs/reports/place195-v6-v9-autoresearch-20260906.md'),
+ ('3. Current account and validity','holdout','Original V6 holdout-exposure audit',root+'audits/holdout-exposure-audit.md'),
+ ('3. Current account and validity','followup-scope','This follow-up: source-access deviation and citation corrections',str(work/'scope-and-review-notes.md')),
+ ('4. Behavioral labels and actual support','marker','Marker semantics: observations versus assumptions','notes/data_inspection/place195_marker_semantics_probe_20260901.md'),
+ ('4. Behavioral labels and actual support','fixed195','Why the fixed195 complete panel failed','notes/data_inspection/fixed195_pseudopop_support_probe_20260901.md'),
+ ('4. Behavioral labels and actual support','v6-summary','Accepted V6 summary',root+'v6-reset-graph-support-audit/summary.json'),
+ ('4. Behavioral labels and actual support','panel-summary','Selected component observed-panel membership',root+'v6-reset-graph-support-audit/v6c_population_membership/selected_component_panel_summary.json'),
+ ('4. Behavioral labels and actual support','panels','Panel sensitivity and no-replacement ceilings',root+'v7-v8-neural-experiments/panels_and_no_replacement_ceilings.json'),
+ ('4. Behavioral labels and actual support','panel-review','Panel feasibility audit',root+'audits/v6-panel-feasibility.md'),
+ ('5. Time bins, metrics and model fitting','v7-summary','Accepted V7/V8 summary',root+'v7-v8-neural-experiments/summary.json'),
+ ('5. Time bins, metrics and model fitting','exposure','Cue exposure and count conservation',root+'v7-v8-neural-experiments/primary29_min3train_min1val/bin100ms/cue_exposure_conservation_audit.json'),
+ ('5. Time bins, metrics and model fitting','prefit','V8b/V9 prefit configuration',final+'prefit_config_manifest.json'),
+ ('5. Time bins, metrics and model fitting','final-summary','Accepted V8b/V9 summary',final+'summary.json'),
+ ('5. Time bins, metrics and model fitting','comparison','Full same-array metric comparison',final+'report_assets/final_same_array_validation_summary.csv'),
+ ('5. Time bins, metrics and model fitting','cebra-metrics','All observed CEBRA train/validation metrics',final+'v9/v9_cebra_metrics.csv'),
+ ('5. Time bins, metrics and model fitting','cebra-predictions','Saved CEBRA predictions underlying those metrics',final+'v9/v9_cebra_predictions.csv'),
+ ('5. Time bins, metrics and model fitting','bin-null','Pointwise and max-over-bin nulls',final+'v8b/v8b_source_label_null_pvalues.json'),
+ ('5. Time bins, metrics and model fitting','cebra-null','CEBRA source-label nulls',final+'v9/v9_null_pvalues.json'),
+ ('5. Time bins, metrics and model fitting','fit-infos','12 observed-fit records (40 null records are separate)',final+'v9/v9_fit_infos.json'),
+ ('5. Time bins, metrics and model fitting','speed-parity','Engineering old/new speed parity',final+'speedfix_old_new_comparison.json'),
+ ('6. Reviews and integrity receipts','v6-review','V6 final independent review',root+'audits/v6-final-independent-review.md'),
+ ('6. Reviews and integrity receipts','v7-review','V7/V8 review that prompted diagnostics',root+'audits/v7-v8-independent-review.md'),
+ ('6. Reviews and integrity receipts','v9-initial-review','V8b/V9 initial findings',root+'audits/v8b-v9-initial-review.md'),
+ ('6. Reviews and integrity receipts','v9-final-review','V8b/V9 final scientific/code audit',root+'audits/v8b-v9-final-review.md'),
+ ('6. Reviews and integrity receipts','pedagogy-review','Separate teaching rewrite review',root+'audits/teaching-rewrite-pedagogy-review.md'),
+ ('6. Reviews and integrity receipts','factual-review','Teaching rewrite factual follow-up',root+'audits/teaching-rewrite-factual-review-final.md'),
+ ('6. Reviews and integrity receipts','professor-review','Professor HTML independent review',root+'audits/professor-html-independent-review.md'),
+ ('6. Reviews and integrity receipts','md-manifest','Current Markdown identity/status',root+'final_report_manifest.json'),
+ ('6. Reviews and integrity receipts','html-manifest','Current HTML identity/status',root+'audits/professor-html-validation.json'),
+ ('6. Reviews and integrity receipts','format-reconciliation','Post-release HTML formatting reconciliation',root+'audits/professor-html-format-reconciliation.json'),
+ ('6. Reviews and integrity receipts','prior-html-manifest','Preserved HTML receipt before formatting reconciliation',root+'audits/professor-html-validation-before-format-reconciliation.json'),
+ ('6. Reviews and integrity receipts','artifact-checks','Historical parent artifact checks',root+'audits/parent-final-artifact-checks.json'),
+ ('6. Reviews and integrity receipts','historical-tests','Historical focused-test receipt',root+'audits/final-focused-tests.log'),
+ ('7. Executable seams — line-numbered','split-code','Split-filtered access implementation','scripts/place195_split_filtered_access.py'),
+ ('7. Executable seams — line-numbered','v6-code','V6 regions, path labels, support','scripts/place195_v6_graph_support_audit.py'),
+ ('7. Executable seams — line-numbered','v7-code','V7/V8 panel selection, masked tensors, assembly, PCA, shuffle','scripts/place195_v7_v8_neural_experiments.py'),
+ ('7. Executable seams — line-numbered','v9-code','V8b/V9 metrics, samplers, fitting and source nulls','scripts/place195_v8b_v9_cebra.py'),
+ ('7. Executable seams — line-numbered','verify','Runnable read-only verification helper',str(work/'verify_completed_work.py')),
+]
+css = '''body{font:16px/1.6 system-ui,sans-serif;color:#17324a;background:#f6f8fb;margin:0}main{max-width:1250px;margin:auto;padding:28px}a{color:#075d9b}code{font-family:ui-monospace,monospace;overflow-wrap:anywhere}pre{padding:12px;background:white;border:1px solid #ccd6e0;font:13px/1.5 ui-monospace,monospace;white-space:pre-wrap}.line{display:flex;min-height:1.5em}.line code{flex:1;min-width:0;white-space:pre-wrap}.n{width:4.5em;flex-shrink:0;color:#738294;text-decoration:none}.line:target{background:#fff0b8}li{margin:.55em 0}.note{border-left:4px solid #a4522a;padding:12px 18px;background:#fff0e8}small{overflow-wrap:anywhere}h1,h2{line-height:1.2}'''
+
+
+def page(title, body):
+    return '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src \'none\'; style-src \'unsafe-inline\'; img-src data:; base-uri \'none\'"><title>'+escape(title)+'</title><style>'+css+'</style><main>'+body+'</main></html>'
+
+
+assert not out.exists(), 'Refusing to overwrite an existing audit-view directory'
+out.mkdir(parents=True)
+manifest = []
+sections = {}
+for group, alias, title, rel in entries:
+    source = Path(rel) if Path(rel).is_absolute() else repo / rel
+    assert source.is_file(), source
+    data = source.read_bytes()
+    sha = hashlib.sha256(data).hexdigest()
+    destination = out / (alias + '.html')
+    if source.suffix == '.html':
+        destination.write_bytes(data)
+    else:
+        lines = data.decode('utf-8').splitlines()
+        content = ''.join('<span class="line" id="L'+str(i)+'"><a class="n" href="#L'+str(i)+'">'+str(i)+'</a><code>'+escape(line)+'</code></span>' for i,line in enumerate(lines,1))
+        shutil.copyfile(source, out / (alias + '.source.txt'))
+        destination.write_text(page(title, '<a href="index.html">← Audit index</a><h1>'+escape(title)+'</h1><p><code>'+escape(str(source))+'</code></p><small>Source SHA-256: '+sha+'</small><p>Read-only line-numbered text snapshot. <a href="'+alias+'.source.txt">Original text bytes</a>. Relative Markdown links remain text; use the index and professor HTML for navigation and figures.</p><pre>'+content+'</pre>'))
+    manifest.append({'alias':alias,'source':str(source),'source_sha256':sha,'view_sha256':hashlib.sha256(destination.read_bytes()).hexdigest()})
+    sections.setdefault(group, []).append('<li><a href="'+alias+'.html">'+escape(title)+'</a></li>')
+intro = '''<h1>Place195 audit entry points</h1><p>Read the question → provenance → historical development → accepted results → code/receipts. Open one finding and trace it backwards to a saved metric, prediction, feature/source identity and behavioral definition.</p><p class="note"><strong>Current validity:</strong> V6–V9 remains exploratory and the original holdout is not pristine. V5 “untouched test” statements are historical. Read the <a href="holdout.html">original exposure audit</a> and the <a href="followup-scope.html">follow-up scope/citation corrections</a>. No new biological model fits were run for this audit.</p><p>Only the listed documents are exposed by the existing loopback viewer—not the repository, raw dataset, checkpoint tree, or credentials. Text views preserve source lines, expose their source path/hash, and offer original text bytes. These are temporary snapshots, not new canonical analysis results.</p><p><a href="professor.html">Current professor report</a> · <a href="full-report.html">Full Markdown audit</a> · <a href="verify.html">Runnable verification helper</a></p>'''
+body = intro + ''.join('<h2>'+escape(group)+'</h2><ul>'+''.join(links)+'</ul>' for group,links in sections.items())
+(out/'index.html').write_text(page('Place195 audit index',body))
+(out/'snapshot-manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
+
+class Links(HTMLParser):
+    def handle_starttag(self,tag,attrs):
+        if tag=='a':
+            href=dict(attrs).get('href')
+            assert isinstance(href,str)
+            if not href.startswith('#'):
+                assert (out/href).is_file(), href
+
+Links().feed((out/'index.html').read_text())
+assert len(manifest)==len({row['alias'] for row in manifest})
+print('Created',len(manifest),'allowlisted audit views at',out)

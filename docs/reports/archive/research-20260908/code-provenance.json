@@ -1,0 +1,374 @@
+[
+  {
+    "study": "v6-v9",
+    "source": "neuro_science/outputs/prospective_path_first_run/place195-v6-v9-autoresearch-20260906/audits/cebra-forward-example-20260907/inspect_saved_forward.py",
+    "archive": "code/inspect_saved_forward-1ca7a62082ae.py.txt",
+    "sha256": "1ca7a62082ae83b75f4e1d33cf92d8bdaba463709bca5159cffd4c7321973466",
+    "bytes": 7661,
+    "status": "historical source snapshot; not an active entry point"
+  },
+  {
+    "study": "v6-v9",
+    "source": "neuro_science/outputs/prospective_path_first_run/place195-v6-v9-autoresearch-20260906/audits/verify_completed_work.py",
+    "archive": "code/verify_completed_work-691e0a259d8e.py.txt",
+    "sha256": "691e0a259d8ec2297768894e690f93dfbc5ed895bcce33e1b3a3e3543be20231",
+    "bytes": 4719,
+    "status": "historical source snapshot; not an active entry point"
+  },
+  {
+    "study": "v6-v9",
+    "source": "neuro_science/outputs/prospective_path_first_run/place195-v6-v9-autoresearch-20260906/v8b-v9-cebra-final-20260905T224554Z/report_assets/build_report_assets.py",
+    "archive": "code/build_report_assets-4d70c6a28790.py.txt",
+    "sha256": "4d70c6a287909336114f239ce53bc5c1dd4e611d5f7544cd1c3292a1d56889d6",
+    "bytes": 9515,
+    "status": "historical source snapshot; not an active entry point"
+  },
+  {
+    "study": "endpoint",
+    "source": "neuro_science-start-goal-cebra/outputs/start-goal-autoresearch-20260907/00-smoke/code/place195_v7_v8_neural_experiments.py",
+    "archive": "code/place195_v7_v8_neural_experiments-39ed10704d7b.py.txt",
+    "sha256": "39ed10704d7b3258a4d7109c9c4ce7ddecc5de98d4c11efe66f019d3cb973089",
+    "bytes": 37478,
+    "status": "historical source snapshot; not an active entry point"
+  },
+  {
+    "study": "endpoint",
+    "source": "neuro_science-start-goal-cebra/outputs/start-goal-autoresearch-20260907/00-smoke/code/place195_v8b_v9_cebra.py",
+    "archive": "code/place195_v8b_v9_cebra-737ad148dcc2.py.txt",
+    "sha256": "737ad148dcc261c3ec1bbbd1ada395b34b47b2b37c5920370d3107c209976f9a",
+    "bytes": 36537,
+    "status": "historical source snapshot; not an active entry point"
+  },
+  {
+    "study": "endpoint",
+    "source": "neuro_science-start-goal-cebra/outputs/start-goal-autoresearch-20260907/00-smoke/code/start_goal_autoresearch.py",
+    "archive": "code/start_goal_autoresearch-196bf24b4dbe.py.txt",
+    "sha256": "196bf24b4dbe020e4eda92d8c83a2b85480efdd405ceb9884663eb396016fa27",
+    "bytes": 36908,
+    "status": "historical source snapshot; not an active entry point"
+  },
+  {
+    "study": "endpoint",
+    "source": "neuro_science-start-goal-cebra/outputs/start-goal-autoresearch-20260907/00-smoke/code/start_goal_cebra_baseline.py",
+    "archive": "code/start_goal_cebra_baseline-5b1b8ccee071.py.txt",
+    "sha256": "5b1b8ccee071def732e465407259b7116724ca2d46ca3cc1ee70ca9fd041d8db",
+    "bytes": 24675,
+    "status": "historical source snapshot; not an active entry point"
+  },
+  {
+    "study": "endpoint",
+    "source": "neuro_science-start-goal-cebra/outputs/start-goal-autoresearch-20260907/01-baselines/code/place195_v7_v8_neural_experiments.py",
+    "archive": "code/place195_v7_v8_neural_experiments-39ed10704d7b.py.txt",
+    "sha256": "39ed10704d7b3258a4d7109c9c4ce7ddecc5de98d4c11efe66f019d3cb973089",
+    "bytes": 37478,
+    "status": "historical source snapshot; not an active entry point"
+  },
+  {
+    "study": "endpoint",
+    "source": "neuro_science-start-goal-cebra/outputs/start-goal-autoresearch-20260907/01-baselines/code/place195_v8b_v9_cebra.py",
+    "archive": "code/place195_v8b_v9_cebra-737ad148dcc2.py.txt",
+    "sha256": "737ad148dcc261c3ec1bbbd1ada395b34b47b2b37c5920370d3107c209976f9a",
+    "bytes": 36537,
+    "status": "historical source snapshot; not an active entry point"
+  },
+  {
+    "study": "endpoint",
+    "source": "neuro_science-start-goal-cebra/outputs/start-goal-autoresearch-20260907/01-baselines/code/start_goal_autoresearch.py",
+    "archive": "code/start_goal_autoresearch-196bf24b4dbe.py.txt",
+    "sha256": "196bf24b4dbe020e4eda92d8c83a2b85480efdd405ceb9884663eb396016fa27",
+    "bytes": 36908,
+    "status": "historical source snapshot; not an active entry point"
+  },
+  {
+    "study": "endpoint",
+    "source": "neuro_science-start-goal-cebra/outputs/start-goal-autoresearch-20260907/01-baselines/code/start_goal_cebra_baseline.py",
+    "archive": "code/start_goal_cebra_baseline-5b1b8ccee071.py.txt",
+    "sha256": "5b1b8ccee071def732e465407259b7116724ca2d46ca3cc1ee70ca9fd041d8db",
+    "bytes": 24675,
+    "status": "historical source snapshot; not an active entry point"
+  },
+  {
+    "study": "endpoint",
+    "source": "neuro_science-start-goal-cebra/outputs/start-goal-autoresearch-20260907/02-cebra/code/place195_v7_v8_neural_experiments.py",
+    "archive": "code/place195_v7_v8_neural_experiments-39ed10704d7b.py.txt",
+    "sha256": "39ed10704d7b3258a4d7109c9c4ce7ddecc5de98d4c11efe66f019d3cb973089",
+    "bytes": 37478,
+    "status": "historical source snapshot; not an active entry point"
+  },
+  {
+    "study": "endpoint",
+    "source": "neuro_science-start-goal-cebra/outputs/start-goal-autoresearch-20260907/02-cebra/code/place195_v8b_v9_cebra.py",
+    "archive": "code/place195_v8b_v9_cebra-737ad148dcc2.py.txt",
+    "sha256": "737ad148dcc261c3ec1bbbd1ada395b34b47b2b37c5920370d3107c209976f9a",
+    "bytes": 36537,
+    "status": "historical source snapshot; not an active entry point"
+  },
+  {
+    "study": "endpoint",
+    "source": "neuro_science-start-goal-cebra/outputs/start-goal-autoresearch-20260907/02-cebra/code/start_goal_autoresearch.py",
+    "archive": "code/start_goal_autoresearch-196bf24b4dbe.py.txt",
+    "sha256": "196bf24b4dbe020e4eda92d8c83a2b85480efdd405ceb9884663eb396016fa27",
+    "bytes": 36908,
+    "status": "historical source snapshot; not an active entry point"
+  },
+  {
+    "study": "endpoint",
+    "source": "neuro_science-start-goal-cebra/outputs/start-goal-autoresearch-20260907/02-cebra/code/start_goal_cebra_baseline.py",
+    "archive": "code/start_goal_cebra_baseline-5b1b8ccee071.py.txt",
+    "sha256": "5b1b8ccee071def732e465407259b7116724ca2d46ca3cc1ee70ca9fd041d8db",
+    "bytes": 24675,
+    "status": "historical source snapshot; not an active entry point"
+  },
+  {
+    "study": "endpoint",
+    "source": "neuro_science-start-goal-cebra/outputs/start-goal-autoresearch-20260907/03-supervised/code/place195_v7_v8_neural_experiments.py",
+    "archive": "code/place195_v7_v8_neural_experiments-39ed10704d7b.py.txt",
+    "sha256": "39ed10704d7b3258a4d7109c9c4ce7ddecc5de98d4c11efe66f019d3cb973089",
+    "bytes": 37478,
+    "status": "historical source snapshot; not an active entry point"
+  },
+  {
+    "study": "endpoint",
+    "source": "neuro_science-start-goal-cebra/outputs/start-goal-autoresearch-20260907/03-supervised/code/place195_v8b_v9_cebra.py",
+    "archive": "code/place195_v8b_v9_cebra-737ad148dcc2.py.txt",
+    "sha256": "737ad148dcc261c3ec1bbbd1ada395b34b47b2b37c5920370d3107c209976f9a",
+    "bytes": 36537,
+    "status": "historical source snapshot; not an active entry point"
+  },
+  {
+    "study": "endpoint",
+    "source": "neuro_science-start-goal-cebra/outputs/start-goal-autoresearch-20260907/03-supervised/code/start_goal_autoresearch.py",
+    "archive": "code/start_goal_autoresearch-196bf24b4dbe.py.txt",
+    "sha256": "196bf24b4dbe020e4eda92d8c83a2b85480efdd405ceb9884663eb396016fa27",
+    "bytes": 36908,
+    "status": "historical source snapshot; not an active entry point"
+  },
+  {
+    "study": "endpoint",
+    "source": "neuro_science-start-goal-cebra/outputs/start-goal-autoresearch-20260907/03-supervised/code/start_goal_cebra_baseline.py",
+    "archive": "code/start_goal_cebra_baseline-5b1b8ccee071.py.txt",
+    "sha256": "5b1b8ccee071def732e465407259b7116724ca2d46ca3cc1ee70ca9fd041d8db",
+    "bytes": 24675,
+    "status": "historical source snapshot; not an active entry point"
+  },
+  {
+    "study": "endpoint",
+    "source": "neuro_science-start-goal-cebra/outputs/start-goal-autoresearch-20260907/04-scaling/code/place195_v7_v8_neural_experiments.py",
+    "archive": "code/place195_v7_v8_neural_experiments-39ed10704d7b.py.txt",
+    "sha256": "39ed10704d7b3258a4d7109c9c4ce7ddecc5de98d4c11efe66f019d3cb973089",
+    "bytes": 37478,
+    "status": "historical source snapshot; not an active entry point"
+  },
+  {
+    "study": "endpoint",
+    "source": "neuro_science-start-goal-cebra/outputs/start-goal-autoresearch-20260907/04-scaling/code/place195_v8b_v9_cebra.py",
+    "archive": "code/place195_v8b_v9_cebra-737ad148dcc2.py.txt",
+    "sha256": "737ad148dcc261c3ec1bbbd1ada395b34b47b2b37c5920370d3107c209976f9a",
+    "bytes": 36537,
+    "status": "historical source snapshot; not an active entry point"
+  },
+  {
+    "study": "endpoint",
+    "source": "neuro_science-start-goal-cebra/outputs/start-goal-autoresearch-20260907/04-scaling/code/start_goal_autoresearch.py",
+    "archive": "code/start_goal_autoresearch-196bf24b4dbe.py.txt",
+    "sha256": "196bf24b4dbe020e4eda92d8c83a2b85480efdd405ceb9884663eb396016fa27",
+    "bytes": 36908,
+    "status": "historical source snapshot; not an active entry point"
+  },
+  {
+    "study": "endpoint",
+    "source": "neuro_science-start-goal-cebra/outputs/start-goal-autoresearch-20260907/04-scaling/code/start_goal_cebra_baseline.py",
+    "archive": "code/start_goal_cebra_baseline-5b1b8ccee071.py.txt",
+    "sha256": "5b1b8ccee071def732e465407259b7116724ca2d46ca3cc1ee70ca9fd041d8db",
+    "bytes": 24675,
+    "status": "historical source snapshot; not an active entry point"
+  },
+  {
+    "study": "endpoint",
+    "source": "neuro_science-start-goal-cebra/outputs/start-goal-autoresearch-20260907/05-nulls/code/place195_v7_v8_neural_experiments.py",
+    "archive": "code/place195_v7_v8_neural_experiments-39ed10704d7b.py.txt",
+    "sha256": "39ed10704d7b3258a4d7109c9c4ce7ddecc5de98d4c11efe66f019d3cb973089",
+    "bytes": 37478,
+    "status": "historical source snapshot; not an active entry point"
+  },
+  {
+    "study": "endpoint",
+    "source": "neuro_science-start-goal-cebra/outputs/start-goal-autoresearch-20260907/05-nulls/code/place195_v8b_v9_cebra.py",
+    "archive": "code/place195_v8b_v9_cebra-737ad148dcc2.py.txt",
+    "sha256": "737ad148dcc261c3ec1bbbd1ada395b34b47b2b37c5920370d3107c209976f9a",
+    "bytes": 36537,
+    "status": "historical source snapshot; not an active entry point"
+  },
+  {
+    "study": "endpoint",
+    "source": "neuro_science-start-goal-cebra/outputs/start-goal-autoresearch-20260907/05-nulls/code/start_goal_autoresearch.py",
+    "archive": "code/start_goal_autoresearch-196bf24b4dbe.py.txt",
+    "sha256": "196bf24b4dbe020e4eda92d8c83a2b85480efdd405ceb9884663eb396016fa27",
+    "bytes": 36908,
+    "status": "historical source snapshot; not an active entry point"
+  },
+  {
+    "study": "endpoint",
+    "source": "neuro_science-start-goal-cebra/outputs/start-goal-autoresearch-20260907/05-nulls/code/start_goal_cebra_baseline.py",
+    "archive": "code/start_goal_cebra_baseline-5b1b8ccee071.py.txt",
+    "sha256": "5b1b8ccee071def732e465407259b7116724ca2d46ca3cc1ee70ca9fd041d8db",
+    "bytes": 24675,
+    "status": "historical source snapshot; not an active entry point"
+  },
+  {
+    "study": "endpoint",
+    "source": "neuro_science-start-goal-cebra/outputs/start-goal-autoresearch-20260907/06-ce-followup/code/start_goal_autoresearch.py",
+    "archive": "code/start_goal_autoresearch-ae445183c0b2.py.txt",
+    "sha256": "ae445183c0b27ef219d60bc269448f29e797cbbac4aba48151e29b7e0d97765d",
+    "bytes": 41963,
+    "status": "historical source snapshot; not an active entry point"
+  },
+  {
+    "study": "endpoint",
+    "source": "neuro_science-start-goal-cebra/outputs/start-goal-autoresearch-20260907/06-ce-followup/code/start_goal_ce_followup.py",
+    "archive": "code/start_goal_ce_followup-09e0e9f806cb.py.txt",
+    "sha256": "09e0e9f806cb6da0ff42a90e5405f6cb19c1d604a3f611339d4a066af1cada46",
+    "bytes": 6779,
+    "status": "historical source snapshot; not an active entry point"
+  },
+  {
+    "study": "endpoint",
+    "source": "neuro_science-start-goal-cebra/outputs/start-goal-autoresearch-20260907/recheck_delivery.py",
+    "archive": "code/recheck_delivery-412cbfa87828.py.txt",
+    "sha256": "412cbfa87828657142d8917f85d2593cd100b1a685259acf951bef4e46afc341",
+    "bytes": 4103,
+    "status": "historical source snapshot; not an active entry point"
+  },
+  {
+    "study": "endpoint",
+    "source": "neuro_science-start-goal-cebra/outputs/start-goal-autoresearch-20260907/verify_study.py",
+    "archive": "code/verify_study-d34fb321575d.py.txt",
+    "sha256": "d34fb321575dc20ffc05ea0d342da413e484a0ccc77f29457000735bad4255f5",
+    "bytes": 9335,
+    "status": "historical source snapshot; not an active entry point"
+  },
+  {
+    "study": "endpoint",
+    "source": "neuro_science-start-goal-cebra/outputs/start-goal-cebra-20260907/code/place195_split_filtered_access.py",
+    "archive": "code/place195_split_filtered_access-2cd7e7a14f6a.py.txt",
+    "sha256": "2cd7e7a14f6a045078c59d2489e6d06a615f033dc0f6c0cbea14533561608c0d",
+    "bytes": 9254,
+    "status": "historical source snapshot; not an active entry point"
+  },
+  {
+    "study": "endpoint",
+    "source": "neuro_science-start-goal-cebra/outputs/start-goal-cebra-20260907/code/place195_v7_v8_neural_experiments.py",
+    "archive": "code/place195_v7_v8_neural_experiments-39ed10704d7b.py.txt",
+    "sha256": "39ed10704d7b3258a4d7109c9c4ce7ddecc5de98d4c11efe66f019d3cb973089",
+    "bytes": 37478,
+    "status": "historical source snapshot; not an active entry point"
+  },
+  {
+    "study": "endpoint",
+    "source": "neuro_science-start-goal-cebra/outputs/start-goal-cebra-20260907/code/place195_v8b_v9_cebra.py",
+    "archive": "code/place195_v8b_v9_cebra-737ad148dcc2.py.txt",
+    "sha256": "737ad148dcc261c3ec1bbbd1ada395b34b47b2b37c5920370d3107c209976f9a",
+    "bytes": 36537,
+    "status": "historical source snapshot; not an active entry point"
+  },
+  {
+    "study": "endpoint",
+    "source": "neuro_science-start-goal-cebra/outputs/start-goal-cebra-20260907/code/start_goal_cebra_baseline.py",
+    "archive": "code/start_goal_cebra_baseline-065f93897f2f.py.txt",
+    "sha256": "065f93897f2faf354f7696fadd1ab8158384b3bbabed3a9021f445f413b470cb",
+    "bytes": 21184,
+    "status": "historical source snapshot; not an active entry point"
+  },
+  {
+    "study": "endpoint",
+    "source": "neuro_science-start-goal-cebra/outputs/start-goal-cebra-20260907/code/test_start_goal_cebra_baseline.py",
+    "archive": "code/test_start_goal_cebra_baseline-f9dc1c4ad1e3.py.txt",
+    "sha256": "f9dc1c4ad1e38165f8f15100edba644ecec7cb3130e817833b922bcbcbb6d2ed",
+    "bytes": 6918,
+    "status": "historical source snapshot; not an active entry point"
+  },
+  {
+    "study": "endpoint",
+    "source": "neuro_science-start-goal-cebra/outputs/start-goal-diagnosis-20260907/diagnose_saved_embeddings.py",
+    "archive": "code/diagnose_saved_embeddings-fd1b11359055.py.txt",
+    "sha256": "fd1b113590556d4baf8bc4e4a0b514bcd0bd07fda45c3440a63fc786e81d69ca",
+    "bytes": 4546,
+    "status": "historical source snapshot; not an active entry point"
+  },
+  {
+    "study": "endpoint",
+    "source": "neuro_science-start-goal-cebra/outputs/start-goal-validation/verify_artifacts.py",
+    "archive": "code/verify_artifacts-75ad9e440e38.py.txt",
+    "sha256": "75ad9e440e386f79bce52839417200ee36afcda03e6a8dbcdde811eb0a516192",
+    "bytes": 6327,
+    "status": "historical source snapshot; not an active entry point"
+  },
+  {
+    "study": "path",
+    "source": "neuro_science-path-diagnosis/outputs/path-generalization-20260907/frozen/driver.py",
+    "archive": "code/driver-2821317f843c.py.txt",
+    "sha256": "2821317f843ca2b285f2db20d9587c5dd594511e42b5fd63ad304130e4417de1",
+    "bytes": 220156,
+    "status": "historical source snapshot; not an active entry point"
+  },
+  {
+    "study": "path",
+    "source": "neuro_science-path-diagnosis/outputs/path-generalization-20260907/frozen/driver_track_a_v2.py",
+    "archive": "code/driver_track_a_v2-340bd4fa14ee.py.txt",
+    "sha256": "340bd4fa14ee90b0a57cbc384785dff5be5936ab08146aee1e6620c0050d7bfb",
+    "bytes": 220213,
+    "status": "historical source snapshot; not an active entry point"
+  },
+  {
+    "study": "path",
+    "source": "neuro_science-path-diagnosis/outputs/path-generalization-20260907/results-20260907T081200Z/audits/report_builder_used.py",
+    "archive": "code/report_builder_used-593bc21f8b82.py.txt",
+    "sha256": "593bc21f8b82cd1bee7eb63e1972cc0b4437c7e136234dfddc96a6099ce816d3",
+    "bytes": 142918,
+    "status": "historical source snapshot; not an active entry point"
+  },
+  {
+    "study": "path-packaging-intermediate",
+    "archive": "code/build_path_generalization_report-8adea130c378.py.txt",
+    "sha256": "8adea130c378efdc75aea77026b1dd7a026637d49cd0f1392743b114812befef",
+    "bytes": 142920,
+    "status": "superseded intermediate; original source-side path unavailable, archived bytes and hash retained",
+    "source_description": "isolated first-copy/scripts/build_path_generalization_report.py",
+    "source": null,
+    "provenance_kind": "archive-only; mutable intermediate source was replaced after capture"
+  },
+  {
+    "study": "teaching-audit-helper",
+    "source": "/tmp/build_place195_professor_report.py",
+    "archive": "code/build_place195_professor_report-cc99d2f60725.py.txt",
+    "sha256": "cc99d2f60725151c9908d9917ffbfe0d1e470acde4c8225dba115c49ec60ddbd",
+    "bytes": 37281,
+    "status": "historical temporary report/view/check builder; absolute paths and writes require review"
+  },
+  {
+    "study": "teaching-audit-helper",
+    "source": "/tmp/neuro-audit-next-20260906/build_audit_views.py",
+    "archive": "code/build_audit_views-c9dd63c6fa29.py.txt",
+    "sha256": "c9dd63c6fa29fbeeb2ddba1b61858fcc4376b26ea925f0619a55d629c05e7b8a",
+    "bytes": 12040,
+    "status": "historical temporary report/view/check builder; absolute paths and writes require review"
+  },
+  {
+    "study": "teaching-audit-helper",
+    "source": "/tmp/neuro-audit-next-20260906/verify_completed_work.py",
+    "archive": "code/verify_completed_work-691e0a259d8e.py.txt",
+    "sha256": "691e0a259d8ec2297768894e690f93dfbc5ed895bcce33e1b3a3e3543be20231",
+    "bytes": 4719,
+    "status": "historical temporary report/view/check builder; absolute paths and writes require review"
+  },
+  {
+    "study": "pca-teaching",
+    "source": "/tmp/place195-pca-explanation.2jhVgz/build_plot.py",
+    "archive": "learning/archive/pca-explainer-build-20260907.py",
+    "archive_base": "repository",
+    "sha256": "4e0211ed01a46561d6cbb9cf6a0d24f506bde63dbf2d2d27ece0c3de4661d69a",
+    "bytes": 6023,
+    "provenance_kind": "temporary source verified at consolidation; recovery uses tracked copy",
+    "status": "archival plot builder; do not blindly execute historical absolute output paths"
+  }
+]

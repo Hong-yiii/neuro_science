@@ -1,0 +1,88 @@
+"""Check delivery after formatter activity, without changing reports or fitting models.
+
+Run from the repository root with the audited Python runtime. The retained original
+receipt remains historical; delivery-validation.json records current source hashes.
+"""
+import ast
+import hashlib
+import json
+import re
+import subprocess
+import sys
+import tempfile
+from datetime import datetime, timezone
+from pathlib import Path
+
+study = Path(__file__).resolve().parent
+repo = study.parent.parent
+previous = json.loads((study / "finalization.json").read_text())
+
+
+def digest(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def without_build_timestamp(text):
+    result, count = re.subn(r"Built \d{4}-\d\d-\d\dT[^< ]+ ·", "Built TIMESTAMP ·", text)
+    assert count == 1, "expected exactly one report build timestamp"
+    return result
+
+
+def verify_model_ast(name):
+    old = ast.parse((study / "06-ce-followup/code" / name).read_text())
+    current = ast.parse((repo / "scripts" / name).read_text())
+    changes = 0
+    for node in ast.walk(old):
+        if isinstance(node, ast.Call) and ast.unparse(node.func) == "torch.load":
+            for keyword in node.keywords:
+                if (keyword.arg == "weights_only" and isinstance(keyword.value, ast.Constant)
+                        and keyword.value.value is False):
+                    keyword.value.value = True
+                    changes += 1
+    assert ast.dump(old) == ast.dump(current), f"unexpected model source change: {name}"
+    return changes
+
+
+# Published results, prior test receipts and the browser-checked HTML must be unchanged.
+changed_sources = []
+for name, expected in previous["sha256"].items():
+    if digest(repo / name) != expected:
+        assert name.startswith("scripts/"), f"published artifact changed: {name}"
+        changed_sources.append(name)
+model_changes = {name: verify_model_ast(name) for name in
+                 ("start_goal_autoresearch.py", "start_goal_ce_followup.py")}
+assert list(model_changes.values()) == [3, 3]
+
+# Rebuild into disposable links to read-only study inputs. Never overwrite delivery.
+with tempfile.TemporaryDirectory(prefix="delivery-recheck-", dir=study) as directory:
+    scratch = Path(directory)
+    phases = sorted(study.glob("[0-9][0-9]-*/manifest.json"))
+    assert len(phases) == 7
+    for manifest in phases:
+        (scratch / manifest.parent.name).symlink_to(manifest.parent, target_is_directory=True)
+    (scratch / "validation.json").symlink_to(study / "validation.json")
+    subprocess.run([sys.executable, "-m", "scripts.render_start_goal_autoresearch",
+                    "--study-dir", str(scratch)], cwd=repo, check=True)
+    assert (scratch / "all_metrics.csv").read_bytes() == (study / "all_metrics.csv").read_bytes()
+    assert without_build_timestamp((scratch / "endpoint-research-report.html").read_text()) == \
+        without_build_timestamp((study / "endpoint-research-report.html").read_text())
+
+paths = [repo / name for name in previous["sha256"]]
+paths.extend([study / name for name in
+              ("recheck_delivery.py", "ruff-delivery.txt", "typecheck-delivery.txt", "tests-delivery.txt")])
+receipt = {
+    "status": "passed",
+    "checked_utc": datetime.now(timezone.utc).isoformat(),
+    "previous_receipt": "finalization.json",
+    "source_byte_changes_since_previous_receipt": changed_sources,
+    "model_ast_changes_from_executed_snapshot_only_restricted_loaders": model_changes,
+    "report_rebuild_identical_except_build_timestamp": True,
+    "metric_csv_rebuild_identical_bytes": True,
+    "published_artifacts_unchanged": True,
+    "no_experimental_fits": True,
+    "sha256": {str(path.relative_to(repo)): digest(path) for path in paths},
+    "source_ast_sha256": {name: hashlib.sha256(ast.dump(ast.parse((repo / name).read_text())).encode()).hexdigest()
+                          for name in previous["sha256"] if name.startswith("scripts/")},
+}
+(study / "delivery-validation.json").write_text(json.dumps(receipt, indent=2) + "\n")
+print("Delivery passed: unchanged report/CSV; model ASTs retain only six approved loader changes.")

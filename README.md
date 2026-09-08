@@ -28,10 +28,19 @@ learned independently by an artificial navigation agent is H2, a stretch aim.
 Place, view, and conjunctive analyses remain supporting validation and confound
 checks rather than the primary question.
 
-Latest exploratory results: [`V6–V9 teaching and audit report`](docs/reports/place195-v6-v9-autoresearch-20260906.md)
-(2026-09-06): geometry graph, pseudopopulation support, cue bins, PCA, and GPU CEBRA.
-The bounded benchmark was nonpositive; the report documents sparse source support
-and an early holdout-exposure incident, so it is not confirmatory H1 evidence.
+**Start with the [research handoff index](docs/reports/README.md)** (2026-09-08):
+current synthesis, completed endpoint and path studies, portable teaching reports,
+source-code preservation, verification, and explicit supersession labels.
+Endpoint-condition decoding improved in later settings; neither that success nor
+the nonpositive path analyses establish confirmatory H1 evidence. The original
+holdout-exposure record remains in force.
+
+- [Current human synthesis](docs/reports/recent-learnings-20260908.md) and [agent brief](docs/reports/recent-learnings-20260908-agent.md).
+- [PCA and below-chance explanation with plots](learning/place195-pca-and-below-chance-20260908.md).
+- [Artifact preservation and verification](docs/reports/research-release-20260908.md): Git is not a backup of ignored data/models.
+
+The [V6–V9 teaching and audit report](docs/reports/place195-v6-v9-autoresearch-20260906.md)
+remains the accepted historical account of geometry, support, cue bins, PCA, and GPU CEBRA.
 
 - [Professor HTML report](docs/professor_updates/place195_v6_v9_20260906/place195-v6-v9-professor-methods-results-validity-20260906.html): download for offline reading with embedded figures.
 - [Audit instructions and non-pseudopopulation next steps](docs/reports/place195-audit-and-next-steps-20260907.md).

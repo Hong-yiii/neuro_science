@@ -1,6 +1,8 @@
 # Place195 audit guide and alternatives to forced pseudopopulations
 
-Status: documentation of completed exploratory work and a proposed next step, not a new fitting stage. The original holdout is not pristine. This guide preserves the earlier inline audit instructions without depending on temporary cmux URLs.
+> **Historical guide — updated status, 2026-09-08:** the source-preserving per-unit work proposed below was subsequently completed as Track C. Read the [current handoff](README.md) and [latest synthesis](recent-learnings-20260908.md) before treating its next-step section as pending. The audit procedure and incident disclosures remain relevant.
+
+Original status: documentation of completed exploratory work and a proposed next step, not a new fitting stage. The original holdout is not pristine. This guide preserves the earlier inline audit instructions without depending on temporary cmux URLs.
 
 ## What is portable in this repository
 
