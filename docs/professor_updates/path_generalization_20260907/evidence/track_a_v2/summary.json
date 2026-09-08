@@ -1,0 +1,73 @@
+{
+  "config_hash": "4f1b6cdeb23ea43bf43f4f57df2a840c67daccd7fd6d2904e1a1b485477b1f84",
+  "known_truth_rows": 1800,
+  "legacy_cebra_replay": {
+    "device": "cuda",
+    "max_old_prediction_diff": 8.666088668896066e-08,
+    "metric_rows": 24,
+    "parity_rows": 12,
+    "prediction_rows": 360,
+    "status": "complete"
+  },
+  "legacy_head_replay": {
+    "coef_dir": "/home/hongyi-home-lab/neuro_science/outputs/prospective_path_first_run/place195-v6-v9-autoresearch-20260906/v8b-v9-cebra-final-20260905T224554Z/v8b/coefs",
+    "max_old_prediction_diff": 9.098240261184998e-08,
+    "metric_rows": 36,
+    "parity_rows": 24,
+    "prediction_rows": 360,
+    "status": "complete"
+  },
+  "metric_rows": 1847,
+  "plot_count": 3,
+  "plots": [
+    "outputs/path-generalization-20260907/results-20260907T081200Z/track_a_v2/figures/plot01_track_a_metric_ba.png",
+    "outputs/path-generalization-20260907/results-20260907T081200Z/track_a_v2/figures/plot02_source_support.png",
+    "outputs/path-generalization-20260907/results-20260907T081200Z/track_a_v2/figures/plot03_pca_sensitivity.png"
+  ],
+  "prediction_rows": 55410,
+  "relaxed40_source_controls": {
+    "cell_count": 40,
+    "input_kind": "real_source_trials_not_pseudopopulations",
+    "metric_rows": 1980,
+    "session_count": 11,
+    "status": "complete",
+    "trial_index_note": "numeric trial index is a temporal diagnostic, not source-ID memorization"
+  },
+  "stage_completion": {
+    "exact_validation_q": "complete",
+    "finite_sample_ridge_convergence": "complete",
+    "known_truth_simulations": "complete",
+    "leave_one_session": "complete",
+    "legacy_v8b_saved_head_replay": "complete",
+    "legacy_v9_cebra_checkpoint_replay": "complete",
+    "moment_exact_cell_PCA_and_matched_head_controls": "complete",
+    "moment_ridge": "complete",
+    "plots": "complete",
+    "relaxed40_source_controls": "complete",
+    "row_grid_raw_pca_source_controls": "complete",
+    "source_budget": "complete",
+    "source_margins": "complete"
+  },
+  "status": "complete",
+  "support": {
+    "absent": {
+      "20180705_session01": 1,
+      "20180730_session01": 2,
+      "20180731_session01": 1,
+      "20180810_session01": 3,
+      "20180912_session01": 1,
+      "20180920_session01": 2,
+      "20181022_session01": 2
+    },
+    "present": {
+      "20180705_session01": 1,
+      "20180730_session01": 1,
+      "20180731_session01": 3,
+      "20180810_session01": 2,
+      "20180912_session01": 1,
+      "20180920_session01": 1,
+      "20181022_session01": 1
+    }
+  },
+  "validation_rows": 30
+}

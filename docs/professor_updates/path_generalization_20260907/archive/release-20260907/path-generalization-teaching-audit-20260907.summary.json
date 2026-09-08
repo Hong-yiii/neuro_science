@@ -1,0 +1,41 @@
+{
+  "assets_dir": "/home/hongyi-home-lab/neuro_science-path-diagnosis/outputs/path-generalization-20260907/results-20260907T081200Z/report_assets/path_generalization_20260907",
+  "derived_tables": [
+    "/home/hongyi-home-lab/neuro_science-path-diagnosis/outputs/path-generalization-20260907/results-20260907T081200Z/report_assets/path_generalization_20260907/derived_summary_metrics.json",
+    "/home/hongyi-home-lab/neuro_science-path-diagnosis/outputs/path-generalization-20260907/results-20260907T081200Z/report_assets/path_generalization_20260907/derived_track_a_method_row_c_summary.csv",
+    "/home/hongyi-home-lab/neuro_science-path-diagnosis/outputs/path-generalization-20260907/results-20260907T081200Z/report_assets/path_generalization_20260907/derived_track_b_observed_fits.csv",
+    "/home/hongyi-home-lab/neuro_science-path-diagnosis/outputs/path-generalization-20260907/results-20260907T081200Z/report_assets/path_generalization_20260907/derived_track_b_family_null_maxima.csv",
+    "/home/hongyi-home-lab/neuro_science-path-diagnosis/outputs/path-generalization-20260907/results-20260907T081200Z/report_assets/path_generalization_20260907/derived_track_b_prefix_parity.csv",
+    "/home/hongyi-home-lab/neuro_science-path-diagnosis/outputs/path-generalization-20260907/results-20260907T081200Z/report_assets/path_generalization_20260907/derived_track_c_session_delta_logloss.csv",
+    "/home/hongyi-home-lab/neuro_science-path-diagnosis/outputs/path-generalization-20260907/results-20260907T081200Z/report_assets/path_generalization_20260907/derived_track_c_unit_model_rows.csv"
+  ],
+  "figure_count": 12,
+  "figure_files": [
+    "/home/hongyi-home-lab/neuro_science-path-diagnosis/outputs/path-generalization-20260907/results-20260907T081200Z/report_assets/path_generalization_20260907/figure01_route_semantics.svg",
+    "/home/hongyi-home-lab/neuro_science-path-diagnosis/outputs/path-generalization-20260907/results-20260907T081200Z/report_assets/path_generalization_20260907/figure02_exact_q_support.svg",
+    "/home/hongyi-home-lab/neuro_science-path-diagnosis/outputs/path-generalization-20260907/results-20260907T081200Z/report_assets/path_generalization_20260907/figure03_sampled_vs_exact_q_scatter.svg",
+    "/home/hongyi-home-lab/neuro_science-path-diagnosis/outputs/path-generalization-20260907/results-20260907T081200Z/report_assets/path_generalization_20260907/figure04_track_a_learning_curves.svg",
+    "/home/hongyi-home-lab/neuro_science-path-diagnosis/outputs/path-generalization-20260907/results-20260907T081200Z/report_assets/path_generalization_20260907/figure05_source_budget_leave_one_out.svg",
+    "/home/hongyi-home-lab/neuro_science-path-diagnosis/outputs/path-generalization-20260907/results-20260907T081200Z/report_assets/path_generalization_20260907/figure06_pca_monte_carlo_vs_moment_basis.svg",
+    "/home/hongyi-home-lab/neuro_science-path-diagnosis/outputs/path-generalization-20260907/results-20260907T081200Z/report_assets/path_generalization_20260907/figure07_gaussian_oracle_null_and_trace.svg",
+    "/home/hongyi-home-lab/neuro_science-path-diagnosis/outputs/path-generalization-20260907/results-20260907T081200Z/report_assets/path_generalization_20260907/figure08_track_c_source_preserving_funnel.svg",
+    "/home/hongyi-home-lab/neuro_science-path-diagnosis/outputs/path-generalization-20260907/results-20260907T081200Z/report_assets/path_generalization_20260907/figure09_track_c_delta_logloss_and_null.svg",
+    "/home/hongyi-home-lab/neuro_science-path-diagnosis/outputs/path-generalization-20260907/results-20260907T081200Z/report_assets/path_generalization_20260907/figure10_track_b_observed_5x5_heatmaps.svg",
+    "/home/hongyi-home-lab/neuro_science-path-diagnosis/outputs/path-generalization-20260907/results-20260907T081200Z/report_assets/path_generalization_20260907/figure11_track_b_sensitivity_and_null_status.svg",
+    "/home/hongyi-home-lab/neuro_science-path-diagnosis/outputs/path-generalization-20260907/results-20260907T081200Z/report_assets/path_generalization_20260907/figure12_cross_assembly_transfer_gap.svg"
+  ],
+  "javascript": false,
+  "mode": "final",
+  "output": "/home/hongyi-home-lab/neuro_science-path-diagnosis/docs/professor_updates/path_generalization_20260907/path-generalization-teaching-audit-20260907.html",
+  "remote_autoload_assets": false,
+  "track_b_expected_null_fit_count": 280,
+  "track_b_final_ready": true,
+  "track_b_null_completed_fit_count": 280,
+  "validation_checks": [
+    "Track A V2 complete and exact-Q products are 24 absent / 6 present",
+    "Track C complete; guarded export skipped 12,486 test rows and yielded zero forbidden rows",
+    "Track B observed fit_info inventory is 50+6+4+2 and primary sampled-train BA is 1 for all 50",
+    "Assembly-transfer replay used 50 CPU-forward checkpoint evaluations and zero new fits"
+  ],
+  "word_count": 12798
+}

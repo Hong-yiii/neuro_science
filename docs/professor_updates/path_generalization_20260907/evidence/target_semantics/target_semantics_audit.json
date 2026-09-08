@@ -1,0 +1,50 @@
+{
+  "anywhere_negative_train_counts_by_primary_session": {
+    "20180705_session01": 5,
+    "20180730_session01": 2,
+    "20180731_session01": 3,
+    "20180810_session01": 2,
+    "20180912_session01": 5,
+    "20180920_session01": 4,
+    "20181022_session01": 3
+  },
+  "bucket_counts": {
+    "middle_present": 475,
+    "old_absent_anywhere_outside_middle": 51,
+    "old_absent_never_component": 134
+  },
+  "component_id": "D_N_R_T__N_R_M",
+  "endpoint_pair": "4->3",
+  "hashes": {
+    "primary_npz_sha256": "688e3b52f69a872c7aec420da99ebb6f0b80464351ded3813b077cd7ed3cf567",
+    "source_membership_sha256": "888a0b71aa51fe20a9cd4b0275e008c7fc4dcd7ef9dace6aba30a815b57b5cea",
+    "trial_mapping_metrics_sha256": "986ddae40d9dbff8a66765368067ef0480d1ec2716c24ff497b0cb6065bea667"
+  },
+  "interpretation_limit": "Complete V6 mapping is an operational route-label property, not verified complete behavioral capture or endpoint-semantics validation.",
+  "old_absent_anywhere_route_token_count_counts": {
+    "2": 51
+  },
+  "primary_npz_source_count": 104,
+  "primary_npz_split_status_bucket_counts": {
+    "train|absent|old_absent_anywhere_outside_middle": 6,
+    "train|absent|old_absent_never_component": 24,
+    "train|present|middle_present": 52,
+    "validation|absent|old_absent_anywhere_outside_middle": 2,
+    "validation|absent|old_absent_never_component": 10,
+    "validation|present|middle_present": 10
+  },
+  "qc_flag_counts": {
+    "": 660
+  },
+  "source_count": 660,
+  "split_status_bucket_counts": {
+    "train|absent|old_absent_anywhere_outside_middle": 41,
+    "train|absent|old_absent_never_component": 112,
+    "train|present|middle_present": 393,
+    "validation|absent|old_absent_anywhere_outside_middle": 10,
+    "validation|absent|old_absent_never_component": 22,
+    "validation|present|middle_present": 82
+  },
+  "stage": "phase1_behavior_target_semantics_audit_no_fits",
+  "target_correction": "old absent means not middle-occurrence; some old-absent sources contain the component outside the ordinal middle slot"
+}

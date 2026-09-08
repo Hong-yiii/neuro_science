@@ -1,0 +1,10 @@
+{
+  "scope": "Track A legacy CSV reader correction only; no changed fitting, labels, hypotheses or hyperparameters",
+  "failure": "V9 prediction CSV has no C column; V8b CSV does. Remove C filter only at V9 callsite.",
+  "failed_attempt": "track_a",
+  "task": "b54c17900",
+  "retained_failed_log": "/home/hongyi-home-lab/.pi/tasks/session-63299-63299/b54c17900.output",
+  "replacement_attempt": "track_a_v2",
+  "code_sha256": "340bd4fa14ee90b0a57cbc384785dff5be5936ab08146aee1e6620c0050d7bfb",
+  "track_b_and_c_remain_on_original_frozen_driver": true
+}

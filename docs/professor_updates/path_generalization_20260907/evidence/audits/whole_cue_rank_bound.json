@@ -1,0 +1,23 @@
+{
+  "scope": "rank bound of constructed WHOLE-CUE 290-feature empirical Q, NOT brain intrinsic dimension, not the pooled29-cell PCA covariance or nonlinear CEBRA output",
+  "proof": "Each empirical source block/class has affine dimension <=n_sources-1; within-class block product ranks add; mixing two class means adds at most1.",
+  "conditional_rank_upper_bounds": {
+    "train": {
+      "absent": 23,
+      "present": 45,
+      "balanced_mixture_rank_bound": 69
+    },
+    "validation": {
+      "absent": 5,
+      "present": 3,
+      "balanced_mixture_rank_bound": 9
+    }
+  },
+  "exact_validation_matrix_rank": 9,
+  "matrix_shape": [
+    30,
+    290
+  ],
+  "absolute_rank_tolerance": 1e-10,
+  "new_fits": 0
+}

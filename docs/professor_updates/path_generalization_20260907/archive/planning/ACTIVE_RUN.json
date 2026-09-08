@@ -1,0 +1,16 @@
+{
+  "status": "approved_for_frozen_bounded_execution",
+  "approved_utc": "2026-09-07T08:12:00.235663+00:00",
+  "run_root": "outputs/path-generalization-20260907/results-20260907T081200Z",
+  "driver_path": "outputs/path-generalization-20260907/frozen/driver.py",
+  "frozen_hashes": {
+    "driver.py": "2821317f843ca2b285f2db20d9587c5dd594511e42b5fd63ad304130e4417de1",
+    "protocol.md": "14e13571233b12727b7ab5e51022eddb6e379bfbe881ba83f405afcd6e14483b"
+  },
+  "independent_review": "work/research-planning/frozen-execution-gate-review.md",
+  "tests": "36 tests; synthetic CUDA prefix/reload parity0.0; full synthetic TrackA runner passed",
+  "allowed": "TracksA/B/C exactly as frozen; originaltest excluded frommodels; TrackC mixed-file access only throughSplitFilteredAccess",
+  "expected_new_cebra_fits": 342,
+  "expected_new_cebra_updates": 510000,
+  "no_external_uploads_or_installs": true
+}

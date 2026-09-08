@@ -1,0 +1,495 @@
+{
+  "scope": "byte-preserved selected local artifacts; live source/report revision recorded separately",
+  "files": [
+    {
+      "source": "outputs/path-generalization-20260907/results-20260907T081200Z/execution_gate.json",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/evidence/execution_gate.json",
+      "status": "accepted receipt or derived metric; not raw data",
+      "bytes": 897,
+      "sha256": "6131d8e0e811680179bc724279672891d6e2b4fb21611c6223cfe8d782d65022"
+    },
+    {
+      "source": "outputs/path-generalization-20260907/results-20260907T081200Z/data_gate_checks.json",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/evidence/data_gate_checks.json",
+      "status": "accepted receipt or derived metric; not raw data",
+      "bytes": 776,
+      "sha256": "9f2a85d7bbb670844efa07b2b54733508835816635c9c7d5d325c8088c95b53e"
+    },
+    {
+      "source": "outputs/path-generalization-20260907/results-20260907T081200Z/track_a_reader_fix.json",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/evidence/track_a_reader_fix.json",
+      "status": "accepted receipt or derived metric; not raw data",
+      "bytes": 553,
+      "sha256": "dc597ae32171a9c2f9f3ae3fb6092909c20b2d0a165fcf43516fc5c958461ca6"
+    },
+    {
+      "source": "outputs/path-generalization-20260907/results-20260907T081200Z/track_a_v2/summary.json",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/evidence/track_a_v2/summary.json",
+      "status": "accepted receipt or derived metric; not raw data",
+      "bytes": 2543,
+      "sha256": "91bf5c9fbd68e72d4b042b55bb962929040ec0a92c8546086f081695561c3db5"
+    },
+    {
+      "source": "outputs/path-generalization-20260907/results-20260907T081200Z/track_a_v2/prefit_config_frozen.json",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/evidence/track_a_v2/prefit_config_frozen.json",
+      "status": "accepted receipt or derived metric; not raw data",
+      "bytes": 3398,
+      "sha256": "d9beaa57a3d01d7d51279cdce5c85fc874c777f26b03e3b9cd7339735ca41284"
+    },
+    {
+      "source": "outputs/path-generalization-20260907/results-20260907T081200Z/track_a_v2/track_a_product_support.json",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/evidence/track_a_v2/track_a_product_support.json",
+      "status": "accepted receipt or derived metric; not raw data",
+      "bytes": 446,
+      "sha256": "0607d8f45e3e6e2d8b79597b39803332535af966e5bf2d200eb932fbeef85c76"
+    },
+    {
+      "source": "outputs/path-generalization-20260907/results-20260907T081200Z/track_a_v2/track_a_moment_pca_support.json",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/evidence/track_a_v2/track_a_moment_pca_support.json",
+      "status": "accepted receipt or derived metric; not raw data",
+      "bytes": 571,
+      "sha256": "6bbec8f9b7a27bdb0e99117e0c86bf24cbd1b3906b39d413770889f7bda228fb"
+    },
+    {
+      "source": "outputs/path-generalization-20260907/results-20260907T081200Z/track_b/summary_exact_audited.json",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/evidence/track_b/summary_exact_audited.json",
+      "status": "accepted receipt or derived metric; not raw data",
+      "bytes": 40070,
+      "sha256": "6d3c7a6ee6b023275f7e7a0aa67823db5b9d7d43d58a2462ceee7e39f5b50185"
+    },
+    {
+      "source": "outputs/path-generalization-20260907/results-20260907T081200Z/track_b/prefit_config_frozen.json",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/evidence/track_b/prefit_config_frozen.json",
+      "status": "accepted receipt or derived metric; not raw data",
+      "bytes": 26847,
+      "sha256": "71501681f09119d7dd8c75cab6a5de541a5839519e42004c15a771e3b4b589fb"
+    },
+    {
+      "source": "outputs/path-generalization-20260907/results-20260907T081200Z/track_b/track_b_exact_validation_support.json",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/evidence/track_b/track_b_exact_validation_support.json",
+      "status": "accepted receipt or derived metric; not raw data",
+      "bytes": 446,
+      "sha256": "0607d8f45e3e6e2d8b79597b39803332535af966e5bf2d200eb932fbeef85c76"
+    },
+    {
+      "source": "outputs/path-generalization-20260907/results-20260907T081200Z/track_b/track_b_prefix_parity.csv",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/evidence/track_b/track_b_prefix_parity.csv",
+      "status": "accepted receipt or derived metric; not raw data",
+      "bytes": 2006,
+      "sha256": "e668ba0e200991fd5af6a4a00306777d651391e65676d96a43e7009efe698a96"
+    },
+    {
+      "source": "outputs/path-generalization-20260907/results-20260907T081200Z/track_c/summary.json",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/evidence/track_c/summary.json",
+      "status": "accepted receipt or derived metric; not raw data",
+      "bytes": 20783,
+      "sha256": "450d1196bdfe33a057dff9b5805fdde0149e1372a90f16f8559d7b126fb07be1"
+    },
+    {
+      "source": "outputs/path-generalization-20260907/results-20260907T081200Z/track_c/prefit_config_frozen.json",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/evidence/track_c/prefit_config_frozen.json",
+      "status": "accepted receipt or derived metric; not raw data",
+      "bytes": 1943,
+      "sha256": "99c0f1ef025b1f4c4f819d76295086d9af03e7054fc5701e28b1a4647fe52d48"
+    },
+    {
+      "source": "outputs/path-generalization-20260907/results-20260907T081200Z/track_c/track_c_joint_target_null_metrics.csv",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/evidence/track_c/track_c_joint_target_null_metrics.csv",
+      "status": "accepted receipt or derived metric; not raw data",
+      "bytes": 139226,
+      "sha256": "380f969c8650b307bfc13533fb3fc83730fb99dde35ab34ccdf44ae77d906c7c"
+    },
+    {
+      "source": "outputs/path-generalization-20260907/results-20260907T081200Z/track_c_export/development_cue_counts_manifest.json",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/evidence/track_c_export/development_cue_counts_manifest.json",
+      "status": "accepted receipt or derived metric; not raw data",
+      "bytes": 2532,
+      "sha256": "2d81b1dce5e58a0866033dae15b599d6832b90a5c7491d8642cce5d42d14d1cc"
+    },
+    {
+      "source": "outputs/path-generalization-20260907/results-20260907T081200Z/track_c_allowlist/track_c_supported_middle_component_ranking_manifest.json",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/evidence/track_c_allowlist/track_c_supported_middle_component_ranking_manifest.json",
+      "status": "accepted receipt or derived metric; not raw data",
+      "bytes": 2787,
+      "sha256": "75fc1db137fa9b2909dbe2168223e99e3976bf973b5bbd718e30ee0ee142d113"
+    },
+    {
+      "source": "outputs/path-generalization-20260907/results-20260907T081200Z/assembly_transfer/summary.json",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/evidence/assembly_transfer/summary.json",
+      "status": "accepted receipt or derived metric; not raw data",
+      "bytes": 493,
+      "sha256": "7a56ba4302501b81ab4732fc0c6459e88504ee6988b4e738c54e74baac1e6f9e"
+    },
+    {
+      "source": "outputs/path-generalization-20260907/results-20260907T081200Z/audits/track_b_exact_audit.json",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/evidence/audits/track_b_exact_audit.json",
+      "status": "accepted receipt or derived metric; not raw data",
+      "bytes": 1851,
+      "sha256": "29f7141223796931f1c70490eb43037673e225d992fc0454556a889e64f833f6"
+    },
+    {
+      "source": "outputs/path-generalization-20260907/results-20260907T081200Z/audits/track_b_exact_ba.csv",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/evidence/audits/track_b_exact_ba.csv",
+      "status": "accepted receipt or derived metric; not raw data",
+      "bytes": 71588,
+      "sha256": "2f4ad06fa0c421a57bbceed05dc0ac593a3b92312de1c4a9bec81a535222aba7"
+    },
+    {
+      "source": "outputs/path-generalization-20260907/results-20260907T081200Z/audits/whole_cue_rank_bound.json",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/evidence/audits/whole_cue_rank_bound.json",
+      "status": "accepted receipt or derived metric; not raw data",
+      "bytes": 712,
+      "sha256": "4f0d21d00bd0cc2fdc292a8398212c2b4da08c35d98523cd6486fc6e39c37f67"
+    },
+    {
+      "source": "outputs/path-generalization-20260907/results-20260907T081200Z/report_assets/path_generalization_20260907/derived_summary_metrics.json",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/evidence/tables/derived_summary_metrics.json",
+      "status": "accepted derived report table",
+      "bytes": 10308,
+      "sha256": "f8680625e5661204404b2b9e3d2bc3fe8376dd67ca9ccdf6e1406cf689ae63b7"
+    },
+    {
+      "source": "outputs/path-generalization-20260907/results-20260907T081200Z/report_assets/path_generalization_20260907/derived_track_a_method_row_c_summary.csv",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/evidence/tables/derived_track_a_method_row_c_summary.csv",
+      "status": "accepted derived report table",
+      "bytes": 8725,
+      "sha256": "645057ecde313dd9177464e4efefaed9ad04d55985e9cbc925d266219f0455e7"
+    },
+    {
+      "source": "outputs/path-generalization-20260907/results-20260907T081200Z/report_assets/path_generalization_20260907/derived_track_b_family_null_maxima.csv",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/evidence/tables/derived_track_b_family_null_maxima.csv",
+      "status": "accepted derived report table",
+      "bytes": 406,
+      "sha256": "0bf56f65f342a15b2f2e138bc1ca3d45a2ff2ece15a0d6cf7080234f4ca06b7f"
+    },
+    {
+      "source": "outputs/path-generalization-20260907/results-20260907T081200Z/report_assets/path_generalization_20260907/derived_track_b_observed_fits.csv",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/evidence/tables/derived_track_b_observed_fits.csv",
+      "status": "accepted derived report table",
+      "bytes": 12581,
+      "sha256": "ca5f6a392d333fc8b8645200f2fda0e5ba41678b09b2584463d7be39e027389c"
+    },
+    {
+      "source": "outputs/path-generalization-20260907/results-20260907T081200Z/report_assets/path_generalization_20260907/derived_track_b_prefix_parity.csv",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/evidence/tables/derived_track_b_prefix_parity.csv",
+      "status": "accepted derived report table",
+      "bytes": 2006,
+      "sha256": "e668ba0e200991fd5af6a4a00306777d651391e65676d96a43e7009efe698a96"
+    },
+    {
+      "source": "outputs/path-generalization-20260907/results-20260907T081200Z/report_assets/path_generalization_20260907/derived_track_c_session_delta_logloss.csv",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/evidence/tables/derived_track_c_session_delta_logloss.csv",
+      "status": "accepted derived report table",
+      "bytes": 1124,
+      "sha256": "c7bb6830d51591c58fee0de280200952f7e7f9fd8ee0727e7d8373827c26b161"
+    },
+    {
+      "source": "outputs/path-generalization-20260907/results-20260907T081200Z/report_assets/path_generalization_20260907/derived_track_c_unit_model_rows.csv",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/evidence/tables/derived_track_c_unit_model_rows.csv",
+      "status": "accepted derived report table",
+      "bytes": 13714,
+      "sha256": "45c8b9de0525abd465bf1cfc210f142ffab2b7b09807f91b399f6b3d1d7d4241"
+    },
+    {
+      "source": "outputs/path-generalization-20260907/target_semantics_audit_three_target_final/target_semantics_audit.json",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/evidence/target_semantics/target_semantics_audit.json",
+      "status": "behavior-label audit; supports Figure1 correction",
+      "bytes": 2036,
+      "sha256": "333f323bd953100b25bbc5732403af00d86cfa98462ec71ecd2747fdb11e1dfe"
+    },
+    {
+      "source": "outputs/path-generalization-20260907/target_semantics_audit_three_target_final/target_semantics_route_counts.csv",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/evidence/target_semantics/target_semantics_route_counts.csv",
+      "status": "behavior-label audit; supports Figure1 correction",
+      "bytes": 1768,
+      "sha256": "12dcd06bef56f142b232c8371c95cac2323eeee31fd089e53c67caad20fda307"
+    },
+    {
+      "source": "outputs/path-generalization-20260907/target_semantics_audit_three_target_final/target_semantics_route_diagram.md",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/evidence/target_semantics/target_semantics_route_diagram.md",
+      "status": "behavior-label audit; supports Figure1 correction",
+      "bytes": 466,
+      "sha256": "3aad32ed2c79e84ca62bcd7288c96111ac8409cbcba562829f836abb525e17e6"
+    },
+    {
+      "source": "work/research-planning/ACTIVE_RUN.json",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/archive/planning/ACTIVE_RUN.json",
+      "status": "historical planning/handoff; superseded as live status",
+      "bytes": 897,
+      "sha256": "6131d8e0e811680179bc724279672891d6e2b4fb21611c6223cfe8d782d65022"
+    },
+    {
+      "source": "work/research-planning/FINAL_STATE.md",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/archive/planning/FINAL_STATE.md",
+      "status": "historical planning/handoff; superseded as live status",
+      "bytes": 5362,
+      "sha256": "4f8f05def7a1db7235d2ae99091ad4a777bd617d843c2dcad3174d170471e953"
+    },
+    {
+      "source": "work/research-planning/artifact-feasibility.md",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/archive/planning/artifact-feasibility.md",
+      "status": "historical planning/handoff; superseded as live status",
+      "bytes": 7134,
+      "sha256": "dcbc1b217f71251ec7251d97079e64ace73963100ff90da7911f6a3639c89e6f"
+    },
+    {
+      "source": "work/research-planning/assembly-transfer-review.md",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/evidence/reviews/assembly-transfer-review.md",
+      "status": "historical accepted review at its recorded hash",
+      "bytes": 1261,
+      "sha256": "35722780f4aa8da6f6be8fb2fcfea7b49ce468a8bb40904676e8e47e6a8b43ef"
+    },
+    {
+      "source": "work/research-planning/code-review-ab-final.md",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/archive/planning/code-review-ab-final.md",
+      "status": "historical planning/handoff; superseded as live status",
+      "bytes": 2949,
+      "sha256": "f471929aff2f786810ca6d6bff1cacac0bdb983f89ec39a9b4ecccb86a54a3ef"
+    },
+    {
+      "source": "work/research-planning/code-review-ab.md",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/archive/planning/code-review-ab.md",
+      "status": "historical planning/handoff; superseded as live status",
+      "bytes": 4886,
+      "sha256": "24fabbcf7f467a9a50f1429e27f2f78b398c1f86c0f12b048080fa8978613258"
+    },
+    {
+      "source": "work/research-planning/code-review-c-final.md",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/archive/planning/code-review-c-final.md",
+      "status": "historical planning/handoff; superseded as live status",
+      "bytes": 2844,
+      "sha256": "98d609b52136e93f68572a7fd78eed347ebc84d06ef6d27eb17a7c1441f4b38f"
+    },
+    {
+      "source": "work/research-planning/code-review-c.md",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/archive/planning/code-review-c.md",
+      "status": "historical planning/handoff; superseded as live status",
+      "bytes": 3709,
+      "sha256": "f308bb7dfbb2a23c29859be9753cd4fe492638c4e216f9cad96c9b84aaf34562"
+    },
+    {
+      "source": "work/research-planning/design-review.md",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/archive/planning/design-review.md",
+      "status": "historical planning/handoff; superseded as live status",
+      "bytes": 6158,
+      "sha256": "11c56ef9aa3f7c0e7ed63261e2a4cf525b927873ae073876251438b4e702b79e"
+    },
+    {
+      "source": "work/research-planning/final-html-factual-review.md",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/evidence/reviews/final-html-factual-review.md",
+      "status": "historical accepted review at its recorded hash",
+      "bytes": 2101,
+      "sha256": "0b92d754d94c2b4154ad825f621c5104852d21cf5b982d12597b2955c7580b11"
+    },
+    {
+      "source": "work/research-planning/final-html-pedagogy-review.md",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/evidence/reviews/final-html-pedagogy-review.md",
+      "status": "historical accepted review at its recorded hash",
+      "bytes": 2235,
+      "sha256": "c3d8953779498fe4a8762da7d02663322ddeb4fc142d7120e7904a366d6b9830"
+    },
+    {
+      "source": "work/research-planning/final-release-followup-review.md",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/evidence/reviews/final-release-followup-review.md",
+      "status": "historical accepted review at its recorded hash",
+      "bytes": 562,
+      "sha256": "4ca1c3b7746a74301a223405137be0304350aa749cdc1ec925d7085d57b28533"
+    },
+    {
+      "source": "work/research-planning/frozen-execution-gate-review.md",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/evidence/reviews/frozen-execution-gate-review.md",
+      "status": "historical accepted review at its recorded hash",
+      "bytes": 5564,
+      "sha256": "c850831c00aad2007dc6b1f0a9e3b255b5652abaecdf5dafaf1dd330d8771e1e"
+    },
+    {
+      "source": "work/research-planning/implementation-phase1.md",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/archive/planning/implementation-phase1.md",
+      "status": "historical planning/handoff; superseded as live status",
+      "bytes": 15190,
+      "sha256": "901bcecd12e7b4f05573ce0511940cc9040556d2147ed6004f1c7495c7497300"
+    },
+    {
+      "source": "work/research-planning/primary-literature.md",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/archive/planning/primary-literature.md",
+      "status": "historical planning/handoff; superseded as live status",
+      "bytes": 6512,
+      "sha256": "d2b03dde9e0c9f23a6fd73a9fd875403cd4f1010e930d78ac816e314961d6b25"
+    },
+    {
+      "source": "work/research-planning/protocol-preflight-review.md",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/archive/planning/protocol-preflight-review.md",
+      "status": "historical planning/handoff; superseded as live status",
+      "bytes": 2090,
+      "sha256": "0a1e93ebcf3d17cda234d254605c6379f9b747ddb7d96ff3ac887b1e0ba67ff0"
+    },
+    {
+      "source": "work/research-planning/report-draft-handoff.md",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/archive/planning/report-draft-handoff.md",
+      "status": "historical planning/handoff; superseded as live status",
+      "bytes": 5092,
+      "sha256": "2ec93676288a54f22e40efd7ee220cba3ae6b84c05bf2d57ce91a5606fb2f6d8"
+    },
+    {
+      "source": "work/research-planning/track-a-results-review.md",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/evidence/reviews/track-a-results-review.md",
+      "status": "historical accepted review at its recorded hash",
+      "bytes": 4448,
+      "sha256": "06b281b8529c0c8cd682144fd13ab8164a516b8867b98d8c9ce0721a2d86cd5c"
+    },
+    {
+      "source": "work/research-planning/track-b-final-review.md",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/evidence/reviews/track-b-final-review.md",
+      "status": "historical accepted review at its recorded hash",
+      "bytes": 2422,
+      "sha256": "8f47fac83033a79395f00f7b379fab3b5796c4e3c655a0479c53a54777fce55a"
+    },
+    {
+      "source": "work/research-planning/track-c-results-review.md",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/evidence/reviews/track-c-results-review.md",
+      "status": "historical accepted review at its recorded hash",
+      "bytes": 4044,
+      "sha256": "de549eb2feecf120d0c19a1e212f4b02a117bb5c630298877f561170ef6a0a69"
+    },
+    {
+      "source": "outputs/path-generalization-20260907/results-20260907T081200Z/track_a/prefit_config_frozen.json",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/archive/execution/track_a/prefit_config_frozen.json",
+      "status": "failed or superseded inference; never pool with accepted results",
+      "bytes": 3382,
+      "sha256": "5be68ecdfaaaaa3e5bc2e9923c85b8db2ae984f764c5657325e19d359a635a60"
+    },
+    {
+      "source": "outputs/path-generalization-20260907/results-20260907T081200Z/track_b/summary.json",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/archive/execution/track_b/summary.json",
+      "status": "failed or superseded inference; never pool with accepted results",
+      "bytes": 39835,
+      "sha256": "25a1dd6204c2d3571074eb4a576216b6dd68508a18b4fdf9e1d11c143fed951e"
+    },
+    {
+      "source": "outputs/path-generalization-20260907/results-20260907T081200Z/track_b/track_b_family_null_pvalues.json",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/archive/execution/track_b/track_b_family_null_pvalues.json",
+      "status": "failed or superseded inference; never pool with accepted results",
+      "bytes": 858,
+      "sha256": "71f96d41c97c952ba467226a374f270ee4e2872ad458f4cb4fbf15f6a2db06d3"
+    },
+    {
+      "source": "outputs/path-generalization-20260907/audits/phase1_failed_smoke_broadcasting.md",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/archive/execution/phase1_failed_smoke_broadcasting.md",
+      "status": "pre-execution failure fixed before frozen runs",
+      "bytes": 664,
+      "sha256": "4d60819b96ccfbe75fb623540b288e8fdd06951788ef2977c2472117b3ec4a3d"
+    },
+    {
+      "source": "outputs/path-generalization-20260907/results-20260907T081200Z/audits/manager_history.md",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/archive/planning/manager_history.md",
+      "status": "chronological historical manager notes; later entries supersede earlier gates",
+      "bytes": 28939,
+      "sha256": "bbe8de2491eb5c7038bb3d99823531cbc6d10366a511b62068ae9989658c498f"
+    },
+    {
+      "source": "outputs/path-generalization-20260907/results-20260907T081200Z/audits/report_before_parent_clarifications.html",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/archive/release-before-parent-clarifications.html",
+      "status": "superseded first reviewed report; not current",
+      "bytes": 837405,
+      "sha256": "8fa2d4b7a6f89efdb80ca56b3d84425ec948d9c7885823e016a02de91831820c"
+    },
+    {
+      "source": "outputs/path-generalization-20260907/frozen/driver.py",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/archive/code/driver_bc_20260907.py.txt",
+      "status": "exact historical executed/report source; do not run as current code",
+      "bytes": 220156,
+      "sha256": "2821317f843ca2b285f2db20d9587c5dd594511e42b5fd63ad304130e4417de1"
+    },
+    {
+      "source": "outputs/path-generalization-20260907/frozen/driver_track_a_v2.py",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/archive/code/driver_track_a_v2_20260907.py.txt",
+      "status": "exact historical executed/report source; do not run as current code",
+      "bytes": 220213,
+      "sha256": "340bd4fa14ee90b0a57cbc384785dff5be5936ab08146aee1e6620c0050d7bfb"
+    },
+    {
+      "source": "outputs/path-generalization-20260907/results-20260907T081200Z/audits/report_builder_used.py",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/archive/code/report_builder_20260907.py.txt",
+      "status": "exact historical executed/report source; do not run as current code",
+      "bytes": 142918,
+      "sha256": "593bc21f8b82cd1bee7eb63e1972cc0b4437c7e136234dfddc96a6099ce816d3"
+    },
+    {
+      "source": "work/pr-packaging/pre-package-tree/docs/professor_updates/path_generalization_20260907/path-generalization-teaching-audit-20260907.html",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/archive/release-20260907/path-generalization-teaching-audit-20260907.html",
+      "status": "original released snapshot; Figure1 label superseded",
+      "bytes": 844825,
+      "sha256": "31c745a626d4fcad3a38f7e9842dce1ac57321594aca0464904ce3718d55a2d7"
+    },
+    {
+      "source": "work/pr-packaging/pre-package-tree/docs/professor_updates/path_generalization_20260907/path-generalization-teaching-audit-20260907.summary.json",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/archive/release-20260907/path-generalization-teaching-audit-20260907.summary.json",
+      "status": "original released snapshot; Figure1 label superseded",
+      "bytes": 4866,
+      "sha256": "e222133c65899e303f0c6eeb52d44065f4b1bceac6c02081b2016ee0537a8b8d"
+    },
+    {
+      "source": "work/pr-packaging/pre-package-tree/docs/professor_updates/path_generalization_20260907/report-manifest.json",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/archive/release-20260907/report-manifest.json",
+      "status": "original released snapshot; Figure1 label superseded",
+      "bytes": 2867,
+      "sha256": "1fa2241749a36866b0d3fd68b08a30f0bb398c238c1a8d9c4bfa9f8a6b3540be"
+    },
+    {
+      "source": "work/pr-packaging/verification.log",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/evidence/packaging-verification.log",
+      "status": "2026-09-08 fresh 38-test, artifact, dry-run, Ruff and legacy8-test checks",
+      "bytes": 3076,
+      "sha256": "d11ab8bc37d4b8df8eab347ea86a5e13a1be9819831570f6c380bba1cbb86550"
+    },
+    {
+      "source": "/home/hongyi-home-lab/.pi/tasks/session-63299-63299/b69c8111b.output",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/archive/execution/preflight-source-budget-failed.log",
+      "status": "historical failed attempt or packaging preflight; see STATUS.md for resolution",
+      "bytes": 7321,
+      "sha256": "b9f1a700c35e2760e68b312510c39ee0e123fe969b2538367b473897eea91988"
+    },
+    {
+      "source": "/home/hongyi-home-lab/.pi/tasks/session-63299-63299/b54c17900.output",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/archive/execution/track-a-first-failed.log",
+      "status": "historical failed attempt or packaging preflight; see STATUS.md for resolution",
+      "bytes": 2679,
+      "sha256": "1d761a72d1adc152374d7b25ab65f4794a051d8935ebe563a576c0dedced7f81"
+    },
+    {
+      "source": "/home/hongyi-home-lab/.pi/tasks/session-63299-63299/b48bb919e.output",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/archive/execution/assembly-replay-first-failed.log",
+      "status": "historical failed attempt or packaging preflight; see STATUS.md for resolution",
+      "bytes": 603,
+      "sha256": "e957843b5b5c319a3d99f80f56ed491c7e724c4888fb8b4b3891ad0a181aecef"
+    },
+    {
+      "source": ".pi-subagents/artifacts/outputs/3682283e-90bb-44b0-a2e8-b6b7688c4272/work/pr-packaging/artifact-inventory-review.md",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/archive/packaging/artifact-inventory-review.md",
+      "status": "historical failed attempt or packaging preflight; see STATUS.md for resolution",
+      "bytes": 6147,
+      "sha256": "96083d0bb18978b9c30aaff3f2215e833a3f0d400e9188761a5cbdaeef37685f"
+    },
+    {
+      "source": ".pi-subagents/artifacts/outputs/3682283e-90bb-44b0-a2e8-b6b7688c4272/work/pr-packaging/documentation-consistency-review.md",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/archive/packaging/documentation-consistency-review.md",
+      "status": "historical failed attempt or packaging preflight; see STATUS.md for resolution",
+      "bytes": 4114,
+      "sha256": "21e5ed17d997cceccf18d36ff435ef9950dde96d76a74d8b2dfc15ec88f4d7f0"
+    },
+    {
+      "source": ".pi-subagents/artifacts/outputs/397ed35b-1867-4180-9f40-72c499e10248/work/pr-packaging/final-integrity-review.md",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/evidence/reviews/pr-package-integrity-review.md",
+      "status": "final packaging review; approved current cc941bed report and preserved evidence",
+      "bytes": 1098,
+      "sha256": "ba642b1a93a2a4b86a61969f9d033d6643aa6ce3360a17401e8d3d1e17617e91"
+    },
+    {
+      "source": ".pi-subagents/artifacts/outputs/397ed35b-1867-4180-9f40-72c499e10248/work/pr-packaging/final-scientific-review.md",
+      "packaged_path": "docs/professor_updates/path_generalization_20260907/evidence/reviews/pr-package-scientific-review.md",
+      "status": "final packaging review; approved current cc941bed report and preserved evidence",
+      "bytes": 1020,
+      "sha256": "02d3bf02ca0d5e82d7237be25be45b3b82bcb04798faf2aa8ef27f2c4d6ceb30"
+    }
+  ]
+}

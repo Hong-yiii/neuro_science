@@ -1,0 +1,2546 @@
+#!/usr/bin/env python3
+"""Build the path-generalization teaching report draft from frozen result tables.
+
+This script is intentionally read-only over analysis outputs. It does not fit
+models, import raw data, touch split/importer internals, or edit existing result
+artifacts. Draft mode is allowed while Track B nulls are incomplete; final mode
+blocks until the complete Track B family-null summary is available from completed
+fit_info files.
+"""
+
+from __future__ import annotations
+
+import argparse
+import csv
+import hashlib
+import html
+import json
+import math
+import re
+import statistics
+from collections import Counter, defaultdict
+from dataclasses import dataclass
+from fractions import Fraction
+from pathlib import Path
+from typing import Any
+
+import matplotlib
+
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt  # noqa: E402
+import numpy as np  # noqa: E402
+from matplotlib import ticker  # noqa: E402
+from matplotlib.figure import Figure as MplFigure  # noqa: E402
+from matplotlib.patches import Rectangle  # noqa: E402
+
+ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_RESULTS_ROOT = (
+    ROOT / "outputs/path-generalization-20260907/results-20260907T081200Z"
+)
+DEFAULT_ASSETS_SUBDIR = Path("report_assets/path_generalization_20260907")
+DEFAULT_DRAFT_OUT = (
+    ROOT / "work/report-draft/path-generalization-teaching-audit-20260907-draft.html"
+)
+DEFAULT_FINAL_OUT = (
+    ROOT
+    / "docs/professor_updates/path_generalization_20260907/path-generalization-teaching-audit-20260907.html"
+)
+EXPECTED_TRACK_B_OBSERVED = 62
+EXPECTED_TRACK_B_NULL_FITS = 280
+EXPECTED_TRACK_B_TOTAL_FITS = 342
+EXPECTED_TRACK_B_UPDATES = 510_000
+TRACK_B_FAMILY_SWEEP = (
+    (8, 64, 1000),
+    (3, 64, 1000),
+    (16, 64, 1000),
+    (29, 64, 1000),
+    (8, 256, 1000),
+    (8, 1024, 1000),
+    (8, 64, 5000),
+)
+
+
+def track_b_family_configs() -> set[tuple[str, int, int, int, int, int]]:
+    return {
+        (objective, dim, rows_per_class, updates, 0, 0)
+        for objective in ["cebra_time", "cebra_behavior"]
+        for dim, rows_per_class, updates in TRACK_B_FAMILY_SWEEP
+    }
+
+
+def track_b_fit_key(row: dict[str, Any]) -> tuple[Any, ...]:
+    return (
+        row["objective"],
+        int(row["dim"]),
+        int(row["rows_per_class"]),
+        int(row["updates"]),
+        int(row["assembly_seed"]),
+        int(row["optimizer_seed"]),
+    )
+
+
+@dataclass
+class Figure:
+    path: Path
+    title: str
+    caption: str
+
+
+def read_csv(path: Path) -> list[dict[str, str]]:
+    with path.open(newline="") as handle:
+        return list(csv.DictReader(handle))
+
+
+def read_json(path: Path) -> Any:
+    return json.loads(path.read_text())
+
+
+def sha256_file(path: Path) -> str:
+    h = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def fnum(value: Any, default: float = math.nan) -> float:
+    if value is None or value == "":
+        return default
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return default
+
+
+def mean(values: list[float]) -> float:
+    values = [v for v in values if math.isfinite(v)]
+    return statistics.fmean(values) if values else math.nan
+
+
+def semirange(values: list[float]) -> tuple[float, float, float]:
+    values = [v for v in values if math.isfinite(v)]
+    if not values:
+        return (math.nan, math.nan, math.nan)
+    return (statistics.fmean(values), min(values), max(values))
+
+
+def loss_trace_edges(fit_dir: Path) -> tuple[float, float]:
+    rows = read_csv(fit_dir / "loss_trace.csv")
+    if not rows:
+        return (math.nan, math.nan)
+    return (fnum(rows[0].get("total")), fnum(rows[-1].get("total")))
+
+
+def crosscheck_track_b_family(
+    producer_family: dict[str, Any] | None,
+    observed_family_max: float,
+    recomputed_null_max: dict[int, float],
+) -> dict[str, Any]:
+    if not producer_family:
+        return {"matches": False, "reason": "producer family JSON missing"}
+    producer_null = {
+        int(k): fnum(v)
+        for k, v in producer_family.get("null_family_max_balanced_accuracy", {}).items()
+    }
+    matches = (
+        abs(
+            fnum(producer_family.get("observed_family_max_balanced_accuracy"))
+            - observed_family_max
+        )
+        < 1e-12
+        and producer_null == recomputed_null_max
+    )
+    return {
+        "matches": matches,
+        "producer_observed": producer_family.get(
+            "observed_family_max_balanced_accuracy"
+        ),
+        "recomputed_observed": observed_family_max,
+        "producer_float_p_value": producer_family.get("family_max_pvalue", {}).get(
+            "p_value"
+        ),
+        "producer_float_exceedances": producer_family.get("family_max_pvalue", {}).get(
+            "exceedances"
+        ),
+        "null_count": len(recomputed_null_max),
+        "note": "Raw producer p-value is not authoritative after the exact tie correction; only maxima are crosschecked here.",
+    }
+
+
+def track_b_exact_audit(results_root: Path) -> dict[str, Any]:
+    audit_path = results_root / "audits/track_b_exact_audit.json"
+    csv_path = results_root / "audits/track_b_exact_ba.csv"
+    if not audit_path.exists() or not csv_path.exists():
+        return {
+            "status": "missing",
+            "path": str(audit_path),
+            "csv_path": str(csv_path),
+            "matches": False,
+        }
+    audit = read_json(audit_path)
+    rows = read_csv(csv_path)
+    family_configs = track_b_family_configs()
+
+    observed = [
+        Fraction(r["exact_ba"])
+        for r in rows
+        if r["family_role"] != "family_null" and track_b_fit_key(r) in family_configs
+    ]
+    null_by_perm: dict[int, list[Fraction]] = defaultdict(list)
+    for row in rows:
+        if (
+            row["family_role"] == "family_null"
+            and track_b_fit_key(row) in family_configs
+        ):
+            null_by_perm[int(row["permutation_index"])].append(
+                Fraction(row["exact_ba"])
+            )
+    observed_max = max(observed) if observed else None
+    null_max = {idx: max(vals) for idx, vals in null_by_perm.items() if vals}
+    exceedances = (
+        sum(value >= observed_max for value in null_max.values())
+        if observed_max is not None
+        else None
+    )
+    pvalue = (
+        Fraction(1 + exceedances, 1 + len(null_max))
+        if exceedances is not None and null_max
+        else None
+    )
+    matches = bool(
+        audit.get("status") == "complete"
+        and audit.get("fits") == EXPECTED_TRACK_B_TOTAL_FITS
+        and audit.get("optimizer_updates") == EXPECTED_TRACK_B_UPDATES
+        and audit.get("prefix_pairs") == 42
+        and audit.get("all_numeric_prefix_differences_zero") is True
+        and audit.get("all_producer_reload_differences_zero") is True
+        and audit.get("observed_family_max_exact") == str(observed_max)
+        and {str(k): str(v) for k, v in null_max.items()}
+        == audit.get("null_maxima_exact")
+        and audit.get("exceedances_including_exact_ties") == exceedances
+        and audit.get("family_max_pvalue_exact") == str(pvalue)
+    )
+    return {
+        "status": audit.get("status"),
+        "path": str(audit_path),
+        "csv_path": str(csv_path),
+        "audit": audit,
+        "row_count": len(rows),
+        "observed_family_max_exact": str(observed_max),
+        "observed_family_max_ba": float(observed_max)
+        if observed_max is not None
+        else math.nan,
+        "null_maxima_exact": {
+            idx: str(value) for idx, value in sorted(null_max.items())
+        },
+        "null_maxima": [float(null_max[idx]) for idx in sorted(null_max)],
+        "exceedances_including_exact_ties": exceedances,
+        "family_max_pvalue_exact": str(pvalue) if pvalue is not None else None,
+        "family_max_pvalue": float(pvalue) if pvalue is not None else math.nan,
+        "matches": matches,
+    }
+
+
+def fmt(value: float, digits: int = 3) -> str:
+    if not math.isfinite(value):
+        return "NA"
+    return f"{value:.{digits}f}"
+
+
+def pct(value: float, digits: int = 1) -> str:
+    if not math.isfinite(value):
+        return "NA"
+    return f"{100 * value:.{digits}f}%"
+
+
+def save_fig(fig: MplFigure, assets_dir: Path, filename: str) -> Path:
+    assets_dir.mkdir(parents=True, exist_ok=True)
+    path = assets_dir / filename
+    with matplotlib.rc_context({"svg.hashsalt": "path-generalization-20260907"}):
+        fig.savefig(path, format="svg", bbox_inches="tight", metadata={"Date": None})
+    plt.close(fig)
+    return path
+
+
+def inline_svg(path: Path, prefix: str, title: str) -> str:
+    text = path.read_text()
+    text = re.sub(r"<\?xml[^>]*>\s*", "", text)
+    text = re.sub(r"<!DOCTYPE[^>]*>\s*", "", text)
+    ids = sorted(set(re.findall(r'\bid="([^"]+)"', text)), key=len, reverse=True)
+    for old in ids:
+        new = f"{prefix}-{old}"
+        text = text.replace(f'id="{old}"', f'id="{new}"')
+        text = re.sub(rf"url\(#{re.escape(old)}\)", f"url(#{new})", text)
+        text = text.replace(f'href="#{old}"', f'href="#{new}"')
+        text = text.replace(f'xlink:href="#{old}"', f'xlink:href="#{new}"')
+    title_id = f"{prefix}-title"
+    title_tag = f'<title id="{title_id}">{html.escape(title)}</title>'
+    return re.sub(
+        r"<svg\b([^>]*)>",
+        f'<svg role="img" aria-labelledby="{title_id}"\\1>{title_tag}',
+        text,
+        count=1,
+    )
+
+
+def key_without_split(row: dict[str, str], fields: list[str]) -> tuple[str, ...]:
+    return tuple(row.get(field, "") for field in fields)
+
+
+def pair_legacy_metrics(
+    rows: list[dict[str, str]], fields: list[str]
+) -> list[dict[str, Any]]:
+    by_key: dict[tuple[str, ...], dict[str, dict[str, str]]] = defaultdict(dict)
+    for row in rows:
+        split = row.get("split", "")
+        if split in {"legacy_validation_array_replay", "exact_validation_q"}:
+            by_key[key_without_split(row, fields)][split] = row
+    pairs = []
+    for key, splits in by_key.items():
+        if (
+            "legacy_validation_array_replay" not in splits
+            or "exact_validation_q" not in splits
+        ):
+            continue
+        old = splits["legacy_validation_array_replay"]
+        exact = splits["exact_validation_q"]
+        pairs.append(
+            {
+                "key": key,
+                "old_ba": fnum(old.get("balanced_accuracy")),
+                "exact_ba": fnum(exact.get("balanced_accuracy")),
+                "old_log_loss": fnum(old.get("log_loss")),
+                "exact_log_loss": fnum(exact.get("log_loss")),
+            }
+        )
+    return pairs
+
+
+def track_a_summary(results_root: Path) -> dict[str, Any]:
+    root = results_root / "track_a_v2"
+    summary = read_json(root / "summary.json")
+    config = read_json(root / "prefit_config_frozen.json")
+    rank_audit_path = results_root / "audits/whole_cue_rank_bound.json"
+    rank_audit = read_json(rank_audit_path) if rank_audit_path.exists() else None
+    exact = read_csv(root / "track_a_exact_validation_metrics.csv")
+    v8 = read_csv(root / "track_a_legacy_v8b_head_metrics.csv")
+    v9 = read_csv(root / "track_a_legacy_v9_cebra_metrics.csv")
+    source_budget = read_csv(root / "track_a_source_budget.csv")
+    loo = read_csv(root / "track_a_leave_one_session.csv")
+    margins = read_csv(root / "track_a_source_margins.csv")
+    known = read_csv(root / "track_a_known_truth_simulations.csv")
+    relaxed = read_csv(root / "track_a_relaxed40_source_controls.csv")
+
+    support = summary["support"]
+    validation_products = {
+        "absent": math.prod(support["absent"].values()),
+        "present": math.prod(support["present"].values()),
+    }
+    v8_pairs = pair_legacy_metrics(
+        v8, ["stage", "seed", "representation", "C", "first_stage"]
+    )
+    v9_pairs = pair_legacy_metrics(
+        v9, ["stage", "objective", "representation", "dim", "seed"]
+    )
+
+    moment_ridge = [r for r in exact if r["stage"] == "moment_exact_ridge"]
+    finite = [r for r in exact if r["stage"] == "finite_sample_ridge_convergence"]
+    row_grid = [r for r in exact if r["stage"] == "row_grid"]
+    moment_pca = [r for r in exact if r["stage"] == "moment_exact_pca_ridge"]
+
+    lambda1 = next(r for r in moment_ridge if r.get("lambda_l2") == "1.0")
+    lambda_by_value = {
+        fnum(r["lambda_l2"]): fnum(r["balanced_accuracy"]) for r in moment_ridge
+    }
+
+    finite_by_rows: dict[int, tuple[float, float, float]] = {}
+    for rows_per_class in [16, 64, 256, 1024]:
+        values = [
+            fnum(r["balanced_accuracy"])
+            for r in finite
+            if int(fnum(r["rows_per_class"])) == rows_per_class
+        ]
+        finite_by_rows[rows_per_class] = semirange(values)
+
+    raw_binned_row_grid: dict[int, tuple[float, float, float]] = {}
+    for rows_per_class in [16, 64, 256, 1024]:
+        values = [
+            fnum(r["balanced_accuracy"])
+            for r in row_grid
+            if r["representation"] == "raw_binned"
+            and r["decoder_C_policy"] == "row_normalized"
+            and int(fnum(r["rows_per_class"])) == rows_per_class
+        ]
+        raw_binned_row_grid[rows_per_class] = semirange(values)
+
+    row_c_summary = []
+    row_groups: dict[tuple[str, str, str], list[dict[str, str]]] = defaultdict(list)
+    for row in row_grid:
+        row_groups[
+            (row["representation"], row["rows_per_class"], row["decoder_C_policy"])
+        ].append(row)
+    for (representation, rows_per_class, c_policy), group in sorted(row_groups.items()):
+        ba_values = [fnum(row["balanced_accuracy"]) for row in group]
+        ll_values = [fnum(row["log_loss"]) for row in group]
+        row_c_summary.append(
+            {
+                "representation": representation,
+                "rows_per_class": rows_per_class,
+                "decoder_C_policy": c_policy,
+                "C_values": ";".join(sorted({row.get("C", "") for row in group})),
+                "n_seeds": len({row.get("seed", "") for row in group}),
+                "ba_mean": mean(ba_values),
+                "ba_min": min(ba_values),
+                "ba_max": max(ba_values),
+                "log_loss_mean": mean(ll_values),
+            }
+        )
+
+    source_budget_by_fraction: dict[float, tuple[float, float, float]] = {}
+    for fraction in [0.5, 0.75, 1.0]:
+        values = [
+            fnum(r["balanced_accuracy"])
+            for r in source_budget
+            if abs(fnum(r["fraction"]) - fraction) < 1e-9
+        ]
+        source_budget_by_fraction[fraction] = semirange(values)
+
+    relaxed_by_representation = {}
+    for representation in sorted(
+        {r["representation"] for r in relaxed if r.get("representation")}
+    ):
+        values = [
+            fnum(r["balanced_accuracy"])
+            for r in relaxed
+            if r["representation"] == representation
+        ]
+        relaxed_by_representation[representation] = semirange(values)
+
+    validation_margin_by_session = {}
+    train_margin_by_session = {}
+    for split, out in [
+        ("train", train_margin_by_session),
+        ("validation", validation_margin_by_session),
+    ]:
+        by_session: dict[str, dict[str, float]] = defaultdict(dict)
+        for row in margins:
+            if row["split"] == split:
+                by_session[row["session_id"]][row["label"]] = fnum(row["score_mean"])
+        for session, label_values in by_session.items():
+            if "present" in label_values and "absent" in label_values:
+                out[session] = label_values["present"] - label_values["absent"]
+
+    known_zero_n3v1 = [
+        r
+        for r in known
+        if r["signal"] == "0.0"
+        and r["train_sources_per_class_session"] == "3"
+        and r["validation_sources_per_class_session"] == "1"
+    ]
+    known_zero_n3v1_counts = Counter(
+        fnum(r["balanced_accuracy"]) for r in known_zero_n3v1
+    )
+    trace_by_train = {}
+    for train in [3, 10, 30]:
+        values = [
+            fnum(r["measured_between_class_trace"])
+            for r in known
+            if r["signal"] == "0.0"
+            and r["train_sources_per_class_session"] == str(train)
+            and r["validation_sources_per_class_session"] == "1"
+        ]
+        expected = [
+            fnum(r["expected_spurious_trace"])
+            for r in known
+            if r["signal"] == "0.0"
+            and r["train_sources_per_class_session"] == str(train)
+            and r["validation_sources_per_class_session"] == "1"
+        ]
+        trace_by_train[train] = (mean(values), mean(expected))
+
+    pca_basis = {}
+    for dim in [3, 8, 16, 29]:
+        sampled = [
+            fnum(r["balanced_accuracy"])
+            for r in row_grid
+            if r["representation"] == f"pca_cellspace_{dim}"
+            and r["decoder_C_policy"] == "row_normalized"
+        ]
+        moment = [
+            fnum(r["balanced_accuracy"])
+            for r in row_grid
+            if r["representation"] == f"moment_pca_cellspace_{dim}"
+            and r["decoder_C_policy"] == "row_normalized"
+        ]
+        exact_rows = [r for r in moment_pca if r["pca_dim"] == str(dim)]
+        pca_basis[dim] = {
+            "sampled_mean": mean(sampled),
+            "sampled_min": min(sampled) if sampled else math.nan,
+            "sampled_max": max(sampled) if sampled else math.nan,
+            "moment_basis_mean": mean(moment),
+            "moment_basis_min": min(moment) if moment else math.nan,
+            "moment_basis_max": max(moment) if moment else math.nan,
+            "moment_exact": fnum(exact_rows[0]["balanced_accuracy"])
+            if exact_rows
+            else math.nan,
+        }
+
+    return {
+        "root": root,
+        "summary": summary,
+        "config": config,
+        "rank_audit": rank_audit,
+        "support": support,
+        "validation_products": validation_products,
+        "v8_pairs": v8_pairs,
+        "v9_pairs": v9_pairs,
+        "lambda1_ba": fnum(lambda1["balanced_accuracy"]),
+        "lambda1_log_loss": fnum(lambda1["log_loss"]),
+        "lambda_by_value": lambda_by_value,
+        "finite_by_rows": finite_by_rows,
+        "raw_binned_row_grid": raw_binned_row_grid,
+        "source_budget_by_fraction": source_budget_by_fraction,
+        "row_c_summary": row_c_summary,
+        "loo": loo,
+        "train_margin_by_session": train_margin_by_session,
+        "validation_margin_by_session": validation_margin_by_session,
+        "known_zero_n3v1_counts": known_zero_n3v1_counts,
+        "trace_by_train": trace_by_train,
+        "pca_basis": pca_basis,
+        "relaxed_by_representation": relaxed_by_representation,
+        "known_rows": len(known),
+    }
+
+
+def track_c_summary(results_root: Path) -> dict[str, Any]:
+    root = results_root / "track_c"
+    summary = read_json(root / "summary.json")
+    config = read_json(root / "prefit_config_frozen.json")
+    data_gate = read_json(results_root / "data_gate_checks.json")
+    export_manifest = read_json(
+        results_root / "track_c_export/development_cue_counts_manifest.json"
+    )
+    allowlist_manifest = read_json(
+        results_root
+        / "track_c_allowlist/development_component_allowlists_manifest.json"
+    )
+    ranking_manifest = read_json(
+        results_root
+        / "track_c_allowlist/track_c_supported_middle_component_ranking_manifest.json"
+    )
+    unit_metrics = read_csv(root / "track_c_unit_metrics.csv")
+    null_metrics = read_csv(root / "track_c_joint_target_null_metrics.csv")
+
+    return {
+        "root": root,
+        "summary": summary,
+        "config": config,
+        "data_gate": data_gate,
+        "export_manifest": export_manifest,
+        "allowlist_manifest": allowlist_manifest,
+        "ranking_manifest": ranking_manifest,
+        "unit_metrics": unit_metrics,
+        "null_metrics": null_metrics,
+    }
+
+
+def track_b_summary(results_root: Path) -> dict[str, Any]:
+    root = results_root / "track_b"
+    config = read_json(root / "prefit_config_frozen.json")
+    producer_summary = (
+        read_json(root / "summary.json") if (root / "summary.json").exists() else None
+    )
+    audited_summary = (
+        read_json(root / "summary_exact_audited.json")
+        if (root / "summary_exact_audited.json").exists()
+        else None
+    )
+    producer_family = (
+        read_json(root / "track_b_family_null_pvalues.json")
+        if (root / "track_b_family_null_pvalues.json").exists()
+        else (producer_summary or {}).get("family_null_pvalues")
+    )
+    audited_family = (audited_summary or {}).get("family_null_pvalues")
+    prefix_rows = (
+        read_csv(root / "track_b_prefix_parity.csv")
+        if (root / "track_b_prefix_parity.csv").exists()
+        else []
+    )
+    exact_audit = track_b_exact_audit(results_root)
+
+    rows = []
+    validation_rows = []
+    train_rows = []
+    observed_fit_table = []
+    for fit_info_path in sorted((root / "fits").glob("*/fit_info.json")):
+        info = read_json(fit_info_path)
+        spec = info["fit_spec"]
+        metrics = info.get("metrics", [])
+        rows.append({"fit_dir": fit_info_path.parent, "spec": spec, "info": info})
+        split_metrics = {metric.get("split"): metric for metric in metrics}
+        for metric in metrics:
+            merged = {**spec, **metric, "fit_hash": fit_info_path.parent.name}
+            if metric.get("split") == "validation_exact_q":
+                validation_rows.append(merged)
+            elif metric.get("split") == "train_sampled":
+                train_rows.append(merged)
+        if spec.get("family_role") != "family_null":
+            train_metric = split_metrics.get("train_sampled", {})
+            val_metric = split_metrics.get("validation_exact_q", {})
+            loss_first, loss_last = loss_trace_edges(fit_info_path.parent)
+            observed_fit_table.append(
+                {
+                    "family_role": spec.get("family_role", ""),
+                    "objective": spec.get("objective", ""),
+                    "assembly_seed": spec.get("assembly_seed", ""),
+                    "optimizer_seed": spec.get("optimizer_seed", ""),
+                    "dim": spec.get("dim", ""),
+                    "rows_per_class": spec.get("rows_per_class", ""),
+                    "updates": spec.get("updates", ""),
+                    "train_ba": fnum(train_metric.get("balanced_accuracy")),
+                    "train_auc": fnum(train_metric.get("auroc")),
+                    "train_log_loss": fnum(train_metric.get("log_loss")),
+                    "validation_ba": fnum(val_metric.get("balanced_accuracy")),
+                    "validation_auc": fnum(val_metric.get("auroc")),
+                    "validation_log_loss": fnum(val_metric.get("log_loss")),
+                    "loss_first": loss_first,
+                    "loss_last": loss_last,
+                    "wall_seconds": fnum(info.get("wall_seconds")),
+                    "fit_hash": fit_info_path.parent.name,
+                }
+            )
+
+    observed_validation = [
+        r for r in validation_rows if r["family_role"] != "family_null"
+    ]
+    null_validation = [r for r in validation_rows if r["family_role"] == "family_null"]
+    primary = [
+        r for r in observed_validation if r["family_role"] == "crossed_seed_primary"
+    ]
+
+    primary_matrices: dict[str, list[list[float]]] = {}
+    for objective in ["cebra_time", "cebra_behavior"]:
+        matrix = [[math.nan for _ in range(5)] for _ in range(5)]
+        for row in primary:
+            if row["objective"] == objective:
+                matrix[int(row["assembly_seed"])][int(row["optimizer_seed"])] = fnum(
+                    row["balanced_accuracy"]
+                )
+        primary_matrices[objective] = matrix
+
+    observed_by_role = Counter(r["family_role"] for r in observed_validation)
+    null_by_perm = Counter(
+        int(r["permutation_index"])
+        for r in null_validation
+        if r["permutation_index"] is not None
+    )
+    complete_null_perms = [
+        idx for idx, count in sorted(null_by_perm.items()) if count == 14
+    ]
+
+    primary_by_objective = {}
+    for objective in ["cebra_time", "cebra_behavior"]:
+        vals = [
+            fnum(r["balanced_accuracy"]) for r in primary if r["objective"] == objective
+        ]
+        primary_by_objective[objective] = semirange(vals)
+
+    train_ba_values = [
+        fnum(r["balanced_accuracy"])
+        for r in train_rows
+        if r["family_role"] == "crossed_seed_primary"
+    ]
+
+    sensitivity = defaultdict(list)
+    for row in observed_validation:
+        if row["family_role"] in {
+            "dimension_sensitivity",
+            "row_sensitivity",
+            "paired_long_budget",
+        }:
+            sensitivity[row["family_role"]].append(row)
+
+    family_configs = track_b_family_configs()
+
+    recomputed_observed = {
+        track_b_fit_key(r): fnum(r["balanced_accuracy"])
+        for r in observed_validation
+        if track_b_fit_key(r) in family_configs
+    }
+    recomputed_null_by_perm: dict[int, list[float]] = defaultdict(list)
+    for row in null_validation:
+        if (
+            track_b_fit_key(row) in family_configs
+            and row.get("permutation_index") is not None
+        ):
+            recomputed_null_by_perm[int(row["permutation_index"])].append(
+                fnum(row["balanced_accuracy"])
+            )
+    recomputed_null_max = {
+        idx: max(vals) for idx, vals in recomputed_null_by_perm.items() if vals
+    }
+    observed_family_max_float = (
+        max(recomputed_observed.values()) if recomputed_observed else math.nan
+    )
+    family_crosscheck = crosscheck_track_b_family(
+        producer_family, observed_family_max_float, recomputed_null_max
+    )
+
+    prefix_numerical_zero = bool(prefix_rows) and all(
+        fnum(row.get("weight_prefix_max_abs_diff")) == 0.0
+        and fnum(row.get("loss_prefix_max_abs_diff")) == 0.0
+        for row in prefix_rows
+    )
+    prefix_hash_match = bool(prefix_rows) and all(
+        row.get("checkpoint_step1000_hash_match") == "True" for row in prefix_rows
+    )
+    producer_complete = bool(
+        producer_summary
+        and producer_summary.get("status") == "complete"
+        and producer_summary.get("fit_count") == EXPECTED_TRACK_B_TOTAL_FITS
+        and producer_summary.get("expected_fit_count") == EXPECTED_TRACK_B_TOTAL_FITS
+        and producer_summary.get("prefix_parity_rows") == 42
+    )
+    audited_complete = bool(
+        audited_summary
+        and audited_summary.get("status") == "complete"
+        and audited_summary.get("fit_count") == EXPECTED_TRACK_B_TOTAL_FITS
+        and audited_summary.get("expected_fit_count") == EXPECTED_TRACK_B_TOTAL_FITS
+        and audited_summary.get("prefix_parity_rows") == 42
+        and audited_family
+        and audited_family.get("family_max_pvalue", {}).get("p_value_exact") == "19/21"
+    )
+    final_ready = bool(
+        producer_complete
+        and audited_complete
+        and len(rows) == EXPECTED_TRACK_B_TOTAL_FITS
+        and sum(observed_by_role.values()) == EXPECTED_TRACK_B_OBSERVED
+        and sum(null_by_perm.values()) == EXPECTED_TRACK_B_NULL_FITS
+        and len(complete_null_perms) == 20
+        and all(null_by_perm[i] == 14 for i in range(20))
+        and len(prefix_rows) == 42
+        and prefix_numerical_zero
+        and prefix_hash_match
+        and family_crosscheck["matches"]
+        and exact_audit["matches"]
+    )
+
+    observed_family_max = exact_audit.get(
+        "observed_family_max_ba", observed_family_max_float
+    )
+    audit_null_max = exact_audit.get("null_maxima")
+    if isinstance(audit_null_max, dict):
+        null_family_max = [
+            fnum(audit_null_max[str(idx)])
+            for idx in sorted(int(key) for key in audit_null_max)
+        ]
+    elif isinstance(audit_null_max, list):
+        null_family_max = [fnum(value) for value in audit_null_max]
+    else:
+        null_family_max = [
+            recomputed_null_max[idx] for idx in sorted(recomputed_null_max)
+        ]
+    audit_null_exact = exact_audit.get("null_maxima_exact")
+    if isinstance(audit_null_exact, dict):
+        null_family_max_exact = {
+            int(idx): value for idx, value in audit_null_exact.items()
+        }
+    else:
+        null_family_max_exact = {
+            idx: str(value) for idx, value in sorted(recomputed_null_max.items())
+        }
+    return {
+        "root": root,
+        "config": config,
+        "producer_summary": producer_summary,
+        "audited_summary": audited_summary,
+        "producer_family": producer_family,
+        "audited_family": audited_family,
+        "prefix_rows": prefix_rows,
+        "prefix_numerical_zero": prefix_numerical_zero,
+        "prefix_hash_match": prefix_hash_match,
+        "producer_complete": producer_complete,
+        "audited_complete": audited_complete,
+        "fit_info_count": len(rows),
+        "observed_by_role": observed_by_role,
+        "observed_validation": observed_validation,
+        "observed_fit_table": sorted(
+            observed_fit_table,
+            key=lambda r: (
+                str(r["family_role"]),
+                str(r["objective"]),
+                int(r["assembly_seed"]),
+                int(r["optimizer_seed"]),
+                int(r["dim"]),
+                int(r["rows_per_class"]),
+                int(r["updates"]),
+            ),
+        ),
+        "primary": primary,
+        "primary_matrices": primary_matrices,
+        "primary_by_objective": primary_by_objective,
+        "primary_grid_best_ba": max(fnum(r["balanced_accuracy"]) for r in primary),
+        "primary_train_all_one": bool(train_ba_values)
+        and all(abs(v - 1.0) < 1e-9 for v in train_ba_values),
+        "train_ba_count": len(train_ba_values),
+        "null_completed_fit_count": sum(null_by_perm.values()),
+        "null_by_perm": null_by_perm,
+        "complete_null_perms": complete_null_perms,
+        "final_ready": final_ready,
+        "sensitivity": sensitivity,
+        "null_family_max": null_family_max,
+        "null_family_max_exact": null_family_max_exact,
+        "observed_family_max": observed_family_max,
+        "family_exceedances": exact_audit.get("exceedances_including_exact_ties"),
+        "family_pvalue": exact_audit.get("family_max_pvalue", math.nan),
+        "family_pvalue_exact": exact_audit.get("family_max_pvalue_exact"),
+        "family_crosscheck": family_crosscheck,
+        "exact_audit": exact_audit,
+    }
+
+
+def assembly_transfer_summary(results_root: Path) -> dict[str, Any]:
+    root = results_root / "assembly_transfer"
+    summary = read_json(root / "summary.json")
+    metrics = read_csv(root / "assembly_transfer_metrics.csv")
+    parity = read_csv(root / "replay_parity.csv")
+    grouped: dict[tuple[str, str], tuple[float, float, float]] = {}
+    for kind in sorted({r["evaluation_kind"] for r in metrics}):
+        for objective in ["cebra_time", "cebra_behavior"]:
+            values = [
+                fnum(r["balanced_accuracy"])
+                for r in metrics
+                if r["evaluation_kind"] == kind and r["objective"] == objective
+            ]
+            if values:
+                grouped[(kind, objective)] = semirange(values)
+    return {
+        "root": root,
+        "summary": summary,
+        "metrics": metrics,
+        "parity": parity,
+        "grouped": grouped,
+    }
+
+
+def write_derived_tables(
+    assets_dir: Path,
+    track_a: dict[str, Any],
+    track_b: dict[str, Any],
+    track_c: dict[str, Any],
+    assembly: dict[str, Any],
+) -> list[Path]:
+    assets_dir.mkdir(parents=True, exist_ok=True)
+    paths = []
+    summary_path = assets_dir / "derived_summary_metrics.json"
+    summary = {
+        "track_a": {
+            "validation_products": track_a["validation_products"],
+            "lambda1_ba": track_a["lambda1_ba"],
+            "finite_by_rows": {str(k): v for k, v in track_a["finite_by_rows"].items()},
+            "source_budget_by_fraction": {
+                str(k): v for k, v in track_a["source_budget_by_fraction"].items()
+            },
+            "known_truth_rows": track_a["known_rows"],
+            "rank_audit": track_a["rank_audit"],
+            "source_code_sha256": track_a["config"].get("source_code_sha256", {}),
+        },
+        "track_b": {
+            "fit_info_count_read": track_b["fit_info_count"],
+            "observed_by_role": dict(track_b["observed_by_role"]),
+            "null_completed_fit_count": track_b["null_completed_fit_count"],
+            "complete_null_permutations": track_b["complete_null_perms"],
+            "final_ready": track_b["final_ready"],
+            "family_pvalue_exact": track_b.get("family_pvalue_exact"),
+            "family_pvalue": track_b.get("family_pvalue"),
+            "family_exceedances": track_b.get("family_exceedances"),
+            "exact_audit": track_b.get("exact_audit"),
+            "expected_total_fits": EXPECTED_TRACK_B_TOTAL_FITS,
+            "expected_updates": EXPECTED_TRACK_B_UPDATES,
+            "source_code_sha256": track_b["config"].get("source_code_sha256", {}),
+        },
+        "track_c": {
+            "observed_global_statistics": track_c["summary"][
+                "observed_global_statistics"
+            ],
+            "pvalues": track_c["summary"]["pvalues"],
+            "data_gate": track_c["data_gate"],
+        },
+        "assembly_transfer": assembly["summary"],
+    }
+    # pi-lens-ignore: python-path-traversal
+    summary_path.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n")
+    paths.append(summary_path)
+
+    a_path = assets_dir / "derived_track_a_method_row_c_summary.csv"
+    with a_path.open("w", newline="") as handle:
+        fields = [
+            "representation",
+            "rows_per_class",
+            "decoder_C_policy",
+            "C_values",
+            "n_seeds",
+            "ba_mean",
+            "ba_min",
+            "ba_max",
+            "log_loss_mean",
+        ]
+        writer = csv.DictWriter(handle, fieldnames=fields)
+        writer.writeheader()
+        writer.writerows(track_a["row_c_summary"])
+    paths.append(a_path)
+
+    b_path = assets_dir / "derived_track_b_observed_fits.csv"
+    with b_path.open("w", newline="") as handle:
+        fields = [
+            "family_role",
+            "objective",
+            "assembly_seed",
+            "optimizer_seed",
+            "dim",
+            "rows_per_class",
+            "updates",
+            "train_ba",
+            "train_auc",
+            "train_log_loss",
+            "validation_ba",
+            "validation_auc",
+            "validation_log_loss",
+            "loss_first",
+            "loss_last",
+            "wall_seconds",
+            "fit_hash",
+        ]
+        writer = csv.DictWriter(handle, fieldnames=fields)
+        writer.writeheader()
+        writer.writerows(track_b["observed_fit_table"])
+    paths.append(b_path)
+
+    b_null_path = assets_dir / "derived_track_b_family_null_maxima.csv"
+    with b_null_path.open("w", newline="") as handle:
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=[
+                "permutation_index",
+                "family_max_exact",
+                "family_max_balanced_accuracy",
+            ],
+        )
+        writer.writeheader()
+        exact_by_idx = track_b.get("null_family_max_exact", {})
+        for idx, value in enumerate(track_b["null_family_max"]):
+            writer.writerow(
+                {
+                    "permutation_index": idx,
+                    "family_max_exact": exact_by_idx.get(idx, ""),
+                    "family_max_balanced_accuracy": value,
+                }
+            )
+    paths.append(b_null_path)
+
+    b_prefix_path = assets_dir / "derived_track_b_prefix_parity.csv"
+    if track_b["prefix_rows"]:
+        with b_prefix_path.open("w", newline="") as handle:
+            writer = csv.DictWriter(
+                handle, fieldnames=list(track_b["prefix_rows"][0].keys())
+            )
+            writer.writeheader()
+            writer.writerows(track_b["prefix_rows"])
+    else:
+        b_prefix_path.write_text("prefix_parity_pending\n")
+    paths.append(b_prefix_path)
+
+    c_path = assets_dir / "derived_track_c_session_delta_logloss.csv"
+    with c_path.open("w", newline="") as handle:
+        writer = csv.DictWriter(
+            handle, fieldnames=["target_mode", "session_id", "delta_logloss"]
+        )
+        writer.writeheader()
+        for target, observed in track_c["summary"]["observed_stats"].items():
+            for session, value in observed["session_aggregate"][
+                "session_means"
+            ].items():
+                writer.writerow(
+                    {
+                        "target_mode": target,
+                        "session_id": session,
+                        "delta_logloss": value,
+                    }
+                )
+    paths.append(c_path)
+
+    c_units_path = assets_dir / "derived_track_c_unit_model_rows.csv"
+    with c_units_path.open("w", newline="") as handle:
+        writer = csv.DictWriter(
+            handle, fieldnames=list(track_c["unit_metrics"][0].keys())
+        )
+        writer.writeheader()
+        writer.writerows(track_c["unit_metrics"])
+    paths.append(c_units_path)
+    return paths
+
+
+def figure_route_semantics(assets_dir: Path) -> Figure:
+    fig, ax = plt.subplots(figsize=(11.5, 5.6))
+    ax.axis("off")
+    ax.set_title(
+        "Behavior target semantics: interior-corridor absence was not whole-route edge absence",
+        fontsize=15,
+        pad=16,
+    )
+    rows = [
+        (
+            "interior-present example",
+            ["CT", "RT", "RM", "RB"],
+            "459 / 475 positive examples",
+        ),
+        (
+            "old absent:\nno selected edge",
+            ["RT", "CT", "CM", "RM", "RB"],
+            "99 negative original-interior examples",
+        ),
+        (
+            "old absent:\nempty interior",
+            ["CT", "RT", "RM"],
+            "50 negatives; selected edge is terminal, not interior",
+        ),
+    ]
+    y_positions = [0.76, 0.50, 0.25]
+    for (label, tokens, note), y in zip(rows, y_positions, strict=True):
+        ax.text(
+            0.02,
+            y,
+            label,
+            ha="left",
+            va="center",
+            fontsize=11,
+            fontweight="bold",
+            transform=ax.transAxes,
+        )
+        start_x = 0.29
+        step = 0.105
+        for i, token in enumerate(tokens):
+            x = start_x + i * step
+            color = "#e6f4eb" if token in {"RT", "RM"} else "#e7f0fa"
+            ax.add_patch(
+                Rectangle(
+                    (x, y - 0.045),
+                    0.075,
+                    0.09,
+                    transform=ax.transAxes,
+                    fc=color,
+                    ec="#789",
+                )
+            )
+            ax.text(
+                x + 0.0375,
+                y,
+                token,
+                ha="center",
+                va="center",
+                fontsize=11,
+                transform=ax.transAxes,
+            )
+            if i < len(tokens) - 1:
+                ax.annotate(
+                    "",
+                    xy=(x + 0.10, y),
+                    xytext=(x + 0.078, y),
+                    xycoords=ax.transAxes,
+                    arrowprops={"arrowstyle": "->", "color": "#506273", "lw": 1.4},
+                )
+        ax.text(
+            0.83, y, note, ha="left", va="center", fontsize=10, transform=ax.transAxes
+        )
+    ax.text(
+        0.02,
+        0.06,
+        "Track A/B keep the legacy interior-component target for audit continuity. Interior means directed components after dropping the first and last; a two-component route has no interior components. Track C separates original-interior, original-anywhere, and train-behavior-selected supported-interior targets.",
+        fontsize=10.3,
+        color="#506273",
+        wrap=True,
+        transform=ax.transAxes,
+    )
+    path = save_fig(fig, assets_dir, "figure01_route_semantics.svg")
+    return Figure(
+        path,
+        "Real route-label semantics correction",
+        "The old label named absence from the interior set after dropping first and last directed components, not absence from the whole route. All selected old/new edge traversals used adjacent-node evidence, and the correction changes interpretation rather than adding a clock/truncation bug story.",
+    )
+
+
+def figure_exact_q_support(assets_dir: Path, track_a: dict[str, Any]) -> Figure:
+    fig, axes = plt.subplots(
+        1, 2, figsize=(11.5, 4.8), gridspec_kw={"width_ratios": [1, 1.4]}
+    )
+    products = track_a["validation_products"]
+    axes[0].bar(
+        ["absent", "present"],
+        [products["absent"], products["present"]],
+        color=["#8c2929", "#165c45"],
+    )
+    axes[0].set_ylabel("exact validation product combinations")
+    axes[0].set_title("Exact Q support: combinations, not trials")
+    for i, v in enumerate([products["absent"], products["present"]]):
+        axes[0].text(i, v + 0.5, str(v), ha="center", va="bottom", fontsize=11)
+    axes[0].set_ylim(0, max(products.values()) * 1.25)
+
+    sessions = list(track_a["support"]["absent"].keys())
+    x = np.arange(len(sessions))
+    absent = [track_a["support"]["absent"][s] for s in sessions]
+    present = [track_a["support"]["present"][s] for s in sessions]
+    width = 0.38
+    axes[1].bar(x - width / 2, absent, width, label="absent", color="#c97c7c")
+    axes[1].bar(x + width / 2, present, width, label="present", color="#75a88f")
+    axes[1].set_xticks(x)
+    axes[1].set_xticklabels([s[:8] for s in sessions], rotation=45, ha="right")
+    axes[1].set_ylabel("validation source choices per session")
+    axes[1].set_title("Class-balanced weighting: 0.5 per class")
+    axes[1].legend(frameon=False)
+    fig.suptitle("Track A exact empirical Q", fontsize=15)
+    path = save_fig(fig, assets_dir, "figure02_exact_q_support.svg")
+    return Figure(
+        path,
+        "Exact-Q class support and class weights",
+        "The exact empirical-Q validation object has 24 absent and 6 present source-combination rows. Each class receives total weight 0.5, so these 30 combinations are not 30 independent biological trials.",
+    )
+
+
+def figure_replay_scatter(assets_dir: Path, track_a: dict[str, Any]) -> Figure:
+    fig, ax = plt.subplots(figsize=(6.6, 6.1))
+    for label, pairs, color, marker in [
+        ("V8b raw/PCA heads", track_a["v8_pairs"], "#154e77", "o"),
+        ("V9 CEBRA checkpoints", track_a["v9_pairs"], "#805007", "s"),
+    ]:
+        x = [p["old_ba"] for p in pairs]
+        y = [p["exact_ba"] for p in pairs]
+        ax.scatter(
+            x,
+            y,
+            label=label,
+            alpha=0.8,
+            s=46,
+            color=color,
+            marker=marker,
+            edgecolor="white",
+            linewidth=0.4,
+        )
+    ax.plot([0, 1], [0, 1], color="#506273", lw=1, ls="--", label="no change")
+    ax.axhline(0.5, color="#aaa", lw=0.8)
+    ax.axvline(0.5, color="#aaa", lw=0.8)
+    ax.set_xlim(-0.03, 1.03)
+    ax.set_ylim(-0.03, 1.03)
+    ax.set_xlabel("legacy sampled validation BA")
+    ax.set_ylabel("exact empirical-Q BA")
+    ax.set_title("Replay: sampled validation vs exact-Q evaluation")
+    ax.legend(frameon=False, loc="lower right")
+    path = save_fig(fig, assets_dir, "figure03_sampled_vs_exact_q_scatter.svg")
+    return Figure(
+        path,
+        "Legacy replay scatter: sampled validation vs exact Q",
+        "Saved legacy predictions replayed with maximum probability differences below 1e-7. Exact-Q evaluation changes scores slightly but does not rescue models with BA near 0 or 0.5.",
+    )
+
+
+def figure_track_a_learning_curves(assets_dir: Path, track_a: dict[str, Any]) -> Figure:
+    fig, ax = plt.subplots(figsize=(8.4, 5.4))
+    rows = [16, 64, 256, 1024]
+    finite = [track_a["finite_by_rows"][r][0] for r in rows]
+    finite_low = [track_a["finite_by_rows"][r][1] for r in rows]
+    finite_high = [track_a["finite_by_rows"][r][2] for r in rows]
+    raw_grid = [track_a["raw_binned_row_grid"][r][0] for r in rows]
+    raw_low = [track_a["raw_binned_row_grid"][r][1] for r in rows]
+    raw_high = [track_a["raw_binned_row_grid"][r][2] for r in rows]
+    ax.plot(
+        rows, finite, marker="o", label="finite sampled ridge mean", color="#154e77"
+    )
+    ax.fill_between(
+        rows,
+        finite_low,
+        finite_high,
+        color="#154e77",
+        alpha=0.14,
+        label="finite ridge min–max over seeds",
+    )
+    ax.plot(
+        rows,
+        raw_grid,
+        marker="s",
+        label="raw-binned logistic row-normalized C mean",
+        color="#165c45",
+    )
+    ax.fill_between(
+        rows, raw_low, raw_high, color="#165c45", alpha=0.12, label="raw-binned min–max"
+    )
+    ax.axhline(
+        track_a["lambda1_ba"],
+        color="#8c2929",
+        ls="--",
+        label=f"moment-exact ridge λ=1 BA={track_a['lambda1_ba']:.3f}",
+    )
+    ax.set_xscale("log", base=2)
+    ax.set_xticks(rows)
+    ax.get_xaxis().set_major_formatter(ticker.ScalarFormatter())
+    ax.set_ylim(0, 1)
+    ax.set_xlabel("assembled rows per class")
+    ax.set_ylabel("balanced accuracy on exact Q")
+    ax.set_title(
+        "Finite synthetic assembly variance shrinks; source support remains the ceiling"
+    )
+    ax.legend(frameon=False, fontsize=9)
+    path = save_fig(fig, assets_dir, "figure04_track_a_learning_curves.svg")
+    return Figure(
+        path,
+        "Track A row-learning curves with exact reference",
+        "Ridge means stabilize by 64–1024 rows/class near the exact λ=1 reference. Raw-binned row-normalized logistic heads sit near chance; adding rows does not create independent biological information.",
+    )
+
+
+def figure_source_budget_loo(assets_dir: Path, track_a: dict[str, Any]) -> Figure:
+    fig, axes = plt.subplots(
+        1, 2, figsize=(12, 4.9), gridspec_kw={"width_ratios": [1, 1.45]}
+    )
+    fractions = [0.5, 0.75, 1.0]
+    means = [track_a["source_budget_by_fraction"][f][0] for f in fractions]
+    lows = [track_a["source_budget_by_fraction"][f][1] for f in fractions]
+    highs = [track_a["source_budget_by_fraction"][f][2] for f in fractions]
+    axes[0].errorbar(
+        fractions,
+        means,
+        yerr=[np.array(means) - np.array(lows), np.array(highs) - np.array(means)],
+        marker="o",
+        color="#154e77",
+        capsize=4,
+    )
+    axes[0].axhline(0.5, color="#aaa", lw=1, ls="--")
+    axes[0].set_ylim(0, 1)
+    axes[0].set_xlabel("fraction of training source pool")
+    axes[0].set_ylabel("exact-Q BA")
+    axes[0].set_title("Source-budget exact ridge")
+    axes[0].text(0.52, 0.07, "0.5 pool range: 0.021–0.854", fontsize=9, color="#506273")
+
+    loo = sorted(track_a["loo"], key=lambda r: r["left_out_session"])
+    labels = [r["left_out_session"][:8] for r in loo]
+    values = [fnum(r["balanced_accuracy"]) for r in loo]
+    colors = [
+        "#8c2929" if v < 0.5 else "#165c45" if v > 0.5 else "#999" for v in values
+    ]
+    axes[1].bar(labels, values, color=colors)
+    axes[1].axhline(0.5, color="#333", lw=1, ls="--")
+    axes[1].set_ylim(0, 1)
+    axes[1].set_ylabel("BA after leaving one session block out")
+    axes[1].set_title("One source/session block can flip the conclusion")
+    axes[1].tick_params(axis="x", rotation=45)
+    for label, value in zip(labels, values, strict=True):
+        axes[1].text(label, value + 0.02, f"{value:.2f}", ha="center", fontsize=8)
+    path = save_fig(fig, assets_dir, "figure05_source_budget_leave_one_out.svg")
+    return Figure(
+        path,
+        "Source-budget and leave-one-source-block diagnostics",
+        "At half source budget, the same estimator ranges from inverted to apparently strong. Leaving out 20180810 raises BA to 0.833, while leaving out 20180912 lowers it to 0.333; this is diagnostic heterogeneity, not a validated model selection result.",
+    )
+
+
+def figure_pca_basis(assets_dir: Path, track_a: dict[str, Any]) -> Figure:
+    fig, ax = plt.subplots(figsize=(8.5, 5.2))
+    dims = [3, 8, 16, 29]
+    x = np.arange(len(dims))
+    width = 0.26
+    sampled = [track_a["pca_basis"][d]["sampled_mean"] for d in dims]
+    moment_basis = [track_a["pca_basis"][d]["moment_basis_mean"] for d in dims]
+    moment_exact = [track_a["pca_basis"][d]["moment_exact"] for d in dims]
+    ax.bar(
+        x - width,
+        sampled,
+        width,
+        label="sample-fitted PCA + sampled head",
+        color="#8fb2d3",
+    )
+    ax.bar(
+        x,
+        moment_basis,
+        width,
+        label="fixed train-Q moment PCA + sampled head",
+        color="#b6d7bf",
+    )
+    ax.scatter(
+        x + width,
+        moment_exact,
+        label="moment-exact PCA ridge",
+        color="#8c2929",
+        zorder=3,
+    )
+    ax.axhline(0.5, color="#333", lw=1, ls="--")
+    ax.set_xticks(x)
+    ax.set_xticklabels([str(d) for d in dims])
+    ax.set_ylim(0, 0.9)
+    ax.set_xlabel("PCA dimensions")
+    ax.set_ylabel("exact-Q BA")
+    ax.set_title("PCA coordinate choices are diagnostics, not discoveries")
+    ax.legend(frameon=False, fontsize=9)
+    path = save_fig(fig, assets_dir, "figure06_pca_monte_carlo_vs_moment_basis.svg")
+    return Figure(
+        path,
+        "PCA Monte Carlo vs moment-basis comparison",
+        "PCA29 retains all shared-cell coordinates but still includes standardization, basis choice, and head scaling. The full-coordinate comparison is not an identity classifier, and CEBRA29 is nonlinear and L2-normalized rather than an invertible PCA control.",
+    )
+
+
+def figure_gaussian_oracle(assets_dir: Path, track_a: dict[str, Any]) -> Figure:
+    fig, axes = plt.subplots(
+        1, 2, figsize=(11.5, 4.8), gridspec_kw={"width_ratios": [1, 1.1]}
+    )
+    counts = track_a["known_zero_n3v1_counts"]
+    ba_levels = [0.0, 0.5, 1.0]
+    axes[0].bar(
+        ["0", "0.5", "1"],
+        [counts.get(v, 0) for v in ba_levels],
+        color=["#8c2929", "#999", "#165c45"],
+    )
+    axes[0].set_ylabel("simulation seeds")
+    axes[0].set_title("Null world, tiny empirical Q")
+    axes[0].text(2, counts.get(1.0, 0) + 1, "30 perfect", ha="center", fontsize=9)
+    axes[0].text(0, counts.get(0.0, 0) + 1, "16 inverted", ha="center", fontsize=9)
+
+    train_ns = [3, 10, 30]
+    observed = [track_a["trace_by_train"][n][0] for n in train_ns]
+    expected = [track_a["trace_by_train"][n][1] for n in train_ns]
+    axes[1].plot(
+        train_ns,
+        observed,
+        marker="o",
+        label="observed simulated trace",
+        color="#154e77",
+    )
+    axes[1].plot(
+        train_ns,
+        expected,
+        marker="s",
+        label="expected formula",
+        color="#805007",
+        ls="--",
+    )
+    axes[1].set_xscale("log")
+    axes[1].set_xticks(train_ns)
+    axes[1].get_xaxis().set_major_formatter(ticker.ScalarFormatter())
+    axes[1].set_xlabel("training sources/class/session")
+    axes[1].set_ylabel("spurious between-class covariance trace")
+    axes[1].set_title("Finite-source mean uncertainty shrinks ~1/n")
+    axes[1].legend(frameon=False, fontsize=9)
+    path = save_fig(fig, assets_dir, "figure07_gaussian_oracle_null_and_trace.svg")
+    return Figure(
+        path,
+        "Known-truth Gaussian counterexample and covariance trace",
+        "These 1,800 rows are simulated positive/negative controls, never biological replications. In the zero-signal world, true BA and AUROC are exactly 0.5, yet tiny empirical-Q validation can look perfect or inverted.",
+    )
+
+
+def figure_track_c_funnel(assets_dir: Path, track_c: dict[str, Any]) -> Figure:
+    data_gate = track_c["data_gate"]["modeled_support_metadata"]
+    targets = ["middle", "anywhere", "supported_middle"]
+    x = np.arange(len(targets))
+    fig, axes = plt.subplots(1, 2, figsize=(11.5, 4.8))
+    sessions = [data_gate[t]["sessions"] for t in targets]
+    cells = [data_gate[t]["cells"] for t in targets]
+    axes[0].bar(x - 0.18, sessions, 0.36, label="sessions", color="#8fb2d3")
+    axes[0].bar(x + 0.18, cells, 0.36, label="units/cells", color="#b6d7bf")
+    axes[0].set_xticks(x)
+    axes[0].set_xticklabels(
+        ["original interior", "original anywhere", "supported interior"],
+        rotation=15,
+        ha="right",
+    )
+    axes[0].set_ylabel("count")
+    axes[0].set_title("Modeled cohort size")
+    axes[0].legend(frameon=False)
+
+    train_sources = [data_gate[t]["source_counts"]["train"] for t in targets]
+    val_sources = [data_gate[t]["source_counts"]["validation"] for t in targets]
+    axes[1].bar(
+        x - 0.18, train_sources, 0.36, label="train source trials", color="#154e77"
+    )
+    axes[1].bar(
+        x + 0.18, val_sources, 0.36, label="validation source trials", color="#805007"
+    )
+    axes[1].set_xticks(x)
+    axes[1].set_xticklabels(
+        ["original interior", "original anywhere", "supported interior"],
+        rotation=15,
+        ha="right",
+    )
+    axes[1].set_ylabel("source-trial count")
+    axes[1].set_title("Source-preserving support")
+    axes[1].legend(frameon=False)
+    fig.suptitle(
+        "Track C data gate: 64,051 unit-trial rows from 19,162 development sources",
+        fontsize=14,
+    )
+    path = save_fig(fig, assets_dir, "figure08_track_c_source_preserving_funnel.svg")
+    return Figure(
+        path,
+        "Track C source-preserving cohort funnel",
+        "The export covers 195 selected cells and 19,162 development source IDs. Modeled cohorts are overlapping target-specific subsets, so their counts should not be summed; 217 supported-middle prediction rows are unit-source rows, not 217 independent trials.",
+    )
+
+
+def figure_track_c_delta_null(assets_dir: Path, track_c: dict[str, Any]) -> Figure:
+    summary = track_c["summary"]
+    fig, axes = plt.subplots(
+        1, 2, figsize=(12.4, 5.0), gridspec_kw={"width_ratios": [1.55, 1]}
+    )
+    order = ["middle", "anywhere", "supported_middle"]
+    colors = {"middle": "#8c2929", "anywhere": "#154e77", "supported_middle": "#165c45"}
+    offset = {"middle": -0.23, "anywhere": 0, "supported_middle": 0.23}
+    sessions = sorted(
+        {
+            s
+            for target in order
+            for s in summary["observed_stats"][target]["session_aggregate"][
+                "session_means"
+            ]
+        }
+    )
+    x = np.arange(len(sessions))
+    for target in order:
+        vals = [
+            summary["observed_stats"][target]["session_aggregate"]["session_means"].get(
+                s, math.nan
+            )
+            for s in sessions
+        ]
+        axes[0].bar(x + offset[target], vals, 0.22, label=target, color=colors[target])
+    axes[0].axhline(0, color="#333", lw=1)
+    axes[0].set_xticks(x)
+    axes[0].set_xticklabels(
+        [s[:8] for s in sessions], rotation=45, ha="right", fontsize=8
+    )
+    axes[0].set_ylabel("Δ log loss = baseline − augmented")
+    axes[0].set_title("Per-session Track C validation effects")
+    axes[0].legend(frameon=False, fontsize=8)
+
+    p_regular = summary["pvalues"]["session_endpoint_split"]
+    p_temporal = summary["pvalues"]["session_endpoint_split_temporal_half"]
+    labels = ["middle", "anywhere", "supported", "MAX3"]
+    regular = [
+        p_regular["middle"]["p_value"],
+        p_regular["anywhere"]["p_value"],
+        p_regular["supported_middle"]["p_value"],
+        p_regular["family_max_three_targets"]["p_value"],
+    ]
+    temporal = [
+        p_temporal["middle"]["p_value"],
+        p_temporal["anywhere"]["p_value"],
+        p_temporal["supported_middle"]["p_value"],
+        p_temporal["family_max_three_targets"]["p_value"],
+    ]
+    xx = np.arange(len(labels))
+    axes[1].bar(xx - 0.18, regular, 0.36, label="session/endpoint", color="#8fb2d3")
+    axes[1].bar(xx + 0.18, temporal, 0.36, label="+ temporal half", color="#f0c37a")
+    axes[1].axhline(0.05, color="#8c2929", lw=1, ls="--")
+    axes[1].set_ylim(0, 1)
+    axes[1].set_xticks(xx)
+    axes[1].set_xticklabels(labels, rotation=20, ha="right")
+    axes[1].set_ylabel("conditional permutation p-value")
+    axes[1].set_title("Family result: no reliable increment")
+    axes[1].legend(frameon=False, fontsize=8)
+    path = save_fig(fig, assets_dir, "figure09_track_c_delta_logloss_and_null.svg")
+    return Figure(
+        path,
+        "Track C per-session Δ log loss and family nulls",
+        "Original-interior is negative. Anywhere and supported-interior have small positive point estimates, but the three-target family p-values are 0.475 and 0.436, so the report conclusion is no convincing incremental cue-rate evidence.",
+    )
+
+
+def figure_track_b_heatmaps(assets_dir: Path, track_b: dict[str, Any]) -> Figure:
+    fig, axes = plt.subplots(1, 2, figsize=(11.8, 5.2))
+    for ax, objective, title, ss in [
+        (
+            axes[0],
+            "cebra_time",
+            "CEBRA-Time validation BA",
+            "SS shares: assembly 16.5%, optimizer 7.2%, interaction 76.3%",
+        ),
+        (
+            axes[1],
+            "cebra_behavior",
+            "CEBRA-Behavior validation BA",
+            "SS shares: assembly 24.4%, optimizer 20.4%, interaction 55.2%",
+        ),
+    ]:
+        matrix = np.array(track_b["primary_matrices"][objective], dtype=float)
+        im = ax.imshow(matrix, vmin=0, vmax=1, cmap="RdYlGn", aspect="equal")
+        ax.set_xticks(range(5))
+        ax.set_yticks(range(5))
+        ax.set_xlabel("optimizer seed")
+        ax.set_ylabel("assembly seed")
+        ax.set_title(title)
+        for i in range(5):
+            for j in range(5):
+                ax.text(
+                    j, i, f"{matrix[i, j]:.2f}", ha="center", va="center", fontsize=8
+                )
+        ax.text(
+            0.5,
+            -0.20,
+            ss,
+            transform=ax.transAxes,
+            ha="center",
+            va="top",
+            fontsize=9,
+            color="#506273",
+        )
+    fig.colorbar(im, ax=axes.ravel().tolist(), shrink=0.82, label="balanced accuracy")
+    fig.suptitle(
+        "Track B observed 5×5 crossed-seed grids: descriptive only", fontsize=14
+    )
+    path = save_fig(fig, assets_dir, "figure10_track_b_observed_5x5_heatmaps.svg")
+    return Figure(
+        path,
+        "Track B observed crossed-seed heatmaps",
+        "The 50 primary observed fits all reached training BA=1, but source-disjoint validation remains low and highly seed-dependent. The SS shares describe this fixed grid, not biological variance or causal attribution.",
+    )
+
+
+def figure_track_b_sensitivity_pending(
+    assets_dir: Path, track_b: dict[str, Any]
+) -> Figure:
+    fig, axes = plt.subplots(
+        1, 2, figsize=(11.6, 4.9), gridspec_kw={"width_ratios": [1.2, 1]}
+    )
+    sensitivity = track_b["sensitivity"]
+    dim_rows = sorted(
+        sensitivity["dimension_sensitivity"],
+        key=lambda r: (r["objective"], int(r["dim"])),
+    )
+    for objective, color, marker in [
+        ("cebra_time", "#154e77", "o"),
+        ("cebra_behavior", "#165c45", "s"),
+    ]:
+        rows = [r for r in dim_rows if r["objective"] == objective]
+        axes[0].plot(
+            [int(r["dim"]) for r in rows],
+            [fnum(r["balanced_accuracy"]) for r in rows],
+            marker=marker,
+            color=color,
+            label=f"{objective} dim sweep",
+        )
+    axes[0].scatter(
+        [8],
+        [track_b["observed_family_max"]],
+        color="#8c2929",
+        label="best A0/O0 family BA",
+        zorder=4,
+    )
+    axes[0].set_xticks([3, 8, 16, 29])
+    axes[0].set_ylim(0, 0.8)
+    axes[0].axhline(0.5, color="#333", lw=1, ls="--")
+    axes[0].set_xlabel("latent dimension")
+    axes[0].set_ylabel("source-disjoint exact-Q BA")
+    axes[0].set_title("Dimension sensitivity at assembly0/optimizer0")
+    axes[0].legend(frameon=False, fontsize=8)
+
+    if track_b["final_ready"]:
+        axes[1].hist(
+            track_b["null_family_max"],
+            bins=np.linspace(0, 1, 11),
+            color="#8fb2d3",
+            edgecolor="white",
+        )
+        axes[1].axvline(
+            track_b["observed_family_max"],
+            color="#8c2929",
+            lw=2,
+            label="observed family max",
+        )
+        axes[1].set_xlabel("family-null max BA across 14 configs")
+        axes[1].set_ylabel("permutations")
+        axes[1].set_title("Full Track B null family")
+        axes[1].legend(frameon=False, fontsize=8)
+    else:
+        complete = track_b["null_completed_fit_count"]
+        axes[1].bar(
+            ["completed", "pending"],
+            [complete, EXPECTED_TRACK_B_NULL_FITS - complete],
+            color=["#8fb2d3", "#f0c37a"],
+        )
+        axes[1].set_ylim(0, EXPECTED_TRACK_B_NULL_FITS)
+        axes[1].set_ylabel("family-null fit_info files")
+        axes[1].set_title("Full null histogram pending")
+        axes[1].text(
+            0.5,
+            0.55,
+            "Draft mode ignores partial null\ndistribution for inference.",
+            transform=axes[1].transAxes,
+            ha="center",
+            va="center",
+            fontsize=11,
+            color="#506273",
+        )
+    path = save_fig(fig, assets_dir, "figure11_track_b_sensitivity_and_null_status.svg")
+    if track_b["final_ready"]:
+        caption = (
+            f"The best narrow-family observed A0/O0 sensitivity BA is {track_b['observed_family_max']:.3f}; "
+            f"{track_b['family_exceedances']}/20 null family maxima were at least that large, p={track_b['family_pvalue']:.3f}. "
+            "This 14-config family bounds only the fixed A0/O0 sensitivity family, not selection of the best seed from the wider 5×5 grid."
+        )
+    else:
+        caption = (
+            f"The best narrow-family observed A0/O0 sensitivity BA is {track_b['observed_family_max']:.3f}, "
+            "but the predeclared 20×14 source-label null family is not complete in this draft. Bigger dimensions, more rows, and longer budget do not consistently rescue the source-disjoint gap."
+        )
+    return Figure(path, "Track B sensitivity and B-null status", caption)
+
+
+def figure_assembly_transfer(
+    assets_dir: Path, track_b: dict[str, Any], assembly: dict[str, Any]
+) -> Figure:
+    fig, ax = plt.subplots(figsize=(9.2, 5.2))
+    categories = [
+        "own training\nassembly",
+        "new mixtures,\nsame training sources",
+        "source-disjoint\nvalidation Q",
+    ]
+    colors = {"cebra_time": "#154e77", "cebra_behavior": "#165c45"}
+    x = np.arange(len(categories))
+    width = 0.34
+    for offset, objective in [
+        (-width / 2, "cebra_time"),
+        (width / 2, "cebra_behavior"),
+    ]:
+        own = assembly["grouped"][("own_training_assembly", objective)][0]
+        same = assembly["grouped"][("other_assembly_same_training_sources", objective)][
+            0
+        ]
+        disjoint = track_b["primary_by_objective"][objective][0]
+        vals = [own, same, disjoint]
+        ax.bar(
+            x + offset,
+            vals,
+            width,
+            label=objective.replace("cebra_", ""),
+            color=colors[objective],
+        )
+        for xi, value in zip(x + offset, vals, strict=True):
+            ax.text(xi, value + 0.025, f"{value:.3f}", ha="center", fontsize=8)
+    ax.axhline(0.5, color="#333", lw=1, ls="--")
+    ax.set_ylim(0, 1.08)
+    ax.set_xticks(x)
+    ax.set_xticklabels(categories)
+    ax.set_ylabel("balanced accuracy")
+    ax.set_title("Cross-assembly replay locates the gap across source pools")
+    ax.legend(frameon=False)
+    path = save_fig(fig, assets_dir, "figure12_cross_assembly_transfer_gap.svg")
+    return Figure(
+        path,
+        "Cross-assembly same-source vs source-disjoint gap",
+        "CPU forward-only replay shows models transfer among new mixtures made from the same training sources, but source-disjoint validation stays low. Same-training-source transfer is a memorization/source-pool diagnostic, not independent biological validation.",
+    )
+
+
+def make_figures(
+    assets_dir: Path,
+    track_a: dict[str, Any],
+    track_b: dict[str, Any],
+    track_c: dict[str, Any],
+    assembly: dict[str, Any],
+) -> list[Figure]:
+    return [
+        figure_route_semantics(assets_dir),
+        figure_exact_q_support(assets_dir, track_a),
+        figure_replay_scatter(assets_dir, track_a),
+        figure_track_a_learning_curves(assets_dir, track_a),
+        figure_source_budget_loo(assets_dir, track_a),
+        figure_pca_basis(assets_dir, track_a),
+        figure_gaussian_oracle(assets_dir, track_a),
+        figure_track_c_funnel(assets_dir, track_c),
+        figure_track_c_delta_null(assets_dir, track_c),
+        figure_track_b_heatmaps(assets_dir, track_b),
+        figure_track_b_sensitivity_pending(assets_dir, track_b),
+        figure_assembly_transfer(assets_dir, track_b, assembly),
+    ]
+
+
+def tag(label: str, kind: str = "fact") -> str:
+    return f'<span class="tag {kind}">{html.escape(label)}</span>'
+
+
+def metric_table(rows: list[tuple[str, str]]) -> str:
+    body = "".join(f"<tr><th>{html.escape(k)}</th><td>{v}</td></tr>" for k, v in rows)
+    return f'<table class="metric"><tbody>{body}</tbody></table>'
+
+
+def html_cell(value: Any) -> str:
+    if isinstance(value, float):
+        if not math.isfinite(value):
+            return "NA"
+        return html.escape(f"{value:.6g}")
+    return html.escape(str(value)).replace("_", "_<wbr>").replace("/", "/<wbr>")
+
+
+def compact_html_table(
+    columns: list[tuple[str, str]], rows: list[dict[str, Any]]
+) -> str:
+    head = "".join(f"<th>{html.escape(label)}</th>" for _, label in columns)
+    body = "".join(
+        "<tr>"
+        + "".join(f"<td>{html_cell(row.get(key, ''))}</td>" for key, _ in columns)
+        + "</tr>"
+        for row in rows
+    )
+    return f'<div class="table-scroll"><table><thead><tr>{head}</tr></thead><tbody>{body}</tbody></table></div>'
+
+
+def details_table(
+    summary: str, columns: list[tuple[str, str]], rows: list[dict[str, Any]]
+) -> str:
+    return f'<details class="audit-table" open><summary>{html.escape(summary)} ({len(rows)} rows)</summary>{compact_html_table(columns, rows)}</details>'
+
+
+def figure_html(figures: list[Figure], number: int) -> str:
+    fig = figures[number - 1]
+    return f"""
+    <figure id="fig{number:02d}">
+      <div class="svg-wrap">{inline_svg(fig.path, f"fig{number:02d}", f"Figure {number}. {fig.title}")}</div>
+      <figcaption><strong>Figure {number}. {html.escape(fig.title)}.</strong> {html.escape(fig.caption)}</figcaption>
+    </figure>
+    """
+
+
+def diagnostic_card(
+    name: str,
+    prediction: str,
+    test: str,
+    result: str,
+    interpretation: str,
+    next_decision: str,
+) -> str:
+    return f"""
+    <div class="diagnostic">
+      <h3>{html.escape(name)}</h3>
+      <dl>
+        <dt>Prediction</dt><dd>{prediction}</dd>
+        <dt>Test</dt><dd>{test}</dd>
+        <dt>Actual result</dt><dd>{result}</dd>
+        <dt>Interpretation / what this does not prove</dt><dd>{interpretation}</dd>
+        <dt>Next decision</dt><dd>{next_decision}</dd>
+      </dl>
+    </div>
+    """
+
+
+def html_report(
+    mode: str,
+    results_root: Path,
+    assets_dir: Path,
+    figures: list[Figure],
+    track_a: dict[str, Any],
+    track_b: dict[str, Any],
+    track_c: dict[str, Any],
+    assembly: dict[str, Any],
+) -> str:
+    c_stats = track_c["summary"]["observed_global_statistics"]
+    c_p = track_c["summary"]["pvalues"]
+    export_manifest = track_c["export_manifest"]
+    data_gate = track_c["data_gate"]
+    b_time = track_b["primary_by_objective"]["cebra_time"]
+    b_behavior = track_b["primary_by_objective"]["cebra_behavior"]
+    b_null_complete = track_b["null_completed_fit_count"]
+    support_rows = data_gate["modeled_support_metadata"]
+    b_family_ready = track_b["final_ready"]
+    if mode == "final":
+        final_label = "FINAL — exact B audit complete"
+        report_title = "Path generalization teaching audit — 2026-09-07"
+        boundary_html = (
+            '<div class="audit-note"><strong>Final status.</strong> Track B has 342/342 fits, 510,000 updates, 42 paired-prefix checks at numerical zero, and an exact rational family audit. '
+            "Inference cites <code>track_b/summary_exact_audited.json</code> and <code>audits/track_b_exact_audit.json</code>; the original producer summary is only an execution receipt. "
+            "Independent artifact review approved the numeric correction to p=19/21. This is still exploratory development evidence, not a confirmatory biological study.</div>"
+        )
+    elif b_family_ready:
+        final_label = "DRAFT FOR REVIEW — B summary complete; final mode not run"
+        report_title = (
+            "Path generalization teaching audit — 2026-09-07 draft for review"
+        )
+        boundary_html = (
+            '<div class="draft"><strong>Draft-for-review boundary.</strong> Track B summary is complete and the generator\'s final-ready checks pass, '
+            "but this worker did not write the final docs HTML. Parent/reviewer owns final release.</div>"
+        )
+    else:
+        final_label = "DRAFT — B null family pending"
+        report_title = "Path generalization teaching audit — 2026-09-07 draft"
+        boundary_html = (
+            '<div class="draft"><strong>Draft boundary.</strong> Track B observed fits are summarized from completed <code>fit_info.json</code> files, '
+            "but the full B source-label null family is still pending. This HTML is deliberately not a final completed study report.</div>"
+        )
+    if b_family_ready:
+        exact_audit = track_b["exact_audit"]["audit"]
+        b_family_text = (
+            f"342/342 fits complete; 20/20 family-null maxima; observed 14-config family max BA={track_b['exact_audit']['observed_family_max_exact']} "
+            f"({track_b['observed_family_max']:.3f}); exact-tie exceedances={track_b['family_exceedances']}/20; "
+            f"corrected p={track_b['family_pvalue_exact']}={track_b['family_pvalue']:.3f}; 42 prefix pairs numerical zero"
+        )
+        b_correction_text = (
+            f"The raw producer floating comparison gave p={exact_audit['original_float_comparison_pvalue']:.3f}; "
+            "the exact audit is authoritative because null 19 is the same rational BA 7/12 as the observed maximum. "
+            "No models, predictions, or saved checkpoints changed."
+        )
+        d2_test_text = "Summarize 62 observed native CEBRA fits and the completed 20×14 source-label null family. Use the 5×5 grids as descriptive variance diagnosis; use the exact rational audit for the family p-value."
+        d2_result_text = (
+            f"Primary source-disjoint validation BA means were Time {b_time[0]:.3f} (range {b_time[1]:.3f}–{b_time[2]:.3f}) and Behavior {b_behavior[0]:.3f} (range {b_behavior[1]:.3f}–{b_behavior[2]:.3f}). "
+            f"All 50 primary sampled training assemblies had BA=1. The 14-config A0/O0 family observed maximum was {track_b['exact_audit']['observed_family_max_exact']} ({track_b['observed_family_max']:.3f}); {track_b['family_exceedances']}/20 null maxima were at least that large, corrected p={track_b['family_pvalue_exact']}={track_b['family_pvalue']:.3f}. "
+            + b_correction_text
+        )
+        d2_next_text = "Do not select the best observed B configuration as evidence. The completed family null says the fixed A0/O0 configuration family is not a positive result; the wider 5×5 seed best is outside that family test."
+    else:
+        exact_audit = None
+        b_family_text = f"62 non-null fits summarized; full family null {b_null_complete}/280 completed fit_info files"
+        b_correction_text = "B exact audit pending."
+        d2_test_text = "Summarize 62 observed native CEBRA fits from completed fit_info only. Use the 5×5 grids as descriptive variance diagnosis. Hold inference until the 20×14 source-label null family is complete."
+        d2_result_text = (
+            f"Primary source-disjoint validation BA means were Time {b_time[0]:.3f} (range {b_time[1]:.3f}–{b_time[2]:.3f}) and Behavior {b_behavior[0]:.3f} (range {b_behavior[1]:.3f}–{b_behavior[2]:.3f}). "
+            f"All 50 primary sampled training assemblies had BA=1. The best narrow A0/O0 sensitivity BA was {track_b['observed_family_max']:.3f}, but the full null family is incomplete."
+        )
+        d2_next_text = "Do not select the best observed B configuration yet. Finalize only after the full family-null histogram is complete; then report the predeclared family maximum rather than a cherry-picked seed."
+
+    top_metrics = metric_table(
+        [
+            ("Status", f"<strong>{html.escape(final_label)}</strong>"),
+            (
+                "Thesis question",
+                "H1a held-out path information beyond start/goal; H1b reproducible low-dimensional organization",
+            ),
+            (
+                "Scope",
+                "fixed 195 selected-unit development scope; no original test evaluation, no 364-cell/supplement expansion",
+            ),
+            (
+                "Track A exact Q",
+                "24 absent / 6 present validation source-combination rows, weighted 0.5 per class",
+            ),
+            (
+                "Track B family status",
+                b_family_text,
+            ),
+            (
+                "Track C export",
+                f"{export_manifest['exported_count_rows']:,} unit-trial rows, {export_manifest['exported_unique_source_count']:,} source IDs, {export_manifest['exported_cell_count']} selected cells; forbidden rows yielded={export_manifest['forbidden_rows_yielded']}",
+            ),
+            (
+                "Claim ceiling",
+                "exploratory development evidence only; positive biology is not claimed",
+            ),
+        ]
+    )
+
+    d1 = diagnostic_card(
+        "D1 — finite synthetic sampling and exact conditional-Q evaluation",
+        "If the old pseudopopulation scores were mostly Monte Carlo assembly noise, exact enumeration of the validation source product and larger training row budgets should stabilize the score toward moment-exact references.",
+        "Enumerate all class-balanced validation source combinations; replay saved legacy heads/checkpoints; compare finite sampled ridge/logistic rows against moment-exact ridge and source-budget controls.",
+        f"Replay parity was numerical, with max probability differences {track_a['summary']['legacy_head_replay']['max_old_prediction_diff']:.2e} for V8b and {track_a['summary']['legacy_cebra_replay']['max_old_prediction_diff']:.2e} for V9. The λ=1 exact ridge BA was {track_a['lambda1_ba']:.3f}; finite ridge means for 16/64/256/1024 rows were "
+        + ", ".join(
+            f"{r}:{track_a['finite_by_rows'][r][0]:.3f}" for r in [16, 64, 256, 1024]
+        )
+        + ".",
+        "The numerical diagnosis is real: finite synthetic draws add variance and exact Q removes one avoidable randomness source. It does not add independent biological observations, and it does not convert legacy BA=0 or BA≈0.5 cases into evidence for H1.",
+        "Stop treating random pseudorow count as a biological lever. Keep exact-Q and moment references as audit tools; spend new data/design effort on source-disjoint real-trial evaluation.",
+    )
+    d2 = diagnostic_card(
+        "D2 — representation and optimizer sensitivity in CEBRA",
+        "If the disappointing old CEBRA result was a bad dimension/seed/budget choice, the crossed assembly×optimizer grid and predeclared sensitivities should show a stable rescue pattern, and the null family should bound best-config selection.",
+        d2_test_text,
+        d2_result_text,
+        "The observed fits locate source-pool sensitivity, not a reproducible source-disjoint signal. Training success and same-training-source recombination transfer are not independent validation. Bigger dimensions, rows, or 5000 updates do not consistently solve the source-disjoint gap.",
+        d2_next_text,
+    )
+    d3 = diagnostic_card(
+        "D3 — source/session-conditioned relationship changes across splits",
+        "If the constructed class relationship changes with session/source composition, source margins, source-budget subsets, and leave-one-session blocks should flip signs or magnitudes even without invoking a neural mechanism reversal.",
+        "Use exact ridge margin summaries, source-budget subsampling, relaxed40 real-source controls, and leave-one-session block-out diagnostics on the accepted development split.",
+        f"At half source budget, mean BA was {track_a['source_budget_by_fraction'][0.5][0]:.3f} with range {track_a['source_budget_by_fraction'][0.5][1]:.3f}–{track_a['source_budget_by_fraction'][0.5][2]:.3f}. Four of seven validation source-block score contrasts reverse sign relative to the training direction. Leaving out 20180810 gives BA 0.833; leaving out 20180912 gives BA 0.333.",
+        "This explains why a wrong-sign decoder is possible without a label bug or biological reversal. It also shows why reporting a mean over a random roster of models would be misleading: the source subset is part of the estimand, not harmless noise.",
+        "Use source/session-disjoint validation and per-session support requirements as first-class design constraints. Treat tiny validation panels as design feedback, not as grounds for another flexible model search.",
+    )
+    d4 = diagnostic_card(
+        "D4 — source-preserving real-trial route-component direction",
+        "If the global common-panel pseudopopulation was too brittle, a broader source-preserving per-unit route-component analysis with endpoint/time controls should be more feasible. A positive result would still be only a candidate conditional cue association.",
+        "Export development-only cue counts through SplitFilteredAccess; fit per-unit baseline models with endpoint-pair intercepts, trial index, and cue duration, then add log1p cue rate. Aggregate Δ log loss within session, then equally across sessions; use coherent source-label nulls over three fixed targets.",
+        f"Original-interior Δ log loss was {c_stats['middle']:.6f}; original-anywhere was {c_stats['anywhere']:.6f}; supported-interior was {c_stats['supported_middle']:.6f}. MAX3 family p-values were {c_p['session_endpoint_split']['family_max_three_targets']['p_value']:.3f} ordinary and {c_p['session_endpoint_split_temporal_half']['family_max_three_targets']['p_value']:.3f} temporal. Supported interior alone was nominal only ({c_p['session_endpoint_split']['supported_middle']['p_value']:.3f} ordinary, {c_p['session_endpoint_split_temporal_half']['supported_middle']['p_value']:.3f} temporal).",
+        "More support made the analysis more feasible, not successful. Track C is operational per-unit real-trial prediction because its features are available before the future route label, but it is not a verified simultaneous-population H1 test. Lack of a simple cue-rate effect is not absence of all neural information.",
+        "The defensible direction is a source-preserving, endpoint/time-controlled, pre-registered held-out design with richer nuisance variables and reserved observations before adaptation.",
+    )
+
+    rank = track_a.get("rank_audit") or {}
+    rank_box = ""
+    if rank:
+        train_bounds = rank["conditional_rank_upper_bounds"]["train"]
+        val_bounds = rank["conditional_rank_upper_bounds"]["validation"]
+        rank_box = f"""
+        <div class="math"><strong>Provable whole-cue rank bound, under constructed empirical Q.</strong><br>
+        Scope: {html.escape(rank["scope"])}. Proof sketch: {html.escape(rank["proof"])}<br>
+        Train bound: absent {train_bounds["absent"]} + present {train_bounds["present"]} + between-class 1 ≤ {train_bounds["balanced_mixture_rank_bound"]}. Validation bound: absent {val_bounds["absent"]} + present {val_bounds["present"]} + between-class 1 ≤ {val_bounds["balanced_mixture_rank_bound"]}. The exact validation matrix is {rank["matrix_shape"][0]}×{rank["matrix_shape"][1]} with rank {rank["exact_validation_matrix_rank"]} at tolerance {rank["absolute_rank_tolerance"]}; new fits={rank["new_fits"]}. This is a property of the finite constructed Q, not brain intrinsic dimensionality, not pooled 29-cell PCA covariance, and not nonlinear CEBRA output rank.</div>
+        """
+
+    a_method_table = details_table(
+        "Appendix A1 — Track A method × row × C summary",
+        [
+            ("representation", "representation"),
+            ("rows_per_class", "rows/class"),
+            ("decoder_C_policy", "C policy"),
+            ("C_values", "C"),
+            ("n_seeds", "seeds"),
+            ("ba_mean", "BA mean"),
+            ("ba_min", "BA min"),
+            ("ba_max", "BA max"),
+            ("log_loss_mean", "log-loss mean"),
+        ],
+        track_a["row_c_summary"],
+    )
+    b_observed_table = details_table(
+        "Appendix B1 — 62 observed Track B fit metrics",
+        [
+            ("family_role", "role"),
+            ("objective", "objective"),
+            ("assembly_seed", "A"),
+            ("optimizer_seed", "O"),
+            ("dim", "dim"),
+            ("rows_per_class", "rows"),
+            ("updates", "updates"),
+            ("train_ba", "train BA"),
+            ("train_auc", "train AUC"),
+            ("train_log_loss", "train log loss"),
+            ("validation_ba", "val BA"),
+            ("validation_auc", "val AUC"),
+            ("validation_log_loss", "val log loss"),
+            ("loss_first", "loss first"),
+            ("loss_last", "loss last"),
+            ("wall_seconds", "wall s"),
+            ("fit_hash", "fit hash"),
+        ],
+        track_b["observed_fit_table"],
+    )
+    b_null_rows = [
+        {
+            "permutation_index": idx,
+            "family_max_exact": exact,
+            "family_max_ba": track_b["null_family_max"][idx],
+        }
+        for idx, exact in sorted(track_b.get("null_family_max_exact", {}).items())
+    ]
+    b_null_table = details_table(
+        "Appendix B2 — 20 exact Track B family-null maxima",
+        [
+            ("permutation_index", "null"),
+            ("family_max_exact", "exact BA"),
+            ("family_max_ba", "BA"),
+        ],
+        b_null_rows,
+    )
+    b_prefix_table = details_table(
+        "Appendix B3 — 42 paired-prefix checks",
+        [
+            ("objective", "objective"),
+            ("dim", "dim"),
+            ("rows_per_class", "rows"),
+            ("assembly_seed", "A"),
+            ("optimizer_seed", "O"),
+            ("permutation_index", "null"),
+            ("prefix_steps_compared", "steps"),
+            ("weight_prefix_max_abs_diff", "weight diff"),
+            ("loss_prefix_max_abs_diff", "loss diff"),
+            ("checkpoint_step1000_hash_match", "ckpt hash match"),
+        ],
+        track_b["prefix_rows"],
+    )
+    c_unit_table = details_table(
+        "Appendix C1 — 70 Track C per-unit model rows",
+        [
+            ("target_mode", "target"),
+            ("cell_id", "cell"),
+            ("session_id", "session"),
+            ("n_train_sources", "train sources"),
+            ("n_validation_rows_scored", "val rows"),
+            ("baseline_log_loss", "base LL"),
+            ("augmented_log_loss", "aug LL"),
+            ("delta_log_loss_baseline_minus_augmented", "ΔLL"),
+            ("baseline_balanced_accuracy", "base BA"),
+            ("augmented_balanced_accuracy", "aug BA"),
+            ("baseline_auroc", "base AUC"),
+            ("augmented_auroc", "aug AUC"),
+        ],
+        track_c["unit_metrics"],
+    )
+    legacy_root = Path(
+        "/home/hongyi-home-lab/neuro_science/outputs/prospective_path_first_run/place195-v6-v9-autoresearch-20260906/v8b-v9-cebra-final-20260905T224554Z"
+    )
+    hash_rows = [
+        {
+            "object": "Track A V2 driver",
+            "detail": "source_code_sha256.driver",
+            "hash_or_value": track_a["config"]
+            .get("source_code_sha256", {})
+            .get("driver", ""),
+            "path": str(track_a["root"] / "prefit_config_frozen.json"),
+        },
+        {
+            "object": "Track B driver",
+            "detail": "source_code_sha256.driver",
+            "hash_or_value": track_b["config"]
+            .get("source_code_sha256", {})
+            .get("driver", ""),
+            "path": str(track_b["root"] / "prefit_config_frozen.json"),
+        },
+        {
+            "object": "Track C driver",
+            "detail": "source_code_sha256.driver",
+            "hash_or_value": track_c["config"]
+            .get("source_code_sha256", {})
+            .get("driver", ""),
+            "path": str(track_c["root"] / "prefit_config_frozen.json"),
+        },
+        {
+            "object": "Protocol",
+            "detail": "protocol_sha256",
+            "hash_or_value": track_c["config"].get("protocol_sha256", ""),
+            "path": str(results_root / "execution_gate.json"),
+        },
+        {
+            "object": "Track B audited summary",
+            "detail": "authoritative inference summary",
+            "hash_or_value": "corrected exact-tie p=19/21; producer summary retained as execution receipt",
+            "path": str(track_b["root"] / "summary_exact_audited.json"),
+        },
+        {
+            "object": "Track B exact audit",
+            "detail": "fits/updates/artifacts",
+            "hash_or_value": f"{track_b['exact_audit'].get('audit', {}).get('fits')} fits; {track_b['exact_audit'].get('audit', {}).get('optimizer_updates')} updates; {track_b['exact_audit'].get('audit', {}).get('artifacts_hashed')} artifact hashes",
+            "path": track_b["exact_audit"].get("path", ""),
+        },
+        {
+            "object": "Track C export data",
+            "detail": "data_sha256",
+            "hash_or_value": data_gate.get("data_sha256", ""),
+            "path": str(results_root / "data_gate_checks.json"),
+        },
+        {
+            "object": "Track C guarded export",
+            "detail": "cue_counts/source_splits hashes",
+            "hash_or_value": f"cue_counts={export_manifest['input_hashes'].get('cue_counts_sha256')}; splits={export_manifest['input_hashes'].get('source_trial_splits_sha256')}",
+            "path": str(
+                results_root / "track_c_export/development_cue_counts_manifest.json"
+            ),
+        },
+        {
+            "object": "Accepted legacy V8b metadata",
+            "detail": "authoritative C/n_iter source",
+            "hash_or_value": "Track A replay omits some legacy iteration metadata",
+            "path": str(legacy_root / "v8b/v8b_regularization_metrics.csv"),
+        },
+        {
+            "object": "Accepted legacy V9 metadata",
+            "detail": "authoritative C/decoder_n_iter source",
+            "hash_or_value": "Track A replay omits C and decoder_n_iter",
+            "path": str(legacy_root / "v9/v9_cebra_metrics.csv"),
+        },
+    ]
+    hash_table = compact_html_table(
+        [
+            ("object", "object"),
+            ("detail", "detail"),
+            ("hash_or_value", "hash/value"),
+            ("path", "path"),
+        ],
+        hash_rows,
+    )
+
+    if b_family_ready:
+        track_b_heading = (
+            "9. Track B: native CEBRA observed fits and exact audited family null"
+        )
+        track_b_inventory_text = (
+            "The observed crossed grid has assembly seeds 0–4 crossed with optimizer seeds 0–4 for both Time and Behavior objectives at dim 8, 64 rows/class, and 1000 updates. "
+            "This report reads completed <code>fit_info.json</code> receipts for fit inventory and uses the audited summary/exact audit for inference. "
+            f"The 50 primary observed fits all have training BA=1, but their source-disjoint exact-Q validation means are Time {b_time[0]:.3f} and Behavior {b_behavior[0]:.3f}. "
+            "The variance decomposition shares provided for the fixed 5×5 grids are descriptive: Time assembly 16.5%, optimizer 7.2%, interaction 76.3%; Behavior assembly 24.4%, optimizer 20.4%, interaction 55.2%. They are not biological variance components and not causal attribution."
+        )
+        track_b_sensitivity_text = (
+            "The A0/O0 sensitivities do not give a stable rescue. Dimensionality, row count, and longer budget can move individual scores, "
+            f"and the exact observed 14-config family maximum is {track_b['exact_audit']['observed_family_max_exact']} ({track_b['observed_family_max']:.3f}). "
+            f"The completed exact family null has {track_b['family_exceedances']}/20 null maxima at least that large, corrected p={track_b['family_pvalue_exact']}={track_b['family_pvalue']:.3f}. "
+            "Larger dimensions and more rows are not consistently better, and the 14-config A0/O0 family does not license choosing the best seed from the wider 5×5 grid."
+        )
+        track_b_interpretation_text = (
+            "Same-training-source transfer is still not independent validation. It says the model learned structure that generalizes across recombinations of sources it has already seen. "
+            "For H1a, the needed object is prediction on source-disjoint real observations with labels and preprocessing frozen before evaluation. "
+            "The final Track B verdict is therefore non-positive under the audited development artifact contract. The exact correction changes p from the stale producer float value to 19/21; it does not change any model, prediction, or checkpoint."
+        )
+        track_b_budget_text = f"The active run was approved at 2026-09-07T08:12:00Z with run root <code>outputs/path-generalization-20260907/results-20260907T081200Z</code>. Track B is complete: {track_b['fit_info_count']} fit_info receipts, {EXPECTED_TRACK_B_UPDATES:,} saved optimizer updates, 62 observed fits, 280 family-null fits, 20 complete 14-config null permutations, and 42 paired-prefix checks at numerical zero. The exact audit hashed {track_b['exact_audit'].get('audit', {}).get('artifacts_hashed')} artifacts."
+        track_b_status_html = f"""
+        <h3>Track B inference authority</h3>
+        <p>Use <code>track_b/summary_exact_audited.json</code> and <code>audits/track_b_exact_audit.json</code> for Track B inference. The untouched producer <code>summary.json</code> and <code>track_b_family_null_pvalues.json</code> are execution receipts but retain a floating inclusive-tie artifact: null 19 and observed are both exact BA 7/12, yet raw floats differed by 1e-16. The independent read-only B review approved the correction: exact-tie exceedances {track_b["family_exceedances"]}/20 and p={track_b["family_pvalue_exact"]}={track_b["family_pvalue"]:.3f}. No models, predictions, source assignments, or checkpoints changed.</p>
+        """
+    else:
+        track_b_heading = "9. Track B: native CEBRA observed fits, null pending"
+        track_b_inventory_text = (
+            "The observed crossed grid has assembly seeds 0–4 crossed with optimizer seeds 0–4 for both Time and Behavior objectives at dim 8, 64 rows/class, and 1000 updates. "
+            "In draft mode, only completed <code>fit_info.json</code> files are read. "
+            f"The 50 primary observed fits all have training BA=1, but their source-disjoint exact-Q validation means are Time {b_time[0]:.3f} and Behavior {b_behavior[0]:.3f}. "
+            "The variance decomposition shares provided for the fixed 5×5 grids are descriptive: Time assembly 16.5%, optimizer 7.2%, interaction 76.3%; Behavior assembly 24.4%, optimizer 20.4%, interaction 55.2%. They are not biological variance components and not causal attribution."
+        )
+        track_b_sensitivity_text = (
+            "The A0/O0 sensitivities do not give a stable rescue. Dimensionality, row count, and longer budget can move individual scores, and the best narrow-family observed score is 0.583. "
+            "But larger dimensions and more rows are not consistently better, and draft mode must wait for the predeclared full null family."
+        )
+        track_b_interpretation_text = (
+            "Same-training-source transfer is still not independent validation. It says the model learned structure that generalizes across recombinations of sources it has already seen. "
+            "For H1a, the needed object is prediction on source-disjoint real observations with labels and preprocessing frozen before evaluation. Track B remains a representation/optimization diagnostic until the full null is complete."
+        )
+        track_b_budget_text = f"The active run was approved at 2026-09-07T08:12:00Z with run root <code>outputs/path-generalization-20260907/results-20260907T081200Z</code>. Expected Track B budget is {EXPECTED_TRACK_B_TOTAL_FITS} new fits and {EXPECTED_TRACK_B_UPDATES:,} updates: 62 observed fits plus 280 null fits. This draft reads {track_b['fit_info_count']} completed B fit_info files total, including {track_b['null_completed_fit_count']} family-null validation summaries. Final HTML generation is blocked by this script until all 280 family-null fits are present as 20 complete 14-config permutations."
+        track_b_status_html = """
+        <h3>Remaining B-dependent final pieces</h3>
+        <ul>
+          <li>Verify all 342 Track B expected fit summaries and the actual update budget after null completion.</li>
+          <li>Generate the full B family-null maximum histogram and p-value using the predeclared 14-config family, not the wider 50-grid best seed.</li>
+          <li>Update the Track B verdict from <q>pending</q> to the final null-bounded interpretation without changing Track A/C conclusions retroactively.</li>
+          <li>Have the parent/reviewer gate release the final professor HTML at the docs path.</li>
+        </ul>
+        """
+
+    css = """
+    :root { --ink:#172838; --muted:#506273; --paper:#f3f6fa; --line:#cfdae5; --blue:#154e77; --green:#165c45; --amber:#805007; --red:#8c2929; }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--paper); color:var(--ink); font:17px/1.66 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    header, main, footer { max-width:1130px; margin:auto; padding:28px; }
+    header { padding-top:48px; }
+    h1 { font-size:clamp(2rem,4vw,3rem); line-height:1.14; max-width:930px; margin:0.35em 0; }
+    h2 { font-size:1.75rem; line-height:1.25; margin-top:0; }
+    h3 { font-size:1.18rem; margin-top:1.5em; }
+    p, li { max-width:92ch; }
+    section { background:white; border:1px solid var(--line); border-radius:14px; padding:28px; margin-bottom:24px; scroll-margin-top:20px; min-width:0; overflow-wrap:anywhere; }
+    a { color:var(--blue); text-underline-offset:3px; }
+    nav { display:flex; flex-wrap:wrap; gap:8px 18px; font-size:.92rem; margin-top:24px; }
+    .kicker { color:var(--blue); font-weight:750; letter-spacing:.06em; text-transform:uppercase; font-size:.82rem; }
+    .lead { font-size:1.18rem; }
+    .muted, figcaption, .small { color:var(--muted); font-size:.92rem; }
+    .draft { border-left:6px solid var(--amber); background:#fff8e8; padding:15px 18px; border-radius:10px; }
+    .tag { display:inline-block; padding:2px 9px; border-radius:5px; font-size:.78rem; font-weight:750; vertical-align:middle; background:#edf2f7; }
+    .fact { background:#e4f4eb; color:var(--green); } .inference { background:#e6effa; color:var(--blue); } .limit { background:#fff1d5; color:var(--amber); } .warning { background:#fae6e6; color:var(--red); }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px; }
+    .card, .diagnostic, .audit-note { border:1px solid var(--line); border-radius:10px; padding:16px; background:#f8fbfe; }
+    .diagnostic { margin:18px 0; background:#fcfdff; }
+    .diagnostic dl { display:grid; grid-template-columns:minmax(130px,190px) 1fr; gap:8px 16px; }
+    .diagnostic dt { font-weight:800; color:var(--blue); }
+    .diagnostic dd { margin:0; }
+    table { border-collapse:collapse; width:100%; margin:18px 0; font-size:.93rem; }
+    th,td { border:1px solid var(--line); padding:8px 10px; vertical-align:top; }
+    th { background:#eef4fa; text-align:left; }
+    table.metric th { width:28%; }
+    figure { margin:26px 0; }
+    .svg-wrap svg { max-width:100%; height:auto; display:block; border:1px solid var(--line); border-radius:8px; background:white; }
+    code { background:#eef2f6; padding:1px 4px; border-radius:4px; overflow-wrap:anywhere; white-space:normal; }
+    .table-scroll { max-width:100%; overflow-x:auto; }
+    .math { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background:#f8fafc; border:1px solid var(--line); border-radius:8px; padding:14px; overflow:auto; }
+    footer { padding-bottom:52px; }
+    @media (max-width: 700px) { header,main,footer{padding:16px;} section{padding:19px;} body{font-size:16px;} .diagnostic dl{grid-template-columns:1fr;} }
+    @media print { @page { size: A4; margin: 14mm; } @page auditWide { size: A4 landscape; margin: 14mm; } details.audit-table{page:auditWide;}  body{background:white;font-size:11pt;line-height:1.45;} header,main,footer{max-width:none;padding:0;} section{border:0;border-radius:0;break-inside:auto;page-break-inside:auto;padding:0 0 9mm 0;margin:0 0 7mm 0;} h2,h3,summary{break-after:avoid;} thead{display:table-header-group;} tr{break-inside:avoid;} .table-scroll{overflow:visible;} table{table-layout:auto;} th,td{overflow-wrap:normal;word-break:normal;padding:2px 3px;line-height:1.2;} details.audit-table table{font-size:8pt;} nav,.draft{display:none;} a{color:inherit;text-decoration:none;} table{font-size:8.6pt;} figure{break-inside:avoid;page-break-inside:avoid;} .svg-wrap svg{max-height:180mm;} }
+    """
+
+    html_text = f"""<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{html.escape(report_title)}</title>
+    <style>{css}</style>
+  </head>
+  <body>
+    <header>
+      <div class="kicker">Path generalization diagnosis · {html.escape(final_label)}</div>
+      <h1>Can cue-period hippocampal activity tell us anything about the future path beyond start and goal?</h1>
+      <p class="lead">This report teaches the measurement chain for testing whether cue-period hippocampal activity predicts later path components beyond start and goal. It separates the thesis H1a/H1b question from diagnostic checks, then states the strongest defensible next project without claiming confirmed biology.</p>
+      {boundary_html}
+      <p class="small"><strong>8 September packaging update.</strong> Figure 1's 99-route example is corrected to <q>no selected edge</q>, not <q>edge elsewhere</q>. All numerical results are unchanged. Section 11 adds the practical pseudopopulation direction discussed after the original release; these are proposals, not additional experiments. The original report and source are preserved in the repository archive.</p>
+      <nav>
+        <a href="#objective">Objective &amp; dataflow</a><a href="#summary">Summary</a><a href="#question">Question</a><a href="#prior">Prior observations</a><a href="#measurement">Measurement</a><a href="#scores">Scores</a><a href="#diagnostics">D1–D4</a><a href="#track-a">Track A</a><a href="#track-b">Track B</a><a href="#track-c">Track C</a><a href="#direction">Direction</a><a href="#audit">Audit</a><a href="#references">References</a>
+      </nav>
+    </header>
+    <main>
+      <section id="objective">
+        <h2>1. Scientific objective and actual measurement/dataflow</h2>
+        <p><strong>Objective.</strong> The thesis question is whether cue-period hippocampal activity contains information about the later observed navigation path beyond start and goal. The current report is a development audit: it asks which existing analysis direction is defensible, not whether a final biological claim has been confirmed.</p>
+        <p><strong>Actual measurement.</strong> The data used here are fixed-scope, selected-unit cue-period spike-count derivatives linked to behavior-derived route components. Track A/B use a constructed finite-source pseudopopulation benchmark for the original interior-route target. Track C uses operational per-unit real-trial prediction: for one source trial and one unit, the input cue count/exposure, endpoint, trial index, and cue duration are available before the future route-component label is known.</p>
+        <p><strong>Dataflow.</strong> Source trial identity is preserved first. Behavior-only route labels are frozen next. Training-only preprocessing and models are fitted on development train rows, then evaluated on source-disjoint validation objects with proper scores and nulls. The flow is deliberately written this way because the conclusion depends less on model glamour than on whether each row means a real source trial, a time bin, a unit-row, or a synthetic recombination.</p>
+        <p><strong>Claim ceiling.</strong> This report does not verify a simultaneous 195-cell population, does not evaluate the original exposed test split, and does not claim intention, planning, internal graph computation, or absence of hippocampal path information. It narrows the next defensible experiment.</p>
+      </section>
+
+      <section id="summary">
+        <h2>2. Executive summary, after the measurement object</h2>
+        {top_metrics}
+        <div class="grid">
+          <div class="card">{tag("FACT · result")}<h3>Old pseudopopulation results were unstable for understandable reasons.</h3><p>Exact-Q replay reproduced the saved outputs numerically, so the report is not blaming a replay bug. The more important finding is that tiny source pools, class-balanced product combinations, and source/session heterogeneity can make a model look good, bad, or inverted without adding new biological observations.</p></div>
+          <div class="card">{tag("FACT · result")}<h3>CEBRA observed fits did not show a stable source-disjoint rescue.</h3><p>The 5×5 seed grids are descriptive and noisy. All primary observed fits can classify their sampled training assemblies, and they also transfer to new mixtures assembled from the same training source pools. The failure appears when validation uses source-disjoint empirical-Q combinations.</p></div>
+          <div class="card">{tag("FACT · result")}<h3>Track C supplies complementary real-trial checks, not a positive result.</h3><p>Source-preserving per-unit models avoid inventing a simultaneous global population. The supported-middle target is more feasible and weakly positive as a point estimate, but the three-target family null is not convincing.</p></div>
+          <div class="card">{tag("LIMIT · not proved", "limit")}<h3>The report does not claim intention, planning, or simultaneous 195-cell dynamics.</h3><p>The observed path is behavior. Calling it intention would add an assumption about the animal executing a plan. A cross-session pseudopopulation can be a conditional benchmark, but it cannot become one real simultaneous population state.</p></div>
+        </div>
+        {figure_html(figures, 1)}
+      </section>
+
+      <section id="question">
+        <h2>3. Zoom out: thesis H1 is not the same as the diagnostics</h2>
+        <p>The thesis-level question is H1: whether hippocampal population activity during the cue period contains prospective information about the subsequently observed navigation path beyond what is already explained by start and goal. It has two linked pieces. <strong>H1a</strong> is the information claim: cue-period neural features improve held-out path prediction beyond a start-and-goal baseline. <strong>H1b</strong> is the structure claim: whatever information exists has reproducible low-dimensional organization rather than being a fragile decoder artifact.</p>
+        <p>This report keeps H1 separate from the four development diagnostics. The frozen protocol called them H1–H4, but that naming is now confusing because the repository already uses H1 for the thesis question. Here they are D1–D4: finite synthetic sampling; representation/optimization sensitivity; source/session relationship changes; and source-preserving route-component feasibility. A diagnostic can be true even when H1 is not yet supported. For example, D1 can show that finite pseudorow sampling was unstable without showing that real cue activity predicts a future route.</p>
+        <p>The outcome measured here is the <strong>observed path</strong>, not a directly observed plan. The maze graph is a measurement device: positions are mapped to graph nodes and route components. It is not itself the hypothesis. A route component such as <code>D_N_R_T__N_R_M</code> is an operational behavioral label extracted from paths; it is not a neuron, not a latent dimension, and not a proof of an internal cognitive graph.</p>
+        <p>The most conservative useful conclusion is therefore: after correcting the target semantics and auditing the old pseudopopulation machinery, the strongest next direction is to test frozen route-component targets with source-preserving trial-linked features, endpoint/time controls, coherent nulls, and genuinely reserved evaluation observations. That direction is credible because it reduces pseudopopulation assumptions; it is not yet confirmed because the current development split and original holdout exposure cap the claim.</p>
+      </section>
+
+      <section id="prior">
+        <h2>4. Prior observations that motivated this audit</h2>
+        <p>Before reading the new outcome tables, the project already had several reasons to be cautious. The earlier V6–V9 work used a fixed selected 195-unit scope and a behavior-derived route-component target. It was not an unbiased all-cell population survey, and it was not a verified simultaneous 195-cell recording. That does not make the analysis useless, but it changes the claim: the old common-panel pseudopopulation is a conditional benchmark over selected source pools, not a direct measurement of one animal's full population state on one trial.</p>
+        <p>The second prior observation was behavioral. The target word <q>absent</q> was misleading. It meant the selected directed component was not in the interior-corridor set: for a route-component sequence of length L, remove component 1 and component L and test positions 2..L−1. A two-component route therefore has an empty interior even if the selected edge appears as the terminal component. A route can share a prefix, an interior corridor, or a terminal segment for different reasons. A shared prefix can be explained by start location, and a shared suffix can be explained by goal. Interior segments are more interesting for H1b, but only if the analysis separates them from endpoint identity and cue/task condition.</p>
+        <p>The third prior observation was statistical. Synthetic pseudorows can be generated in large numbers, but the number of independent source trials does not increase. In ML terms, this is like heavy augmentation from a small training set: it can stabilize an optimizer and estimate a chosen conditional benchmark more accurately, but it cannot by itself create a new validation distribution. Exact enumeration and moment calculations were therefore predeclared as diagnostics before treating any model score as neuroscience.</p>
+        <p>The fourth prior observation was about representation learning. PCA and CEBRA are useful instruments, but neither is the thesis. PCA components are coordinates fitted from data. CEBRA embeddings are learned nonlinear representations. A high score after trying many dimensions, seeds, and budgets would need a family null because it may reflect search over analysis choices. A low score would not prove the hippocampus lacks path information because the target, cells, cue window, nuisance controls, and validation support can all be limiting.</p>
+        <p>The final prior observation was about data governance. The original holdout has already been exposed in earlier project history, so this development work cannot become pristine confirmation. The study's guarded Track C extraction streamed the mixed-split importer and consulted split metadata; only permitted development records reached analysis. The later report-generation step reads those derived artifacts rather than reopening the importer. The experimental program is complete, but it remains a development study rather than confirmation.</p>
+        <p>That framing also protects the positive future case. If a later reserved-data analysis succeeds, it will be stronger because this report has already separated the measurement object, the nuisance controls, the null family, and the claim ceiling. If it fails, the result will still be interpretable as a design or support limit rather than as a vague statement that hippocampal prospective coding is absent. Either way, the next reader can see exactly which bridge from behavior to neural inference is carrying the load.</p>
+      </section>
+
+      <section id="measurement">
+        <h2>5. Measurement ladder: what each object is, and what it is not</h2>
+        <p>A <strong>source trial</strong> is the behavioral trial identity that must keep all derivatives together. A <strong>trial</strong> in ordinary language is the animal's attempt in the maze. In these tables, the term source is used because one biological trial can create several derived rows: time bins, unit-specific rows, or pseudopopulation assemblies. Treating those derivatives as independent examples would be pseudoreplication.</p>
+        <p>A <strong>bin</strong> is a time slice of the cue period. In the old whole-cue Track A/B setup there are ten 100 ms cue bins. Adjacent bins are not independent biological trials. A <strong>unit</strong> is a putative neuron/cell from spike sorting; its cue count is a feature. A <strong>session</strong> is a recording day/session. Units from different sessions are not automatically simultaneous with each other, so combining them into a single vector is a constructed benchmark unless simultaneity is verified.</p>
+        <p>A <strong>graph node</strong> is a maze-location label from the path measurement pipeline. The spatial bin IDs are categorical/topological, not row-major coordinates. A <strong>directed component</strong> is an ordered edge-like route token such as center-top to right-top. A <strong>latent dimension</strong> is an embedding coordinate produced by PCA or CEBRA. It is not a cell, and its dimensionality is a modeling choice.</p>
+        <p>The end-to-end flow is: source trial identity → cue-period spike counts by unit/bin → behavior-only route labels from subsequent path → training-only preprocessing and model fitting → held-out validation scores → null or sensitivity checks. The route label must be constructible from behavior alone; neural activity is not allowed to help define the target. Inputs for a new prediction must be known before the future route label is known.</p>
+        <p><strong>Inclusion and time windows.</strong> The 19,162 behavioral sources are successful trials following successful trials, inherited from the V6 development cohort; timeout/unsuccessful cases are not this evaluation population. A/B use the nominal first second of cue activity in ten 100 ms bins. C uses the full recorded cue-window count divided by its measured exposure, with cue duration also in the baseline. These window and cohort differences are another reason not to rank A/B and C scores as the same task.</p>
+        <p><strong>How a pseudorow is constructed.</strong> A/B begin with masked source storage, not a complete 104×29-cell recording: off-session cell entries are unavailable, not zero spikes. To construct a <em>present</em> row, the assembler first chooses that label, then chooses one present source trial from each of seven sessions and joins its observed cell block. The same source supplies all cells and ten bins within that session block. Thus one row combines seven real trials, and its construction requires the future class label. Recorded zero-count bins remain zeros; unavailable cells are never imputed as zeros. C instead constructs each unit's feature row from one real trial without needing its future path label. Its evaluation is still conditional on the stated successful-trial cohort.</p>
+        <p>Track C's export is the cleanest current example of this ladder. The guarded access streamed a mixed-split file and yielded only train/validation rows. It explicitly saw and skipped 12,486 test rows, yielded zero forbidden rows, and exported 64,051 selected-cell unit-trial rows over 19,162 development source IDs. This is a receipt that the derived export was guarded; it is not a re-audit of the original raw importer, which is outside this report's allowed scope.</p>
+        <p>There is no claim here that the actual train/validation split leaked source IDs. Track A/B validation source pools are source-disjoint, and Track C keeps all derivatives of a source trial together. A source-ID-control leak was a preflight implementation bug fixed before these fits; the assembly-transfer diagnostic intentionally uses seen training sources and is labeled as a same-source diagnostic, not validation. The recommender-system analogy is only a warning about what source leakage would look like if it happened.</p>
+        {figure_html(figures, 8)}
+      </section>
+
+      <section id="scores">
+        <h2>6. How to read the scores: BA, probability scores, seeds, and intervals</h2>
+        <p><strong>Balanced accuracy</strong> is the average of sensitivity and specificity. It gives each class equal importance even when class counts differ. In Track A exact Q, the validation object has 24 absent and 6 present source-combination rows, but each class receives total weight 0.5. That is why ordinary row accuracy is not the target metric. BA is useful for directional classification, but it ignores confidence: a model that predicts 0.51 and a model that predicts 0.99 receive the same class decision if both cross the threshold.</p>
+        <p><strong>Log loss</strong> and <strong>Brier score</strong> are proper probability scores. They measure the quality of predicted probabilities, combining discrimination and calibration rather than serving as standalone calibration tests. Log loss is especially strict about confident wrong predictions. In Track C, the primary metric is Δ log loss = baseline log loss − augmented log loss. Positive means adding cue-rate information improved held-out probability predictions beyond endpoint, trial index, and cue-duration controls. Negative means the cue-rate term made predictions worse.</p>
+        <p><strong>AUROC</strong> is a ranking metric. It asks whether positives tend to receive higher scores than negatives. For ridge outputs in Track A, probability scores use a clipped transformation for log loss/Brier, but AUROC uses the unbounded decision score to avoid clipping-induced rank ties. That distinction matters because a probability score and a rank score answer different questions.</p>
+        <p><strong>Seeds are not independent scientific replications.</strong> Assembly seeds change synthetic pseudorows; optimizer seeds change model initialization or stochastic training. Means over seeds can summarize algorithmic variability, but they are not confidence intervals over animals or sessions. When figures show min–max bands here, the band says what varied: random source subset, pseudorow assembly, or optimizer seed. It should not be read as a biological CI unless the resampling unit and exchangeability assumption justify that interpretation.</p>
+        <p>For the same reason, a family maximum is a different estimand from an average seed. The 50-grid Track B primary panel diagnoses variability across assembly and optimizer seeds. The narrower 14-configuration null family asks a different question: if the source labels carried no usable relationship under the conditional permutation, how large a best observed BA could we get after trying the predeclared dimension, row, and budget variants? Mixing those two objects would make the uncertainty look better than it is.</p>
+        {figure_html(figures, 2)}
+      </section>
+
+      <section id="diagnostics">
+        <h2>7. The four diagnostics, stated as prediction → test → result → decision</h2>
+        {d1}
+        {d2}
+        {d3}
+        {d4}
+      </section>
+
+      <section id="track-a">
+        <h2>8. Track A: exact conditional benchmark and finite-source diagnosis</h2>
+        <p>Track A kept the old interior-component target so the old V8b/V9 claims could be audited on the same target. The target-semantics correction is load-bearing: the old word <q>absent</q> meant the selected directed component was not in positions 2..L−1 after dropping the first and last route components. It did not mean the edge was nowhere in the route. Fifty-one old fixed-4→3 absent sources actually used the edge outside the interior set; all 51 were two-token routes, where the interior set is empty, and had empty V6 QC flags. The right correction is semantic, not a new truncation or clock-bug story.</p>
+        <p>The exact empirical-Q object is deliberately small and finite. It enumerates validation session-block source combinations: 24 absent and 6 present. It assigns total weight 0.5 to each class and uniform weight inside each class. These product rows can be dependent and can even yield identical neural vectors. They are a conditional benchmark over the finite source pools, not 30 independent biological trials.</p>
+        <div class="math">Q(Y=0)=Q(Y=1)=1/2. For class y and session block j, draw S_j uniformly from the saved finite source pool for that class/session. The pseudorow is X=(X_1(S_1),...,X_J(S_J)). Under this constructed product Q, μ_y concatenates the block means and Σ_y is block diagonal across sessions. The balanced class-mixture covariance is 0.5 Σ_0 + 0.5 Σ_1 + 0.25(μ_1−μ_0)(μ_1−μ_0)^T.</div>
+        <p>The last rank-one term can induce between-session covariance in the constructed mixture even when no simultaneous between-session interaction was measured. That is a mathematical identity under the product-Q construction. It is not biological proof of coordinated hippocampal dynamics. For pooled class+time PCA, the covariance is different again: the mean and covariance are averaged over both class and cue time, so shared time as well as class can contribute. The whole-cue rank-one statement cannot simply be transferred to pooled-bin PCA.</p>
+        {rank_box}
+        <p>Track A also derives the finite-source mean uncertainty under the zero-true-contrast toy assumption. If a session/block coordinate has variance σ² and class means are estimated from n0 and n1 finite sources, the null class-mean difference has uncertainty σ²(1/n0+1/n1). The expected spurious balanced-mixture between-class covariance contribution is one quarter of that trace summed over coordinates; any real nonzero class contrast would add its own between-class term. This is exactly why tiny source pools can create apparent cross-session structure without a real simultaneous population effect.</p>
+        {figure_html(figures, 3)}
+        {figure_html(figures, 4)}
+        {figure_html(figures, 5)}
+        {figure_html(figures, 6)}
+        <p>The Gaussian known-truth controls are the clean counterexample. They simulate a world where the true null BA and AUROC are exactly 0.5 for any frozen classifier under the stated Gaussian/no-signal assumptions. With train N=3 and validation N=1 per class/session, 30 of 100 simulation seeds have perfect empirical-Q BA and 16 have inverted BA. These are toy simulation seeds and Gaussian coordinates, not biological replications and not universal sample-size advice. Their role is narrower: prove that a finite empirical benchmark can be perfect or inverted even when the population truth is chance.</p>
+        {figure_html(figures, 7)}
+        <p>The practical Track A conclusion is restrained. Finite synthetic sampling variance shrinks as rows/class increase. Moment-exact references are useful. Source-budget and leave-one-session checks show source composition can dominate the score. None of that rescues the old biological claim; it tells us how not to overread it.</p>
+      </section>
+
+      <section id="track-b">
+        <h2>{track_b_heading}</h2>
+        <p>Track B tests whether representation, dimension, optimizer seed, row budget, or training length explain the old CEBRA weakness. The input to CEBRA is raw standardized cue-count data, not upstream PCA. The inspected pointwise model maps 29 input coordinates through hidden layers 32 → 32 → 16 → d, L2-normalizes the d-dimensional embedding, and then a 10-bin downstream logistic head evaluates the exact-Q target. Output dimension 29 is therefore not an invertible no-compression control: the mapping is nonlinear and normalized.</p>
+        <p>{track_b_inventory_text}</p>
+        {figure_html(figures, 10)}
+        <p>{track_b_sensitivity_text}</p>
+        {figure_html(figures, 11)}
+        <p>The assembly-transfer diagnostic is especially useful. CPU forward-only replay did not fit new models. It loaded the 50 observed primary checkpoints and evaluated new mixtures from the same training source pools. Own training assemblies have BA=1. New mixtures from the same training sources remain near perfect: Time mean 0.9925 and Behavior mean 0.997656. Source-disjoint validation drops to Time 0.249167 and Behavior 0.351667. That pattern localizes the gap across source pools, not merely across the 64 particular sampled rows.</p>
+        {figure_html(figures, 12)}
+        <p>{track_b_interpretation_text}</p>
+      </section>
+
+      <section id="track-c">
+        <h2>10. Track C: source-preserving per-unit route-component analysis</h2>
+        <p>Track C is not a direct score comparison with Track A/B. It changes the evaluation object to reduce a major assumption. Instead of building a global common-panel pseudopopulation, it keeps real source trials and per-unit observations. That means it cannot claim a simultaneous population decoder, but it also does not invent one. This is closer to an operational route-component analysis that could eventually support H1a if it is repeated with reserved observations and verified metadata.</p>
+        <p>The target definitions are frozen and separate. <strong>middle</strong> is the saved artifact name for the original interior-corridor target: whether <code>D_N_R_T__N_R_M</code> appears after dropping the first and last route components. <strong>anywhere</strong> asks whether that same original component appears anywhere in the route signature. <strong>supported_middle</strong> is the saved name for the supported-interior candidate <code>D_N_C_M__N_C_B</code>, selected by a train-behavior-only support ranking over 24 static directed components. The ranking did not use neural response values.</p>
+        <p>The real-route examples matter pedagogically. The dominant middle-present route is CT→RT→RM→RB, 459 of 475 positive examples. Two dominant old-absent routes are RT→CT→CM→RM→RB (99 examples) and CT→RT→RM (50 examples). A full route signature can be a noncontiguous inferred corridor-token sequence; 23 of 660 signatures had noncontiguous tokens. Therefore binary adjacent-node edge evidence is stronger than assuming the full signature is an exact graph walk.</p>
+        <p>The model is intentionally boring. The baseline has full endpoint-pair intercepts plus standardized trial index and cue duration. The augmented model adds standardized log1p(cue count/exposure). Continuous inputs are centered by training endpoint-specific means before residual standardization; validation means are never learned. Endpoint intercepts are unpenalized so the baseline is not deliberately underfit. The primary statistic is held-out Δ log loss, aggregated per unit within session and then equally across sessions.</p>
+        <table>
+          <thead><tr><th>Target</th><th>Modeled sessions</th><th>Units</th><th>Train sources</th><th>Validation sources</th><th>Global Δ log loss</th><th>Ordinary p</th><th>Temporal p</th></tr></thead>
+          <tbody>
+            <tr><td>original interior (saved target: middle)</td><td>{support_rows["middle"]["sessions"]}</td><td>{support_rows["middle"]["cells"]}</td><td>{support_rows["middle"]["source_counts"]["train"]}</td><td>{support_rows["middle"]["source_counts"]["validation"]}</td><td>{c_stats["middle"]:.6f}</td><td>{c_p["session_endpoint_split"]["middle"]["p_value"]:.3f}</td><td>{c_p["session_endpoint_split_temporal_half"]["middle"]["p_value"]:.3f}</td></tr>
+            <tr><td>old anywhere</td><td>{support_rows["anywhere"]["sessions"]}</td><td>{support_rows["anywhere"]["cells"]}</td><td>{support_rows["anywhere"]["source_counts"]["train"]}</td><td>{support_rows["anywhere"]["source_counts"]["validation"]}</td><td>{c_stats["anywhere"]:.6f}</td><td>{c_p["session_endpoint_split"]["anywhere"]["p_value"]:.3f}</td><td>{c_p["session_endpoint_split_temporal_half"]["anywhere"]["p_value"]:.3f}</td></tr>
+            <tr><td>supported middle</td><td>{support_rows["supported_middle"]["sessions"]}</td><td>{support_rows["supported_middle"]["cells"]}</td><td>{support_rows["supported_middle"]["source_counts"]["train"]}</td><td>{support_rows["supported_middle"]["source_counts"]["validation"]}</td><td>{c_stats["supported_middle"]:.6f}</td><td>{c_p["session_endpoint_split"]["supported_middle"]["p_value"]:.3f}</td><td>{c_p["session_endpoint_split_temporal_half"]["supported_middle"]["p_value"]:.3f}</td></tr>
+            <tr><td>MAX3 family</td><td colspan="4">max over the three frozen targets</td><td>{c_stats["family_max_three_targets"]:.6f}</td><td>{c_p["session_endpoint_split"]["family_max_three_targets"]["p_value"]:.3f}</td><td>{c_p["session_endpoint_split_temporal_half"]["family_max_three_targets"]["p_value"]:.3f}</td></tr>
+          </tbody>
+        </table>
+        {figure_html(figures, 9)}
+        <p>The interpretation is conservative. Original-interior is negative. Anywhere and supported-interior are weakly positive point estimates. Supported-interior has eight of eleven sessions positive, and its ordinary single-target p-value is nominally suggestive, but the temporal null weakens it and the three-target family p-values are large. Track C therefore does not provide convincing incremental cue-rate evidence beyond endpoint/time controls. It supplies a transparent source-preserving complement to population analyses, not confirmation of H1 or a requirement that each neuron be individually significant.</p>
+      </section>
+
+      <section id="direction">
+        <h2>11. Defensible research direction after this report</h2>
+        <h3>8 September follow-up: pseudopopulations remain central</h3>
+        <p>Large simultaneous monkey recordings are operationally difficult. They are not a prerequisite for the next condition-level study. The practical aim is <strong>reproducible endpoint-controlled prospective-path coding from pseudopopulations, with source-level uncertainty</strong>. This differs from reconstructing the exact neural state of one real simultaneous population. More independent route repetitions may help, but the present results do not prove that sample size alone caused the gap or that more data will necessarily rescue it.</p>
+        <ol>
+          <li><strong>Freeze a meaningful, supported contrast.</strong> Choose a route component and cue window using behavior, task meaning, and training support, not the best neural score. Preserve the distinction between an edge anywhere and an interior edge.</li>
+          <li><strong>Test source-trial reproducibility.</strong> Compare population patterns and regularized decoding across independent source subsets, with endpoint/time controls and a neural-only positive control. Weak distributed effects can combine; individual-cell significance is not an inclusion gate. Existing resplits remain development analyses, not a restored pristine holdout.</li>
+          <li><strong>Keep source-safe pseudopopulation construction.</strong> Split actual trials before assembly, retain within-session cells and bins together, and never fill unavailable recordings with zero. These protections were already used here. Varying only synthetic combinations is not independent replication; source/session-aware uncertainty and repeated recording-group evidence matter.</li>
+          <li><strong>Let measurement guide models and collection.</strong> Where feasible, prioritize usable route repetitions within recordings and independent recording-session replication rather than requiring simultaneous195. Use source-level reliability or injected-signal checks to estimate useful budgets, not an arbitrary minimum N. Compare CEBRA with simpler baselines under the same evaluation rather than optimizing synthetic-row scores.</li>
+        </ol>
+        <p>CEBRA-Time can emphasize cue phase instead of future route; binary behavior supervision can fit source-pool differences; and the current offset1 encoder acts per bin, although its decoder receives the full cue. These are plausible formulation limitations, not proven causes. A different representation could help, but no architecture is known here to recover unrecorded information or resolve insufficient conditional support. The source-preserving table below is a foundation for both per-unit checks and pseudopopulations, not a demand to abandon the latter.</p>
+        <p>The next direction should not be <q>try a bigger model until the exact-Q BA looks good</q>. The lazy scientific move is to remove an assumption, not add capacity. Pseudopopulations are not universally invalid: condition decoding and source-safe cross-validation can be legitimate, and the Meyers Neural Decoding Toolbox tradition is a useful reference for careful pseudopopulation decoding. But this project's thesis asks about trial-linked cue-period path information. For that, the source trial and recording group matter.</p>
+        <p>The concrete next project is a source-preserving route-component validation set. Dataset schema: one row per source trial × unit with <code>source_id</code>, <code>recording_group/session</code>, split, unit ID, cue-window spike count and exposure, start, goal, endpoint pair, trial index, cue duration, route signature, and frozen binary route-component targets. Keep all rows derived from one source trial in the same split; if simultaneous recording groups are verified, add a separate within-group population table rather than mixing it with per-unit rows.</p>
+        <p>Freeze a small behavior-only target set before fitting. The first candidate is the supported-interior component <code>D_N_C_M__N_C_B</code> (parent shorthand: <code>D_C_M_C_B</code>) because Track C found support across 11 modeled sessions without using neural response values for selection. Plan training support and enough prospectively reserved validation trials to represent both route variants. Fix inclusion and allocation rules before neural evaluation; do not discard a one-class validation group after inspecting responses. Proper scores remain reportable there, although within-group BA/AUROC may be undefined.</p>
+        <p>Baseline: endpoint-pair intercepts plus trial index, cue duration, and available nuisance variables such as gaze, heading, speed, action, and previous-trial history. Neural increment: add cue-period neural features available by cue offset, never later navigation activity, only after the baseline is frozen. Primary metric: held-out Δ log loss; report Brier and BA/AUROC as secondary probability/discrimination summaries. Positive control: decode an easier endpoint or task-condition label from the neural features alone under the same source-safe split; do not give that target label, its one-hot encoding, or a duplicate proxy to the control decoder. This checks an easier signal, not H1 itself. Gates: source-disjoint validation, recording-group provenance checks, nuisance-balance checks, and coherent source/session/temporal nulls. Stop criteria: no target/model swaps after freeze; stop if validation support or nuisance imbalance fails, or if the family null is non-positive.</p>
+        <p>For H1a, the minimal positive result would be held-out improvement in predicting future path components beyond start and goal on reserved source trials. For H1b, the minimal structural result would be reproducible geometry in raw, PCA, or CEBRA representations that tracks behavior-only path distance or route-component overlap after endpoint matching. CEBRA can be a measurement instrument, not the hypothesis. A behavior-conditioned CEBRA embedding uses path-derived context by design, so it still needs a separate held-out decoder and nulls.</p>
+        <p>For H2, the later artificial-agent comparison remains a stretch aim. RNN hidden activations are easy to observe but artificial; neural activity is biological but partial, noisy, sparse, and preprocessing-mediated. Similar geometry between an agent and hippocampal recordings would be a comparison of representational measurements, not proof that RNN units are neurons or that mechanisms are shared. That comparison should wait until H1 has a cleaner biological measurement object. Temporal and per-source hierarchical uncertainty models are future proposals, not fitted results in this report.</p>
+        <p>Negative or weak results are still useful. This report narrows the failure modes: exact-Q enumeration does not rescue the old claim; random pseudorow budget is not the answer; CEBRA training can memorize/source-transfer without source-disjoint validation; and source-preserving Track C is feasible but not yet positive. That is a concrete defensible direction.</p>
+      </section>
+
+      <section id="audit">
+        <h2>12. Audit appendix: provenance, failures, and inference authority</h2>
+        <h3>Inputs read by this generator</h3>
+        <ul>
+          <li><code>{html.escape(str(results_root / "track_a_v2"))}</code> for completed Track A V2 result tables. The failed initial <code>track_a</code> output is not used.</li>
+          <li><code>{html.escape(str(results_root / "track_c"))}</code>, <code>track_c_allowlist</code>, <code>track_c_export</code>, and <code>data_gate_checks.json</code> for completed Track C derived outputs and manifests.</li>
+          <li><code>{html.escape(str(results_root / "track_b/fits/*/fit_info.json"))}</code> for completed B fit summaries only, plus <code>assembly_transfer</code> replay metrics.</li>
+          <li>Local planning documents: AGENTS, learner profile, research question, analysis contract, frozen prefit protocol, and Track A/C result reviews were used to write the teaching text and claim boundaries.</li>
+        </ul>
+        <h3>Budgets and run identity</h3>
+        <p>{track_b_budget_text}</p>
+        <h3>Failures and recovery</h3>
+        <p>The first Track A attempt was superseded because the V9 replay reader had a CSV/metadata problem; the accepted output is <code>track_a_v2</code>. This was a fresh rerun of the same frozen math/fits for audit completeness, not outcome-based model tuning. Track A replay tables omit some legacy decoder metadata. The accepted V8b <code>v8b_regularization_metrics.csv</code> and V9 <code>v9_cebra_metrics.csv</code>, under the retained legacy final run, remain authoritative for C and decoder-iteration metadata; the legacy V9 readout used C=1. Earlier code preflight reviews blocked missing stages before biological interpretation, and a later parent postprocess correction fixed a role-filter mistake that had assumed the first 50 B receipts were all factorial observed fits. No new fits were run for that correction.</p>
+        <h3>Scope and claim ceiling</h3>
+        <p>Report generation is read-only over derived results. The study itself executed the recorded model fits and performed the guarded development extraction from mixed-split importer files; it did not evaluate models on original test records. At the original 7 September research release, no packages had been installed, commits made, or shared services changed by this study. The 8 September packaging revision is intended for a pull request; it changes documentation/presentation, not fitted artifacts. All analysis stayed within the fixed-195 selected-unit scope. Original test exposure is permanent, so current development results cannot be promoted to confirmation. New observations must be reserved before adaptation if the project needs strong claims.</p>
+        <h3>Review status</h3>
+        <p>The planning and result reviews are AI-assisted quality assurance, not external peer review. They help check leakage, pseudoreplication, confounds, nulls, and claim boundaries, but they are not laboratory metadata verification or independent biological replication.</p>
+        {track_b_status_html}
+        <h3>Embedded audit tables</h3>
+        <p>The tables below are generated from saved summaries/receipts only. They make the report self-contained without touching model artifacts.</p>
+        {a_method_table}
+        {b_observed_table}
+        {b_null_table}
+        {b_prefix_table}
+        {c_unit_table}
+        <h3>Hashes, timings, and authoritative local paths</h3>
+        {hash_table}
+      </section>
+
+      <section id="references">
+        <h2>13. References and evidence map</h2>
+        <p>Only verified-scope references are included. Elsayed &amp; Cunningham (2017, DOI 10.1038/nn.4617; PMC5577566) is relevant because population structure can be described by means/covariances and task variables; this report does not claim to implement their full method. Meyers (2013, Neural Decoding Toolbox, DOI 10.3389/fninf.2013.00008; PMC3660664) is relevant for careful pseudopopulation/condition decoding and source-safe cross-validation; it does not make pseudopopulations universally valid for trial-specific simultaneous-state claims. CEBRA 2023 Nature is relevant as the representation-learning method family used in prior checkpoints. Varoquaux (2018, DOI 10.1016/j.neuroimage.2017.06.061) is relevant for small-sample cross-validation uncertainty; no generic ±10% number is transplanted here as this study's CI.</p>
+        <table>
+          <thead><tr><th>Evidence object</th><th>Role in this report</th></tr></thead>
+          <tbody>
+            <tr><td><code>track_a_v2/summary.json</code> and Track A CSVs</td><td>Exact-Q support, replay parity, finite sampling, source-budget, PCA, Gaussian controls.</td></tr>
+            <tr><td><code>track_c/summary.json</code>, unit metrics, null metrics</td><td>Source-preserving per-unit route-component results and conditional null p-values.</td></tr>
+            <tr><td><code>track_c_export/development_cue_counts_manifest.json</code></td><td>Guarded development-only export receipt: 12,486 test rows skipped, zero forbidden rows yielded.</td></tr>
+            <tr><td><code>track_b/fits/*/fit_info.json</code>, <code>track_b/summary_exact_audited.json</code>, and <code>audits/track_b_exact_audit.json</code></td><td>Completed B receipts and authoritative exact family-null inference.</td></tr>
+            <tr><td><code>assembly_transfer/summary.json</code> and metrics</td><td>CPU forward-only same-training-source transfer diagnostic.</td></tr>
+            <tr><td><code>work/research-planning/track-a-results-review.md</code> and <code>track-c-results-review.md</code></td><td>Independent read-only numerical review summaries used as QA context.</td></tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+    <footer>
+      <p class="small">Generated by <code>scripts/build_path_generalization_report.py</code> from frozen derived outputs. Assets are also written under <code>{html.escape(str(assets_dir))}</code>; this one-file HTML embeds SVGs and CSS inline and contains no JavaScript or remote autoload assets.</p>
+    </footer>
+  </body>
+</html>
+"""
+    return html_text
+
+
+def count_words_from_html(html_text: str) -> int:
+    text = re.sub(r"<style.*?</style>", " ", html_text, flags=re.S)
+    text = re.sub(r"<[^>]+>", " ", text)
+    text = html.unescape(text)
+    return len(re.findall(r"\b[\w’'-]+\b", text))
+
+
+def require(condition: bool, message: str) -> None:
+    if not condition:
+        raise ValueError(message)
+
+
+def resolve_under(path: Path, roots: list[Path], label: str) -> Path:
+    resolved = (ROOT / path if not path.is_absolute() else path).resolve()
+    allowed_roots = [root.resolve() for root in roots]
+    if not any(resolved == root or root in resolved.parents for root in allowed_roots):
+        allowed = ", ".join(str(root) for root in allowed_roots)
+        raise ValueError(f"{label} must stay under: {allowed}")
+    return resolved
+
+
+def validate_inputs(
+    track_a: dict[str, Any],
+    track_b: dict[str, Any],
+    track_c: dict[str, Any],
+    assembly: dict[str, Any],
+) -> list[str]:
+    checks = []
+    require(
+        track_a["summary"]["status"] == "complete", "Track A V2 summary is not complete"
+    )
+    require(
+        track_a["validation_products"] == {"absent": 24, "present": 6},
+        "Track A exact-Q support changed",
+    )
+    checks.append("Track A V2 complete and exact-Q products are 24 absent / 6 present")
+    require(
+        track_c["summary"]["status"] == "complete", "Track C summary is not complete"
+    )
+    require(
+        track_c["export_manifest"]["forbidden_rows_yielded"] == 0,
+        "Track C export yielded forbidden rows",
+    )
+    require(
+        track_c["export_manifest"]["split_access_audit"]["rows_skipped_by_split"][
+            "cue_counts"
+        ]["test"]
+        == 12486,
+        "Track C guarded-export test-row skip count changed",
+    )
+    checks.append(
+        "Track C complete; guarded export skipped 12,486 test rows and yielded zero forbidden rows"
+    )
+    require(
+        track_b["observed_by_role"]
+        == Counter(
+            {
+                "crossed_seed_primary": 50,
+                "dimension_sensitivity": 6,
+                "row_sensitivity": 4,
+                "paired_long_budget": 2,
+            }
+        ),
+        "Track B observed fit_info inventory changed",
+    )
+    require(
+        track_b["primary_train_all_one"],
+        "Track B primary sampled-train BA is not all one",
+    )
+    checks.append(
+        "Track B observed fit_info inventory is 50+6+4+2 and primary sampled-train BA is 1 for all 50"
+    )
+    require(
+        assembly["summary"]["fits_replayed"] == 50,
+        "Assembly-transfer replay count changed",
+    )
+    require(
+        assembly["summary"]["new_fits"] == 0,
+        "Assembly-transfer summary reports new fits",
+    )
+    checks.append(
+        "Assembly-transfer replay used 50 CPU-forward checkpoint evaluations and zero new fits"
+    )
+    return checks
+
+
+def build(args: argparse.Namespace) -> dict[str, Any]:
+    results_root = resolve_under(
+        Path(args.results_root),
+        [ROOT / "outputs/path-generalization-20260907"],
+        "results-root",
+    )
+    default_assets_dir = results_root / DEFAULT_ASSETS_SUBDIR
+    assets_arg = Path(args.assets_dir) if args.assets_dir else default_assets_dir
+    assets_dir = resolve_under(
+        assets_arg, [results_root / "report_assets"], "assets-dir"
+    )
+    default_output = DEFAULT_FINAL_OUT if args.mode == "final" else DEFAULT_DRAFT_OUT
+    output_roots = [
+        ROOT / "work/report-draft",
+        ROOT / "docs/professor_updates/path_generalization_20260907",
+    ]
+    output_path = resolve_under(
+        Path(args.output) if args.output else default_output, output_roots, "output"
+    )
+
+    track_a = track_a_summary(results_root)
+    track_c = track_c_summary(results_root)
+    track_b = track_b_summary(results_root)
+    assembly = assembly_transfer_summary(results_root)
+    validation_checks = validate_inputs(track_a, track_b, track_c, assembly)
+
+    if args.mode == "final" and not track_b["final_ready"]:
+        raise SystemExit(
+            "Final HTML blocked: Track B full family-null summary is incomplete "
+            f"({track_b['null_completed_fit_count']}/{EXPECTED_TRACK_B_NULL_FITS} family-null fit_info files; "
+            f"complete permutations={len(track_b['complete_null_perms'])}/20). Use --mode draft."
+        )
+
+    if args.dry_run:
+        return {
+            "mode": args.mode,
+            "output": str(output_path),
+            "assets_dir": str(assets_dir),
+            "dry_run": True,
+            "validation_checks": validation_checks,
+            "track_b_final_ready": track_b["final_ready"],
+        }
+
+    table_paths = write_derived_tables(assets_dir, track_a, track_b, track_c, assembly)
+    figures = make_figures(assets_dir, track_a, track_b, track_c, assembly)
+    html_text = html_report(
+        args.mode,
+        results_root,
+        assets_dir,
+        figures,
+        track_a,
+        track_b,
+        track_c,
+        assembly,
+    )
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    # pi-lens-ignore: python-path-traversal
+    output_path.write_text(html_text)
+    word_count = count_words_from_html(html_text)
+
+    summary_path = output_path.with_suffix(".summary.json")
+    summary_payload = {
+        "mode": args.mode,
+        "output": str(output_path),
+        "assets_dir": str(assets_dir),
+        "figure_count": len(figures),
+        "figure_files": [str(fig.path) for fig in figures],
+        "derived_tables": [str(path) for path in table_paths],
+        "word_count": word_count,
+        "validation_checks": validation_checks,
+        "track_b_final_ready": track_b["final_ready"],
+        "track_b_null_completed_fit_count": track_b["null_completed_fit_count"],
+        "track_b_expected_null_fit_count": EXPECTED_TRACK_B_NULL_FITS,
+        "remote_autoload_assets": False,
+        "javascript": False,
+    }
+    # pi-lens-ignore: python-path-traversal
+    summary_path.write_text(
+        json.dumps(summary_payload, indent=2, sort_keys=True) + "\n"
+    )
+    return summary_payload
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--mode", choices=["draft", "final"], default="draft")
+    parser.add_argument("--results-root", default=str(DEFAULT_RESULTS_ROOT))
+    parser.add_argument("--assets-dir", default=None)
+    parser.add_argument("--output", default=None)
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Validate inputs/guards without writing files",
+    )
+    return parser.parse_args()
+
+
+def main() -> None:
+    summary = build(parse_args())
+    print(json.dumps(summary, indent=2, sort_keys=True))
+
+
+if __name__ == "__main__":
+    main()

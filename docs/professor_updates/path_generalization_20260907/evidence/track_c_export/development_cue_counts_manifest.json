@@ -1,0 +1,58 @@
+{
+  "allowlist_source_count": 19162,
+  "exported_cell_count": 195,
+  "exported_count_rows": 64051,
+  "exported_unique_source_count": 19162,
+  "forbidden_rows_yielded": 0,
+  "input_hashes": {
+    "allowlist_sha256": "7751cc3caa4b18335e0c17c1bcbfb209055c2b501ce724749338308a5506fa1b",
+    "cue_counts_sha256": "e355af169b661650c4cc02aeaafd96a1443698afa67648a8b888a3adeee4c7b0",
+    "selected_cells_sha256": "888a0b71aa51fe20a9cd4b0275e008c7fc4dcd7ef9dace6aba30a815b57b5cea",
+    "source_trial_splits_sha256": "b0ef8cce43c79d9e2b1ae0a804c7d48fefeb92469670f3031485d0009fb10ff3",
+    "split_summary_sha256": "9092e5b85f42569c8214c9b23e75e0074acbb0b01a5fb2d5eec06f20ded92549"
+  },
+  "input_paths": {
+    "allowlist_csv": "outputs/path-generalization-20260907/results-20260907T081200Z/track_c_allowlist/development_component_allowlist.csv",
+    "import_dir": "/home/hongyi-home-lab/neuro_science/outputs/prospective_path_first_run/place195-all-sessions-20260830-v4",
+    "selected_cells_path": "/home/hongyi-home-lab/neuro_science/outputs/prospective_path_first_run/place195-v6-v9-autoresearch-20260906/v6-reset-graph-support-audit/v6c_population_membership/selected_component_source_membership.csv",
+    "split_dir": "/home/hongyi-home-lab/neuro_science/outputs/prospective_path_first_run/place195-splits-20260830-v3"
+  },
+  "missing_allowlist_source_count": 0,
+  "missing_allowlist_source_ids_first20": [],
+  "policy": "SplitFilteredAccess streams mixed-split files and skips test rows; exported rows are development allowlist and selected-cell allowlist only",
+  "qc_flag_counts": {
+    "": 64002,
+    "ripple_eyelink_marker_mismatch;eyelink_nonmonotonic_trial_time": 2,
+    "ripple_unity_nav_duration_discrepancy_gt_2s": 47
+  },
+  "required_selected_scope_hash": "2924d60f9a52ad7c02e802c28e84a85c6267da023267ac1b507b957e0587f60d",
+  "selected_scope_cell_count": 195,
+  "selected_scope_hash": "2924d60f9a52ad7c02e802c28e84a85c6267da023267ac1b507b957e0587f60d",
+  "skipped_unselected_cell_rows": 0,
+  "split_access_audit": {
+    "allowed_splits": [
+      "train",
+      "validation"
+    ],
+    "forbidden_rows_yielded": 0,
+    "rows_seen_by_split": {
+      "cue_counts": {
+        "test": 12486,
+        "train": 56968,
+        "validation": 11429
+      }
+    },
+    "rows_skipped_by_split": {
+      "cue_counts": {
+        "test": 12486
+      }
+    },
+    "rows_yielded_by_split": {
+      "cue_counts": {
+        "train": 56968,
+        "validation": 11429
+      }
+    }
+  },
+  "stage": "track_c_guarded_development_cue_count_export"
+}

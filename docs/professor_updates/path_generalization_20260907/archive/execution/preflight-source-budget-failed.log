@@ -1,0 +1,55 @@
+test_accepted_root_gate_rejects_other_paths (scripts.test_place195_path_generalization_phase1.Phase1GuardedExportTest.test_accepted_root_gate_rejects_other_paths) ... ok
+test_export_requires_authorization (scripts.test_place195_path_generalization_phase1.Phase1GuardedExportTest.test_export_requires_authorization) ... ok
+test_poisoned_test_rows_and_unselected_cells_cannot_reach_export (scripts.test_place195_path_generalization_phase1.Phase1GuardedExportTest.test_poisoned_test_rows_and_unselected_cells_cannot_reach_export) ... ok
+test_selected_cell_scope_hash_uses_canonical_sorted_json (scripts.test_place195_path_generalization_phase1.Phase1GuardedExportTest.test_selected_cell_scope_hash_uses_canonical_sorted_json) ... ok
+test_selected_fractional_cue_count_is_rejected (scripts.test_place195_path_generalization_phase1.Phase1GuardedExportTest.test_selected_fractional_cue_count_is_rejected) ... ok
+test_cebra_config_counts_and_caveats (scripts.test_place195_path_generalization_phase1.Phase1ModelAndTargetTest.test_cebra_config_counts_and_caveats) ... ok
+test_context_eligibility_counts_unique_sources (scripts.test_place195_path_generalization_phase1.Phase1ModelAndTargetTest.test_context_eligibility_counts_unique_sources) ... ok
+test_endpoint_intercepts_are_not_penalized (scripts.test_place195_path_generalization_phase1.Phase1ModelAndTargetTest.test_endpoint_intercepts_are_not_penalized) ... ok
+test_joint_target_shuffle_preserves_middle_implies_anywhere_and_strata_counts (scripts.test_place195_path_generalization_phase1.Phase1ModelAndTargetTest.test_joint_target_shuffle_preserves_middle_implies_anywhere_and_strata_counts) ... ok
+test_normalized_logistic_c (scripts.test_place195_path_generalization_phase1.Phase1ModelAndTargetTest.test_normalized_logistic_c) ... ok
+test_rotation_invariance_control_uses_no_second_scaler (scripts.test_place195_path_generalization_phase1.Phase1ModelAndTargetTest.test_rotation_invariance_control_uses_no_second_scaler) ... ok
+test_target_semantics_middle_vs_anywhere (scripts.test_place195_path_generalization_phase1.Phase1ModelAndTargetTest.test_target_semantics_middle_vs_anywhere) ... ok
+test_three_target_family_reports_eligibility_signature_mismatches (scripts.test_place195_path_generalization_phase1.Phase1ModelAndTargetTest.test_three_target_family_reports_eligibility_signature_mismatches) ... ok
+test_weighted_metrics_handle_one_class_auc_as_none (scripts.test_place195_path_generalization_phase1.Phase1ModelAndTargetTest.test_weighted_metrics_handle_one_class_auc_as_none) ... ok
+test_exact_validation_weights_are_class_balanced_not_row_balanced (scripts.test_place195_path_generalization_phase1.Phase1ProductDiagnosticsTest.test_exact_validation_weights_are_class_balanced_not_row_balanced) ... ok
+test_expected_spurious_between_class_trace_formula (scripts.test_place195_path_generalization_phase1.Phase1ProductDiagnosticsTest.test_expected_spurious_between_class_trace_formula) ... ok
+test_linear_score_convolution_matches_materialized_product (scripts.test_place195_path_generalization_phase1.Phase1ProductDiagnosticsTest.test_linear_score_convolution_matches_materialized_product) ... ok
+test_pooled_time_cell_moments_include_time_and_class_mean_covariance (scripts.test_place195_path_generalization_phase1.Phase1ProductDiagnosticsTest.test_pooled_time_cell_moments_include_time_and_class_mean_covariance) ... ok
+test_product_moments_match_tiny_exhaustive_rows_and_mixture_term (scripts.test_place195_path_generalization_phase1.Phase1ProductDiagnosticsTest.test_product_moments_match_tiny_exhaustive_rows_and_mixture_term) ... ok
+test_ridge_controls_positive_and_true_null (scripts.test_place195_path_generalization_phase1.Phase1ProductDiagnosticsTest.test_ridge_controls_positive_and_true_null) ... ok
+test_ridge_score_probability_link_for_plus_minus_one_targets (scripts.test_place195_path_generalization_phase1.Phase1ProductDiagnosticsTest.test_ridge_score_probability_link_for_plus_minus_one_targets) ... ok
+test_sampled_ridge_moment_arm_is_emitted (scripts.test_place195_path_generalization_phase1.Phase1ProductDiagnosticsTest.test_sampled_ridge_moment_arm_is_emitted) ... ok
+test_behavior_ranking_denominator_is_gate_qualified (scripts.test_place195_path_generalization_execution.ExecutionRegressionTests.test_behavior_ranking_denominator_is_gate_qualified) ... ok
+test_completed_fit_reuse_rejects_missing_or_changed_artifacts (scripts.test_place195_path_generalization_execution.ExecutionRegressionTests.test_completed_fit_reuse_rejects_missing_or_changed_artifacts) ... ok
+test_named_target_cannot_fall_back_to_old_middle_label (scripts.test_place195_path_generalization_execution.ExecutionRegressionTests.test_named_target_cannot_fall_back_to_old_middle_label) ... ok
+test_real_session_controls_cannot_call_pseudopopulation_builder (scripts.test_place195_path_generalization_execution.ExecutionRegressionTests.test_real_session_controls_cannot_call_pseudopopulation_builder) ... ok
+test_row_grid_executes_exact_pca_and_nonleaky_identity_control (scripts.test_place195_path_generalization_execution.ExecutionRegressionTests.test_row_grid_executes_exact_pca_and_nonleaky_identity_control) ... ok
+test_source_budget_uses_exact_moments_not_assembly_draws (scripts.test_place195_path_generalization_execution.ExecutionRegressionTests.test_source_budget_uses_exact_moments_not_assembly_draws) ... ERROR
+test_source_identity_vocabulary_never_contains_validation (scripts.test_place195_path_generalization_execution.ExecutionRegressionTests.test_source_identity_vocabulary_never_contains_validation) ... ok
+test_weighted_scores_are_class_balanced_and_rank_is_not_clipped (scripts.test_place195_path_generalization_execution.ExecutionRegressionTests.test_weighted_scores_are_class_balanced_and_rank_is_not_clipped) ... ok
+
+======================================================================
+ERROR: test_source_budget_uses_exact_moments_not_assembly_draws (scripts.test_place195_path_generalization_execution.ExecutionRegressionTests.test_source_budget_uses_exact_moments_not_assembly_draws)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/hongyi-home-lab/neuro_science-path-diagnosis/scripts/test_place195_path_generalization_execution.py", line 81, in test_source_budget_uses_exact_moments_not_assembly_draws
+    rows = study.run_track_a_source_budget(
+        Xsrc=X, Msrc=M, metas=metas, source_index={}, cells=cells,
+        Xval=Xv, yval=yv, wval=wv, fractions=(0.5, 1.0), seeds=(0,), rows_per_class=16,
+    )
+  File "/home/hongyi-home-lab/neuro_science-path-diagnosis/scripts/place195_path_generalization_phase1.py", line 1507, in run_track_a_source_budget
+    product_conditional_moments(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        Xsrc, Msrc, sampled_metas, cells, split="train", label=label
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/hongyi-home-lab/neuro_science-path-diagnosis/scripts/place195_path_generalization_phase1.py", line 631, in product_conditional_moments
+    raise ValueError(f"observed-mask failure in {split}/{label}/{sess}")
+ValueError: observed-mask failure in train/absent/s1_session01
+
+----------------------------------------------------------------------
+Ran 30 tests in 0.415s
+
+FAILED (errors=1)

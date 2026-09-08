@@ -1,0 +1,24 @@
+{
+  "class_weight": 0.5,
+  "source_counts_by_label_session": {
+    "absent": {
+      "20180705_session01": 5,
+      "20180730_session01": 3,
+      "20180731_session01": 4,
+      "20180810_session01": 3,
+      "20180912_session01": 6,
+      "20180920_session01": 5,
+      "20181022_session01": 4
+    },
+    "present": {
+      "20180705_session01": 12,
+      "20180730_session01": 12,
+      "20180731_session01": 9,
+      "20180810_session01": 3,
+      "20180912_session01": 3,
+      "20180920_session01": 8,
+      "20181022_session01": 5
+    }
+  },
+  "time_weight": 0.1
+}

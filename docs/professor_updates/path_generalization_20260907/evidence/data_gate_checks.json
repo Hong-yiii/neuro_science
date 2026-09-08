@@ -1,0 +1,36 @@
+{
+  "count_rows": 64051,
+  "source_ids": 19162,
+  "rectangular_within_session_source_cells": true,
+  "expected_rows": 64051,
+  "data_sha256": "b0f00cff980d0b813b638a3a2d51fff44e52809041957cd0af4bc817c16919d2",
+  "modeled_support_metadata": {
+    "middle": {
+      "sessions": 5,
+      "cells": 15,
+      "source_counts": {
+        "train": 134,
+        "validation": 25
+      },
+      "flagged_sources": []
+    },
+    "anywhere": {
+      "sessions": 4,
+      "cells": 12,
+      "source_counts": {
+        "train": 108,
+        "validation": 22
+      },
+      "flagged_sources": []
+    },
+    "supported_middle": {
+      "sessions": 11,
+      "cells": 43,
+      "source_counts": {
+        "train": 267,
+        "validation": 52
+      },
+      "flagged_sources": []
+    }
+  }
+}

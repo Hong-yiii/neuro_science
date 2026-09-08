@@ -1,0 +1,755 @@
+{
+  "config_hash": "89ad34527896255d4ea05dd84337a89310ba5ecffb532acc0961df268fc247d3",
+  "eligibility_note": "Target cohorts may differ under fixed train-only thresholds; null signature mismatches are reported, not silently ignored.",
+  "null_policy": "same source permutation of joint Track-C labels within strata; family statistic is max over original middle, anywhere, and supported_middle global statistics",
+  "nulls": 100,
+  "observed_eligibility_signatures": {
+    "anywhere": {
+      "eligible_unit_count": 12,
+      "entries": [
+        {
+          "cell_id": "20180716/session01/array01/channel026/cell02",
+          "contexts": [
+            "4->3",
+            "4->5",
+            "4->6"
+          ],
+          "train_source_count": 31
+        },
+        {
+          "cell_id": "20180716/session01/array02/channel045/cell01",
+          "contexts": [
+            "4->3",
+            "4->5",
+            "4->6"
+          ],
+          "train_source_count": 31
+        },
+        {
+          "cell_id": "20180731/session01/array02/channel045/cell01",
+          "contexts": [
+            "4->2",
+            "4->3"
+          ],
+          "train_source_count": 23
+        },
+        {
+          "cell_id": "20180731/session01/array03/channel086/cell02",
+          "contexts": [
+            "4->2",
+            "4->3"
+          ],
+          "train_source_count": 23
+        },
+        {
+          "cell_id": "20180823/session01/array01/channel006/cell01",
+          "contexts": [
+            "4->2",
+            "4->3",
+            "4->6"
+          ],
+          "train_source_count": 34
+        },
+        {
+          "cell_id": "20180823/session01/array01/channel020/cell01",
+          "contexts": [
+            "4->2",
+            "4->3",
+            "4->6"
+          ],
+          "train_source_count": 34
+        },
+        {
+          "cell_id": "20180823/session01/array01/channel021/cell01",
+          "contexts": [
+            "4->2",
+            "4->3",
+            "4->6"
+          ],
+          "train_source_count": 34
+        },
+        {
+          "cell_id": "20180823/session01/array01/channel029/cell02",
+          "contexts": [
+            "4->2",
+            "4->3",
+            "4->6"
+          ],
+          "train_source_count": 34
+        },
+        {
+          "cell_id": "20180823/session01/array02/channel034/cell01",
+          "contexts": [
+            "4->2",
+            "4->3",
+            "4->6"
+          ],
+          "train_source_count": 34
+        },
+        {
+          "cell_id": "20180823/session01/array02/channel045/cell01",
+          "contexts": [
+            "4->2",
+            "4->3",
+            "4->6"
+          ],
+          "train_source_count": 34
+        },
+        {
+          "cell_id": "20181004/session01/array02/channel045/cell01",
+          "contexts": [
+            "2->3",
+            "4->2"
+          ],
+          "train_source_count": 20
+        },
+        {
+          "cell_id": "20181004/session01/array02/channel045/cell02",
+          "contexts": [
+            "2->3",
+            "4->2"
+          ],
+          "train_source_count": 20
+        }
+      ],
+      "hash": "dc8659516e4368a17ec687f3e1839d5e7c37830b534ca1b953013c5a2bed530b",
+      "target_mode": "anywhere"
+    },
+    "middle": {
+      "eligible_unit_count": 15,
+      "entries": [
+        {
+          "cell_id": "20180716/session01/array01/channel026/cell02",
+          "contexts": [
+            "4->3",
+            "4->5",
+            "4->6"
+          ],
+          "train_source_count": 31
+        },
+        {
+          "cell_id": "20180716/session01/array02/channel045/cell01",
+          "contexts": [
+            "4->3",
+            "4->5",
+            "4->6"
+          ],
+          "train_source_count": 31
+        },
+        {
+          "cell_id": "20180731/session01/array02/channel045/cell01",
+          "contexts": [
+            "4->2",
+            "4->3"
+          ],
+          "train_source_count": 23
+        },
+        {
+          "cell_id": "20180731/session01/array03/channel086/cell02",
+          "contexts": [
+            "4->2",
+            "4->3"
+          ],
+          "train_source_count": 23
+        },
+        {
+          "cell_id": "20180823/session01/array01/channel006/cell01",
+          "contexts": [
+            "4->2",
+            "4->3",
+            "4->6"
+          ],
+          "train_source_count": 34
+        },
+        {
+          "cell_id": "20180823/session01/array01/channel020/cell01",
+          "contexts": [
+            "4->2",
+            "4->3",
+            "4->6"
+          ],
+          "train_source_count": 34
+        },
+        {
+          "cell_id": "20180823/session01/array01/channel021/cell01",
+          "contexts": [
+            "4->2",
+            "4->3",
+            "4->6"
+          ],
+          "train_source_count": 34
+        },
+        {
+          "cell_id": "20180823/session01/array01/channel029/cell02",
+          "contexts": [
+            "4->2",
+            "4->3",
+            "4->6"
+          ],
+          "train_source_count": 34
+        },
+        {
+          "cell_id": "20180823/session01/array02/channel034/cell01",
+          "contexts": [
+            "4->2",
+            "4->3",
+            "4->6"
+          ],
+          "train_source_count": 34
+        },
+        {
+          "cell_id": "20180823/session01/array02/channel045/cell01",
+          "contexts": [
+            "4->2",
+            "4->3",
+            "4->6"
+          ],
+          "train_source_count": 34
+        },
+        {
+          "cell_id": "20180907/session01/array01/channel020/cell01",
+          "contexts": [
+            "4->3",
+            "4->6"
+          ],
+          "train_source_count": 24
+        },
+        {
+          "cell_id": "20180907/session01/array01/channel020/cell02",
+          "contexts": [
+            "4->3",
+            "4->6"
+          ],
+          "train_source_count": 24
+        },
+        {
+          "cell_id": "20180907/session01/array01/channel021/cell01",
+          "contexts": [
+            "4->3",
+            "4->6"
+          ],
+          "train_source_count": 24
+        },
+        {
+          "cell_id": "20181015/session01/array01/channel020/cell01",
+          "contexts": [
+            "4->1",
+            "4->3"
+          ],
+          "train_source_count": 22
+        },
+        {
+          "cell_id": "20181015/session01/array02/channel045/cell01",
+          "contexts": [
+            "4->1",
+            "4->3"
+          ],
+          "train_source_count": 22
+        }
+      ],
+      "hash": "781c31c6dde2ff4b32a85d354cc2766b5379f98d89bd107137eba5421da6aad7",
+      "target_mode": "middle"
+    },
+    "supported_middle": {
+      "eligible_unit_count": 43,
+      "entries": [
+        {
+          "cell_id": "20180705/session01/array01/channel026/cell01",
+          "contexts": [
+            "2->1",
+            "3->1"
+          ],
+          "train_source_count": 21
+        },
+        {
+          "cell_id": "20180705/session01/array01/channel026/cell03",
+          "contexts": [
+            "2->1",
+            "3->1"
+          ],
+          "train_source_count": 21
+        },
+        {
+          "cell_id": "20180705/session01/array02/channel045/cell01",
+          "contexts": [
+            "2->1",
+            "3->1"
+          ],
+          "train_source_count": 21
+        },
+        {
+          "cell_id": "20180705/session01/array03/channel086/cell01",
+          "contexts": [
+            "2->1",
+            "3->1"
+          ],
+          "train_source_count": 21
+        },
+        {
+          "cell_id": "20180705/session01/array03/channel086/cell03",
+          "contexts": [
+            "2->1",
+            "3->1"
+          ],
+          "train_source_count": 21
+        },
+        {
+          "cell_id": "20180706/session01/array02/channel045/cell01",
+          "contexts": [
+            "2->1",
+            "3->1",
+            "5->1"
+          ],
+          "train_source_count": 34
+        },
+        {
+          "cell_id": "20180706/session01/array03/channel086/cell01",
+          "contexts": [
+            "2->1",
+            "3->1",
+            "5->1"
+          ],
+          "train_source_count": 34
+        },
+        {
+          "cell_id": "20180706/session01/array03/channel086/cell02",
+          "contexts": [
+            "2->1",
+            "3->1",
+            "5->1"
+          ],
+          "train_source_count": 34
+        },
+        {
+          "cell_id": "20180716/session01/array01/channel026/cell02",
+          "contexts": [
+            "2->1",
+            "3->1"
+          ],
+          "train_source_count": 23
+        },
+        {
+          "cell_id": "20180716/session01/array02/channel045/cell01",
+          "contexts": [
+            "2->1",
+            "3->1"
+          ],
+          "train_source_count": 23
+        },
+        {
+          "cell_id": "20180726/session01/array02/channel042/cell01",
+          "contexts": [
+            "3->1",
+            "6->1"
+          ],
+          "train_source_count": 25
+        },
+        {
+          "cell_id": "20180726/session01/array02/channel045/cell01",
+          "contexts": [
+            "3->1",
+            "6->1"
+          ],
+          "train_source_count": 25
+        },
+        {
+          "cell_id": "20180726/session01/array03/channel086/cell01",
+          "contexts": [
+            "3->1",
+            "6->1"
+          ],
+          "train_source_count": 25
+        },
+        {
+          "cell_id": "20180726/session01/array03/channel086/cell02",
+          "contexts": [
+            "3->1",
+            "6->1"
+          ],
+          "train_source_count": 25
+        },
+        {
+          "cell_id": "20180727/session01/array02/channel042/cell01",
+          "contexts": [
+            "5->1",
+            "6->1"
+          ],
+          "train_source_count": 21
+        },
+        {
+          "cell_id": "20180727/session01/array03/channel086/cell01",
+          "contexts": [
+            "5->1",
+            "6->1"
+          ],
+          "train_source_count": 21
+        },
+        {
+          "cell_id": "20180730/session01/array02/channel042/cell01",
+          "contexts": [
+            "5->1",
+            "6->1"
+          ],
+          "train_source_count": 23
+        },
+        {
+          "cell_id": "20180730/session01/array02/channel045/cell01",
+          "contexts": [
+            "5->1",
+            "6->1"
+          ],
+          "train_source_count": 23
+        },
+        {
+          "cell_id": "20180730/session01/array03/channel086/cell01",
+          "contexts": [
+            "5->1",
+            "6->1"
+          ],
+          "train_source_count": 23
+        },
+        {
+          "cell_id": "20180801/session01/array02/channel045/cell01",
+          "contexts": [
+            "2->1",
+            "5->1",
+            "6->1"
+          ],
+          "train_source_count": 26
+        },
+        {
+          "cell_id": "20180801/session01/array03/channel086/cell01",
+          "contexts": [
+            "2->1",
+            "5->1",
+            "6->1"
+          ],
+          "train_source_count": 26
+        },
+        {
+          "cell_id": "20180801/session01/array03/channel086/cell02",
+          "contexts": [
+            "2->1",
+            "5->1",
+            "6->1"
+          ],
+          "train_source_count": 26
+        },
+        {
+          "cell_id": "20180807/session01/array01/channel006/cell02",
+          "contexts": [
+            "4->1",
+            "5->1"
+          ],
+          "train_source_count": 28
+        },
+        {
+          "cell_id": "20180807/session01/array01/channel006/cell04",
+          "contexts": [
+            "4->1",
+            "5->1"
+          ],
+          "train_source_count": 28
+        },
+        {
+          "cell_id": "20180807/session01/array03/channel086/cell01",
+          "contexts": [
+            "4->1",
+            "5->1"
+          ],
+          "train_source_count": 28
+        },
+        {
+          "cell_id": "20180807/session01/array03/channel086/cell02",
+          "contexts": [
+            "4->1",
+            "5->1"
+          ],
+          "train_source_count": 28
+        },
+        {
+          "cell_id": "20180807/session01/array03/channel086/cell04",
+          "contexts": [
+            "4->1",
+            "5->1"
+          ],
+          "train_source_count": 28
+        },
+        {
+          "cell_id": "20180814/session01/array01/channel006/cell01",
+          "contexts": [
+            "5->1",
+            "6->1"
+          ],
+          "train_source_count": 20
+        },
+        {
+          "cell_id": "20180814/session01/array01/channel020/cell01",
+          "contexts": [
+            "5->1",
+            "6->1"
+          ],
+          "train_source_count": 20
+        },
+        {
+          "cell_id": "20180814/session01/array01/channel021/cell01",
+          "contexts": [
+            "5->1",
+            "6->1"
+          ],
+          "train_source_count": 20
+        },
+        {
+          "cell_id": "20180814/session01/array01/channel021/cell02",
+          "contexts": [
+            "5->1",
+            "6->1"
+          ],
+          "train_source_count": 20
+        },
+        {
+          "cell_id": "20180814/session01/array02/channel045/cell02",
+          "contexts": [
+            "5->1",
+            "6->1"
+          ],
+          "train_source_count": 20
+        },
+        {
+          "cell_id": "20180823/session01/array01/channel006/cell01",
+          "contexts": [
+            "3->1",
+            "6->1"
+          ],
+          "train_source_count": 23
+        },
+        {
+          "cell_id": "20180823/session01/array01/channel020/cell01",
+          "contexts": [
+            "3->1",
+            "6->1"
+          ],
+          "train_source_count": 23
+        },
+        {
+          "cell_id": "20180823/session01/array01/channel021/cell01",
+          "contexts": [
+            "3->1",
+            "6->1"
+          ],
+          "train_source_count": 23
+        },
+        {
+          "cell_id": "20180823/session01/array01/channel029/cell02",
+          "contexts": [
+            "3->1",
+            "6->1"
+          ],
+          "train_source_count": 23
+        },
+        {
+          "cell_id": "20180823/session01/array02/channel034/cell01",
+          "contexts": [
+            "3->1",
+            "6->1"
+          ],
+          "train_source_count": 23
+        },
+        {
+          "cell_id": "20180823/session01/array02/channel045/cell01",
+          "contexts": [
+            "3->1",
+            "6->1"
+          ],
+          "train_source_count": 23
+        },
+        {
+          "cell_id": "20180905/session01/array01/channel006/cell01",
+          "contexts": [
+            "5->1",
+            "6->1"
+          ],
+          "train_source_count": 23
+        },
+        {
+          "cell_id": "20180905/session01/array01/channel020/cell01",
+          "contexts": [
+            "5->1",
+            "6->1"
+          ],
+          "train_source_count": 23
+        },
+        {
+          "cell_id": "20180905/session01/array01/channel020/cell02",
+          "contexts": [
+            "5->1",
+            "6->1"
+          ],
+          "train_source_count": 23
+        },
+        {
+          "cell_id": "20180905/session01/array01/channel021/cell01",
+          "contexts": [
+            "5->1",
+            "6->1"
+          ],
+          "train_source_count": 23
+        },
+        {
+          "cell_id": "20180905/session01/array01/channel029/cell01",
+          "contexts": [
+            "5->1",
+            "6->1"
+          ],
+          "train_source_count": 23
+        }
+      ],
+      "hash": "795a20db606977587d1a86c393965059d741095d4f9c74e2d255202b42102a7d",
+      "target_mode": "supported_middle"
+    }
+  },
+  "observed_global_statistics": {
+    "anywhere": 0.0018779946739230224,
+    "family_max_three_targets": 0.0038601434776949326,
+    "middle": -0.010680532277341484,
+    "supported_middle": 0.0038601434776949326
+  },
+  "observed_stats": {
+    "anywhere": {
+      "aggregation_policy": "aggregate per unit first within session, then equally across sessions",
+      "prediction_row_count": 68,
+      "preprocessing_policy": "continuous predictors are centered within endpoint using train rows, then train-standardized; endpoint intercepts are unpenalized",
+      "session_aggregate": {
+        "equal_session_mean": 0.0018779946739230224,
+        "metric": "delta_log_loss_baseline_minus_augmented",
+        "session_count": 4,
+        "session_means": {
+          "20180716_session01": -0.005019353058957288,
+          "20180731_session01": 0.007981703315941724,
+          "20180823_session01": -0.005740885659421935,
+          "20181004_session01": 0.010290514098129588
+        }
+      },
+      "skipped": {
+        "no_eligible_context": 118,
+        "unit_train_source_count_below_threshold": 65
+      },
+      "target_mode": "anywhere",
+      "unit_result_count": 12
+    },
+    "middle": {
+      "aggregation_policy": "aggregate per unit first within session, then equally across sessions",
+      "prediction_row_count": 78,
+      "preprocessing_policy": "continuous predictors are centered within endpoint using train rows, then train-standardized; endpoint intercepts are unpenalized",
+      "session_aggregate": {
+        "equal_session_mean": -0.010680532277341484,
+        "metric": "delta_log_loss_baseline_minus_augmented",
+        "session_count": 5,
+        "session_means": {
+          "20180716_session01": -0.005019353058957288,
+          "20180731_session01": 0.0003962179906640273,
+          "20180823_session01": -0.005740885659421935,
+          "20180907_session01": -0.02763822354544006,
+          "20181015_session01": -0.015400417113552167
+        }
+      },
+      "skipped": {
+        "no_eligible_context": 84,
+        "unit_train_source_count_below_threshold": 96
+      },
+      "target_mode": "middle",
+      "unit_result_count": 15
+    },
+    "supported_middle": {
+      "aggregation_policy": "aggregate per unit first within session, then equally across sessions",
+      "prediction_row_count": 217,
+      "preprocessing_policy": "continuous predictors are centered within endpoint using train rows, then train-standardized; endpoint intercepts are unpenalized",
+      "session_aggregate": {
+        "equal_session_mean": 0.0038601434776949326,
+        "metric": "delta_log_loss_baseline_minus_augmented",
+        "session_count": 11,
+        "session_means": {
+          "20180705_session01": -0.010930104780435424,
+          "20180706_session01": -0.016710231853598767,
+          "20180716_session01": 0.0027834165467248706,
+          "20180726_session01": 0.004408473395349846,
+          "20180727_session01": 0.0041963998742025055,
+          "20180730_session01": 0.01763357088279821,
+          "20180801_session01": 0.004329986923022573,
+          "20180807_session01": 0.009933114417401212,
+          "20180814_session01": 0.02078919729753672,
+          "20180823_session01": 0.01035201654253772,
+          "20180905_session01": -0.004324260990895212
+        }
+      },
+      "skipped": {
+        "no_eligible_context": 75,
+        "unit_train_source_count_below_threshold": 77
+      },
+      "target_mode": "supported_middle",
+      "unit_result_count": 43
+    }
+  },
+  "pvalues": {
+    "session_endpoint_split": {
+      "anywhere": {
+        "exceedances": 39,
+        "nulls": 100,
+        "observed": 0.0018779946739230224,
+        "p_value": 0.39603960396039606
+      },
+      "family_max_three_targets": {
+        "exceedances": 47,
+        "nulls": 100,
+        "observed": 0.0038601434776949326,
+        "p_value": 0.4752475247524752
+      },
+      "middle": {
+        "exceedances": 92,
+        "nulls": 100,
+        "observed": -0.010680532277341484,
+        "p_value": 0.9207920792079208
+      },
+      "supported_middle": {
+        "exceedances": 9,
+        "nulls": 100,
+        "observed": 0.0038601434776949326,
+        "p_value": 0.09900990099009901
+      }
+    },
+    "session_endpoint_split_temporal_half": {
+      "anywhere": {
+        "exceedances": 30,
+        "nulls": 100,
+        "observed": 0.0018779946739230224,
+        "p_value": 0.3069306930693069
+      },
+      "family_max_three_targets": {
+        "exceedances": 43,
+        "nulls": 100,
+        "observed": 0.0038601434776949326,
+        "p_value": 0.43564356435643564
+      },
+      "middle": {
+        "exceedances": 84,
+        "nulls": 100,
+        "observed": -0.010680532277341484,
+        "p_value": 0.8415841584158416
+      },
+      "supported_middle": {
+        "exceedances": 19,
+        "nulls": 100,
+        "observed": 0.0038601434776949326,
+        "p_value": 0.19801980198019803
+      }
+    }
+  },
+  "status": "complete",
+  "target_modes": [
+    "middle",
+    "anywhere",
+    "supported_middle"
+  ],
+  "temporal_null_policy": "coarse temporal-half sensitivity adds training-derived trial-index half to session/endpoint/split strata",
+  "temporal_nulls": 100
+}

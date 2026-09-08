@@ -17,7 +17,35 @@ by spike counts or firing rates. For model data, it is an RNN or other agent
 hidden dimension represented by its activation.
 
 Adjacent time bins are not independent samples. All bins from a source trial
-must remain in one validation split.
+must remain in one validation split. Trials and units are nested within recording
+sessions; serial dependence and session structure must be respected in uncertainty
+and null calculations. Neither cells nor sessions should silently be counted as
+independent animals.
+
+### Complementary condition-level contract (2026-09-08)
+
+A source-safe pseudopopulation is a legitimate candidate evaluation object when
+large simultaneous recordings are unavailable. Retain the real source table
+(`source_trial_id × recorded unit × cue bin`, with session, exposure, endpoint,
+behavior-defined target and provenance), then a separate assembly manifest linking
+each synthetic row/session block to its actual source. Its target is reproducible
+condition-level response differences beyond endpoints, not reconstruction of one
+real simultaneous trial. Fixed195 is the selected-unit scope, not a requirement
+that every analysis have195 fully observed columns.
+
+Split actual trials before assembly and preserve a session block's source across
+its cells and bins. Missing/unrecorded values remain masked, not zero. Use only
+training data for learned transformations and target/support choices, with
+source/session-aware uncertainty and matched conditional nulls. Future-label
+matching defines a conditional benchmark; it does not turn its rows into an
+operational unknown-label population measurement. Same-session grouping is not
+proof of simultaneous recording, and assembly cannot recover unrecorded
+cross-session noise correlations.
+
+Per-unit real-trial checks and source-safe pseudopopulation analyses are
+complementary; individual-cell significance is not required for population
+information. See the [current plan](reports/path-generalization-next-steps-20260908.md)
+and [completed study](professor_updates/path_generalization_20260907/README.md).
 
 ## Required Trial Identity And Events
 
@@ -170,9 +198,12 @@ identifiability limit, not a modeling problem.
 
 ## Primary Evaluation Objects
 
-Every analysis should be able to produce results within each verified
-simultaneous-recording group before any group-level synthesis. It should also be
-able to produce:
+Real-trial population analyses should expose results within each verified
+simultaneous-recording group before group-level synthesis. For a condition-level
+pseudopopulation analysis, instead retain session-block source support, assembly
+lineage and source-aware uncertainty; report per-unit/session diagnostics where
+estimable without requiring individually significant units or unrecorded
+simultaneity. The relevant evaluation should also be able to produce:
 
 - a start-and-goal-only path baseline;
 - raw-population and PCA neural baselines;
@@ -202,7 +233,7 @@ These characterize and control H1; they are not the primary research question.
 
 ## Current Data Boundary
 
-The current local JLD2 export starts at cue offset and contains selected
+The legacy local JLD2 export starts at cue offset and contains selected
 single-cell navigation-period spike counts plus spatial-bin IDs. It lacks the
 cue period, start/goal labels, and a verified synchronized population matrix.
 It therefore cannot instantiate this contract or test H1.
@@ -224,6 +255,12 @@ marker-label semantics, absent gaze/raycast controls, subject/session metadata,
 and trial-level QC remain open. Clock-discrepant trials such as 20181105 trial
 178 must be retained with explicit QC flags rather than silently repaired or
 dropped.
+
+The September exploratory import/graph/pseudopopulation/CEBRA studies are now
+completed and documented in the [study package](professor_updates/path_generalization_20260907/README.md).
+They do not remove the metadata/observability limits above. The original test was
+exposed during early V6 reconnaissance and is not pristine; references above to
+an untouched test describe a prospective design, not the status of that dataset.
 
 ## Open Decisions
 
