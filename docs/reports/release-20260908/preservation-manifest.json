@@ -321,16 +321,16 @@
     "log": "code-only-tests.log"
   },
   "status": "sealed_after_leaf_merge",
-  "sealed_utc": "2026-09-08T10:21:53.713069+00:00",
+  "sealed_utc": "2026-09-08T10:53:21.103564+00:00",
   "leaf_commit": "9e0457438c901ad6aa0c06be107d2cc130e7a884",
   "leaf_is_ancestor": true,
   "leaf_integration_receipt": "leaf-integration.json",
   "source_hash_semantics": "sha256 = source bytes at sealing; captured_source_sha256 = earlier copy-time identity; packaged_sha256 = final deliverable. Source working trees may later change.",
   "code_provenance": {
-    "records": 46,
-    "unique_contents": 23,
+    "records": 49,
+    "unique_contents": 26,
     "archive_only_intermediates": 1,
-    "verified_source_paths": 45
+    "verified_source_paths": 48
   },
   "tracked_code_sha256": {
     "docs/cebra_pilot/implementation/__init__.py": "75c4b46bfc88be5d6b43d8b4e9787a613cb13da1fb3ce213608e752f80727897",
@@ -365,7 +365,10 @@
     "docs/reports/archive/research-20260908/code/test_start_goal_cebra_baseline-f9dc1c4ad1e3.py.txt": "f9dc1c4ad1e38165f8f15100edba644ecec7cb3130e817833b922bcbcbb6d2ed",
     "docs/reports/archive/research-20260908/code/verify_artifacts-75ad9e440e38.py.txt": "75ad9e440e386f79bce52839417200ee36afcda03e6a8dbcdde811eb0a516192",
     "docs/reports/archive/research-20260908/code/verify_completed_work-691e0a259d8e.py.txt": "691e0a259d8ec2297768894e690f93dfbc5ed895bcce33e1b3a3e3543be20231",
+    "docs/reports/archive/research-20260908/code/verify_place_candidate_schema-b09f02d87e5c.py.txt": "b09f02d87e5c13e943ac29a5ab50b8e518fed27bbd08c40f7268fc353bc31df0",
+    "docs/reports/archive/research-20260908/code/verify_snapshot-18100fb538d4.py.txt": "18100fb538d4f2d939567a0c3b40705ec33a0165e9c746e9465501b159145f95",
     "docs/reports/archive/research-20260908/code/verify_study-d34fb321575d.py.txt": "d34fb321575dc20ffc05ea0d342da413e484a0ccc77f29457000735bad4255f5",
+    "docs/reports/archive/research-20260908/code/verify_transferred_package-a729f16a3b0c.py.txt": "a729f16a3b0ccbd43f4a9ea4ae998f767ef1aeb60684fcb56d58bf0e3a5eedc2",
     "learning/archive/pca-explainer-build-20260907.py": "4e0211ed01a46561d6cbb9cf6a0d24f506bde63dbf2d2d27ece0c3de4661d69a",
     "scripts/__init__.py": "2f08ab558adc082760a7f1011082b6af1f76cb2f68ba24951a84671d59d7e41c",
     "scripts/build_path_generalization_report.py": "f508ba7d5d543b796479086d5a054877d6078a574995e9b36ffd22cd4dfbbafd",
@@ -400,5 +403,6 @@
     "scripts/verify_path_generalization_package.py": "9fb1c03a7b696bc4a0567f06848dbc192bc69937275bc3d83260aecf22a6bdc3",
     "scripts/verify_path_generalization_results.py": "1ab0371aa2fcc0e97987964f7df431ffeac28d7a97503d73ca16738415323844",
     "scripts/verify_place195_v6_v9_artifacts.py": "691e0a259d8ec2297768894e690f93dfbc5ed895bcce33e1b3a3e3543be20231"
-  }
+  },
+  "coverage_note": "Completed-study inventory, not an open-ended mirror. New concurrent outputs/path-autoresearch-management-20260908/audit_prefit_support.py is outside this completed-study release and retained in the owning main worktree. No ongoing source files or outputs were deleted."
 }

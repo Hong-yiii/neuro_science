@@ -7,7 +7,7 @@
 - Existing tracked research code/history, plus endpoint and path follow-up runners, tests, report builders and read-only verification entry points from the accessible sibling worktrees.
 - Current synthesis and continuation brief; historical plans/journals; professor/teaching reports; the PCA/below-chance explanation and curated figure.
 - A byte-identical portable copy of the endpoint HTML, which was previously only in ignored outputs. Its nine figures and metric CSV are embedded.
-- [Historical code archive](archive/research-20260908/README.md): 46 recorded project-code sources mapped to 23 distinct snapshots, including the original PCA plotting script and earlier temporary report/audit-view builders. Old and new execution/loader/reporting versions remain distinguishable rather than silently overwritten.
+- [Historical code archive](archive/research-20260908/README.md): 49 recorded project-code sources mapped to 26 distinct snapshots, including the original PCA plotting script, earlier temporary report/audit-view builders and three historical transfer-audit helpers. The latter can access raw/mixed-split files and the removed eight-unit candidate supplement; they are archival text only, were not executed during packaging, and do not authorize cohort expansion. Old and new execution/loader/reporting versions remain distinguishable rather than silently overwritten.
 - Explicit status labels for accepted historical results, frozen plans, rejected interpretations, superseded artifacts and local-only files. Intermediate notes were not arbitrarily deleted.
 
 The main, endpoint and path originals remain at:

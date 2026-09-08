@@ -1,0 +1,62 @@
+"""Read metadata/marker columns only; never fit or inspect path/response outcomes."""
+from pathlib import Path
+import json
+import sys
+import hashlib
+import numpy as np
+import scipy.io as sio
+
+sys.path.insert(0, str(Path.cwd()))
+from scripts.import_place195_sessions import (
+    read_ripple_trials, read_eyelink_trials, _find_first_numeric_line,
+    _is_trial_triplet,
+)
+
+package = Path('data/raw/lab_server/cortex_place_filtered_candidates8_20260906')
+manifest = json.loads((package/'TRANSFER_MANIFEST.json').read_text())
+old = Path('/Users/hongyilin/neuro_science/data/raw/lab_server/cortex_picasso_misc_place195_20260830')
+out = {'scientific_status':'software_smoke_test_provenance_and_schema_only',
+       'path_coordinate_columns_loaded':False, 'response_outcome_comparisons':False,
+       'model_fitting':False, 'sessions':[], 'units':[],
+       'timestamp_units':'milliseconds by the same upstream/importer convention as the current 195 files; no independent acquisition unit annotation found',
+       'simultaneity':'not established by these checks'}
+
+for session, base in [('20181026/session01',package),('20181102/session01',old)]:
+    p = base/session
+    rp=read_ripple_trials(p/'rplparallel.mat')
+    el=read_eyelink_trials(p/'eyelink.mat')
+    logs=list(p.glob('RawData_T1-400/session_*.txt'))
+    assert len(logs)==1
+    line, _ = _find_first_numeric_line(logs[0])
+    # Only marker codes and delta time: never load x/y/heading.
+    marker_dt=np.loadtxt(logs[0],skiprows=line,usecols=(0,1))
+    markers=np.rint(marker_dt[:,0]).astype(int)
+    marker_rows=np.flatnonzero((markers//10>=1)&(markers//10<=4))
+    assert len(marker_rows)%3==0
+    triplets=markers[marker_rows].reshape(-1,3)
+    valid=all(_is_trial_triplet(tuple(v.tolist())) for v in triplets)
+    matched=bool(np.array_equal(rp.codes,el.codes) and np.array_equal(rp.codes,triplets))
+    assert matched and valid
+    out['sessions'].append(dict(session_id=session.replace('/','_'),
+                               trial_count=len(triplets),marker_triplets_match_all_three_streams=matched,
+                               valid_event_sequence=valid,
+                               ripple_event_times_finite=bool(np.isfinite(rp.times).all()),
+                               ripple_cue_windows_positive=bool(np.all(rp.times[:,1]>rp.times[:,0])),
+                               behavioral_values_inspected=False,
+                               raw_input_root=str(base)))
+
+for unit in manifest['candidates']:
+    p=package/unit['cell_id']/'spiketrain.mat'
+    data=sio.loadmat(p,variable_names=['reference','components','timestamps'],squeeze_me=True)
+    times=np.asarray(data['timestamps']).reshape(-1)
+    row=dict(cell_id=unit['cell_id'],mat_format='MATLAB_v5',
+             reference=str(data['reference']),components=np.asarray(data['components']).reshape(-1).tolist(),
+             numeric_timestamp_vector=times.ndim==1 and np.issubdtype(times.dtype,np.number),
+             timestamps_finite=bool(np.isfinite(times).all()),timestamps_sorted=bool(np.all(np.diff(times)>=0)),
+             timestamps_nonempty=bool(times.size),sha256=hashlib.sha256(p.read_bytes()).hexdigest())
+    assert row['reference']=='from firings.curated2.mda'
+    assert all(row[k] for k in ['numeric_timestamp_vector','timestamps_finite','timestamps_sorted','timestamps_nonempty'])
+    out['units'].append(row)
+
+(package/'SCHEMA_VERIFICATION.json').write_text(json.dumps(out,indent=2)+'\n')
+print(json.dumps({'sessions':out['sessions'],'verified_units':len(out['units'])},indent=2))

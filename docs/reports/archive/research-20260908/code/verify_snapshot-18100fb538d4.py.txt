@@ -1,0 +1,57 @@
+"""Read-only software smoke test: provenance/inventory, never trial outcomes."""
+import csv
+import hashlib
+import json
+import statistics
+from collections import Counter
+from pathlib import Path
+
+root = Path.home() / "neuro_science"
+imp = root / "outputs/prospective_path_first_run/place195-all-sessions-20260830-v4"
+
+def sha(path):
+    h = hashlib.sha256()
+    with path.open("rb") as f:
+        for b in iter(lambda: f.read(4 * 1024 * 1024), b""):
+            h.update(b)
+    return h.hexdigest()
+
+cache = {}
+def check(records, base):
+    bad = []
+    for r in records:
+        p = base / r["path"]
+        if not p.is_file():
+            bad.append({"path": r["path"], "issue": "absent"})
+            continue
+        if p not in cache:
+            cache[p] = (p.stat().st_size, sha(p))
+        size, digest = cache[p]
+        if ("bytes" in r and size != int(r["bytes"])) or digest != r["sha256"]:
+            bad.append({"path": r["path"], "issue": "mismatch", "actual_bytes": size, "actual_sha256": digest})
+    return {"records": len(records), "matched": len(records)-len(bad), "issues": bad}
+
+with (imp / "source_files.csv").open() as f:
+    sources = list(csv.DictReader(f))
+with (imp / "units.csv").open() as f:
+    units = list(csv.DictReader(f))
+summary = json.loads((imp / "summary.json").read_text())
+artifacts = [{"path": name, "sha256": digest} for name, digest in summary["artifact_hashes"].items()]
+manifest = json.loads((root / "data/manifests/latest.json").read_text())
+counts = Counter(r["session_id"] for r in units)
+receipt = (root / "data/manifests/20181105_session01_candidate_source_files.txt").read_text().splitlines()
+active = root / "data/raw/lab_server/cortex_picasso_misc_place195_20260830"
+result = {
+    "status": "software_smoke_test_provenance_only",
+    "sources": check(sources, root),
+    "outputs": check(artifacts, imp),
+    "manifest": check(manifest["files"], root),
+    "units": len(units), "sessions": len(counts),
+    "trials_rows": sum(1 for _ in (imp / "trials.csv").open())-1,
+    "units_per_session": {"min": min(counts.values()), "median": statistics.median(counts.values()), "max": max(counts.values()), "counts": dict(counts)},
+    "historical_bundle_present": (root / "data/raw/lab_server/cortex_picasso_misc_20260830").exists(),
+    "historical_receipt": receipt,
+    "receipt_absent_in_active": [p for p in receipt if not (active / p).is_file()],
+    "recording_status": dict(Counter(r["simultaneity_status"] for r in units)),
+}
+print(json.dumps(result, indent=2))

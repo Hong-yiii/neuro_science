@@ -1,0 +1,34 @@
+"""Checksum-only transfer verification, run on homelab after scp completes."""
+from pathlib import Path
+import hashlib
+import json
+import subprocess
+
+root=Path.home()/'neuro_science'
+package=root/'data/raw/lab_server/cortex_place_filtered_candidates8_20260906'
+def sha(p):
+    h=hashlib.sha256()
+    with p.open('rb') as f:
+        for b in iter(lambda:f.read(4194304),b''):
+            h.update(b)
+    return h.hexdigest()
+
+checks=[]
+for line in (package/'SHA256SUMS').read_text().splitlines():
+    digest,name=line.split('  ',1)
+    actual=sha(package/name)
+    checks.append(dict(path=name,sha256=actual,matches=actual==digest))
+manifest=json.loads((package/'TRANSFER_MANIFEST.json').read_text())
+reused=[]
+for r in manifest['reused_homelab_dependencies']:
+    p=root/r['path']
+    reused.append(dict(path=r['path'],matches=p.stat().st_size==int(r['bytes']) and sha(p)==r['sha256']))
+assert all(r['matches'] for r in checks+reused)
+split=root/'outputs/prospective_path_first_run/place195-splits-20260830-v3/source_trial_splits.csv'
+print(json.dumps(dict(status='verified',package=str(package),verified_package_files=len(checks),
+                     total_package_files=sum(p.is_file() for p in package.rglob('*')),
+                     upstream_payload_files=len(manifest['files']),upstream_payload_bytes=manifest['total_payload_bytes'],
+                     package_sha256_manifest=sha(package/'SHA256SUMS'),reused_dependencies=reused,
+                     source_trial_split_sha256=sha(split),
+                     git_head=subprocess.check_output(['git','-C',str(root),'rev-parse','HEAD'],text=True).strip(),
+                     checks=checks),indent=2))

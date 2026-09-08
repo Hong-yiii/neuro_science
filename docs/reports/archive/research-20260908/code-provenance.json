@@ -370,5 +370,29 @@
     "bytes": 6023,
     "provenance_kind": "temporary source verified at consolidation; recovery uses tracked copy",
     "status": "archival plot builder; do not blindly execute historical absolute output paths"
+  },
+  {
+    "study": "historical-transfer-audit",
+    "source": "neuro_science/outputs/data_transfer_audit_20260906/verify_place_candidate_schema.py",
+    "archive": "code/verify_place_candidate_schema-b09f02d87e5c.py.txt",
+    "sha256": "b09f02d87e5c13e943ac29a5ab50b8e518fed27bbd08c40f7268fc353bc31df0",
+    "bytes": 3534,
+    "status": "historical only; raw/mixed-split access and excluded eight-candidate context; NOT executed during packaging or authorized for reuse"
+  },
+  {
+    "study": "historical-transfer-audit",
+    "source": "neuro_science/outputs/data_transfer_audit_20260906/verify_snapshot.py",
+    "archive": "code/verify_snapshot-18100fb538d4.py.txt",
+    "sha256": "18100fb538d4f2d939567a0c3b40705ec33a0165e9c746e9465501b159145f95",
+    "bytes": 2519,
+    "status": "historical only; raw/mixed-split access and excluded eight-candidate context; NOT executed during packaging or authorized for reuse"
+  },
+  {
+    "study": "historical-transfer-audit",
+    "source": "neuro_science/outputs/data_transfer_audit_20260906/verify_transferred_package.py",
+    "archive": "code/verify_transferred_package-a729f16a3b0c.py.txt",
+    "sha256": "a729f16a3b0ccbd43f4a9ea4ae998f767ef1aeb60684fcb56d58bf0e3a5eedc2",
+    "bytes": 1663,
+    "status": "historical only; raw/mixed-split access and excluded eight-candidate context; NOT executed during packaging or authorized for reuse"
   }
 ]
