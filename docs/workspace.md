@@ -107,10 +107,12 @@ Local recovery:
   symlink identities and 2,697 original directory permission modes. The migration scripts are retained as one-off audit tools;
   do not repeat the move operation.
 
-The inaccessible Mac worktree registration at
-`/Users/hongyilin/.codex/worktrees/c797/neuro_science` has no inspected contents on
-this host. Its commit is retained in Git; no Mac directory was deleted or claimed
-backed up. Its stale local registration can be removed without touching Mac data.
+The inaccessible Mac worktree at
+`/Users/hongyilin/.codex/worktrees/c797/neuro_science` has no inspected filesystem
+contents on this host. Its stale registration was pruned only after verifying its
+index matched retained commit `4946c1b` and copying its metadata to
+`work/workspace-consolidation-20260910/stale-mac-registration/`. No Mac directory
+was deleted or claimed backed up. There is now one registered local worktree.
 
 ## Recreate the software checkout
 

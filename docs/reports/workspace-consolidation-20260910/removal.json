@@ -1,0 +1,11 @@
+{
+  "published_commit_before_removal": "2e17e733bb0b6466d22eb543ea252c25b402f3b3",
+  "removed": [
+    "/home/hongyi-home-lab/neuro_science-path-autoresearch-20260908",
+    "/home/hongyi-home-lab/neuro_science-path-diagnosis",
+    "/home/hongyi-home-lab/neuro_science-release-20260908",
+    "/home/hongyi-home-lab/neuro_science-start-goal-cebra"
+  ],
+  "source_and_destination_checks_passed": true,
+  "branches_and_history_retained": true
+}

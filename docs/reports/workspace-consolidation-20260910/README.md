@@ -39,8 +39,8 @@ folders after PR/log coverage. No other project is included.
 | Path generalization | 342 fit records, 510,000 updates, 4,488 artifact hashes and 42 numeric-prefix pairs checked; exact family p remains 19/21; zero new fits. |
 | Endpoint | 2,251 baseline + 5,515 follow-up hashes and 690 + 1,618 metric rows checked; zero fits/checkpoint loads/raw or original-split access. |
 | Preprocessing numerical replay | Passed in 12m02s: 82,283 forward replays, 100 ordinary + 100 temporal null worlds, 200 source bootstraps, zero new fits. Local `preprocessing-replay.json`; tracked summary in `verification.json`. |
-| Fresh Git checkout and package | Pending final commit/check. |
-| Independent final review | Pending. |
+| Fresh Git checkout and package | Commit `2e17e73`: both submodules initialized from remotes; 97 tests, 298 current package checksums and the 98-file path package passed; clean clone afterward. Retained interpreter used; no new-runtime installation claim. |
+| Independent final review | [No findings; approved immutable `2e17e73`](review-final.md) for push/deletion from preservation standpoint. That commit was published to PR #5 before removal. |
 | LSP/static checks | Two initial imported files and the small software runner confirmed clean; large driver/test checks timed out. Independent review classified pre-existing generic throw flags as fail-closed propagation: the CLI logs failures and re-raises. The named PackageNotFoundError catch is not bare. No blanket type-clean claim. |
 
 Detailed local commands/logs/receipts live in
@@ -53,13 +53,27 @@ was retained during manual integration.
 
 ## Removal status
 
-Pending successful PR update, final verification and independent review. The
-four sibling worktrees are not to be removed before those gates pass. The stale
-Mac registration is metadata only; inaccessible Mac contents are outside the
-verified inventory. See [current workspace guide](../../workspace.md) for paths
+**Complete:** four redundant neuroscience worktrees removed with Git's worktree
+command after publication, review and per-file recovery checks. The final
+preflight checked 243 preprocessing, 182 path, 244 release and 102 endpoint
+remaining source/doc files, plus all 17,668 migrated local files and 2,697
+directory modes. Only `~/neuro_science` remains as a local folder and registered
+worktree. Branches, stash, source snapshots, local artifacts and native session
+history are retained. The exact removal receipt is `removal.json` beside this
+ledger.
+
+The first removal attempt correctly stopped before deleting anything because
+this audit's own marksman language server still used a sibling cwd. Only that
+identified child (PID 47459, parent current Pi) was stopped; the prior user Pi
+process was not killed. The successful retry retained its failure log locally.
+
+The stale Mac registration's index matched Git commit `4946c1b`; its metadata was
+copied to `work/workspace-consolidation-20260910/stale-mac-registration/` before
+pruning just that stale registration. No inaccessible Mac contents were touched
+or claimed backed up. See [current workspace guide](../../workspace.md) for paths
 and remaining private-backup requirements.
 
 No biological model fitting, new data acquisition, cohort expansion, Pi-history
-rewriting, process termination, service change or non-neuroscience cleanup was
-performed. Reproducible code/report delivery is **not** a verified off-host backup
+rewriting, user-session termination, service change or non-neuroscience cleanup
+was performed. Reproducible code/report delivery is **not** a verified off-host backup
 of the private dataset and exact historical outputs.
