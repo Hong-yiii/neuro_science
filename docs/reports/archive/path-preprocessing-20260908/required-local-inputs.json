@@ -1,0 +1,202 @@
+[
+  {
+    "path": "outputs/path-autoresearch-management-20260908/FINAL-ATTEMPT-1-FAILURE.json",
+    "bytes": 2248,
+    "sha256": "9f18abb365885d9194da3f42adafd382009430fc0d5411d076d25dd06197b640"
+  },
+  {
+    "path": "outputs/path-autoresearch-management-20260908/PROTOCOL-DRAFT.md",
+    "bytes": 12514,
+    "sha256": "7e47c384791f7bab11ce743ae83562807c21a5583a2a7e788dfc9009b8cdd862"
+  },
+  {
+    "path": "outputs/path-autoresearch-management-20260908/PROTOCOL-FROZEN-V1.md",
+    "bytes": 12514,
+    "sha256": "7e47c384791f7bab11ce743ae83562807c21a5583a2a7e788dfc9009b8cdd862"
+  },
+  {
+    "path": "outputs/path-autoresearch-management-20260908/REVIEW-RESOLUTION.md",
+    "bytes": 5640,
+    "sha256": "c6ccaf5dec6015af7a101f80f44a7abf3803e7e8f2b4570a0306e9f57b0243f2"
+  },
+  {
+    "path": "outputs/path-autoresearch-management-20260908/ROUND2-DECISION.md",
+    "bytes": 2377,
+    "sha256": "16fadac12cf20962c515e74b159b30144c1ada7088ec8aba3a8af66d3f80a33c"
+  },
+  {
+    "path": "outputs/path-autoresearch-management-20260908/SCRATCHPAD.md",
+    "bytes": 19699,
+    "sha256": "31164696cff2120ec42e2bdb707c6e8613a8ef5e51c3d26f18040ba674170f3b"
+  },
+  {
+    "path": "outputs/path-autoresearch-management-20260908/SELECTION-FROZEN.json",
+    "bytes": 1678,
+    "sha256": "bcf77b3b07d0e5a75f18edd796418a154359caefa57b522eee23204ebe772ab3"
+  },
+  {
+    "path": "outputs/path-autoresearch-management-20260908/audit_prefit_support.py",
+    "bytes": 6777,
+    "sha256": "6e4bdaa31b47f7bc02376f58f1cb1c6721cffb0f2ecb7da3c6896b142971ec40"
+  },
+  {
+    "path": "outputs/path-autoresearch-management-20260908/code-review-round1-gate.md",
+    "bytes": 688,
+    "sha256": "0342d611994591de55fe60d7f84cf50cc31e69579d9fc01ebdcad60d2523d0a3"
+  },
+  {
+    "path": "outputs/path-autoresearch-management-20260908/data-evaluator.md",
+    "bytes": 13029,
+    "sha256": "5722cb52cfa683bb3234957d3a9f9ed87a622c81527b4fe9d7737bc1147c3ac7"
+  },
+  {
+    "path": "outputs/path-autoresearch-management-20260908/final-code-controls-review.md",
+    "bytes": 1042,
+    "sha256": "3b657f5cfaa013b471e34b02b255a465d1a4fd183ca340c4a5285efc3f76c96c"
+  },
+  {
+    "path": "outputs/path-autoresearch-management-20260908/final-code-evidence-review.md",
+    "bytes": 1931,
+    "sha256": "13d0f50dd1cf7a5e14a4c67f6abaeba22e2db5225967489517ed858809fb0731"
+  },
+  {
+    "path": "outputs/path-autoresearch-management-20260908/final-code-gate-followup.md",
+    "bytes": 1593,
+    "sha256": "f04de0eade1cd04c7302223dcc99f6af101369453e15b27b8766f07a5ed0ee93"
+  },
+  {
+    "path": "outputs/path-autoresearch-management-20260908/final-code-null-review.md",
+    "bytes": 2677,
+    "sha256": "43677167a4c27cd681a86c4584f2cc630b2f95841814f7ad88198fc4d79f0cd9"
+  },
+  {
+    "path": "outputs/path-autoresearch-management-20260908/final-release-followup.md",
+    "bytes": 618,
+    "sha256": "51f366ea5a56139393d3fb6461858e1bdad5e1e589375d4626f6fe18f1f54461"
+  },
+  {
+    "path": "outputs/path-autoresearch-management-20260908/final-science-results-review.md",
+    "bytes": 6016,
+    "sha256": "53bd3c90462e9b7dc7533f643b74a6cc94af443a905a2728e83c2572902e0891"
+  },
+  {
+    "path": "outputs/path-autoresearch-management-20260908/final-teaching-release-review.md",
+    "bytes": 101,
+    "sha256": "ebecfff4cda1965666f9b1642ed31371c30636f24d94662e0bfaa0abd4d1ff50"
+  },
+  {
+    "path": "outputs/path-autoresearch-management-20260908/implementation-evaluator.md",
+    "bytes": 4683,
+    "sha256": "bff2093074d3a3d28ce693d001d431f352ce9f442006db8f73425ca4da435a06"
+  },
+  {
+    "path": "outputs/path-autoresearch-management-20260908/implementation-recon.md",
+    "bytes": 15751,
+    "sha256": "061160a791526a0d545c2bc93ffcb1b24157f9f8856619ae5c118d9fdb661a38"
+  },
+  {
+    "path": "outputs/path-autoresearch-management-20260908/implementation-stage1.md",
+    "bytes": 8454,
+    "sha256": "cc7f9bac14cd9318f7a1c13a5f5dd4aa6dbb08c461b59eb06f92eb19ebad6b01"
+  },
+  {
+    "path": "outputs/path-autoresearch-management-20260908/methods-evaluator.md",
+    "bytes": 13943,
+    "sha256": "f974a591dab5efc513e8cf761b89e566ef2da39cfe90b370464502eb606b99e8"
+  },
+  {
+    "path": "outputs/path-autoresearch-management-20260908/methods-literature-round2.md",
+    "bytes": 13180,
+    "sha256": "7aed05c00b024336d166f997e4b34593358b322206e021ff7a403c2889135d3d"
+  },
+  {
+    "path": "outputs/path-autoresearch-management-20260908/parent-behavior-support.json",
+    "bytes": 317358,
+    "sha256": "0ec5c8f24ca8eda44364ce50f35a4f22d73e4037d0feee88d9dd270196e80842"
+  },
+  {
+    "path": "outputs/path-autoresearch-management-20260908/prefit-selected-sources.json",
+    "bytes": 143678,
+    "sha256": "36c72e8f1f9c55ca3af9458963cf1e1062c8803cb57b33af29df4502e46c2b2f"
+  },
+  {
+    "path": "outputs/path-autoresearch-management-20260908/prefit-source-exclusions.csv.gz",
+    "bytes": 176398,
+    "sha256": "009f7ca17480d2afb7d3202c5e09196c977aa44b676eda9d37e4b07d278a3fc4"
+  },
+  {
+    "path": "outputs/path-autoresearch-management-20260908/prefit-support-audit.json",
+    "bytes": 4468,
+    "sha256": "3a856adb1ef3e33a3b258adc1e3e3cdb028aa1c754425f9725d94573e40e046a"
+  },
+  {
+    "path": "outputs/path-autoresearch-management-20260908/round1-evaluator-round2-gate.md",
+    "bytes": 2524,
+    "sha256": "89db6ef1f8ae0e5f8e84752a39da576b3b11d35d636c9aea8cd051672729e6bf"
+  },
+  {
+    "path": "outputs/path-autoresearch-management-20260908/science-evaluator.md",
+    "bytes": 10576,
+    "sha256": "9aa2961eae8a0a4186b44d49f8397d361906eba98df0172a2f9040737439e2f3"
+  },
+  {
+    "path": "outputs/path-autoresearch-management-20260908/science-implementation-review.md",
+    "bytes": 6261,
+    "sha256": "15cccf655aa0151ea67aa5f89d82d3b86bc192a413f27eb1c4362110fe0e544d"
+  },
+  {
+    "path": "outputs/path-autoresearch-management-20260908/science-outcomes-preliminary.md",
+    "bytes": 7413,
+    "sha256": "0f0c7f036f9c188eeb792307de52f8f3a0cb1052612996225d2042b7a1b42769"
+  },
+  {
+    "path": "outputs/path-autoresearch-management-20260908/science-prefit-v1-review.md",
+    "bytes": 2560,
+    "sha256": "3062c5fa6493438962e88b7e2db273941e98045492c2aa17e06bb6fd48d8dd26"
+  },
+  {
+    "path": "outputs/path-autoresearch-management-20260908/teaching-evaluator.md",
+    "bytes": 7282,
+    "sha256": "848e5545e2cdcf297ea9136e41d3a642014f5070d6431d4aceab7bbc9ee00136"
+  },
+  {
+    "path": "outputs/path-autoresearch-management-20260908/verifier-integration-evaluator.md",
+    "bytes": 3640,
+    "sha256": "7cde790c112732fa895b928d21b153f5f5e59bf8c6cf40c3c42d5476518321fd"
+  },
+  {
+    "path": "outputs/path-autoresearch-management-20260908/verifier-integration-followup.md",
+    "bytes": 1133,
+    "sha256": "b07732a03ec9c064c0a067b435ab781ed31b9e8420d69327c83eba03d1de1218"
+  },
+  {
+    "path": "outputs/path-preprocessing-autoresearch-20260908/biological-20260908T115508Z/export/command_result.json",
+    "bytes": 6675,
+    "sha256": "40142119713180632eed0cc8580511d3002b73322edc453292f5df61e1745f09"
+  },
+  {
+    "path": "outputs/path-preprocessing-autoresearch-20260908/biological-20260908T115508Z/export/command_start.json",
+    "bytes": 3560,
+    "sha256": "3339546c929ca41317b191678179995177ebb3892573e44aa2c7e91f4d952632"
+  },
+  {
+    "path": "outputs/path-preprocessing-autoresearch-20260908/biological-20260908T115508Z/export/cue_tail_count_conservation.csv.gz",
+    "bytes": 6905,
+    "sha256": "26086104b82924f8db00887057f7284306c836314537090742c8e366811be254"
+  },
+  {
+    "path": "outputs/path-preprocessing-autoresearch-20260908/biological-20260908T115508Z/export/development_binned_cue_counts.csv.gz",
+    "bytes": 39115,
+    "sha256": "e2d5c071b43104369b723cbc54cc58906f3b2f0d6ffc779a4fcbd051b3c4c5f4"
+  },
+  {
+    "path": "outputs/path-preprocessing-autoresearch-20260908/biological-20260908T115508Z/export/export_manifest.json",
+    "bytes": 3578,
+    "sha256": "7c2df55b3cc8713826e0de6359f4d288a7daf132d5179033bdd068b5eca821ca"
+  },
+  {
+    "path": "outputs/path-preprocessing-autoresearch-20260908/biological-20260908T115508Z/export/source_tensors.npz",
+    "bytes": 17995,
+    "sha256": "6fa3e836fad756b6007f69115de5e6758c7238cfb9a786b4a4e7a0d4ac849e3a"
+  }
+]

@@ -1,0 +1,80 @@
+{
+  "failed_attempt": {
+    "events": {
+      "cv_fit_complete": 9567,
+      "diagnostic_fit_complete": 3263,
+      "nuisance_fit_complete": 20
+    },
+    "iteration_max": 18,
+    "iteration_min": 2,
+    "recorded_fits": 12850,
+    "reported_nonconverged": 0
+  },
+  "final": {
+    "events": {
+      "cv_fit_complete": 60600,
+      "diagnostic_fit_complete": 21363,
+      "nuisance_fit_complete": 20
+    },
+    "iteration_max": 18,
+    "iteration_min": 2,
+    "recorded_fits": 81983,
+    "reported_nonconverged": 0
+  },
+  "new_model_fits": 0,
+  "null_mobility": {
+    "ordinary": {
+      "actual_changed_source_fraction_min_median_max": [
+        0.3617021276595745,
+        0.44680851063829785,
+        0.5531914893617021
+      ],
+      "producer_movable_fraction_definition": "fraction of records in strata with any realized label change; not actual changed-source fraction",
+      "sources_in_pure_strata": 0,
+      "strata": 56,
+      "structurally_pure_strata": 0,
+      "worlds": 100
+    },
+    "temporal_half": {
+      "actual_changed_source_fraction_min_median_max": [
+        0.20212765957446807,
+        0.31382978723404253,
+        0.39361702127659576
+      ],
+      "producer_movable_fraction_definition": "fraction of records in strata with any realized label change; not actual changed-source fraction",
+      "sources_in_pure_strata": 64,
+      "strata": 101,
+      "structurally_pure_strata": 52,
+      "worlds": 100
+    }
+  },
+  "prior_cv_fits": 300,
+  "source_count": 188,
+  "total_recorded_biological_fits_including_interrupted_attempt": 95133,
+  "validation_pools": {
+    "by_endpoint": {
+      "2->1": {
+        "singletons": 1,
+        "total": 2
+      },
+      "3->1": {
+        "singletons": 3,
+        "total": 6
+      },
+      "4->1": {
+        "singletons": 2,
+        "total": 2
+      },
+      "5->1": {
+        "singletons": 4,
+        "total": 6
+      },
+      "6->1": {
+        "singletons": 7,
+        "total": 12
+      }
+    },
+    "singletons": 17,
+    "total": 28
+  }
+}

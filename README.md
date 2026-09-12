@@ -1,6 +1,9 @@
 # Neuro Science Workspace
 
-This folder is the top-level home for neuroscience work, lab context, and references to analysis code.
+This is the single neuroscience workspace: `~/neuro_science`.
+Start with the [current session and recovery guide](docs/workspace.md) for the
+September 10 consolidation, artifact locations, and reproducible setup.
+Earlier sessions are exploratory history, not separate active workspaces.
 
 ## Layout
 
@@ -35,7 +38,8 @@ Endpoint-condition decoding improved in later settings; neither that success nor
 the nonpositive path analyses establish confirmatory H1 evidence. The original
 holdout-exposure record remains in force.
 
-- [Current human synthesis](docs/reports/recent-learnings-20260908.md) and [agent brief](docs/reports/recent-learnings-20260908-agent.md).
+- **Latest completed study:** [path-preprocessing report](docs/reports/path-preprocessing-autoresearch-20260908.md), [offline HTML](docs/reports/path-preprocessing-autoresearch-20260908.html), [agent brief](docs/reports/path-preprocessing-autoresearch-20260908-agent.md), and [September 9 review](docs/reports/path-preprocessing-review-20260909.md). Stronger regularization helped probability loss, but the historical result was 6→1-dominated and did not establish broad robustness. The prior verification replayed 82,283 model-fit instances with zero new fits.
+- [Earlier cross-study synthesis](docs/reports/recent-learnings-20260908.md) and [agent brief](docs/reports/recent-learnings-20260908-agent.md).
 - [PCA and below-chance explanation with plots](learning/place195-pca-and-below-chance-20260908.md).
 - [Artifact preservation and verification](docs/reports/research-release-20260908.md): Git is not a backup of ignored data/models.
 - [Path-generalization package](docs/professor_updates/path_generalization_20260907/README.md): corrected self-contained report, code, evidence and historical status labels. The study ran 342 CEBRA fits; cross-assembly checks of 50 observed encoders transferred across mixtures of training sources, but did not establish reliable source-pool generalization. Corrected family p is **19/21**; the cause of the gap is not uniquely established.

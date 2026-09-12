@@ -1,8 +1,20 @@
 # Research handoff: what to read, what is current, what is retained
 
-**Consolidation: 2026-09-08.** This index separates the scientific question, completed exploratory studies, teaching explanations and historical evidence. Packaging did not fit biological models or change the selected 195-cell scope.
+**Updated: 2026-09-09.** This index separates the scientific question, completed exploratory studies, teaching explanations and historical evidence. The earlier consolidation did not fit models; the subsequent bounded preprocessing study below did. Both preserve the selected195 scope.
 
 ## Start here
+
+**Current workspace/session:** [single workspace and recovery guide](../workspace.md)
+and [consolidation ledger](workspace-consolidation-20260910/README.md). The
+September 10 session, resumed September 13, supersedes the earlier exploratory
+sessions. Historical absolute worktree paths below are provenance; use the
+current path map. This consolidation adds no biological fits.
+
+**Concise retrospective:** [what worked, what did not, and what remains unknown](path-preprocessing-review-20260909.md) — three-angle review of the completed preprocessing study; no new fits.
+
+**Latest experiment:** [path-preprocessing teaching report](path-preprocessing-autoresearch-20260908.md), [offline illustrated HTML](path-preprocessing-autoresearch-20260908.html), and [agent handoff](path-preprocessing-autoresearch-20260908-agent.md). Twenty observed-data recipes and source-coherent controls are complete. Stronger regularization improved probability loss, but the small historical diagnostic was6→1-dominated and did not establish broad robustness. All82,283 accepted model-fit instances were forward-replayed without fitting. [Frozen methods](path-preprocessing-prefit-20260908.md).
+
+Earlier cross-study context:
 
 1. **[Current human synthesis](recent-learnings-20260908.md)** — what changed across endpoint and path investigations, what the results do/not establish, and gated next work.
 2. **[Agent continuation brief](recent-learnings-20260908-agent.md)** — exact targets, artifact authorities, corrections, source counts and execution boundaries.
@@ -17,6 +29,7 @@ Normative authority remains [research questions](../research-questions.md) and [
 
 | Study | Best entry point | Scope / status |
 | --- | --- | --- |
+| Path preprocessing, September 8 | [Teaching report](path-preprocessing-autoresearch-20260908.md), [offline HTML](path-preprocessing-autoresearch-20260908.html), [agent brief](path-preprocessing-autoresearch-20260908-agent.md) | Completed exploratory first-second count/time/scaling/L2 study:147train+41historical-validation sources,49unit IDs,13sessions. Selected Δ+.0286/BA55%; only2/5 positive; declared null p=.139–.356 and source sensitivity crosses0. No broad H1 win. |
 | V6–V9, September 6 | [Teaching/audit Markdown](place195-v6-v9-autoresearch-20260906.md), [self-contained professor HTML](../professor_updates/place195_v6_v9_20260906/place195-v6-v9-professor-methods-results-validity-20260906.html) | Accepted **historical** 29-cell/7-session, fixed-endpoint interior-component benchmark. Whole-cue generalization nonpositive/unstable; not superseded numerically by a different task. |
 | Endpoint baseline/diagnosis, September 7 | [Baseline](start-goal-cebra-baseline.md), [diagnosis](start-goal-cebra-diagnosis.md) | Accepted initial 30-class endpoint benchmark and subsequent diagnostics; original settings are not the latest best development settings. |
 | Endpoint follow-up, September 7 | [Study index](start-goal-autoresearch.md), [portable teaching HTML](../professor_updates/start_goal_20260907/endpoint-research-report.html) | Completed sampler, readout, duration, coverage and CE investigations. Useful condition separability, not unknown-real-trial deployment or path information beyond endpoints. |

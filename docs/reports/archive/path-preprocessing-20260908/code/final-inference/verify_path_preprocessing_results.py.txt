@@ -1,0 +1,239 @@
+#!/usr/bin/env python3
+"""Recompute saved path-preprocessing scores and forward-replay models; never fit."""
+from __future__ import annotations
+
+import argparse
+from collections import defaultdict
+import csv
+from dataclasses import replace
+import gzip
+import hashlib
+import json
+import math
+from pathlib import Path
+import sys
+from unittest.mock import patch
+
+import numpy as np
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+from scripts import place195_path_preprocessing_autoresearch as pp
+
+
+def load(path: Path):
+    opener = gzip.open if path.suffix == ".gz" else open
+    with opener(path, "rt") as stream:
+        return json.load(stream)
+
+
+def prediction_groups(path: Path):
+    groups = defaultdict(list)
+    with gzip.open(path, "rt") as stream:
+        for row in csv.DictReader(stream):
+            key = (row["candidate_key"], row["endpoint_pair"], row.get("fold", ""))
+            p, w = float(row["prob_present"]), float(row["weight"])
+            assert math.isfinite(p) and 0 <= p <= 1
+            assert math.isfinite(w) and w > 0
+            assert row["true_label"] in ("absent", "present")
+            groups[key].append(row)
+    return groups
+
+
+def group_metrics(rows):
+    weights = [float(r["weight"]) for r in rows]
+    total = math.fsum(weights)
+    loss = math.fsum(w * -math.log(max(1e-9, min(1 - 1e-9,
+        float(r["prob_present"]) if r["true_label"] == "present" else 1 - float(r["prob_present"]))))
+        for r, w in zip(rows, weights, strict=True)) / total
+    recalls = []
+    for label in ("absent", "present"):
+        support = math.fsum(w for r, w in zip(rows, weights, strict=True) if r["true_label"] == label)
+        assert math.isclose(support / total, .5, abs_tol=1e-10)
+        correct = math.fsum(w for r, w in zip(rows, weights, strict=True)
+            if r["true_label"] == label and (float(r["prob_present"]) >= .5) == (label == "present"))
+        recalls.append(correct / support)
+    return loss, sum(recalls) / 2
+
+
+def scores(groups):
+    panels = defaultdict(lambda: defaultdict(list))
+    for (candidate, endpoint, _fold), rows in groups.items():
+        panels[candidate][endpoint].append(group_metrics(rows))
+    return {candidate: {
+        "delta": math.log(2) - np.mean([np.mean([v[0] for v in values]) for values in by_endpoint.values()]),
+        "ba": np.mean([np.mean([v[1] for v in values]) for values in by_endpoint.values()]),
+    } for candidate, by_endpoint in panels.items()}
+
+
+def check_summaries(summaries, derived, field):
+    assert len(summaries) == len(derived)
+    for row in summaries:
+        assert math.isclose(row[field], derived[row["candidate_key"]]["delta"], abs_tol=1e-10), row["candidate_key"]
+
+
+def replay(directory: Path, prefix: str, tensor, labels=None, *, prediction_file=None, model_file=None):
+    groups = prediction_groups(directory / (prediction_file or f"{prefix}_predictions.csv.gz"))
+    model_path = directory / (model_file or f"{prefix}_models.json.gz")
+    models = load(model_path)
+    bundles = {}
+    count = 0
+    for model in models:
+        endpoint = model["endpoint_pair"]
+        fold = model.get("fold")
+        seed = model["seed"]
+        key = (endpoint, fold, seed)
+        if key not in bundles:
+            et = pp.subset_tensor(tensor, endpoint)
+            bundles[key] = pp.build_product_rows(
+                et, split="train" if prefix == "cv" else "validation",
+                fold_mode="validation" if prefix == "cv" else "all", fold=fold,
+                seed=seed + 10_000 + fold if prefix == "cv" else seed + 20_000,
+                max_combinations_per_class=10_000 if prefix == "cv" else None,
+                shuffled_labels=labels,
+            )
+        bundle = bundles[key]
+        candidate = model["candidate_key"]
+        rows = groups[(candidate, endpoint, str(fold) if prefix == "cv" else "")]
+        probs = pp.predict_from_replay(model, bundle.X_counts, bundle.E)
+        np.testing.assert_allclose(probs, [float(r["prob_present"]) for r in rows], rtol=1e-9, atol=1e-10)
+        np.testing.assert_allclose(bundle.weights, [float(r["weight"]) for r in rows], atol=1e-12)
+        np.testing.assert_array_equal(bundle.y, [r["true_label"] == "present" for r in rows])
+        count += 1
+    assert count == len(groups)
+    return scores(groups), count
+
+
+def verify(run: Path, final: Path):
+    summary = load(final / "final_summary.json")
+    assert summary["status"] == "complete"
+    assert (summary["ordinary_null_count"], summary["temporal_half_null_count"], summary["bootstrap_count"]) == (100, 100, 200)
+    tensor = pp.load_source_tensor(run / "export/source_tensors.npz", strict_expected=True)
+    model_count = 0
+    package = summary["observed_cv_package"]
+    assert package["new_fits"] == 0
+    for relative, receipt in package["files"].items():
+        assert pp.sha256_file(final / relative) == receipt["sha256"]
+    assert load(final / "label_map.json") == {"absent": 0, "present": 1, "positive_probability": "present"}
+    cv_family = []
+    for phase in ("round1", "round2"):
+        directory = final / "observed_cv" / phase
+        values, n = replay(directory, "cv", tensor,
+            prediction_file=f"{phase}_cv_predictions.csv.gz", model_file=f"{phase}_model_replays.json.gz")
+        model_count += n
+        saved = load(directory / f"{phase}_summary.json")
+        rows = saved["summary_rows" if phase == "round1" else "round2_summary_rows"]
+        check_summaries(rows, values, "primary_cv_delta_log_loss")
+        cv_family.extend(rows)
+    assert len(cv_family) == 20
+    assert pp.select_best_candidate(cv_family)["candidate_key"] == summary["selected_candidate"]["candidate_key"]
+    observed, n = replay(final / "observed", "validation", tensor)
+    model_count += n
+    check_summaries(load(final / "final_observed_candidate_summary.json"), observed, "diagnostic_validation_delta_log_loss")
+    selected = summary["selected_candidate"]["candidate_key"]
+    assert math.isclose(observed[selected]["delta"], summary["observed_selected_diagnostic"]["diagnostic_validation_delta_log_loss"], abs_tol=1e-10)
+    null_values = {}
+    for kind in ("ordinary", "temporal_half"):
+        worlds = sorted((final / f"null_{kind}").glob("world-*"))
+        assert len(worlds) == 100
+        values = []
+        for index, world in enumerate(worlds):
+            permutation = load(world / "permutation.json")
+            labels = permutation["labels"]
+            cv, n = replay(world, "cv", tensor, labels)
+            model_count += n
+            family = load(world / "cv_family20.json")
+            check_summaries(family, cv, "primary_cv_delta_log_loss")
+            base = [r for r in family if r["lambda_l2"] == .1]
+            assert len(base) == 18 and len(family) == 20
+            best1 = pp.select_best_candidate(base)
+            extra = [r for r in family if r["lambda_l2"] != .1]
+            assert sorted(r["lambda_l2"] for r in extra) == [.01, 1.0]
+            assert all(r["representation_key"] == best1["representation_key"] for r in extra)
+            chosen = pp.select_best_candidate(family)["candidate_key"]
+            validation, n = replay(world, "validation", tensor, labels)
+            model_count += n
+            check_summaries(load(world / "validation_candidate_summaries.json"), validation, "diagnostic_validation_delta_log_loss")
+            recorded = load(world / "world_summary.json")
+            assert chosen == recorded["selected_candidate_key"]
+            pair = (validation[chosen]["delta"], max(r["delta"] for r in validation.values()))
+            assert math.isclose(pair[0], recorded["null_selected_diagnostic_delta_log_loss"], abs_tol=1e-10)
+            assert math.isclose(pair[1], recorded["null_max_family_diagnostic_delta_log_loss"], abs_tol=1e-10)
+            # Regenerate source labels, not model fits, to verify the actual coherent null.
+            regenerated, _ = pp.make_label_permutation(tensor.records, seed=recorded["seed"], temporal_half=kind == "temporal_half")
+            assert regenerated == labels
+            values.append((recorded["null_selected_diagnostic_delta_log_loss"], recorded["null_max_family_diagnostic_delta_log_loss"]))
+            if index % 20 == 0:
+                print(f"verified {kind} world {index}; replayed {model_count} models", flush=True)
+        null_values[kind] = values
+    obs = summary["observed_selected_diagnostic"]["diagnostic_validation_delta_log_loss"]
+    for kind, values in null_values.items():
+        stem = "ordinary" if kind == "ordinary" else "temporal_half"
+        for col, policy in ((0, "selected"), (1, "max_family")):
+            p = (1 + sum(pair[col] >= obs for pair in values)) / 101
+            assert p == summary["p_values"][f"{stem}_null_{policy}_policy_ge_observed_selected"]
+    original = {r.source_trial_id: r for r in tensor.records}
+    bootstrap_dirs = sorted((final / "source_bootstrap").glob("resample-*"))
+    assert len(bootstrap_dirs) == 200
+    for directory in bootstrap_dirs:
+        audit = load(directory / "resampling.json")
+        records = [replace(original[r["original_source_trial_id"]], source_trial_id=r["bootstrap_source_trial_id"])
+                   for r in audit["lineage"]]
+        bt = pp.bootstrap_tensor(tensor, records)
+        values, n = replay(directory, "validation", bt)
+        model_count += n
+        assert list(values) == [selected]
+        assert math.isclose(values[selected]["delta"], load(directory / "bootstrap_summary.json")["diagnostic_validation_delta_log_loss"], abs_tol=1e-10)
+    for seed in (1, 2):
+        directory = final / "assembly_sensitivity" / f"seed-{seed}"
+        for prefix in ("cv", "validation"):
+            _, n = replay(directory, prefix, tensor)
+            model_count += n
+        item = load(directory / "sensitivity_summary.json")
+        assert item["fixed_selected_candidate"] == selected and not item["selection_allowed"]
+    for session in sorted({r.session_id for r in tensor.records}):
+        indices = [i for i, r in enumerate(tensor.records) if r.session_id != session]
+        reduced = replace(tensor, X=tensor.X[indices], E=tensor.E[indices], M=tensor.M[indices],
+                          records=tuple(tensor.records[i] for i in indices))
+        if indices:
+            _, n = replay(final / "influence" / session, "validation", reduced)
+            model_count += n
+    with gzip.open(final / "nuisance/predictions.csv.gz", "rt") as stream:
+        nuisance_groups = defaultdict(list)
+        for row in csv.DictReader(stream):
+            nuisance_groups[(row["endpoint_pair"], row["fold"])].append(row)
+    for model in load(final / "nuisance/models.json.gz"):
+        key = (model["endpoint_pair"], "" if model["fold"] is None else str(model["fold"]))
+        X = np.asarray(model["evaluation_features"])
+        logits = ((X - np.asarray(model["mean"])) / np.asarray(model["scale"])) @ np.asarray(model["coef"]) + model["intercept"]
+        probs = 1 / (1 + np.exp(-logits))
+        np.testing.assert_allclose(probs, [float(r["prob_present"]) for r in nuisance_groups[key]], atol=1e-10)
+        model_count += 1
+    return {"status": "verified", "new_model_fits": 0, "models_forward_replayed": model_count,
+            "ordinary_nulls": 100, "temporal_half_nulls": 100, "source_bootstraps": 200,
+            "selected_candidate": selected, "selected_validation_delta": obs, "p_values": summary["p_values"]}
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--run-dir", required=True, type=Path)
+    parser.add_argument("--final-dir", required=True, type=Path)
+    parser.add_argument("--output", required=True, type=Path)
+    args = parser.parse_args()
+    if args.output.exists():
+        raise FileExistsError(args.output)
+    with patch.object(pp.LogisticRegression, "fit", side_effect=AssertionError("verification must not fit")):
+        result = verify(args.run_dir, args.final_dir)
+    files = sorted(p for p in args.run_dir.rglob("*") if p.is_file() and p != args.output)
+    result["artifact_hashes"] = {str(p.relative_to(args.run_dir)): pp.sha256_file(p) for p in files}
+    result["verifier_sha256"] = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    with args.output.open("x") as stream:
+        json.dump(result, stream, indent=2, sort_keys=True)
+        stream.write("\n")
+    print(json.dumps({k: v for k, v in result.items() if k != "artifact_hashes"}, indent=2))
+
+
+if __name__ == "__main__":
+    main()

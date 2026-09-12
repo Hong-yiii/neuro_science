@@ -2,6 +2,16 @@
 
 This is Hongyi's neuroscience workspace. Treat it as a living context repo for lab onboarding, analysis notes, and references to active neuroscience code.
 
+## Current Session Authority
+
+Use `~/neuro_science` as the single working copy. Hongyi designated session
+`01a08ab0-4fd4-704c-ac18-3b002e40c116` (begun September 10; consolidation resumed
+September 13, 2026) as the current durable session; earlier sessions are
+exploratory history. Read `docs/workspace.md` first for the consolidated paths,
+PR status, recovery records and safe verification commands. Do not recreate old
+sibling worktrees or restart experiments from historical pending-work flags.
+Keep new durable decisions in Git-backed notes, not only in a chat transcript.
+
 ## Workspace Role
 
 - This parent repo tracks context, notes, and references.
@@ -60,6 +70,16 @@ an individual-cell-significance gate. Follow the current proposed direction in
 index in `docs/professor_updates/path_generalization_20260907/README.md`. Frozen
 protocols, failed attempts, historical reviews, and current recommendations must
 not be conflated; never pool superseded output directories with accepted runs.
+
+The bounded September8 preprocessing study is complete: read
+`docs/reports/path-preprocessing-autoresearch-20260908-agent.md` and its human/HTML
+companions. It tested20 observed recipes on147train+41historical-validation
+sources (49unit IDs/13sessions). Stronger regularization helped probability loss,
+but only2/5 endpoint diagnostics were positive,6→1 dominated, and the declared
+nulls/source sensitivity did not support broad robustness.82,283 accepted model-fit
+instances were forward-verified with zero new fits. Do not reopen tuning or treat
+historical pending-review flags as current instructions. This does not reject
+condition-level pseudopopulations, establish H1 absence, or test H1b/H2.
 
 Important data streams:
 

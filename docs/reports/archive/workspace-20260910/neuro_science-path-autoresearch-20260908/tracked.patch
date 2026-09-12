@@ -1,0 +1,64 @@
+diff --git a/AGENTS.md b/AGENTS.md
+index 946f323..ebfb96d 100644
+--- a/AGENTS.md
++++ b/AGENTS.md
+@@ -61,6 +61,16 @@ index in `docs/professor_updates/path_generalization_20260907/README.md`. Frozen
+ protocols, failed attempts, historical reviews, and current recommendations must
+ not be conflated; never pool superseded output directories with accepted runs.
+ 
++The bounded September8 preprocessing study is complete: read
++`docs/reports/path-preprocessing-autoresearch-20260908-agent.md` and its human/HTML
++companions. It tested20 observed recipes on147train+41historical-validation
++sources (49unit IDs/13sessions). Stronger regularization helped probability loss,
++but only2/5 endpoint diagnostics were positive,6→1 dominated, and the declared
++nulls/source sensitivity did not support broad robustness.82,283 accepted model-fit
++instances were forward-verified with zero new fits. Do not reopen tuning or treat
++historical pending-review flags as current instructions. This does not reject
++condition-level pseudopopulations, establish H1 absence, or test H1b/H2.
++
+ Important data streams:
+ 
+ - `RippleData`: markers/timestamps recorded by the Ripple neural recording system.
+diff --git a/README.md b/README.md
+index 5be7dda..9343774 100644
+--- a/README.md
++++ b/README.md
+@@ -35,7 +35,8 @@ Endpoint-condition decoding improved in later settings; neither that success nor
+ the nonpositive path analyses establish confirmatory H1 evidence. The original
+ holdout-exposure record remains in force.
+ 
+-- [Current human synthesis](docs/reports/recent-learnings-20260908.md) and [agent brief](docs/reports/recent-learnings-20260908-agent.md).
++- **Latest completed experiment:** [path-preprocessing teaching report](docs/reports/path-preprocessing-autoresearch-20260908.md), [offline illustrated HTML](docs/reports/path-preprocessing-autoresearch-20260908.html), and [agent handoff](docs/reports/path-preprocessing-autoresearch-20260908-agent.md). Stronger regularization improved probability loss, but the historical result was6→1-dominated and did not establish broad path-decoding robustness;82,283 model-fit instances forward-verified with zero new fits.
++- [Cross-study human synthesis](docs/reports/recent-learnings-20260908.md) and [agent brief](docs/reports/recent-learnings-20260908-agent.md), preceding that bounded preprocessing study.
+ - [PCA and below-chance explanation with plots](learning/place195-pca-and-below-chance-20260908.md).
+ - [Artifact preservation and verification](docs/reports/research-release-20260908.md): Git is not a backup of ignored data/models.
+ - [Path-generalization package](docs/professor_updates/path_generalization_20260907/README.md): corrected self-contained report, code, evidence and historical status labels. Its 342 CEBRA fits transfer across mixtures of training sources, but not reliably across source pools. Corrected family p is **19/21**; the cause of the gap is not uniquely established.
+diff --git a/docs/reports/README.md b/docs/reports/README.md
+index 51070af..c72d7c1 100644
+--- a/docs/reports/README.md
++++ b/docs/reports/README.md
+@@ -1,9 +1,15 @@
+ # Research handoff: what to read, what is current, what is retained
+ 
+-**Consolidation: 2026-09-08.** This index separates the scientific question, completed exploratory studies, teaching explanations and historical evidence. Packaging did not fit biological models or change the selected 195-cell scope.
++**Updated: 2026-09-09.** This index separates the scientific question, completed exploratory studies, teaching explanations and historical evidence. The earlier consolidation did not fit models; the subsequent bounded preprocessing study below did. Both preserve the selected195 scope.
+ 
+ ## Start here
+ 
++**Concise retrospective:** [what worked, what did not, and what remains unknown](path-preprocessing-review-20260909.md) — three-angle review of the completed preprocessing study; no new fits.
++
++**Latest experiment:** [path-preprocessing teaching report](path-preprocessing-autoresearch-20260908.md), [offline illustrated HTML](path-preprocessing-autoresearch-20260908.html), and [agent handoff](path-preprocessing-autoresearch-20260908-agent.md). Twenty observed-data recipes and source-coherent controls are complete. Stronger regularization improved probability loss, but the small historical diagnostic was6→1-dominated and did not establish broad robustness. All82,283 accepted model-fit instances were forward-replayed without fitting. [Frozen methods](path-preprocessing-prefit-20260908.md).
++
++Earlier cross-study context:
++
+ 1. **[Current human synthesis](recent-learnings-20260908.md)** — what changed across endpoint and path investigations, what the results do/not establish, and gated next work.
+ 2. **[Agent continuation brief](recent-learnings-20260908-agent.md)** — exact targets, artifact authorities, corrections, source counts and execution boundaries.
+ 3. **[PCA and below-chance explainer](../../learning/place195-pca-and-below-chance-20260908.md)** — 3/8 components per bin → 30/80 linear-classifier inputs; training versus validation; class bias versus reversed predictions; portable figure.
+@@ -17,6 +23,7 @@ Normative authority remains [research questions](../research-questions.md) and [
+ 
+ | Study | Best entry point | Scope / status |
+ | --- | --- | --- |
++| Path preprocessing, September 8 | [Teaching report](path-preprocessing-autoresearch-20260908.md), [offline HTML](path-preprocessing-autoresearch-20260908.html), [agent brief](path-preprocessing-autoresearch-20260908-agent.md) | Completed exploratory first-second count/time/scaling/L2 study:147train+41historical-validation sources,49unit IDs,13sessions. Selected Δ+.0286/BA55%; only2/5 positive; declared null p=.139–.356 and source sensitivity crosses0. No broad H1 win. |
+ | V6–V9, September 6 | [Teaching/audit Markdown](place195-v6-v9-autoresearch-20260906.md), [self-contained professor HTML](../professor_updates/place195_v6_v9_20260906/place195-v6-v9-professor-methods-results-validity-20260906.html) | Accepted **historical** 29-cell/7-session, fixed-endpoint interior-component benchmark. Whole-cue generalization nonpositive/unstable; not superseded numerically by a different task. |
+ | Endpoint baseline/diagnosis, September 7 | [Baseline](start-goal-cebra-baseline.md), [diagnosis](start-goal-cebra-diagnosis.md) | Accepted initial 30-class endpoint benchmark and subsequent diagnostics; original settings are not the latest best development settings. |
+ | Endpoint follow-up, September 7 | [Study index](start-goal-autoresearch.md), [portable teaching HTML](../professor_updates/start_goal_20260907/endpoint-research-report.html) | Completed sampler, readout, duration, coverage and CE investigations. Useful condition separability, not unknown-real-trial deployment or path information beyond endpoints. |

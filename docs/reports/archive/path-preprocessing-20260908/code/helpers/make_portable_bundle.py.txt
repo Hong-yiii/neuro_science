@@ -1,0 +1,90 @@
+"""Package reviewed reports/code/receipts, not raw data or the full model archive."""
+import hashlib
+import json
+from pathlib import Path
+import zipfile
+
+ROOT = Path('/home/hongyi-home-lab/neuro_science-path-autoresearch-20260908')
+RUN = ROOT / 'outputs/path-preprocessing-autoresearch-20260908/biological-20260908T115508Z'
+MANAGER = Path('/home/hongyi-home-lab/neuro_science/outputs/path-autoresearch-management-20260908')
+NAME = 'path-preprocessing-autoresearch-20260908'
+
+
+def main():
+    files = {}
+    for name in (f'{NAME}.md', f'{NAME}.html', f'{NAME}-agent.md', 'path-preprocessing-prefit-20260908.md'):
+        files[f'docs/reports/{name}'] = (ROOT / 'docs/reports' / name).read_bytes()
+    scripts = ('place195_path_preprocessing_autoresearch.py', 'place195_split_filtered_access.py',
+               'place195_v7_v8_neural_experiments.py', 'verify_path_preprocessing_results.py',
+               'test_place195_path_preprocessing_autoresearch.py', 'test_place195_split_filtered_access.py',
+               'test_place195_v7_v8_neural_experiments.py', 'build_path_preprocessing_report.py',
+               'build_path_generalization_report.py')
+    for name in scripts:
+        files[f'scripts/{name}'] = (ROOT / 'scripts' / name).read_bytes()
+    for directory in ('gated-export-round1', 'final-inference'):
+        for path in sorted((ROOT / 'work/path-autoresearch-20260908/code-snapshots' / directory).iterdir()):
+            if path.is_file():
+                files[f'historical-snapshots/{directory}/{path.name}'] = path.read_bytes()
+    for name in ('verification-final.json', 'descriptive-audit.json', 'report-validation.json'):
+        files[f'receipts/{name}'] = (RUN / name).read_bytes()
+    files['receipts/final_summary.json'] = (RUN / 'final-20260908T133200Z/final_summary.json').read_bytes()
+    for name in ('PROTOCOL-FROZEN-V1.md', 'prefit-selected-sources.json', 'ROUND2-DECISION.md', 'SELECTION-FROZEN.json',
+                 'science-prefit-v1-review.md', 'code-review-round1-gate.md', 'round1-evaluator-round2-gate.md',
+                 'final-code-gate-followup.md', 'final-science-results-review.md', 'final-teaching-release-review.md',
+                 'final-code-evidence-review.md', 'final-release-followup.md', 'REVIEW-RESOLUTION.md',
+                 'FINAL-ATTEMPT-1-FAILURE.json'):
+        files[f'receipts/{name}'] = (MANAGER / name).read_bytes()
+    for name in ('summarize_final_evidence.py', 'check_report_delivery.py', 'make_portable_bundle.py'):
+        files[f'delivery-checks/{name}'] = (ROOT / 'work/path-autoresearch-20260908' / name).read_bytes()
+    readme = f'''# Portable path-preprocessing report/code package — 2026-09-08
+
+Open `docs/reports/{NAME}.html` for the self-contained illustrated report; Markdown and an agent handoff are alongside it. Extract into a fresh directory, not over a live checkout.
+
+Outcome: stronger regularization improved probability loss within this bounded family, but the small historical diagnostic did not establish broad robustness. Null p-values .139–.356; source sensitivity crosses zero;6→1 dominates. No H1 absence, H1b/H2, intention or mechanism claim.
+
+This archive contains reviewed reports, nine current Python files, historical execution snapshots, fixed source/fold metadata, decisions and verification/review receipts. `SHA256-MANIFEST.json` covers every non-manifest entry. Historical pending-review flags/snapshots are chronology, not current instructions. The current verified replay code is `scripts/verify_path_preprocessing_results.py`, not an older historical snapshot.
+
+**Not a full analysis backup:** raw cue data, source tensors, all saved models/predictions/lineages and runtime environments are NOT included. They remain on the data-equipped host under:
+`{RUN}`
+Accepted final directory: `final-20260908T133200Z/`. The interrupted `final-20260908T125617Z/` is retained separately, not another accepted result. Its last267 recorded fits lack complete original coefficient packages; any further in-flight fit is unknown.
+
+The full receipt forward-replayed82,283 accepted model-fit instances with zero new fits and hashes4,193 then-existing run files. Receipt paths/hashes reference the original local archive; they are not a claim that those files are inside this ZIP. Copying code here performs no fitting. Reproducing verification requires the data-equipped checkout, corresponding inputs and existing runtime; it is not a clean-machine installation package.
+
+Existing runtime: `/home/hongyi-home-lab/neuro_science/scratch/v6-v9-runtime/bin/python`, with OMP/OPENBLAS/MKL threads2. From the owning worktree, an explicitly requested no-fit recheck uses:
+
+```sh
+OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 MKL_NUM_THREADS=2 \\
+/home/hongyi-home-lab/neuro_science/scratch/v6-v9-runtime/bin/python \\
+scripts/verify_path_preprocessing_results.py \\
+  --run-dir outputs/path-preprocessing-autoresearch-20260908/biological-20260908T115508Z \\
+  --final-dir outputs/path-preprocessing-autoresearch-20260908/biological-20260908T115508Z/final-20260908T133200Z \\
+  --output outputs/path-preprocessing-autoresearch-20260908/biological-20260908T115508Z/verification-recheck-NEW.json
+```
+
+Use a fresh receipt name and do not run Python with `-O`. No new fitting, installation, data transfer, service change, commit or push is authorized by this package. DOI links are optional external reading; no external resources are loaded to display the report. Local journals and the complete attempt history remain in the manager directory referenced by the agent handoff.
+'''
+    files['README.md'] = readme.encode()
+    manifest = {name: hashlib.sha256(data).hexdigest() for name, data in files.items()}
+    files['SHA256-MANIFEST.json'] = (json.dumps(manifest, indent=2, sort_keys=True) + '\n').encode()
+    destination = RUN / 'portable-path-preprocessing-20260908.zip'
+    with zipfile.ZipFile(destination, 'x', compression=zipfile.ZIP_DEFLATED) as archive:
+        for name, data in sorted(files.items()):
+            assert not Path(name).is_absolute() and '..' not in Path(name).parts
+            archive.writestr(name, data)
+    with zipfile.ZipFile(destination) as archive:
+        assert archive.testzip() is None
+        assert len(archive.namelist()) == len(files)
+        for name, expected in manifest.items():
+            assert hashlib.sha256(archive.read(name)).hexdigest() == expected
+    receipt = {'status': 'byte-verified', 'new_model_fits': 0, 'zip': str(destination),
+               'zip_sha256': hashlib.sha256(destination.read_bytes()).hexdigest(),
+               'bytes': destination.stat().st_size, 'entries': len(files), 'manifest_files_checked': len(manifest),
+               'scope': 'reports/code/receipts only; raw data and complete model archive not included'}
+    with (RUN / 'portable-package-validation.json').open('x') as stream:
+        json.dump(receipt, stream, indent=2, sort_keys=True)
+        stream.write('\n')
+    print(json.dumps(receipt, indent=2))
+
+
+if __name__ == '__main__':
+    main()

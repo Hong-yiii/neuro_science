@@ -1,0 +1,113 @@
+"""Behavior/duration/support audit only; never fits or inspects spike responses."""
+import collections
+import csv
+import gzip
+import hashlib
+import json
+from pathlib import Path
+import random
+
+ROOT = Path(__file__).resolve().parent
+DATA = Path('/home/hongyi-home-lab/neuro_science-path-diagnosis/outputs/path-generalization-20260907/results-20260907T081200Z/track_c_export')
+TARGET = 'D_N_C_M__N_C_B'
+ENDPOINTS = ['2->1', '3->1', '4->1', '5->1', '6->1']
+with (DATA / 'development_component_labels.csv').open() as f:
+    rows = list(csv.DictReader(f))
+labels = {r['source_trial_id']: r for r in rows}
+assert len(labels) == len(rows)
+metadata = {}
+cells = collections.defaultdict(set)
+with gzip.open(DATA / 'development_cue_counts.csv.gz', 'rt') as f:
+    for r in csv.DictReader(f):
+        sid = r['source_trial_id']
+        assert r['split'] in ('train', 'validation')
+        assert sid in labels
+        m = {k: r[k] for k in ('session_id', 'split', 'trial_index', 'endpoint_pair', 'cue_duration_s', 'qc_flags', 'supported_middle_component_id', 'supported_middle_component_label', 'candidate_recording_group', 'simultaneity_status')}
+        if sid in metadata:
+            assert metadata[sid] == m
+        metadata[sid] = m
+        assert r['cell_id'] not in cells[sid]
+        cells[sid].add(r['cell_id'])
+
+reasons = {}
+eligible = {}
+for sid, m in metadata.items():
+    label = labels[sid]
+    why = []
+    if m['supported_middle_component_id'] != TARGET:
+        why.append('wrong_component')
+    if m['supported_middle_component_label'] not in ('absent', 'present'):
+        why.append('unknown_label')
+    if label['complete_directed_path_coverage'].lower() != 'true':
+        why.append('incomplete_path_coverage')
+    if label['absence_labels_allowed'].lower() != 'true':
+        why.append('absence_not_validated')
+    if m['qc_flags']:
+        why.append('recorded_qc_flag')
+    if not 1.0 <= float(m['cue_duration_s']) <= 1.5:
+        why.append('cue_duration_outside_1_to_1p5_seconds')
+    reasons[sid] = why
+    if not why:
+        eligible[sid] = m
+support = collections.defaultdict(collections.Counter)
+for sid, m in eligible.items():
+    support[(m['endpoint_pair'], m['session_id'])][m['split'] + '_' + m['supported_middle_component_label']] += 1
+contexts = {k for k, v in support.items() if k[0] in ENDPOINTS and min(v['train_absent'], v['train_present']) >= 3 and min(v['validation_absent'], v['validation_present']) >= 1}
+selected = {sid: dict(m) for sid, m in eligible.items() if (m['endpoint_pair'], m['session_id']) in contexts}
+for sid, m in eligible.items():
+    if sid not in selected:
+        reasons[sid].append('context_fails_frozen_support_gate')
+for context in contexts:
+    observed = [cells[sid] for sid, m in selected.items() if (m['endpoint_pair'], m['session_id']) == context]
+    assert all(s == observed[0] for s in observed), ('nonconstant_observed_cell_panel', context)
+
+# Assignment uses IDs/labels only, before neural bin export.
+rng = random.Random(20260908)
+for context in sorted(contexts):
+    for label in ('absent', 'present'):
+        ids = sorted(sid for sid, m in selected.items() if (m['endpoint_pair'], m['session_id']) == context and m['split'] == 'train' and m['supported_middle_component_label'] == label)
+        rng.shuffle(ids)
+        for index, sid in enumerate(ids):
+            selected[sid]['inner_fold'] = index % 3
+for sid, m in selected.items():
+    m.setdefault('inner_fold', -1)
+    m['cell_ids'] = sorted(cells[sid])
+    m['source_trial_id'] = sid
+
+panel_summary = []
+for endpoint in ENDPOINTS:
+    panel = {sid: m for sid, m in selected.items() if m['endpoint_pair'] == endpoint}
+    counts = collections.Counter(m['split'] + '_' + m['supported_middle_component_label'] for m in panel.values())
+    sessions = {m['session_id'] for m in panel.values()}
+    panel_summary.append({'endpoint': endpoint, 'sessions': len(sessions), 'cells': len(set().union(*(cells[sid] for sid in panel))), 'counts': dict(counts), 'interval_grade': 'point_influence_only' if len(sessions) == 1 or min(counts['validation_absent'], counts['validation_present']) < 2 else 'source_resampling_sensitivity_only'})
+
+sources_path = ROOT / 'prefit-selected-sources.json'
+sources_path.write_text(json.dumps(sorted(selected.values(), key=lambda m: m['source_trial_id']), indent=2) + '\n')
+with gzip.open(ROOT / 'prefit-source-exclusions.csv.gz', 'wt') as f:
+    w = csv.writer(f)
+    w.writerow(['source_trial_id', 'split', 'endpoint_pair', 'session_id', 'cue_duration_s', 'qc_flags', 'inclusion_status', 'exclusion_reasons'])
+    for sid, m in sorted(metadata.items()):
+        w.writerow([sid, m['split'], m['endpoint_pair'], m['session_id'], m['cue_duration_s'], m['qc_flags'], 'included' if sid in selected else 'excluded', ';'.join(reasons[sid])])
+counts = collections.Counter(m['split'] for m in selected.values())
+assert counts == {'train': 147, 'validation': 41}, counts
+removed_in_context = [{'source_trial_id': sid, **m, 'reasons': reasons[sid]} for sid, m in metadata.items() if (m['endpoint_pair'], m['session_id']) in contexts and sid not in eligible and m['supported_middle_component_label'] in ('absent', 'present')]
+audit = {
+    'scope': 'saved accepted development artifacts; metadata/support only; zero fits',
+    'component': TARGET,
+    'input_hashes': {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in (DATA / 'development_component_labels.csv', DATA / 'development_cue_counts.csv.gz', ROOT / 'parent-behavior-support.json')},
+    'filter': {'cue_duration_s': [1.0, 1.5], 'qc_flags': 'empty', 'coverage_and_absence_allowed': True, 'train_per_class_min': 3, 'validation_per_class_min': 1},
+    'original_saved_count_export_sources': len(metadata),
+    'pre_duration_qc_fixed_panel_sources': 190,
+    'selected_sources': dict(counts),
+    'duration_range_selected_s': [min(float(m['cue_duration_s']) for m in selected.values()), max(float(m['cue_duration_s']) for m in selected.values())],
+    'removed_from_fixed_contexts': removed_in_context,
+    'unique_sessions': len({m['session_id'] for m in selected.values()}),
+    'unique_cells': len(set().union(*(cells[sid] for sid in selected))),
+    'panels': panel_summary,
+    'inner_folds': 'stdlib random.Random(20260908); sorted context, absent/present, sorted source IDs, shuffle then index%3; validation=-1',
+    'selected_sources_path': str(sources_path),
+    'selected_sources_sha256': hashlib.sha256(sources_path.read_bytes()).hexdigest(),
+    'all_exclusions_path': str(ROOT / 'prefit-source-exclusions.csv.gz'),
+}
+(ROOT / 'prefit-support-audit.json').write_text(json.dumps(audit, indent=2) + '\n')
+print(json.dumps({k: audit[k] for k in ('selected_sources', 'unique_sessions', 'unique_cells', 'panels', 'removed_from_fixed_contexts')}, indent=2))

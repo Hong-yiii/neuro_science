@@ -1,0 +1,214 @@
+diff --git a/scripts/test_verify_endpoint_saved_artifacts.py b/scripts/test_verify_endpoint_saved_artifacts.py
+index f2d1b79..bda07c0 100644
+--- a/scripts/test_verify_endpoint_saved_artifacts.py
++++ b/scripts/test_verify_endpoint_saved_artifacts.py
+@@ -1,4 +1,5 @@
+ """Synthetic checks for the packaging verifier; no model fitting or lab inputs."""
++
+ import hashlib
+ import json
+ import tempfile
+@@ -14,26 +15,27 @@ class EndpointSavedVerifierTest(unittest.TestCase):
+     def test_hash_integrity_and_boundary(self):
+         with tempfile.TemporaryDirectory() as directory:
+             root = Path(directory)
+-            artifact = root / 'saved.txt'
+-            artifact.write_text('saved output')
+-            manifest = root / 'artifact_hashes.json'
++            artifact = root / "saved.txt"
++            artifact.write_text("saved output")
++            manifest = root / "artifact_hashes.json"
+             digest = hashlib.sha256(artifact.read_bytes()).hexdigest()
+-            manifest.write_text(json.dumps({'saved.txt': digest}))
++            manifest.write_text(json.dumps({"saved.txt": digest}))
+             self.assertEqual(verify_hashes(root), 1)
+-            artifact.write_text('changed output')
++            artifact.write_text("changed output")
+             with self.assertRaises(AssertionError):
+                 verify_hashes(root)
+-            manifest.write_text(json.dumps({'../outside.txt': digest}))
++            manifest.write_text(json.dumps({"../outside.txt": digest}))
+             with self.assertRaises(ValueError):
+                 verify_hashes(root)
+ 
+     def test_metric_calculation(self):
+-        result = scores(np.array([0, 1]), np.array([0, 1]),
+-                        np.array([[.9, .1], [.2, .8]]))
+-        self.assertEqual(result['balanced_accuracy'], 1)
+-        self.assertEqual(result['macro_f1'], 1)
+-        self.assertAlmostEqual(result['log_loss'], -np.log(.9 * .8) / 2)
++        result = scores(
++            np.array([0, 1]), np.array([0, 1]), np.array([[0.9, 0.1], [0.2, 0.8]])
++        )
++        self.assertEqual(result["balanced_accuracy"], 1)
++        self.assertEqual(result["macro_f1"], 1)
++        self.assertAlmostEqual(result["log_loss"], -np.log(0.9 * 0.8) / 2)
+ 
+ 
+-if __name__ == '__main__':
++if __name__ == "__main__":
+     unittest.main()
+diff --git a/scripts/verify_endpoint_saved_artifacts.py b/scripts/verify_endpoint_saved_artifacts.py
+index eeb9976..d84fe25 100644
+--- a/scripts/verify_endpoint_saved_artifacts.py
++++ b/scripts/verify_endpoint_saved_artifacts.py
+@@ -4,6 +4,7 @@ Requires the saved baseline/study directories and the recorded research runtime.
+ Only hashes artifacts contained in those directories and recomputes prediction
+ metrics. Does not repeat original-split/source-assembly/scaler/reload checks.
+ """
++
+ import argparse
+ import csv
+ import hashlib
+@@ -15,87 +16,112 @@ from sklearn.metrics import accuracy_score, balanced_accuracy_score, f1_score, l
+ 
+ 
+ def verify_hashes(root):
+-    manifest = json.loads((root / 'artifact_hashes.json').read_text())
++    manifest = json.loads((root / "artifact_hashes.json").read_text())
+     for relative, expected in manifest.items():
+         path = (root / relative).resolve()
+         if not path.is_relative_to(root.resolve()):
+-            raise ValueError(f'Artifact escapes allowlisted root: {relative}')
++            raise ValueError(f"Artifact escapes allowlisted root: {relative}")
+         digest = hashlib.sha256()
+-        with path.open('rb') as handle:
+-            for block in iter(lambda: handle.read(1024 * 1024), b''):
++        with path.open("rb") as handle:
++            for block in iter(lambda: handle.read(1024 * 1024), b""):
+                 digest.update(block)
+         assert digest.hexdigest() == expected, path
+     return len(manifest)
+ 
+ 
+ def scores(y, pred, prob):
+-    values = {'accuracy': accuracy_score(y, pred),
+-              'balanced_accuracy': balanced_accuracy_score(y, pred),
+-              'macro_f1': f1_score(y, pred, average='macro', zero_division=0)}  # pyright: ignore[reportArgumentType]  # sklearn supports 0; local stub incorrectly says str.
++    values = {
++        "accuracy": accuracy_score(y, pred),
++        "balanced_accuracy": balanced_accuracy_score(y, pred),
++        "macro_f1": f1_score(y, pred, average="macro", zero_division=0),
++    }  # pyright: ignore[reportArgumentType]  # sklearn supports 0; local stub incorrectly says str.
+     if prob.size:
+         assert np.isfinite(prob).all() and (prob >= 0).all()
+         np.testing.assert_allclose(prob.sum(axis=1), 1, atol=1e-6)
+-        values['log_loss'] = log_loss(y, prob, labels=np.unique(y))
++        values["log_loss"] = log_loss(y, prob, labels=np.unique(y))
+     return values
+ 
+ 
+ def check(baseline, study):
+     pairs = np.array([(s, g) for s in range(1, 7) for g in range(1, 7) if s != g])
+     baseline_hashes = verify_hashes(baseline)
+-    with (baseline / 'metrics.csv').open(newline='') as handle:
++    with (baseline / "metrics.csv").open(newline="") as handle:
+         rows = list(csv.DictReader(handle))
+     assert len(rows) == 690
+     for row in rows:
+-        stage = 'observed' if int(row['null_id']) == -1 else f"null_{int(row['null_id']):03d}"
+-        file = baseline / stage / f"seed{row['seed']}" / row['representation'] / 'decoder.npz'
++        stage = (
++            "observed"
++            if int(row["null_id"]) == -1
++            else f"null_{int(row['null_id']):03d}"
++        )
++        file = (
++            baseline
++            / stage
++            / f"seed{row['seed']}"
++            / row["representation"]
++            / "decoder.npz"
++        )
+         assert file.resolve().is_relative_to(baseline.resolve())
+         with np.load(file, allow_pickle=False) as data:
+             y, prob = data[f"y_{row['split']}"], data[f"prob_{row['split']}"]
+-            pred = data['classes'][prob.argmax(axis=1)]
+-        values = {'joint_' + k: v for k, v in scores(y, pred, prob).items()}
+-        values.update(start_accuracy=accuracy_score(pairs[y, 0], pairs[pred, 0]),
+-                      goal_accuracy=accuracy_score(pairs[y, 1], pairs[pred, 1]))
++            pred = data["classes"][prob.argmax(axis=1)]
++        values = {"joint_" + k: v for k, v in scores(y, pred, prob).items()}
++        values.update(
++            start_accuracy=accuracy_score(pairs[y, 0], pairs[pred, 0]),
++            goal_accuracy=accuracy_score(pairs[y, 1], pairs[pred, 1]),
++        )
+         for key, value in values.items():
+-            assert abs(float(row[key]) - value) < 1e-10, f'{file}: {key}'
+-    phases = sorted(study.glob('[0-9][0-9]-*/manifest.json'))
++            assert abs(float(row[key]) - value) < 1e-10, f"{file}: {key}"
++    phases = sorted(study.glob("[0-9][0-9]-*/manifest.json"))
+     assert len(phases) == 7
+     count = hashes = 0
+     for manifest in phases:
+-        assert json.loads(manifest.read_text())['status'] == 'completed'
++        assert json.loads(manifest.read_text())["status"] == "completed"
+         phase = manifest.parent
+         hashes += verify_hashes(phase)
+-        for file in sorted(phase.rglob('*_metrics.json')):
++        for file in sorted(phase.rglob("*_metrics.json")):
+             row = json.loads(file.read_text())
+-            pred_file = file.with_name(file.name.replace('_metrics.json', '_predictions.npz'))
++            pred_file = file.with_name(
++                file.name.replace("_metrics.json", "_predictions.npz")
++            )
+             with np.load(pred_file, allow_pickle=False) as data:
+-                y, pred, prob = data['y'], data['pred'], data['prob']
++                y, pred, prob = data["y"], data["pred"], data["prob"]
+             values = scores(y, pred, prob)
+             if prob.size:
+                 np.testing.assert_array_equal(np.unique(y)[prob.argmax(axis=1)], pred)
+             else:
+-                assert row['log_loss'] is None and row['decoder'] == 'svm'
+-            if row['target'] == 'joint':
+-                values.update(start_accuracy=accuracy_score(pairs[y, 0], pairs[pred, 0]),
+-                              goal_accuracy=accuracy_score(pairs[y, 1], pairs[pred, 1]))
+-            assert row['n_rows'] == len(y)
++                assert row["log_loss"] is None and row["decoder"] == "svm"
++            if row["target"] == "joint":
++                values.update(
++                    start_accuracy=accuracy_score(pairs[y, 0], pairs[pred, 0]),
++                    goal_accuracy=accuracy_score(pairs[y, 1], pairs[pred, 1]),
++                )
++            assert row["n_rows"] == len(y)
+             for key, value in values.items():
+-                assert abs(float(row[key]) - value) < 1e-10, f'{file}: {key}'
++                assert abs(float(row[key]) - value) < 1e-10, f"{file}: {key}"
+             count += 1
+-    receipt = json.loads((study / 'validation.json').read_text())
+-    assert receipt['status'] == 'passed'
+-    assert count == receipt['metrics'] == 1618
+-    assert hashes == receipt['artifact_hashes']
+-    return {'status': 'passed', 'baseline_hashes': baseline_hashes,
+-            'baseline_metrics': len(rows), 'study_hashes': hashes, 'study_metrics': count,
+-            'new_fits': 0, 'checkpoint_loads': 0, 'raw_or_original_split_access': False,
+-            'scope': 'Saved artifact hashes and prediction metrics only; not biological validity'}
++    receipt = json.loads((study / "validation.json").read_text())
++    assert receipt["status"] == "passed"
++    assert count == receipt["metrics"] == 1618
++    assert hashes == receipt["artifact_hashes"]
++    return {
++        "status": "passed",
++        "baseline_hashes": baseline_hashes,
++        "baseline_metrics": len(rows),
++        "study_hashes": hashes,
++        "study_metrics": count,
++        "new_fits": 0,
++        "checkpoint_loads": 0,
++        "raw_or_original_split_access": False,
++        "scope": "Saved artifact hashes and prediction metrics only; not biological validity",
++    }
+ 
+ 
+-if __name__ == '__main__':
++if __name__ == "__main__":
+     parser = argparse.ArgumentParser(description=__doc__)
+-    parser.add_argument('baseline', type=Path)
+-    parser.add_argument('study', type=Path)
++    parser.add_argument("baseline", type=Path)
++    parser.add_argument("study", type=Path)
+     args = parser.parse_args()
+     if not __debug__:
+-        parser.error('Do not use Python -O; verification requires assertions')
++        parser.error("Do not use Python -O; verification requires assertions")
+     print(json.dumps(check(args.baseline, args.study), indent=2))
