@@ -25,6 +25,11 @@ Read its [protocol and execution ledger](reports/path-pca-matched/execution.md).
 Keep it through PR review; after user-approved merge, hash/migrate its local
 outputs back to canonical storage before removal. This is not a competing
 research queue or permission to restart historical searches. No new service.
+The study completed September 14: [human verdict and reviewed evidence](reports/path-pca-matched/README.md).
+PCA's matched historical loss advantage was small (+.007023), with unchanged 55%
+balanced accuracy and source sensitivity spanning both signs. All 26,266 fits
+were forward-replayed without fitting. [Draft PR #7](https://github.com/Hong-yiii/neuro_science/pull/7)
+remains open for user review; no more biological fits are queued by this handoff.
 
 Pi/Codex transcripts were not concatenated, rewritten or deleted. This session
 started from the account home; its transcript remains in the host-local Pi session

@@ -1,0 +1,19 @@
+{
+  "chrome": "actual headless render visually inspected; figure text collision fixed; browser exited and owned temporary profile removed",
+  "external_html_assets": 0,
+  "full_replay_models": 26266,
+  "html_tables": 11,
+  "inline_svg_figures": 2,
+  "largest_staged_file_bytes": 21012,
+  "lsp": "small files clean; historical driver/new verifier timed out even at10000ms; session cache does not dispatch ignored worktree files",
+  "new_verification_fits": 0,
+  "prefit_hashes_unchanged": true,
+  "private_or_bulky_artifacts_staged": false,
+  "python_3_11_syntax": "five affected Python files parsed",
+  "relative_links_checked": 19,
+  "repository_tests": 102,
+  "ruff": "five affected Python files passed",
+  "science_report_review": "approved; final cosmetic layout change did not alter claims/numbers",
+  "staged_payload_files_checked_before_this_receipt": 16,
+  "status": "passed"
+}

@@ -31,14 +31,15 @@ learned independently by an artificial navigation agent is H2, a stretch aim.
 Place, view, and conjunctive analyses remain supporting validation and confound
 checks rather than the primary question.
 
-**Start with the [research handoff index](docs/reports/README.md)** (2026-09-08):
+**Start with the [research handoff index](docs/reports/README.md)** (2026-09-14):
 current synthesis, completed endpoint and path studies, portable teaching reports,
 source-code preservation, verification, and explicit supersession labels.
 Endpoint-condition decoding improved in later settings; neither that success nor
 the nonpositive path analyses establish confirmatory H1 evidence. The original
 holdout-exposure record remains in force.
 
-- **Latest completed study:** [path-preprocessing report](docs/reports/path-preprocessing-autoresearch-20260908.md), [offline HTML](docs/reports/path-preprocessing-autoresearch-20260908.html), [agent brief](docs/reports/path-preprocessing-autoresearch-20260908-agent.md), and [September 9 review](docs/reports/path-preprocessing-review-20260909.md). Stronger regularization helped probability loss, but the historical result was 6→1-dominated and did not establish broad robustness. The prior verification replayed 82,283 model-fit instances with zero new fits.
+- **Latest matched comparison:** [PCA versus raw verdict](docs/reports/path-pca-matched/README.md), [offline HTML](docs/reports/path-pca-matched/report.html), and [evidence index](docs/reports/path-pca-matched/evidence.md). PCA improved historical loss by 0.007023 nats; both arms had 55% balanced accuracy and source sensitivity spanned both signs. All 26,266 fit instances replayed without fitting. Small exploratory method advantage, not robust biological generalization or H1 confirmation.
+- **Earlier preprocessing study:** [path-preprocessing report](docs/reports/path-preprocessing-autoresearch-20260908.md), [offline HTML](docs/reports/path-preprocessing-autoresearch-20260908.html), [agent brief](docs/reports/path-preprocessing-autoresearch-20260908-agent.md), and [September 9 review](docs/reports/path-preprocessing-review-20260909.md). Stronger regularization helped probability loss, but the historical result was 6→1-dominated and did not establish broad robustness. The prior verification replayed 82,283 model-fit instances with zero new fits.
 - [Earlier cross-study synthesis](docs/reports/recent-learnings-20260908.md) and [agent brief](docs/reports/recent-learnings-20260908-agent.md).
 - [PCA and below-chance explanation with plots](learning/place195-pca-and-below-chance-20260908.md).
 - [Artifact preservation and verification](docs/reports/research-release-20260908.md): Git is not a backup of ignored data/models.
