@@ -13,11 +13,18 @@ queues. Read this document and the [research index](reports/README.md) rather th
 reconstructing instructions from old transcripts. Do not spawn lasting sibling
 worktrees without an explicit need and a removal/handoff plan.
 
-The checked-out branch is `release/research-consolidation-20260908`, associated
-with [PR #5](https://github.com/Hong-yiii/neuro_science/pull/5). It is **not merged
-into `main`** by this cleanup. PRs #1–4 were already merged. The older local `main`
-branch is not the latest research handoff; use the PR branch until it is merged.
-No force-push, branch deletion, or research fitting is part of consolidation.
+**Remote status refreshed September 13:** [PR #5](https://github.com/Hong-yiii/neuro_science/pull/5)
+merged into `main` at `d1228d3`. The canonical checkout's branch and uncommitted
+work are preserved; base new branches on refreshed `origin/main`, not old local
+`main`. No force-push, branch deletion or fitting was part of consolidation.
+
+**Explicit temporary exception, issue #6:** Hongyi requested a separate worktree
+and draft PR for the matched PCA/raw exploratory study. Its branch is
+`feat/issue-6-matched-pca`, worktree `~/neuro_science/work/issue-6-pca`.
+Read its [protocol and execution ledger](reports/path-pca-matched/execution.md).
+Keep it through PR review; after user-approved merge, hash/migrate its local
+outputs back to canonical storage before removal. This is not a competing
+research queue or permission to restart historical searches. No new service.
 
 Pi/Codex transcripts were not concatenated, rewritten or deleted. This session
 started from the account home; its transcript remains in the host-local Pi session

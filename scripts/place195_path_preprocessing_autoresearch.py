@@ -145,10 +145,16 @@ class Candidate:
     transform: str
     scaler: str
     lambda_l2: float = ROUND1_LAMBDA
+    projection: str = "none"
+
+    def __post_init__(self) -> None:
+        if self.projection not in {"none", "pca90"}:
+            raise ValueError(f"unknown projection {self.projection}")
 
     @property
     def representation_key(self) -> str:
-        return f"t{self.temporal_bins}_{self.transform}_{self.scaler}"
+        base = f"t{self.temporal_bins}_{self.transform}_{self.scaler}"
+        return base if self.projection == "none" else f"{base}_{self.projection}"
 
     @property
     def key(self) -> str:
@@ -163,6 +169,7 @@ class Candidate:
             "lambda_l2": self.lambda_l2,
             "representation_key": self.representation_key,
             "candidate_key": self.key,
+            **({"projection": self.projection} if self.projection != "none" else {}),
         }
 
 
@@ -180,6 +187,7 @@ class FittedCandidate:
     candidate: Candidate
     scaler: FeatureScaler
     model: LogisticRegression
+    projection: dict[str, Any] | None = None
 
 
 @dataclass(frozen=True)
@@ -1011,7 +1019,9 @@ def export_binned_cue_counts(
 # ---------- source tensor loading/saving ----------
 
 
-def load_source_tensor(path: Path, *, strict_expected: bool = False) -> SourceTensor:
+def load_source_tensor(
+    path: Path, *, strict_expected: bool = False, selected_sources_path: Path | None = None
+) -> SourceTensor:
     with np.load(path, allow_pickle=False) as npz:
         X = np.asarray(npz["X_source_cell_bin"], dtype=np.float32)
         M = np.asarray(npz["observed_source_cell_mask"], dtype=bool)
@@ -1034,7 +1044,8 @@ def load_source_tensor(path: Path, *, strict_expected: bool = False) -> SourceTe
     validate_source_records(records, strict_expected=strict_expected)
     if strict_expected:
         expected = load_selected_source_records(
-            MANAGER_ROOT / "prefit-selected-sources.json", strict_expected=True
+            selected_sources_path or MANAGER_ROOT / "prefit-selected-sources.json",
+            strict_expected=True,
         )
         if records != expected or cell_ids != tuple(
             sorted({c for r in expected for c in r.cell_ids})
@@ -1469,10 +1480,52 @@ def average_loss_logistic_c(lambda_l2: float, n_training_rows: int) -> float:
     return 1.0 / (lambda_l2 * n_training_rows)
 
 
+def fit_pca_projection(X: np.ndarray, *, variance_target: float = 0.9) -> dict[str, Any]:
+    """Full SVD, no whitening. Target=1 is a synthetic rotation check only."""
+    X = np.asarray(X, dtype=float)
+    if X.ndim != 2 or min(X.shape) < 1 or not np.isfinite(X).all():
+        raise ValueError("PCA requires a finite nonempty matrix")
+    if not 0 < variance_target <= 1:
+        raise ValueError("variance target must be in (0,1]")
+    mean = X[0].copy() if np.all(X == X[0]) else X.mean(axis=0)
+    centered = X - mean
+    _, singular, components = np.linalg.svd(centered, full_matrices=False)
+    tolerance = np.finfo(float).eps * max(X.shape) * singular[0]
+    rank = int(np.count_nonzero(singular > tolerance))
+    variance = singular ** 2
+    ratios = variance / variance.sum() if rank else np.zeros_like(variance)
+    cumulative = np.cumsum(ratios)
+    k = min(rank, int(np.searchsorted(cumulative, variance_target - 1e-12)) + 1) if rank else 0
+    components = components[:k].copy()
+    if k:
+        signs = np.sign(components[np.arange(k), np.abs(components).argmax(axis=1)])
+        components *= signs[:, None]
+    return {
+        "mean": mean.tolist(), "components": components.tolist(),
+        "input_features": X.shape[1], "n_components": k, "numerical_rank": rank,
+        "singular_tolerance": float(tolerance), "variance_target": variance_target,
+        "singular_values": singular.tolist(), "explained_variance_ratio": ratios.tolist(),
+        "retained_variance": float(cumulative[k - 1]) if k else 0.0,
+        "intercept_only": k == 0, "whiten": False, "schema_version": 1,
+    }
+
+
+def apply_projection(X: np.ndarray, projection: Mapping[str, Any] | None) -> np.ndarray:
+    if projection is None:
+        return X
+    if X.shape[1] != projection["input_features"]:
+        raise ValueError("PCA feature count mismatch")
+    if projection["intercept_only"]:
+        # ponytail: one zero column lets the existing solver fit only its intercept.
+        return np.zeros((len(X), 1))
+    return (X - np.asarray(projection["mean"])) @ np.asarray(projection["components"]).T
+
+
 def fit_candidate_model(train: RowBundle, candidate: Candidate) -> FittedCandidate:
     X = feature_matrix(train.X_counts, train.E, candidate)
     scaler = fit_scaler(X, candidate.scaler)
     Xs = apply_scaler(X, scaler)
+    projection = fit_pca_projection(Xs) if candidate.projection == "pca90" else None
     model = LogisticRegression(
         C=average_loss_logistic_c(candidate.lambda_l2, len(train.y)),
         penalty="l2",
@@ -1481,14 +1534,14 @@ def fit_candidate_model(train: RowBundle, candidate: Candidate) -> FittedCandida
         max_iter=1000,
         random_state=0,
     )
-    model.fit(Xs, train.y)
-    return FittedCandidate(candidate=candidate, scaler=scaler, model=model)
+    model.fit(apply_projection(Xs, projection), train.y)
+    return FittedCandidate(candidate=candidate, scaler=scaler, model=model, projection=projection)
 
 
 def predict_candidate(fit: FittedCandidate, rows: RowBundle) -> np.ndarray:
     X = feature_matrix(rows.X_counts, rows.E, fit.candidate)
     Xs = apply_scaler(X, fit.scaler)
-    return fit.model.predict_proba(Xs)[:, 1]
+    return fit.model.predict_proba(apply_projection(Xs, fit.projection))[:, 1]
 
 
 def weighted_metrics(
@@ -1557,9 +1610,12 @@ def weighted_auc(y: np.ndarray, score: np.ndarray, weights: np.ndarray) -> float
 def model_replay_payload(fit: FittedCandidate) -> dict[str, Any]:
     return {
         **fit.candidate.as_dict(),
+        **({"projection_state": fit.projection, "replay_schema_version": 2} if fit.projection is not None else {}),
         "intercept": np.asarray(fit.model.intercept_).tolist(),
         "coef": np.asarray(fit.model.coef_).tolist(),
         "classes": np.asarray(fit.model.classes_).tolist(),
+        "input_features": len(fit.scaler.mean),
+        "intercept_only": fit.scaler.floored_fraction == 1.0,
         "scaler": {
             "kind": fit.scaler.kind,
             "mean": fit.scaler.mean.tolist(),
@@ -1584,6 +1640,10 @@ def predict_from_replay(
         floored_fraction=float(scaler_info["floored_fraction"]),
     )
     Xs = apply_scaler(X, scaler)
+    if candidate.projection == "pca90":
+        if payload.get("replay_schema_version") != 2:
+            raise ValueError("PCA replay requires schema version 2")
+        Xs = apply_projection(Xs, payload["projection_state"])
     coef = np.asarray(payload["coef"], dtype=float).reshape(1, -1)
     intercept = float(np.asarray(payload["intercept"], dtype=float).reshape(-1)[0])
     logits = Xs @ coef.T + intercept
@@ -1603,11 +1663,15 @@ def round1_candidates() -> list[Candidate]:
 
 
 def candidate_from_dict(payload: Mapping[str, Any]) -> Candidate:
+    # Saved models carry scaler state; candidate/metric rows carry its name.
+    scaler = payload["scaler"]
+    scaler_kind = scaler["kind"] if isinstance(scaler, Mapping) else scaler
     return Candidate(
         int(payload["temporal_bins"]),
         str(payload["transform"]),
-        str(payload["scaler"]),
+        str(scaler_kind),
         float(payload["lambda_l2"]),
+        str(payload.get("projection", "none")),
     )
 
 

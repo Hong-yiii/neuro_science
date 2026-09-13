@@ -1,0 +1,37 @@
+{
+  "biological_fits_before_gate": 0,
+  "checks": {
+    "focused_tests": 20,
+    "lsp": "2 clean,2 timed out; inconclusive for those2",
+    "repository_tests": 102,
+    "ruff": "passed",
+    "synthetic_forward_replays": 272,
+    "synthetic_new_fits_during_verification": 0
+  },
+  "code_hashes": {
+    "docs/reports/path-pca-matched/protocol.md": "61d894340564262919b24d8258b20979dda08051e48d787e719e8dbcb57c2fd9",
+    "scripts/place195_matched_pca.py": "88ac39812b5f4a6512a9a81a4acfb03c1a2884e6ed94352df9b0bab0dca10093",
+    "scripts/place195_path_preprocessing_autoresearch.py": "adfe40aebc420844965cebd1ac76cd7e6d719c15469c1a027e1435cdd137d2c8",
+    "scripts/place195_split_filtered_access.py": "2cd7e7a14f6a045078c59d2489e6d06a615f033dc0f6c0cbea14533561608c0d",
+    "scripts/place195_v7_v8_neural_experiments.py": "39ed10704d7b3258a4d7109c9c4ce7ddecc5de98d4c11efe66f019d3cb973089",
+    "scripts/test_matched_pca.py": "00963cf623744895fb2ea960a479752c036cfdded486e93742482151a4c1b4a9",
+    "scripts/verify_matched_pca.py": "79ee8180b6ca154ae40a37809d5e673e1292b2672377c508e80163a7040180ab",
+    "scripts/verify_path_preprocessing_results.py": "b8b1030d6e322faf0d8e3e6fdf19e5aec1e6a0a5cb0ab9474cf6ede2385c3dea"
+  },
+  "created_utc": "2026-09-13T15:51:31.132182+00:00",
+  "resource_estimate": {
+    "estimated_seconds": 2576.8362524711374,
+    "fit_budget": 26266,
+    "headroom_factor": 8,
+    "max_artifact_bytes": 10737418240,
+    "max_seconds": 7200,
+    "synthetic_fits": 272,
+    "synthetic_seconds": 3.33558336191345
+  },
+  "reviews": {
+    "docs/reports/path-pca-matched/reviews/prefit-code.md": "9178a06907686fa7efce4da53efd85e2ad1792c61c508b7ccb9845a897bf371f",
+    "docs/reports/path-pca-matched/reviews/prefit-science-approved.md": "b88dba84c291d140a13d128c994f97a4c51547a3309123b3e6113ce20a38ade0",
+    "docs/reports/path-pca-matched/reviews/prefit-science.md": "375558c20e88d2c58eb09c2e197b994d67a395cd5456a6e47f4fec0784a19fac"
+  },
+  "status": "approved-for-bounded-exploratory-fit"
+}

@@ -1,0 +1,98 @@
+{
+  "claim_ceiling": "exposed historical, known-label condition-level pseudopopulation method comparison",
+  "cue_duration_range_s": [
+    1.0,
+    1.127032999999983
+  ],
+  "export_manifest_sha256": "7c2df55b3cc8713826e0de6359f4d288a7daf132d5179033bdd068b5eca821ca",
+  "observed_pairs": 756,
+  "qc_flags_counts": {
+    "": 188
+  },
+  "selected_sources_sha256": "36c72e8f1f9c55ca3af9458963cf1e1062c8803cb57b33af29df4502e46c2b2f",
+  "shape": [
+    188,
+    49,
+    10
+  ],
+  "simultaneity_status_counts": {
+    "candidate_same_session_unverified": 188
+  },
+  "source_sha256": "6fa3e836fad756b6007f69115de5e6758c7238cfb9a786b4a4e7a0d4ac849e3a",
+  "status": "fixed-assay-input-gate-passed",
+  "support": {
+    "component": "D_N_C_M__N_C_B",
+    "inner_fold_policy": "frozen prefit-selected-sources.json; train folds 0/1/2, validation -1",
+    "panels": [
+      {
+        "cells": 2,
+        "endpoint_pair": "2->1",
+        "interval_grade": "point_influence_only",
+        "sessions": 1,
+        "sources": 15,
+        "train_absent": 6,
+        "train_present": 6,
+        "validation_absent": 2,
+        "validation_present": 1
+      },
+      {
+        "cells": 14,
+        "endpoint_pair": "3->1",
+        "interval_grade": "source_resampling_sensitivity_only",
+        "sessions": 3,
+        "sources": 42,
+        "train_absent": 20,
+        "train_present": 11,
+        "validation_absent": 7,
+        "validation_present": 4
+      },
+      {
+        "cells": 3,
+        "endpoint_pair": "4->1",
+        "interval_grade": "point_influence_only",
+        "sessions": 1,
+        "sources": 11,
+        "train_absent": 3,
+        "train_present": 6,
+        "validation_absent": 1,
+        "validation_present": 1
+      },
+      {
+        "cells": 12,
+        "endpoint_pair": "5->1",
+        "interval_grade": "source_resampling_sensitivity_only",
+        "sessions": 3,
+        "sources": 41,
+        "train_absent": 14,
+        "train_present": 19,
+        "validation_absent": 4,
+        "validation_present": 4
+      },
+      {
+        "cells": 23,
+        "endpoint_pair": "6->1",
+        "interval_grade": "source_resampling_sensitivity_only",
+        "sessions": 6,
+        "sources": 79,
+        "train_absent": 43,
+        "train_present": 19,
+        "validation_absent": 9,
+        "validation_present": 8
+      }
+    ],
+    "source_count": 188,
+    "train_sources": 147,
+    "unique_cells": 49,
+    "unique_sessions": 13,
+    "validation_sources": 41
+  },
+  "unresolved": [
+    "lab confirmation of cue/goal/start marker semantics",
+    "verified simultaneity",
+    "gaze/view/heading/action and admissible previous-trial history",
+    "serial exchangeability",
+    "anatomical/selection provenance and animal replication"
+  ],
+  "validation_pools": 28,
+  "validation_singletons": 17
+}
