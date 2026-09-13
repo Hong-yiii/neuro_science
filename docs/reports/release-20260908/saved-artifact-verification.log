@@ -1,0 +1,40 @@
+test_assemble_pseudo_uses_one_source_per_session_for_all_cells_bins (scripts.test_place195_v7_v8_neural_experiments.V7V8NeuralExperimentsTest.test_assemble_pseudo_uses_one_source_per_session_for_all_cells_bins) ... ok
+test_half_open_bin_events_and_conservation (scripts.test_place195_v7_v8_neural_experiments.V7V8NeuralExperimentsTest.test_half_open_bin_events_and_conservation) ... ok
+test_source_shuffle_preserves_session_split_counts (scripts.test_place195_v7_v8_neural_experiments.V7V8NeuralExperimentsTest.test_source_shuffle_preserves_session_split_counts) ... ok
+test_flatten_rows_preserves_trial_bins_and_labels (scripts.test_place195_v8b_v9_cebra.V8bV9CebraTest.test_flatten_rows_preserves_trial_bins_and_labels) ... ok
+test_time_loader_samples_only_within_trial_offset_one (scripts.test_place195_v8b_v9_cebra.V8bV9CebraTest.test_time_loader_samples_only_within_trial_offset_one) ... ok
+test_offset1_fast_path_matches_cebra_trial_expansion (scripts.test_place195_v8b_v9_cebra.V8bV9CebraTest.test_offset1_fast_path_matches_cebra_trial_expansion) ... ok
+test_behavior_loader_samples_matching_labels (scripts.test_place195_v8b_v9_cebra.V8bV9CebraTest.test_behavior_loader_samples_matching_labels) ... ok
+test_saved_manifest_has_seven_session_components_per_pseudorow (scripts.test_place195_v8b_v9_cebra.V8bV9CebraTest.test_saved_manifest_has_seven_session_components_per_pseudorow) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 1.160s
+
+OK
+PASS: two reports, two experiment scripts, and primary source tensor hashes
+PASS: 52 final fit records, 52,000 saved loss rows, all saved reload receipts zero
+PASS: all 24 observed CEBRA train/validation metric rows recomputed from predictions
+PASS: eight non-fitting tests. This checks implementation/artifact consistency, not biological validity.
+{
+  "status": "verified",
+  "fits": 342,
+  "updates": 510000,
+  "hashed_artifacts": 4488,
+  "numeric_prefix_pairs": 42,
+  "exact_observed_family_max": "7/12",
+  "inclusive_exceedances": 18,
+  "exact_family_p": "19/21",
+  "family_p": 0.9047619047619048,
+  "new_fits": 0
+}
+{
+  "status": "passed",
+  "baseline_hashes": 2251,
+  "baseline_metrics": 690,
+  "study_hashes": 5515,
+  "study_metrics": 1618,
+  "new_fits": 0,
+  "checkpoint_loads": 0,
+  "raw_or_original_split_access": false,
+  "scope": "Saved artifact hashes and prediction metrics only; not biological validity"
+}

@@ -1,0 +1,55 @@
+diff --git a/README.md b/README.md
+index 45d2a04..b04495f 100644
+--- a/README.md
++++ b/README.md
+@@ -37,6 +37,15 @@ and an early holdout-exposure incident, so it is not confirmatory H1 evidence.
+ - [Audit instructions and non-pseudopopulation next steps](docs/reports/place195-audit-and-next-steps-20260907.md).
+ - [Data-volume comparison with CEBRA and hippocampal studies](docs/reports/cebra-data-volume-comparison-20260907.md).
+ 
++Separate endpoint-decoding baseline: [start–goal CEBRA adaptation](docs/reports/start-goal-cebra-baseline.md)
++uses the current place195 set, matches pseudotrials only by inferred `(start, goal)`,
++and compares raw/PCA/CEBRA decoders. It is exploratory condition decoding, not H1.
++[Autonomous endpoint investigation and teaching HTML](docs/reports/start-goal-autoresearch.md)
++(2026-09-07) adds sampling/training/decoder diagnostics, matched student-style LDA,
++source/unit/recombination sensitivities, and a bounded CE follow-up. Its research
++plan, journal, all results, and validation receipts are preserved; comparisons
++remain development-only, true-label-conditioned pseudopopulation evidence.
++
+ Raw data, detailed run artifacts, and runtime environments remain local/ignored;
+ links into `outputs/` in the audit Markdown require the data-equipped checkout.
+ 
+diff --git a/context/previous-student-analysis.md b/context/previous-student-analysis.md
+index 8af139b..561d7c2 100644
+--- a/context/previous-student-analysis.md
++++ b/context/previous-student-analysis.md
+@@ -174,4 +174,29 @@ The write-up links the prior student's scripts at:
+ 
+ `https://github.com/josephchengyx/Hippocampus_Decoding`
+ 
+-This repository has not yet been cloned or audited locally.
++A bounded read-only source inspection was performed on 2026-09-07 at commit
++`2f12016c58472888b83298d163be1daaf5291a1e`; historical notebooks were not executed
++against the missing original data. In `neurosci_2023_pseudopop.ipynb`, the custom
++10-fold helper uses deterministic row modulo, not source-trial groups. The
++pooled-bin cell 70 splits different bins of the same trial across folds; the
++separate per-bin LDA cells 72/73 are different code paths whose bootstrap-source
++reuse requires tracing. Do not generalize that pooled-bin issue to every
++historical result. See the [CEBRA diagnosis and comparison note](../docs/reports/start-goal-cebra-diagnosis.md)
++for the bounded audit and a fair source-safe comparison plan.
++
++### Matched adaptation completed, 2026-09-07
++
++The [autonomous endpoint study](../docs/reports/start-goal-autoresearch.md) now
++includes separate start/goal/joint SVD LDA on identical 195-unit source-safe
++arrays and ten 100 ms cue bins. Three-seed development goal accuracy peaks
++at 81.25% in 0.4–0.5 s; joint LDA in that bin is 37.22%. Whole-cue SVD LDA
++is 48.47% joint; PCA8/bin + logistic C=.01 is 83.61% joint. These are different
++input/target comparisons, not historical accuracy replication or evidence
++that LDA/PCA generally dominates CEBRA.
++
++The report also includes cross-temporal goal readouts, shrinkage joint LDA,
++and an explicitly modern factorized two-head comparator. It retains the
++known-condition pseudopopulation and inspected-development caveats. The
++student's original 233-cell selection, preprocessing artifacts and source-safe
++historical folds remain unavailable. Notebook cell numbers above are zero-based
++indices in the notebook JSON, not execution counters.

@@ -1,0 +1,76 @@
+"""Exploratory decoder ablation on fixed saved embeddings; never trains CEBRA.
+
+Pre-fit contract: same saved source-disjoint inner train/validation assemblies,
+seeds 0/1/2, 30 classes, joint balanced accuracy/log loss, no model selection or
+significance claim. Independent evidence remains original trials/session, not
+pseudorows. Baseline is saved scaled-C1 logistic. Test no scaling (C1), stronger
+regularization (scaled C=.01), and cosine 5-NN for PCA/CEBRA-Time/CEBRA-Behavior.
+PCA per-bin L2 normalization + original scaled-C1 decoder tests magnitude loss.
+All candidates reported; existing source-label nulls do NOT calibrate these new
+choices. Files under the original completed run remain read-only.
+"""
+import csv
+import hashlib
+import importlib.metadata
+import json
+from pathlib import Path
+
+import numpy as np
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import balanced_accuracy_score, log_loss
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+
+HERE = Path(__file__).resolve().parent
+RUN = HERE.parent / "start-goal-cebra-20260907"
+
+
+def main():
+    result = {"status": "running", "scientific_status": "exploratory_decoder_diagnostic_only", "script_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(), "versions": {n: importlib.metadata.version(n) for n in ["numpy", "scikit-learn"]}, "rows": [], "geometry": [], "input_hashes": {}}
+    path = HERE / "decoder_diagnostic.json"
+    if path.exists():
+        raise FileExistsError(path)
+    path.write_text(json.dumps(result, indent=2))
+    for name in ["pca8", "cebra_time", "cebra_behavior"]:
+        for seed in range(3):
+            source = RUN / "observed" / f"seed{seed}" / name / "decoder.npz"
+            result["input_hashes"][str(source)] = hashlib.sha256(source.read_bytes()).hexdigest()
+            with np.load(source) as f:
+                d = {k: f[k] for k in f.files}
+            tr, va = d["features_train"], d["features_validation"]
+            yt, yv = d["y_train"], d["y_validation"]
+            flat = tr.reshape(-1, 8).astype(float)
+            singular = np.linalg.svd(flat - flat.mean(axis=0), compute_uv=False)
+            frac = singular ** 2 / (singular ** 2).sum()
+            result["geometry"].append({"representation": name, "seed": seed, "train_variance_fractions": frac.tolist(), "train_participation_ratio": float(1 / np.sum(frac ** 2)), "decoder_scale_min": float(d["scaler_scale"].min()), "decoder_scale_max": float(d["scaler_scale"].max())})
+            candidates = {
+                "scaled_C1_saved": None,
+                "unscaled_C1": LogisticRegression(C=1, max_iter=2000),
+                "scaled_C0.01": make_pipeline(StandardScaler(), LogisticRegression(C=0.01, max_iter=2000)),
+                "cosine_knn5": KNeighborsClassifier(n_neighbors=5, metric="cosine"),
+            }
+            if name == "pca8":
+                candidates["unit_bin_norm_scaled_C1"] = make_pipeline(StandardScaler(), LogisticRegression(C=1, max_iter=2000))
+            for ablation, model in candidates.items():
+                xtr, xva = tr, va
+                if ablation == "unit_bin_norm_scaled_C1":
+                    xtr = (tr.reshape(-1, 10, 8) / np.maximum(np.linalg.norm(tr.reshape(-1, 10, 8), axis=2, keepdims=True), 1e-12)).reshape(len(tr), -1)
+                    xva = (va.reshape(-1, 10, 8) / np.maximum(np.linalg.norm(va.reshape(-1, 10, 8), axis=2, keepdims=True), 1e-12)).reshape(len(va), -1)
+                if model is not None:
+                    model.fit(xtr, yt)
+                for split, x, y in [("train", xtr, yt), ("validation", xva, yv)]:
+                    prob = d[f"prob_{split}"] if model is None else model.predict_proba(x)
+                    pred = d["classes"][prob.argmax(axis=1)]
+                    result["rows"].append({"representation": name, "seed": seed, "ablation": ablation, "split": split, "joint_balanced_accuracy": float(balanced_accuracy_score(y, pred)), "joint_log_loss": float(log_loss(y, prob, labels=np.arange(30)))})
+                print(name, seed, ablation, result["rows"][-1]["joint_balanced_accuracy"], flush=True)
+    result["status"] = "completed"
+    path.write_text(json.dumps(result, indent=2) + "\n")
+    with (HERE / "decoder_diagnostic.csv").open("w", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=list(result["rows"][0]))
+        writer.writeheader()
+        writer.writerows(result["rows"])
+
+
+if __name__ == "__main__":
+    main()

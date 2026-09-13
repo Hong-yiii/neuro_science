@@ -1,0 +1,135 @@
+"""Read-only forward-pass audit of existing CEBRA-Time-3 / seed 1 artifacts.
+Run from the repository root with scratch/v6-v9-runtime/bin/python.
+No fitting, optimizer steps, raw/test access, or checkpoint writes.
+"""
+from pathlib import Path
+import csv
+import hashlib
+import json
+import sys
+
+import numpy as np
+from scipy.special import expit
+from sklearn.preprocessing import StandardScaler
+import torch
+
+REPO = Path(__file__).resolve().parents[5]
+sys.path.insert(0, str(REPO))
+from scripts.place195_v8b_v9_cebra import embed_rows, make_solver
+
+ROOT = REPO / 'outputs/prospective_path_first_run/place195-v6-v9-autoresearch-20260906'
+BASE = ROOT / 'v7-v8-neural-experiments/primary29_min3train_min1val/bin100ms'
+FINAL = ROOT / 'v8b-v9-cebra-final-20260905T224554Z'
+FIT = FINAL / 'v9/observed/cebra_time/dim3/seed1'
+
+
+def read_csv(path):
+    with path.open(newline='') as f:
+        return list(csv.DictReader(f))
+
+
+def session(cell):
+    return '_'.join(cell.split('/')[:2])
+
+
+def confusion(y, pred):
+    return [[int(np.sum((y == actual) & (pred == guessed))) for guessed in (0, 1)] for actual in (0, 1)]
+
+
+def main():
+    torch.set_num_threads(1)
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    arrays = np.load(BASE / 'pseudo_arrays_seed1.npz', allow_pickle=False)
+    source = np.load(BASE / 'source_level_cue_tensors.npz', allow_pickle=False)
+    saved = np.load(FIT / 'embeddings_and_decoder.npz', allow_pickle=False)
+    checkpoint_path = FIT / 'checkpoint_final.pth'
+    checksum = hashlib.sha256(checkpoint_path.read_bytes()).hexdigest()
+    checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=True)
+    early = torch.load(FIT / 'checkpoint_step0001.pth', map_location=device, weights_only=True)
+    changes = {k: float(torch.max(torch.abs(v - early['model'][k])).item()) for k, v in checkpoint['model'].items()}
+    assert all(v > 0 for v in changes.values())
+    steps = sorted({int(v['step'].item()) for v in checkpoint['optimizer']['state'].values()})
+    assert steps == [1000]
+    solver = make_solver(29, 3, 32, 3e-4, device)
+    solver.load_state_dict(checkpoint, strict=True)
+    solver.n_features = 29
+    solver.model.eval()
+    scaler = StandardScaler()
+    scaler.mean_ = saved['embedding_scaler_mean']
+    scaler.scale_ = saved['embedding_scaler_scale']
+    setattr(scaler, 'n_features_in_', 29)
+    decoder_scaler = StandardScaler()
+    decoder_scaler.mean_ = saved['decoder_scaler_mean']
+    decoder_scaler.scale_ = saved['decoder_scaler_scale']
+    setattr(decoder_scaler, 'n_features_in_', 30)
+    manifest = read_csv(BASE / 'pseudo_manifest_seed1.csv')
+    source_index = {str(sid): i for i, sid in enumerate(source['source_trial_ids'])}
+    samples, full_scores = [], {}
+    cells = arrays['cell_ids'].tolist()
+    for split in ('train', 'validation'):
+        X, y = arrays[f'X_{split}'], arrays[f'y_{split}']
+        assert X.shape == (128, 29, 10) and np.bincount(y).tolist() == [64, 64]
+        Z = embed_rows(solver, scaler, X, device=device, dim=3)
+        error = float(np.max(np.abs(Z - saved[f'Z_{split}'])))
+        assert error < 2e-6, error
+        Zscaled = np.asarray(decoder_scaler.transform(Z))
+        logits = (Zscaled @ saved['decoder_coef'].T + saved['decoder_intercept']).ravel()
+        prob = expit(logits)
+        predicted = (logits > 0).astype(int)
+        full_scores[split] = {'confusion_absent_present': confusion(y, predicted), 'max_embedding_error_vs_saved': error, 'probability_range': [float(prob.min()), float(prob.max())]}
+        for row in (0, 64):  # First saved row of each class; not selected by performance.
+            label = 'present' if int(y[row]) else 'absent'
+            lineage = [r for r in manifest if r['split'] == split and r['label'] == label and r['pseudo_row'] == '0']
+            assert len(lineage) == 7
+            for r in lineage:
+                si = source_index[r['source_trial_id']]
+                indices = [i for i, c in enumerate(cells) if session(c) == r['session_id']]
+                assert np.all(source['observed_source_cell_mask'][si, indices])
+                assert np.array_equal(X[row, indices, :], source['X_source_cell_bin'][si, indices, :])
+            raw_bins = X[row].T.copy()
+            standardized = np.asarray(scaler.transform(raw_bins), dtype=np.float32)
+            with torch.no_grad():
+                direct = solver.model(torch.as_tensor(standardized[:, :, None], device=device)).detach().cpu().numpy().reshape(10, 3)
+            assert np.max(np.abs(direct - Z[row].reshape(10, 3))) < 2e-6
+            samples.append({'split': split, 'array_row': row, 'true_label': label,
+                'source_lineage': lineage, 'counts_bins_by_cells': raw_bins.tolist(),
+                'encoder_input_bins_by_cells': standardized.tolist(), 'encoder_output_bins_by_latents': direct.tolist(),
+                'decoder_input_scaled': Zscaled[row].tolist(), 'decoder_logit': float(logits[row]),
+                'prob_present': float(prob[row]), 'predicted_label': 'present' if predicted[row] else 'absent'})
+    saved_preds = read_csv(FINAL / 'v9/v9_cebra_predictions.csv')
+    for sample in samples:
+        previous = next(r for r in saved_preds if r['representation'] == 'cebra_time' and r['dim'] == '3' and r['seed'] == '1' and r['split'] == sample['split'] and int(r['row']) == sample['array_row'])
+        assert previous['pred_label'] == sample['predicted_label']
+        assert abs(float(previous['prob_present']) - sample['prob_present']) < 2e-6
+    counts = read_csv(FINAL / 'v8b/v8b_session_label_bin2_source_counts.csv')
+    sessions = []
+    for sid in sorted(set(source['source_session_ids'].tolist())):
+        row = {'session': sid, 'cells': sum(session(c) == sid for c in cells)}
+        for split in ('train', 'validation'):
+            for label in ('absent', 'present'):
+                row[f'{split}_{label}'] = sum(int(r['source_count']) for r in counts if r['session_id'] == sid and r['split'] == split and r['label'] == label)
+        sessions.append(row)
+    bin2 = [r for r in read_csv(FINAL / 'v8b/v8b_regularization_metrics.csv') if r['representation'] == 'raw_bin_2' and r['bin_index'] == '2' and float(r['C']) == 1.0]
+    assert len(bin2) == 6 and all(float(r['balanced_accuracy']) == 1.0 for r in bin2)
+    loss = read_csv(FIT / 'loss_trace.csv')
+    assert len(loss) == 1000
+    result = {'scope': 'Forward-only reproduction of existing artifacts; no fitting or raw/test access.',
+        'model': 'CEBRA-Time-3', 'seed': 1, 'device': device, 'architecture': str(solver.model),
+        'checkpoint_sha256': checksum, 'optimizer_steps': steps, 'parameter_tensor_max_changes_step1_to1000': changes,
+        'loss_first': float(loss[0]['total']), 'loss_last': float(loss[-1]['total']),
+        'cell_order': cells, 'session_support': sessions, 'full_scores': full_scores,
+        'bin2_c1_metrics': bin2, 'samples': samples}
+    assert hashlib.sha256(checkpoint_path.read_bytes()).hexdigest() == checksum
+    output = Path(__file__).with_name('forward_trace.json')
+    output.write_text(json.dumps(result, indent=2) + '\n')
+    print('Saved', output)
+    print(json.dumps({k:v for k,v in result.items() if k not in ('cell_order','samples','bin2_c1_metrics')}, indent=2))
+    for r in samples:
+        print(json.dumps({k:r[k] for k in ('split','array_row','true_label','decoder_logit','prob_present','predicted_label')}))
+        print('first bin raw', r['counts_bins_by_cells'][0])
+        print('first bin standardized', r['encoder_input_bins_by_cells'][0])
+        print('first 3 bin embeddings', r['encoder_output_bins_by_latents'][:3])
+
+
+if __name__ == '__main__':
+    main()

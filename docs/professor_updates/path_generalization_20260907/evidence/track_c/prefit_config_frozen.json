@@ -1,0 +1,39 @@
+{
+  "argv": [
+    "outputs/path-generalization-20260907/frozen/driver.py",
+    "fit-track-c-models",
+    "--authorized-phase",
+    "reviewed-code-data-gate",
+    "--target-mode",
+    "both",
+    "--nulls",
+    "100",
+    "--temporal-nulls",
+    "100",
+    "--development-counts",
+    "outputs/path-generalization-20260907/results-20260907T081200Z/track_c_export/development_cue_counts.csv.gz",
+    "--output-dir",
+    "outputs/path-generalization-20260907/results-20260907T081200Z/track_c"
+  ],
+  "config_hash": "89ad34527896255d4ea05dd84337a89310ba5ecffb532acc0961df268fc247d3",
+  "created_unix_seconds": 1788768960.2582667,
+  "development_counts": "outputs/path-generalization-20260907/results-20260907T081200Z/track_c_export/development_cue_counts.csv.gz",
+  "development_counts_sha256": "b0f00cff980d0b813b638a3a2d51fff44e52809041957cd0af4bc817c16919d2",
+  "min_context_class_train": 3,
+  "min_train_sources_per_unit": 20,
+  "nulls": 100,
+  "penalty": 1.0,
+  "platform": "Linux-7.0.0-30-generic-x86_64-with-glibc2.39",
+  "protocol_sha256": "14e13571233b12727b7ab5e51022eddb6e379bfbe881ba83f405afcd6e14483b",
+  "python": "3.13.2 | packaged by Anaconda, Inc. | (main, Feb  6 2025, 18:56:02) [GCC 11.2.0]",
+  "source_code_sha256": {
+    "driver": "2821317f843ca2b285f2db20d9587c5dd594511e42b5fd63ad304130e4417de1",
+    "place195_split_filtered_access.py": "2cd7e7a14f6a045078c59d2489e6d06a615f033dc0f6c0cbea14533561608c0d",
+    "place195_v7_v8_neural_experiments.py": "39ed10704d7b3258a4d7109c9c4ce7ddecc5de98d4c11efe66f019d3cb973089",
+    "place195_v8b_v9_cebra.py": "737ad148dcc261c3ec1bbbd1ada395b34b47b2b37c5920370d3107c209976f9a"
+  },
+  "stage": "track_c_per_unit_endpoint_time_exposure_component_decoding",
+  "target_mode": "both",
+  "temporal_nulls": 100,
+  "three_target_null_policy": "target_mode=both runs all three frozen Track-C targets; use one joint source-label permutation per null and max over the three global statistics"
+}

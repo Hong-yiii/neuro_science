@@ -1,0 +1,21 @@
+major — docs/prospective-path-research-flow-review.md:34 — Historical “blocked work” now conflicts with completed path-generalization results.
+
+Verified evidence: this file still says `PCA, decoders, CEBRA...` are blocked at lines 34–38, while README.md:31–46 points to the latest final path-generalization HTML, 342 native CEBRA fits, and verification instructions. Impact: a PR reader following the “single start-here review doc” can conclude the new results should not exist. Minimum fix: add a top deprecation banner: “Historical 2026-08-31 flow; superseded for PR packaging by README + path-generalization final HTML. Retain for provenance, not current next-step gating.”
+
+major — README.md:54 — Link label and older advice over-deprecate pseudopopulations.
+
+Verified evidence: README labels the report as “non-pseudopopulation next steps”; docs/reports/place195-audit-and-next-steps-20260907.md:62–68 frames “real observations before another architecture” and “not fake population vectors.” But docs/reports/cebra-data-volume-comparison-20260907.md:69–77 explicitly says pseudopopulations are not disqualified and multi-session CEBRA is an alternative. Impact: packaging could wrongly tell reviewers that pseudopopulations are rejected, instead of valid/central condition-level tools under monkey recording constraints. Minimum fix: retitle/link as “audit guide and alternatives to forced common-panel pseudopopulations”; add one note that source-safe pseudopopulation decoding remains a central condition-level analysis, while per-unit real-trial checks are complementary.
+
+major — docs/research-questions.md:162 — Canonical docs lack an explicit current “condition-level pseudopopulation/generalization lane.”
+
+Verified evidence: research-questions.md:162–165 says cross-session pseudopopulations support route-condition/condition-average analyses but cannot reconstruct exact trial state; analysis-contract.md:173–185 emphasizes verified simultaneous-group outputs. That is true, but incomplete for the latest packaging need. Impact: readers may think only simultaneous195 can advance H1-related work, or conversely may overclaim pseudopopulation rows as exact trial-specific population states. Minimum fix: add a short subsection defining the allowed lane: source-trial splits preserved; session-block/bin construction preserved; behavior-only route/component labels; condition semantics explicit; source/session nulls; no claims of simultaneous covariance, dynamics, intention, or exact trial-specific state.
+
+minor — README.md:32 — CEBRA phrasing needs a root-cause caveat.
+
+Verified evidence: README.md:32–35 says models transfer across training-source mixtures but not reliably across source pools; final HTML line 21365 says “CEBRA training can memorize/source-transfer without source-disjoint validation.” docs/reports/cebra-data-volume-comparison-20260907.md:8 already says sample/support limits do not establish the only cause. Impact: reviewers may cite “CEBRA failed because X” as proven. Minimum fix: add one canonical sentence: “The CEBRA limitations are plausible diagnostics, not a proven root cause of the nonpositive result.”
+
+minor — docs/reports/place195-audit-and-next-steps-20260907.md:68 — Per-unit checks need a complement-not-replacement label.
+
+Verified evidence: line 68 recommends per-unit encoding/session decoding and preserving real trial rows; final HTML line 21354 calls Track C the “best candidate shape” but not positive. Impact: packaging could imply population analyses should stop, or that per-unit follow-up requires individually significant cells. Minimum fix: add a README/canonical note: “Real-trial per-unit checks test support and positive controls; they complement source-safe population/pseudopopulation analyses and should be interpreted through pooled/session-level evidence, not mandatory individual-cell significance.”
+
+Residual risks: I reviewed documentation and generated HTML only; no raw data, fits, or result artifacts were opened beyond documented text summaries.

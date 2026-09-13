@@ -1,5 +1,11 @@
 # How our data volume compares with CEBRA and hippocampal population studies
 
+> **Literature comparison retained; roadmap updated 2026-09-08.** The numerical
+> comparisons below are not minimum-N rules. The [completed follow-up](../professor_updates/path_generalization_20260907/README.md)
+> and [current plan](path-generalization-next-steps-20260908.md) retain source-safe
+> pseudopopulations as a central condition-level method under the recording
+> constraints. Neither more data nor another CEBRA formulation is a proven cure.
+
 Date: 2026-09-07 Asia/Singapore (web research began 2026-09-06 UTC).
 Status: bounded literature/provenance comparison, not a new neural analysis or power calculation. Four independent research branches covered original CEBRA hippocampus, original motor/visual benchmarks, independent CEBRA applications, and prospective hippocampal studies. Independent read-only scientific/source synthesis review completed with no findings; scope and evidence limits are recorded below.
 
@@ -70,7 +76,7 @@ CEBRA's rat data supply many 25 ms population vectors while position changes con
 
 CEBRA's visual example is a direct counterexample to “pseudopopulations cannot be useful.” Ten controlled movie repeats provide the same stimulus sequence across sessions, supporting a well-defined stimulus-conditioned population comparison. Our unknown future route varies across trials and is used to select matching source blocks. Both constructions have claim limits, but they answer different questions.
 
-Thus, moving away from pseudotrials for our primary H1 analysis is a recommendation about preserving the real trial's neural/path link and avoiding a restrictive common-panel intersection—not a verdict against every CEBRA pseudopopulation analysis.
+The earlier recommendation to move away from pseudotrials concerned exact real-trial claims and the restrictive common-panel intersection, not a general rejection of pseudopopulations. The current plan keeps source-safe condition-level pseudopopulation analyses central, alongside complementary per-unit checks; it does not require individually significant cells or a large simultaneous195 recording.
 
 ### Multi-session CEBRA is an alternative to row stitching, not a cure
 
@@ -86,7 +92,7 @@ The original CEBRA paper states that CEBRA-Time and some unsupervised comparator
 2. Audit **real per-session/per-endpoint/per-route support** before a new model. The desired contrast may be infeasible even though the archive is sizeable.
 3. Establish a source-safe goal/start positive control and simple within-session or per-cell path associations. Pool estimates conservatively rather than treating cells or sessions as independent animals.
 4. Consider multi-session representation learning only if those measurements and shared labels support it. No extra pseudorow count, architecture sweep or universal minimum-N rule is justified by this review.
-5. If a supported design emerges, estimate data needs with **whole-source-trial learning curves** and, where possible, neuron subsampling. Preserve session/time structure and evaluate the actual beyond-endpoint target. A larger future collection would ideally add route repetitions and genuine simultaneous population coverage, not merely more dates with sparse units.
+5. If a supported design emerges, estimate data needs with **whole-source-trial learning curves** and, where possible, neuron subsampling. Preserve session/time structure and evaluate the actual beyond-endpoint target. If future collection is feasible, prioritize usable route repetitions within recordings and independent session replication. Denser simultaneous coverage can help when feasible, but is not a prerequisite for the condition-level lane; extra unmatched dates/units alone need not improve support.
 
 The accepted V6–V9 benchmark remains development-only because of the previously documented holdout exposure. No genuinely untouched confirmation set was created by this literature review.
 

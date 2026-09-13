@@ -1,0 +1,36 @@
+{
+  "bootstrap_delta_quantiles": {
+    "q025": -0.08751339317543719,
+    "q50": 0.015384729918027746,
+    "q975": 0.10061152153449993
+  },
+  "coverage": [
+    "evaluation and training metrics",
+    "saved and regenerated source lineage",
+    "adaptive null selection",
+    "bootstrap seed/strata/lineage/hash/quantiles",
+    "nuisance features and metrics",
+    "seed and influence summaries"
+  ],
+  "models_forward_replayed": 82283,
+  "new_model_fits": 0,
+  "ordinary_nulls": 100,
+  "p_values": {
+    "ordinary_null_max_family_policy_ge_observed_selected": 0.3564356435643564,
+    "ordinary_null_selected_policy_ge_observed_selected": 0.16831683168316833,
+    "temporal_half_null_max_family_policy_ge_observed_selected": 0.297029702970297,
+    "temporal_half_null_selected_policy_ge_observed_selected": 0.13861386138613863
+  },
+  "selected_candidate": "t1_raw_rate_variance_floor_l2_1",
+  "selected_validation_balanced_accuracy": 0.55,
+  "selected_validation_delta": 0.028583397042444624,
+  "source_bootstraps": 200,
+  "status": "verified",
+  "temporal_half_nulls": 100,
+  "verifier_sha256": "b8b1030d6e322faf0d8e3e6fdf19e5aec1e6a0a5cb0ab9474cf6ede2385c3dea",
+  "full_local_receipt": "outputs/workspace-consolidation-20260910/preprocessing-replay.json",
+  "full_local_receipt_sha256": "16c2b048dc3864950d5a0d37f27330e30470c6e19f45c01b52793c747bc03226",
+  "artifact_hash_count": 4206,
+  "verification_date": "2026-09-13",
+  "saved_study_elapsed_seconds": 722
+}

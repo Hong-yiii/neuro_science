@@ -1,0 +1,5591 @@
+#!/usr/bin/env python3
+"""Phase-1 implementation for the 2026-09-07 path-generalization program.
+
+This file intentionally does not edit the accepted V6/V7/V8/V9 scripts.  Real
+biological fitting/export subcommands require an explicit review-gate token;
+phase 1 is implementation, synthetic/unit checks, and saved-artifact schema
+inspection only.
+"""
+
+from __future__ import annotations
+
+import argparse
+import csv
+import gzip
+import hashlib
+import itertools
+import json
+import math
+import platform
+import random
+import sys
+import time
+import zipfile
+from collections import Counter, defaultdict
+from collections.abc import Iterable, Mapping, Sequence
+from dataclasses import dataclass
+from io import BytesIO
+from pathlib import Path
+from typing import Any, TextIO, cast
+
+import numpy as np
+from numpy.lib import format as npy_format
+from scipy.optimize import minimize
+from scipy.special import expit, ndtr
+from sklearn.decomposition import PCA
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import (
+    balanced_accuracy_score,
+    brier_score_loss,
+    log_loss,
+    roc_auc_score,
+)
+from sklearn.preprocessing import StandardScaler
+
+from scripts.place195_split_filtered_access import SplitFilteredAccess
+from scripts.place195_v7_v8_neural_experiments import (
+    INT_TO_LABEL,
+    LABEL_TO_INT,
+    LABELS,
+    SourceMeta,
+    build_dataset,
+    session_from_cell,
+)
+
+ACCEPTED_INPUT_ROOT = Path(
+    "/home/hongyi-home-lab/neuro_science/outputs/prospective_path_first_run/"
+    "place195-v6-v9-autoresearch-20260906"
+)
+OWNED_OUTPUT_ROOT = Path("outputs/path-generalization-20260907")
+AUTH_TOKEN = "reviewed-code-data-gate"
+PRIMARY_COMPONENT = "D_N_R_T__N_R_M"
+SUPPORTED_MIDDLE_COMPONENT = "D_N_C_M__N_C_B"
+PRIMARY_ENDPOINT = "4->3"
+CEBRA_OBJECTIVES = ("cebra_time", "cebra_behavior")
+TRACK_C_TARGETS = ("middle", "anywhere", "supported_middle")
+TRACK_C_FAMILY_MAX_TARGET = "family_max_three_targets"
+SELECTED195_CELL_SCOPE_SHA256 = (
+    "2924d60f9a52ad7c02e802c28e84a85c6267da023267ac1b507b957e0587f60d"
+)
+MIN_TRACK_C_NULLS = 100
+
+SCHEMA_RELATIVE_PATHS = (
+    "final_report_manifest.json",
+    "v6-reset-graph-support-audit/summary.json",
+    "v6-reset-graph-support-audit/v6a_geometry_mapping/trial_mapping_metrics.csv",
+    "v6-reset-graph-support-audit/v6c_population_membership/selected_component_source_membership.csv",
+    "v6-reset-graph-support-audit/v6c_population_membership/selected_component_condition_mean_source_membership.csv",
+    "v7-v8-neural-experiments/prefit_config_before_neural_access.json",
+    "v7-v8-neural-experiments/metrics.csv",
+    "v7-v8-neural-experiments/predictions.csv",
+    "v7-v8-neural-experiments/primary29_min3train_min1val/bin100ms/source_level_cue_tensors.npz",
+    "v7-v8-neural-experiments/primary29_min3train_min1val/bin100ms/pseudo_arrays_seed0.npz",
+    "v7-v8-neural-experiments/primary29_min3train_min1val/bin100ms/pseudo_manifest_seed0.csv",
+    "v8b-v9-cebra-final-20260905T224554Z/prefit_config_manifest.json",
+    "v8b-v9-cebra-final-20260905T224554Z/v8b/v8b_regularization_metrics.csv",
+    "v8b-v9-cebra-final-20260905T224554Z/v8b/v8b_regularization_predictions.csv",
+    "v8b-v9-cebra-final-20260905T224554Z/v8b/coefs/seed0_raw_total_C1.npz",
+    "v8b-v9-cebra-final-20260905T224554Z/v8b/coefs/seed0_raw_binned_C1.npz",
+    "v8b-v9-cebra-final-20260905T224554Z/v8b/coefs/seed0_pca_cellspace_3_C1.npz",
+    "v8b-v9-cebra-final-20260905T224554Z/v8b/coefs/seed0_pca_cellspace_8_C1.npz",
+    "v8b-v9-cebra-final-20260905T224554Z/v9/v9_cebra_metrics.csv",
+    "v8b-v9-cebra-final-20260905T224554Z/v9/v9_cebra_predictions.csv",
+    "v8b-v9-cebra-final-20260905T224554Z/v9/v9_null_pvalues.json",
+)
+
+REQUIRED_TRIAL_MAPPING_COLUMNS = {
+    "source_trial_id",
+    "session_id",
+    "split",
+    "trial_index",
+    "start",
+    "goal",
+    "endpoint_pair",
+    "middle_directed_components",
+    "route_signature",
+    "complete_directed_path_coverage",
+    "absence_labels_allowed",
+}
+REQUIRED_CUE_COUNT_COLUMNS = {
+    "source_trial_id",
+    "cell_id",
+    "cue_spike_count",
+    "cue_window_start_ripple_s",
+    "cue_window_end_ripple_s",
+}
+
+
+@dataclass(frozen=True)
+class ProductMoments:
+    split: str
+    label: str
+    sessions: tuple[str, ...]
+    mean: np.ndarray
+    covariance: np.ndarray
+    source_counts_by_session: dict[str, int]
+
+
+@dataclass(frozen=True)
+class RidgeModel:
+    coefficients: np.ndarray
+    intercept: float
+    lambda_l2: float
+    intercept_unpenalized: bool = True
+
+
+@dataclass(frozen=True)
+class PenalizedLogisticModel:
+    endpoint_levels: tuple[str, ...]
+    endpoint_slope_means: dict[str, np.ndarray]
+    slope_mean: np.ndarray
+    slope_scale: np.ndarray
+    coef: np.ndarray
+    intercept_count: int
+    penalty: float
+    converged: bool
+    message: str
+
+
+@dataclass(frozen=True)
+class CebraFitSpec:
+    objective: str
+    dim: int
+    rows_per_class: int
+    updates: int
+    assembly_seed: int
+    optimizer_seed: int
+    family_role: str = "observed"
+    permutation_index: int | None = None
+
+    def as_dict(self) -> dict[str, Any]:
+        return {
+            "objective": self.objective,
+            "dim": self.dim,
+            "rows_per_class": self.rows_per_class,
+            "updates": self.updates,
+            "assembly_seed": self.assembly_seed,
+            "optimizer_seed": self.optimizer_seed,
+            "family_role": self.family_role,
+            "permutation_index": self.permutation_index,
+            "input_representation": "raw_counts_standardized_per_bin_not_pca",
+        }
+
+
+def jsonable(value: Any) -> Any:
+    if isinstance(value, dict):
+        return {str(k): jsonable(v) for k, v in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [jsonable(v) for v in value]
+    if isinstance(value, np.ndarray):
+        return value.tolist()
+    if isinstance(value, (np.integer,)):
+        return int(value)
+    if isinstance(value, (np.floating,)):
+        return float(value)
+    if isinstance(value, Path):
+        return str(value)
+    return value
+
+
+def write_json(path: Path, payload: Any) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(jsonable(payload), indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+
+
+def write_csv(path: Path, rows: Sequence[Mapping[str, Any]]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    keys: list[str] = []
+    for row in rows:
+        for key in row:
+            if key not in keys:
+                keys.append(key)
+    with _open_text_write(path) as handle:
+        writer = csv.DictWriter(handle, fieldnames=keys)
+        writer.writeheader()
+        for row in rows:
+            writer.writerow(
+                {
+                    k: json.dumps(v, sort_keys=True)
+                    if isinstance(v, (list, dict))
+                    else v
+                    for k, v in row.items()
+                }
+            )
+
+
+def _open_text(path: Path) -> TextIO:
+    if path.suffix == ".gz":
+        return cast(TextIO, gzip.open(path, "rt", encoding="utf-8", newline=""))
+    return cast(TextIO, path.open("rt", encoding="utf-8", newline=""))
+
+
+def _open_text_write(path: Path) -> TextIO:
+    if path.suffix == ".gz":
+        return cast(TextIO, gzip.open(path, "wt", encoding="utf-8", newline=""))
+    return cast(TextIO, path.open("w", encoding="utf-8", newline=""))
+
+
+def sha256_file(path: Path) -> str:
+    h = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def stable_hash(payload: Any) -> str:
+    blob = json.dumps(jsonable(payload), sort_keys=True, separators=(",", ":")).encode(
+        "utf-8"
+    )
+    return hashlib.sha256(blob).hexdigest()
+
+
+def ndarray_sha256(array: np.ndarray) -> str:
+    arr = np.ascontiguousarray(array)
+    h = hashlib.sha256()
+    h.update(str(arr.shape).encode("utf-8"))
+    h.update(str(arr.dtype).encode("utf-8"))
+    h.update(arr.view(np.uint8))
+    return h.hexdigest()
+
+
+def is_relative_to(path: Path, root: Path) -> bool:
+    try:
+        path.resolve().relative_to(root.resolve())
+        return True
+    except ValueError:
+        return False
+
+
+def validate_accepted_root(root: Path) -> Path:
+    resolved = root.resolve()
+    expected = ACCEPTED_INPUT_ROOT.resolve()
+    if resolved != expected:
+        raise ValueError(
+            f"phase-1 allowed numerical input root is exactly {expected}; got {resolved}"
+        )
+    return resolved
+
+
+def validate_under_accepted(path: Path, root: Path = ACCEPTED_INPUT_ROOT) -> Path:
+    resolved = path.resolve()
+    if not is_relative_to(resolved, root.resolve()):
+        raise ValueError(
+            f"input path must stay under accepted root {root.resolve()}; got {resolved}"
+        )
+    return resolved
+
+
+def require_authorization(token: str | None, operation: str) -> None:
+    if token != AUTH_TOKEN:
+        raise PermissionError(
+            f"{operation} requires --authorized-phase {AUTH_TOKEN!r}; phase 1 may only inspect schemas or run synthetic smoke checks"
+        )
+
+
+def freeze_config(
+    output_dir: Path,
+    config: Mapping[str, Any],
+    *,
+    filename: str = "prefit_config_frozen.json",
+) -> dict[str, Any]:
+    output_dir.mkdir(parents=True, exist_ok=True)
+    frozen = dict(config)
+    helper_root = Path(str(sys.modules[build_dataset.__module__].__file__)).parent
+    frozen["source_code_sha256"] = {
+        "driver": sha256_file(Path(__file__)),
+        **{
+            name: sha256_file(helper_root / name)
+            for name in (
+                "place195_v7_v8_neural_experiments.py",
+                "place195_v8b_v9_cebra.py",
+                "place195_split_filtered_access.py",
+            )
+        },
+    }
+    protocol = Path("docs/reports/path-generalization-prefit-20260907.md")
+    if not protocol.is_file():
+        raise FileNotFoundError(
+            "run from the reviewed worktree with its prefit protocol"
+        )
+    frozen["protocol_sha256"] = sha256_file(protocol)
+    frozen["created_unix_seconds"] = time.time()
+    frozen["python"] = sys.version
+    frozen["platform"] = platform.platform()
+    frozen["argv"] = sys.argv
+    frozen["config_hash"] = stable_hash(
+        {k: v for k, v in frozen.items() if k != "created_unix_seconds"}
+    )
+    path = output_dir / filename
+    if path.exists():
+        prior = json.loads(path.read_text(encoding="utf-8"))
+        if prior.get("config_hash") != frozen["config_hash"]:
+            raise FileExistsError(
+                f"refusing to clobber mismatched frozen config: {path}"
+            )
+        return prior
+    write_json(path, frozen)
+    return frozen
+
+
+# ---------------------------------------------------------------------------
+# Saved-artifact schema inspection. Reads CSV/JSON headers and NPZ array
+# headers only; it does not aggregate biological values.
+
+
+def csv_schema(path: Path) -> dict[str, Any]:
+    with _open_text(path) as handle:
+        reader = csv.reader(handle)
+        try:
+            header = next(reader)
+        except StopIteration:
+            header = []
+    return {
+        "kind": "csv",
+        "columns": header,
+        "column_count": len(header),
+        "sha256": sha256_file(path),
+    }
+
+
+def json_schema(path: Path) -> dict[str, Any]:
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if isinstance(payload, dict):
+        keys = sorted(payload)
+        top_type = "object"
+    elif isinstance(payload, list):
+        keys = []
+        top_type = "array"
+    else:
+        keys = []
+        top_type = type(payload).__name__
+    return {
+        "kind": "json",
+        "top_level_type": top_type,
+        "top_level_keys": keys,
+        "sha256": sha256_file(path),
+    }
+
+
+def npz_schema(path: Path) -> dict[str, Any]:
+    arrays = []
+    with zipfile.ZipFile(path) as zf:
+        for name in sorted(zf.namelist()):
+            if not name.endswith(".npy"):
+                continue
+            with zf.open(name) as member:
+                magic = member.read(len(npy_format.MAGIC_PREFIX) + 2)
+                if not magic.startswith(npy_format.MAGIC_PREFIX):
+                    raise ValueError(f"not an npy member: {path}!{name}")
+                version = tuple(magic[-2:])
+                header_len_size = 2 if version == (1, 0) else 4
+                header_len = int.from_bytes(member.read(header_len_size), "little")
+                header = member.read(header_len)
+                fake = BytesIO(
+                    magic + header_len.to_bytes(header_len_size, "little") + header
+                )
+                npy_format.read_magic(fake)
+                if version == (1, 0):
+                    shape, fortran_order, dtype = npy_format.read_array_header_1_0(fake)
+                elif version in {(2, 0), (3, 0)}:
+                    shape, fortran_order, dtype = npy_format.read_array_header_2_0(fake)
+                else:
+                    raise ValueError(
+                        f"unsupported npy version {version} in {path}!{name}"
+                    )
+                arrays.append(
+                    {
+                        "name": name[:-4],
+                        "shape": list(shape),
+                        "dtype": str(np.dtype(dtype)),
+                        "fortran_order": bool(fortran_order),
+                    }
+                )
+    return {"kind": "npz", "arrays": arrays, "sha256": sha256_file(path)}
+
+
+def inspect_one_schema(path: Path) -> dict[str, Any]:
+    if path.suffix == ".npz":
+        return npz_schema(path)
+    if path.suffix == ".json":
+        return json_schema(path)
+    if path.suffix == ".csv" or path.name.endswith(".csv.gz"):
+        return csv_schema(path)
+    return {"kind": "other", "sha256": sha256_file(path)}
+
+
+def inspect_allowed_artifact_schemas(root: Path, output_dir: Path) -> dict[str, Any]:
+    root = validate_accepted_root(root)
+    rows = []
+    by_path = {}
+    for rel in SCHEMA_RELATIVE_PATHS:
+        path = validate_under_accepted(root / rel, root)
+        if not path.exists():
+            by_path[rel] = {"missing": True}
+            rows.append({"path": rel, "kind": "missing", "detail": "missing"})
+            continue
+        schema = inspect_one_schema(path)
+        by_path[rel] = schema
+        if schema["kind"] == "npz":
+            detail = "; ".join(
+                f"{a['name']} {tuple(a['shape'])} {a['dtype']}"
+                for a in schema["arrays"]
+            )
+        elif schema["kind"] == "csv":
+            detail = f"{schema['column_count']} columns: {', '.join(schema['columns'])}"
+        elif schema["kind"] == "json":
+            detail = f"{schema['top_level_type']} keys: {', '.join(schema['top_level_keys'][:20])}"
+        else:
+            detail = schema["kind"]
+        rows.append(
+            {
+                "path": rel,
+                "kind": schema["kind"],
+                "detail": detail,
+                "sha256": schema.get("sha256", ""),
+            }
+        )
+    payload = {
+        "stage": "phase1_saved_artifact_schema_inspection_only",
+        "accepted_root": str(root),
+        "policy": "CSV headers, JSON top-level keys, and NPZ member headers only; no biological fits or importer/split-table access",
+        "schemas": by_path,
+    }
+    output_dir.mkdir(parents=True, exist_ok=True)
+    write_json(output_dir / "schema_inspection.json", payload)
+    write_csv(output_dir / "schema_inspection.csv", rows)
+    lines = [
+        "# Phase-1 saved-artifact schema inspection",
+        "",
+        f"Accepted root: `{root}`",
+        "",
+        "No biological model fitting or mixed-importer extraction was run.",
+        "",
+    ]
+    for row in rows:
+        lines.append(f"- `{row['path']}` — {row['kind']}: {row['detail']}")
+    (output_dir / "schema_inspection.md").write_text(
+        "\n".join(lines) + "\n", encoding="utf-8"
+    )
+    return payload
+
+
+# ---------------------------------------------------------------------------
+# Track A: exact product enumeration, moments, linear controls, simulations.
+
+
+def source_indices_by_session_label(
+    metas: Sequence[SourceMeta],
+    sessions: Sequence[str],
+    *,
+    split: str,
+    label: str,
+    shuffled_labels: Mapping[str, str] | None = None,
+) -> dict[str, list[int]]:
+    out = {s: [] for s in sessions}
+    for i, meta in enumerate(metas):
+        lab = (
+            shuffled_labels.get(meta.source_trial_id, meta.label)
+            if shuffled_labels
+            else meta.label
+        )
+        if meta.split == split and lab == label and meta.session_id in out:
+            out[meta.session_id].append(i)
+    empty = [s for s, idx in out.items() if not idx]
+    if empty:
+        raise ValueError(
+            f"empty product support for split={split!r} label={label!r}: {empty}"
+        )
+    return out
+
+
+def session_cell_index(cell_ids: Sequence[str]) -> dict[str, np.ndarray]:
+    grouped: dict[str, list[int]] = defaultdict(list)
+    for i, cell_id in enumerate(cell_ids):
+        grouped[session_from_cell(cell_id)].append(i)
+    return {sess: np.asarray(idx, dtype=int) for sess, idx in sorted(grouped.items())}
+
+
+def count_product_combinations(by_session: Mapping[str, Sequence[int]]) -> int:
+    total = 1
+    for ids in by_session.values():
+        total *= len(ids)
+    return int(total)
+
+
+def enumerate_product_rows(
+    Xsrc: np.ndarray,
+    Msrc: np.ndarray,
+    metas: Sequence[SourceMeta],
+    cell_ids: Sequence[str],
+    *,
+    split: str,
+    label: str,
+    shuffled_labels: Mapping[str, str] | None = None,
+    max_combinations: int | None = None,
+) -> tuple[np.ndarray, list[dict[str, str]], dict[str, int]]:
+    sess_cells = session_cell_index(cell_ids)
+    sessions = tuple(sess_cells)
+    by_session = source_indices_by_session_label(
+        metas, sessions, split=split, label=label, shuffled_labels=shuffled_labels
+    )
+    n_combo = count_product_combinations(by_session)
+    if max_combinations is not None and n_combo > max_combinations:
+        raise ValueError(
+            f"{n_combo} combinations exceed max_combinations={max_combinations}"
+        )
+    rows = np.empty((n_combo, Xsrc.shape[1], Xsrc.shape[2]), dtype=np.float32)
+    manifest: list[dict[str, str]] = []
+    for out_i, combo in enumerate(
+        itertools.product(*(by_session[s] for s in sessions))
+    ):
+        rows[out_i, :, :] = np.nan
+        for sess, source_i in zip(sessions, combo, strict=True):
+            cidx = sess_cells[sess]
+            if not np.all(Msrc[source_i, cidx]):
+                raise ValueError(
+                    f"source {metas[source_i].source_trial_id} lacks same-session observed cells for {sess}"
+                )
+            rows[out_i, cidx, :] = Xsrc[source_i, cidx, :]
+            manifest.append(
+                {
+                    "split": split,
+                    "label": label,
+                    "product_row": str(out_i),
+                    "session_id": sess,
+                    "source_trial_id": metas[source_i].source_trial_id,
+                }
+            )
+        if np.isnan(rows[out_i]).any():
+            raise ValueError("product row has unavailable cells; refusing imputation")
+    return rows, manifest, {s: len(by_session[s]) for s in sessions}
+
+
+def exact_class_weights(y: np.ndarray) -> np.ndarray:
+    y = np.asarray(y, dtype=int)
+    weights = np.zeros(len(y), dtype=float)
+    for lab in (0, 1):
+        idx = np.flatnonzero(y == lab)
+        if len(idx) == 0:
+            raise ValueError("exact class weights require both labels")
+        weights[idx] = 0.5 / len(idx)
+    return weights
+
+
+def exact_validation_product(
+    Xsrc: np.ndarray,
+    Msrc: np.ndarray,
+    metas: Sequence[SourceMeta],
+    cell_ids: Sequence[str],
+    *,
+    split: str = "validation",
+    max_combinations: int | None = None,
+    shuffled_labels: Mapping[str, str] | None = None,
+) -> tuple[
+    np.ndarray, np.ndarray, np.ndarray, list[dict[str, str]], dict[str, dict[str, int]]
+]:
+    xs, ys, manifests = [], [], []
+    counts: dict[str, dict[str, int]] = {}
+    for label in LABELS:
+        X, manifest, support = enumerate_product_rows(
+            Xsrc,
+            Msrc,
+            metas,
+            cell_ids,
+            split=split,
+            label=label,
+            shuffled_labels=shuffled_labels,
+            max_combinations=max_combinations,
+        )
+        xs.append(X)
+        ys.extend([LABEL_TO_INT[label]] * len(X))
+        manifests.extend(manifest)
+        counts[label] = support
+    y = np.asarray(ys, dtype=int)
+    return np.concatenate(xs, axis=0), y, exact_class_weights(y), manifests, counts
+
+
+def _block_feature_indices(cell_indices: np.ndarray, n_bins: int) -> np.ndarray:
+    return np.asarray(
+        [ci * n_bins + b for ci in cell_indices for b in range(n_bins)], dtype=int
+    )
+
+
+def product_conditional_moments(
+    Xsrc: np.ndarray,
+    Msrc: np.ndarray,
+    metas: Sequence[SourceMeta],
+    cell_ids: Sequence[str],
+    *,
+    split: str,
+    label: str,
+    shuffled_labels: Mapping[str, str] | None = None,
+) -> ProductMoments:
+    sess_cells = session_cell_index(cell_ids)
+    sessions = tuple(sess_cells)
+    by_session = source_indices_by_session_label(
+        metas, sessions, split=split, label=label, shuffled_labels=shuffled_labels
+    )
+    n_features = Xsrc.shape[1] * Xsrc.shape[2]
+    mean = np.zeros(n_features, dtype=float)
+    cov = np.zeros((n_features, n_features), dtype=float)
+    for sess, cidx in sess_cells.items():
+        sidx = np.asarray(by_session[sess], dtype=int)
+        if not np.all(Msrc[sidx[:, None], cidx[None, :]]):
+            raise ValueError(f"observed-mask failure in {split}/{label}/{sess}")
+        block = Xsrc[sidx][:, cidx, :].reshape(len(sidx), -1).astype(float)
+        bmean = block.mean(axis=0)
+        centered = block - bmean
+        bcov = centered.T @ centered / len(block)
+        findex = _block_feature_indices(cidx, Xsrc.shape[2])
+        mean[findex] = bmean
+        cov[findex[:, None], findex[None, :]] = bcov
+    return ProductMoments(
+        split, label, sessions, mean, cov, {s: len(by_session[s]) for s in sessions}
+    )
+
+
+def balanced_mixture_moments(
+    absent: ProductMoments, present: ProductMoments
+) -> tuple[np.ndarray, np.ndarray]:
+    delta = present.mean - absent.mean
+    mean = 0.5 * (absent.mean + present.mean)
+    cov = (
+        0.5 * absent.covariance
+        + 0.5 * present.covariance
+        + 0.25 * np.outer(delta, delta)
+    )
+    return mean, cov
+
+
+def pooled_time_cell_moments(
+    Xsrc: np.ndarray,
+    Msrc: np.ndarray,
+    metas: Sequence[SourceMeta],
+    cell_ids: Sequence[str],
+    *,
+    split: str,
+    shuffled_labels: Mapping[str, str] | None = None,
+) -> tuple[np.ndarray, np.ndarray, dict[str, Any]]:
+    """Moments for PCA pooled over class and cue time in shared cell space."""
+    sess_cells = session_cell_index(cell_ids)
+    sessions = tuple(sess_cells)
+    n_cells = Xsrc.shape[1]
+    n_bins = Xsrc.shape[2]
+    components: list[tuple[float, np.ndarray, np.ndarray, str, int]] = []
+    support: dict[str, Any] = {}
+    for label in LABELS:
+        by_session = source_indices_by_session_label(
+            metas, sessions, split=split, label=label, shuffled_labels=shuffled_labels
+        )
+        support[label] = {s: len(by_session[s]) for s in sessions}
+        for b in range(n_bins):
+            mu = np.zeros(n_cells, dtype=float)
+            cov = np.zeros((n_cells, n_cells), dtype=float)
+            for sess, cidx in sess_cells.items():
+                sidx = np.asarray(by_session[sess], dtype=int)
+                if not np.all(Msrc[sidx[:, None], cidx[None, :]]):
+                    raise ValueError(
+                        f"observed-mask failure in pooled PCA moments {split}/{label}/{sess}"
+                    )
+                block = Xsrc[sidx][:, cidx, b].astype(float)
+                bmean = block.mean(axis=0)
+                centered = block - bmean
+                bcov = centered.T @ centered / len(block)
+                mu[cidx] = bmean
+                cov[cidx[:, None], cidx[None, :]] = bcov
+            components.append((0.5 / n_bins, mu, cov, label, b))
+    overall_mean = np.zeros(n_cells, dtype=float)
+    for weight, mu, _cov, _label, _bin in components:
+        overall_mean += weight * mu
+    overall_cov = np.zeros((n_cells, n_cells), dtype=float)
+    for weight, mu, cov, _label, _bin in components:
+        d = mu - overall_mean
+        overall_cov += weight * (cov + np.outer(d, d))
+    return (
+        overall_mean,
+        overall_cov,
+        {
+            "source_counts_by_label_session": support,
+            "class_weight": 0.5,
+            "time_weight": 1 / n_bins,
+        },
+    )
+
+
+def pca_from_moments(
+    mean: np.ndarray, covariance: np.ndarray, n_components: int
+) -> dict[str, np.ndarray]:
+    scale = np.sqrt(np.maximum(np.diag(covariance), 0.0))
+    scale[scale == 0] = 1.0
+    corr = covariance / np.outer(scale, scale)
+    vals, vecs = np.linalg.eigh((corr + corr.T) / 2)
+    order = np.argsort(vals)[::-1]
+    vals = np.maximum(vals[order], 0.0)
+    vecs = vecs[:, order]
+    if n_components > vecs.shape[1]:
+        raise ValueError(
+            f"requested {n_components} components from {vecs.shape[1]} features"
+        )
+    total = float(vals.sum())
+    explained = vals[:n_components] / total if total > 0 else np.zeros(n_components)
+    return {
+        "mean": mean.astype(float),
+        "scale": scale.astype(float),
+        "components": vecs[:, :n_components].T.astype(float),
+        "explained_variance": vals[:n_components].astype(float),
+        "explained_variance_ratio": explained.astype(float),
+    }
+
+
+def pca_time_operator(
+    cell_pca: Mapping[str, np.ndarray], n_bins: int
+) -> tuple[np.ndarray, np.ndarray]:
+    components = np.asarray(cell_pca["components"], dtype=float)
+    mean = np.asarray(cell_pca["mean"], dtype=float)
+    scale = np.asarray(cell_pca["scale"], dtype=float)
+    n_dim, n_cells = components.shape
+    out_dim = n_bins * n_dim
+    in_dim = n_bins * n_cells
+    A = np.zeros((out_dim, in_dim), dtype=float)
+    offset = np.zeros(out_dim, dtype=float)
+    for b in range(n_bins):
+        for d in range(n_dim):
+            row = b * n_dim + d
+            for c in range(n_cells):
+                col = c * n_bins + b
+                A[row, col] = components[d, c] / scale[c]
+            offset[row] = -float(np.dot(components[d], mean / scale))
+    return A, offset
+
+
+def transform_moments_linear(
+    mean: np.ndarray,
+    covariance: np.ndarray,
+    A: np.ndarray,
+    offset: np.ndarray | None = None,
+) -> tuple[np.ndarray, np.ndarray]:
+    off = 0.0 if offset is None else offset
+    return A @ mean + off, A @ covariance @ A.T
+
+
+def fit_ridge_from_moments(
+    absent: ProductMoments, present: ProductMoments, lambda_l2: float = 1.0
+) -> RidgeModel:
+    mean, cov = balanced_mixture_moments(absent, present)
+    cov_xy = 0.5 * (
+        present.mean - absent.mean
+    )  # labels are +/-1 and classes are balanced.
+    mat = cov + lambda_l2 * np.eye(cov.shape[0])
+    try:
+        coef = np.linalg.solve(mat, cov_xy)
+    except np.linalg.LinAlgError:
+        coef = np.linalg.pinv(mat) @ cov_xy
+    intercept = -float(np.dot(coef, mean))
+    return RidgeModel(coef.astype(float), intercept, lambda_l2)
+
+
+def linear_scores(X: np.ndarray, model: RidgeModel) -> np.ndarray:
+    return (
+        X.reshape(X.shape[0], -1).astype(float) @ model.coefficients + model.intercept
+    )
+
+
+def ridge_score_to_probability(score: np.ndarray, *, eps: float = 1e-9) -> np.ndarray:
+    """Ridge predicts E[y] for +/-1 labels; map score to P(present)."""
+    return np.clip((np.asarray(score, dtype=float) + 1.0) / 2.0, eps, 1.0 - eps)
+
+
+def convolve_linear_scores(
+    Xsrc: np.ndarray,
+    Msrc: np.ndarray,
+    metas: Sequence[SourceMeta],
+    cell_ids: Sequence[str],
+    model: RidgeModel,
+    *,
+    split: str,
+    label: str,
+    shuffled_labels: Mapping[str, str] | None = None,
+) -> np.ndarray:
+    sess_cells = session_cell_index(cell_ids)
+    sessions = tuple(sess_cells)
+    by_session = source_indices_by_session_label(
+        metas, sessions, split=split, label=label, shuffled_labels=shuffled_labels
+    )
+    sums = np.asarray([model.intercept], dtype=float)
+    n_bins = Xsrc.shape[2]
+    for sess, cidx in sess_cells.items():
+        findex = _block_feature_indices(cidx, n_bins)
+        w = model.coefficients[findex]
+        vals = []
+        for si in by_session[sess]:
+            if not np.all(Msrc[si, cidx]):
+                raise ValueError(
+                    f"observed-mask failure for score convolution {metas[si].source_trial_id}"
+                )
+            vals.append(float(Xsrc[si, cidx, :].reshape(-1).astype(float) @ w))
+        sums = (sums[:, None] + np.asarray(vals, dtype=float)[None, :]).reshape(-1)
+    return sums
+
+
+def weighted_binary_metrics(
+    y_true: np.ndarray,
+    prob_present: np.ndarray,
+    weights: np.ndarray | None = None,
+    *,
+    ranking_score: np.ndarray | None = None,
+) -> dict[str, Any]:
+    y = np.asarray(y_true, dtype=int)
+    original_p = np.asarray(prob_present, dtype=float)
+    if y.ndim != 1 or not len(y) or original_p.shape != y.shape:
+        raise ValueError("binary metrics require matching nonempty vectors")
+    if not np.all(np.isin(y, (0, 1))) or not np.all(np.isfinite(original_p)):
+        raise ValueError("invalid binary labels or nonfinite probabilities")
+    if np.any((original_p < 0) | (original_p > 1)):
+        raise ValueError("probabilities outside [0, 1]")
+    p = np.clip(original_p, 1e-9, 1 - 1e-9)
+    if weights is None:
+        w = np.full(len(y), 1 / len(y), dtype=float)
+    else:
+        w = np.asarray(weights, dtype=float)
+        if (
+            w.shape != y.shape
+            or not np.all(np.isfinite(w))
+            or np.any(w < 0)
+            or w.sum() <= 0
+        ):
+            raise ValueError("invalid metric weights")
+        w = w / w.sum()
+    pred = (p >= 0.5).astype(int)
+    rows: dict[str, Any] = {
+        "n": int(len(y)),
+        "weighted_accuracy": float(np.sum(w * (pred == y))),
+        "log_loss": float(log_loss(y, np.c_[1 - p, p], labels=[0, 1], sample_weight=w)),
+        "brier": float(np.sum(w * (p - y) ** 2)),
+        "positive_rate_true_weighted": float(np.sum(w * y)),
+        "positive_rate_pred_weighted": float(np.sum(w * pred)),
+    }
+    ba_parts = []
+    for lab in (0, 1):
+        idx = y == lab
+        denom = float(np.sum(w[idx]))
+        ba_parts.append(
+            float(np.sum(w[idx] * (pred[idx] == y[idx])) / denom) if denom else None
+        )
+    rows["balanced_accuracy"] = (
+        None
+        if any(v is None for v in ba_parts)
+        else float(0.5 * (ba_parts[0] + ba_parts[1]))
+    )
+    rank = (
+        original_p if ranking_score is None else np.asarray(ranking_score, dtype=float)
+    )
+    if rank.shape != y.shape or not np.all(np.isfinite(rank)):
+        raise ValueError("invalid ranking scores")
+    rows["auroc"] = safe_weighted_auc(y, rank, w)
+    return rows
+
+
+def safe_weighted_auc(
+    y: np.ndarray, score: np.ndarray, weights: np.ndarray | None = None
+) -> float | None:
+    y = np.asarray(y, dtype=int)
+    if len(set(y.tolist())) < 2:
+        return None
+    if weights is None:
+        return float(roc_auc_score(y, score))
+    return float(roc_auc_score(y, score, sample_weight=weights))
+
+
+def normalized_logistic_c(rows_per_class: int) -> float:
+    if rows_per_class <= 0:
+        raise ValueError("rows_per_class must be positive")
+    return 64.0 / float(rows_per_class)
+
+
+def fit_normalized_logistic(
+    Xtr: np.ndarray,
+    ytr: np.ndarray,
+    Xva: np.ndarray,
+    *,
+    rows_per_class: int,
+    random_state: int = 0,
+):
+    scaler = StandardScaler().fit(Xtr)
+    C = normalized_logistic_c(rows_per_class)
+    clf = LogisticRegression(
+        C=C,
+        class_weight="balanced",
+        solver="liblinear",
+        max_iter=1000,
+        random_state=random_state,
+    ).fit(scaler.transform(Xtr), ytr)
+    prob = clf.predict_proba(scaler.transform(Xva))[:, 1]
+    return prob, clf, scaler
+
+
+def rotation_invariance_check(seed: int = 0) -> dict[str, Any]:
+    """Matched standardized-input logistic check; no extra head rescaling."""
+    rng = np.random.default_rng(seed)
+    X = rng.normal(size=(80, 6))
+    y = np.repeat([0, 1], 40)
+    X[y == 1, :2] += 0.8
+    Xva = rng.normal(size=(40, 6))
+    yva = np.repeat([0, 1], 20)
+    Xva[yva == 1, :2] += 0.8
+    scaler = StandardScaler().fit(X)
+    Z = np.asarray(scaler.transform(X), dtype=float)
+    Zva = np.asarray(scaler.transform(Xva), dtype=float)
+    q = np.asarray(np.linalg.qr(rng.normal(size=(Z.shape[1], Z.shape[1])))[0])
+
+    def fit_prob(A: np.ndarray, B: np.ndarray) -> np.ndarray:
+        clf = LogisticRegression(
+            C=1.0, solver="lbfgs", max_iter=5000, tol=1e-12, random_state=0
+        )
+        clf.fit(A, y)
+        return clf.predict_proba(B)[:, 1]
+
+    raw_prob = fit_prob(Z, Zva)
+    rotated_prob = fit_prob(Z @ q, Zva @ q)
+    max_diff = float(np.max(np.abs(raw_prob - rotated_prob)))
+    return {
+        "status": "pass" if max_diff < 1e-6 else "warning",
+        "max_abs_probability_diff": max_diff,
+        "policy": "PCA29/full-rank rotations can preserve linear coordinates only when the head sees matched standardized inputs with no extra per-coordinate rescaling; legacy PCA29+head-scaler need not equal raw.",
+    }
+
+
+def analytic_gaussian_linear_metrics(
+    model: RidgeModel, delta: np.ndarray, sigma: np.ndarray | float = 1.0
+) -> dict[str, float]:
+    delta = np.asarray(delta, dtype=float).reshape(-1)
+    sigma_arr = np.asarray(sigma, dtype=float)
+    sig = (
+        np.full_like(delta, float(sigma_arr))
+        if sigma_arr.ndim == 0
+        else sigma_arr.reshape(-1)
+    )
+    w = model.coefficients.reshape(-1)
+    mean0 = -0.5 * float(w @ delta) + model.intercept
+    mean1 = 0.5 * float(w @ delta) + model.intercept
+    var = float(np.sum((w * sig) ** 2))
+    if var <= 0:
+        pred = int(model.intercept >= 0)
+        return {
+            "true_balanced_accuracy": 0.5,
+            "true_auroc": 0.5,
+            "score_sd": 0.0,
+            "degenerate_pred": float(pred),
+        }
+    sd = math.sqrt(var)
+    tnr = float(ndtr((0.0 - mean0) / sd))
+    tpr = float(1.0 - ndtr((0.0 - mean1) / sd))
+    auroc = float(ndtr((mean1 - mean0) / math.sqrt(2.0 * var)))
+    return {
+        "true_balanced_accuracy": 0.5 * (tnr + tpr),
+        "true_auroc": auroc,
+        "score_sd": sd,
+    }
+
+
+def expected_spurious_between_class_trace(
+    feature_sigmas: np.ndarray,
+    feature_sessions: Sequence[str],
+    n0_by_session: Mapping[str, int],
+    n1_by_session: Mapping[str, int],
+) -> float:
+    sig = np.asarray(feature_sigmas, dtype=float).reshape(-1)
+    if len(sig) != len(feature_sessions):
+        raise ValueError("feature_sigmas and feature_sessions length mismatch")
+    total = 0.0
+    for sigma, sess in zip(sig, feature_sessions, strict=True):
+        total += (
+            sigma**2 * (1.0 / n0_by_session[sess] + 1.0 / n1_by_session[sess]) / 4.0
+        )
+    return float(total)
+
+
+def gaussian_source_fixture(
+    *,
+    session_cell_counts: Sequence[int],
+    n_bins: int,
+    train_per_class_session: int,
+    validation_per_class_session: int,
+    mean_difference: float,
+    seed: int,
+    sigma: float = 1.0,
+) -> tuple[np.ndarray, np.ndarray, list[SourceMeta], list[str], np.ndarray, np.ndarray]:
+    rng = np.random.default_rng(seed)
+    cell_ids: list[str] = []
+    feature_sessions: list[str] = []
+    for si, n_cells in enumerate(session_cell_counts):
+        sess = f"s{si}_session01"
+        for ci in range(n_cells):
+            cell_ids.append(f"s{si}/session01/array/channel{ci:03d}/cell01")
+            feature_sessions.extend([sess] * n_bins)
+    n_cells_total = len(cell_ids)
+    signed = np.where(np.arange(n_cells_total * n_bins) % 2 == 0, 1.0, -1.0)
+    delta = mean_difference * signed
+    rows: list[np.ndarray] = []
+    metas: list[SourceMeta] = []
+    masks: list[np.ndarray] = []
+    source_i = 0
+    cell_sessions = np.array([session_from_cell(c) for c in cell_ids])
+    for sess in sorted(set(cell_sessions)):
+        cidx = np.flatnonzero(cell_sessions == sess)
+        findex = _block_feature_indices(cidx, n_bins)
+        for split, n_per in (
+            ("train", train_per_class_session),
+            ("validation", validation_per_class_session),
+        ):
+            for label in LABELS:
+                sign = -0.5 if label == "absent" else 0.5
+                for _ in range(n_per):
+                    x = np.full((n_cells_total, n_bins), np.nan, dtype=np.float32)
+                    block_mean = (sign * delta[findex]).reshape(len(cidx), n_bins)
+                    x[cidx, :] = rng.normal(
+                        block_mean, sigma, size=(len(cidx), n_bins)
+                    ).astype(np.float32)
+                    mask = np.zeros(n_cells_total, dtype=bool)
+                    mask[cidx] = True
+                    sid = f"{sess}_{split}_{label}_{source_i:04d}"
+                    metas.append(SourceMeta(sid, sess, split, label))
+                    rows.append(x)
+                    masks.append(mask)
+                    source_i += 1
+    return (
+        np.stack(rows),
+        np.stack(masks),
+        metas,
+        cell_ids,
+        delta,
+        np.asarray(feature_sessions),
+    )
+
+
+def empirical_product_moments_from_sampled_rows(
+    X_rows: np.ndarray, y_rows: np.ndarray, *, label: str
+) -> ProductMoments:
+    flat = (
+        X_rows[np.asarray(y_rows, dtype=int) == LABEL_TO_INT[label]]
+        .reshape(-1, X_rows.shape[1] * X_rows.shape[2])
+        .astype(float)
+    )
+    if len(flat) == 0:
+        raise ValueError(f"no sampled rows for {label}")
+    mean = flat.mean(axis=0)
+    centered = flat - mean
+    cov = centered.T @ centered / len(flat)
+    return ProductMoments(
+        "train_sampled",
+        label,
+        ("sampled_pseudopopulation",),
+        mean,
+        cov,
+        {"sampled_rows": len(flat)},
+    )
+
+
+def fit_standardized_ridge_from_moments(
+    absent: ProductMoments, present: ProductMoments, lambda_l2: float = 1.0
+) -> tuple[RidgeModel, dict[str, np.ndarray]]:
+    """Fit ridge in train-Q standardized coordinates, then map to raw scores."""
+    mix_mean, mix_cov = balanced_mixture_moments(absent, present)
+    scale = np.sqrt(np.maximum(np.diag(mix_cov), 0.0))
+    scale[scale == 0] = 1.0
+
+    def tx(mom: ProductMoments) -> ProductMoments:
+        return ProductMoments(
+            mom.split,
+            mom.label,
+            mom.sessions,
+            (mom.mean - mix_mean) / scale,
+            mom.covariance / np.outer(scale, scale),
+            mom.source_counts_by_session,
+        )
+
+    zmodel = fit_ridge_from_moments(tx(absent), tx(present), lambda_l2=lambda_l2)
+    raw_coef = zmodel.coefficients / scale
+    raw_intercept = zmodel.intercept - float(np.dot(raw_coef, mix_mean))
+    return RidgeModel(raw_coef, raw_intercept, lambda_l2), {
+        "train_q_mean": mix_mean,
+        "train_q_scale": scale,
+        "standardized_coef": zmodel.coefficients,
+        "standardized_intercept": np.asarray([zmodel.intercept]),
+    }
+
+
+def track_a_feature_matrix(
+    X: np.ndarray,
+    representation: str,
+    *,
+    pca_dim: int | None = None,
+    scaler: StandardScaler | None = None,
+    pca: PCA | None = None,
+) -> tuple[np.ndarray, StandardScaler | None, PCA | None]:
+    if representation == "raw_total":
+        return X.sum(axis=2), scaler, pca
+    if representation == "raw_binned":
+        return X.reshape(X.shape[0], -1), scaler, pca
+    if representation == "pca_cellspace":
+        if pca_dim is None:
+            raise ValueError("pca_dim is required")
+        flat = X.transpose(0, 2, 1).reshape(-1, X.shape[1])
+        if scaler is None or pca is None:
+            scaler = StandardScaler().fit(flat)
+            pca = PCA(n_components=pca_dim, random_state=0).fit(scaler.transform(flat))
+        if scaler is None or pca is None:
+            raise AssertionError("PCA/scaler construction failed")
+        z = pca.transform(scaler.transform(flat)).reshape(
+            X.shape[0], X.shape[2], pca_dim
+        )
+        return z.reshape(X.shape[0], -1), scaler, pca
+    raise ValueError(representation)
+
+
+def exact_prediction_rows(
+    *,
+    prefix: Mapping[str, Any],
+    y: np.ndarray,
+    prob: np.ndarray,
+    weights: np.ndarray,
+) -> list[dict[str, Any]]:
+    return [
+        {
+            **prefix,
+            "row": i,
+            "true_label": INT_TO_LABEL[int(yy)],
+            "pred_label": INT_TO_LABEL[int(pp >= 0.5)],
+            "prob_present": float(pp),
+            "evaluation_weight": float(ww),
+        }
+        for i, (yy, pp, ww) in enumerate(zip(y, prob, weights, strict=True))
+    ]
+
+
+def source_index_feature_rows(
+    manifest: Sequence[Mapping[str, str]], *, rows_per_class: int
+) -> tuple[np.ndarray, np.ndarray, list[str]]:
+    row_entries: dict[int, list[str]] = defaultdict(list)
+    categories: list[str] = []
+    y = np.zeros(rows_per_class * 2, dtype=int)
+    for entry in manifest:
+        if entry.get("split") != "train":
+            continue
+        label = entry["label"]
+        row = int(entry.get("pseudo_row", entry.get("product_row", 0)))
+        array_row = row if label == LABELS[0] else rows_per_class + row
+        key = f"{entry['session_id']}|{entry['source_trial_id']}"
+        row_entries[array_row].append(key)
+        categories.append(key)
+        y[array_row] = LABEL_TO_INT[label]
+    levels = sorted(set(categories))
+    idx = {level: i for i, level in enumerate(levels)}
+    X = np.zeros((rows_per_class * 2, len(levels)), dtype=float)
+    for row, keys in row_entries.items():
+        for key in keys:
+            X[row, idx[key]] = 1.0
+    return X, y, levels
+
+
+def exact_source_index_features(
+    manifest: Sequence[Mapping[str, str]], levels: Sequence[str]
+) -> np.ndarray:
+    row_count = 1 + max(
+        int(entry["product_row"]) + (0 if entry["label"] == LABELS[0] else 0)
+        for entry in manifest
+    )
+    absent_rows = [int(e["product_row"]) for e in manifest if e["label"] == LABELS[0]]
+    absent_n = (max(absent_rows) + 1) if absent_rows else 0
+    present_rows = [int(e["product_row"]) for e in manifest if e["label"] == LABELS[1]]
+    total_rows = absent_n + ((max(present_rows) + 1) if present_rows else 0)
+    X = np.zeros((total_rows, len(levels)), dtype=float)
+    idx = {level: i for i, level in enumerate(levels)}
+    for entry in manifest:
+        offset = 0 if entry["label"] == LABELS[0] else absent_n
+        row = offset + int(entry["product_row"])
+        key = f"{entry['session_id']}|{entry['source_trial_id']}"
+        if key in idx:
+            X[row, idx[key]] = 1.0
+    _ = row_count  # row_count documents the local exact-row derivation; total_rows is the actual stacked size.
+    return X
+
+
+def run_track_a_row_grid(
+    *,
+    Xsrc: np.ndarray,
+    Msrc: np.ndarray,
+    metas: Sequence[SourceMeta],
+    source_index: Mapping[str, int],
+    cells: Sequence[str],
+    Xval: np.ndarray,
+    yval: np.ndarray,
+    wval: np.ndarray,
+    val_manifest: Sequence[Mapping[str, str]],
+    rows_per_class_grid: Sequence[int],
+    seeds: Sequence[int],
+    pca_dims: Sequence[int],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    metric_rows: list[dict[str, Any]] = []
+    pred_rows: list[dict[str, Any]] = []
+    pooled_mean, pooled_cov, _ = pooled_time_cell_moments(
+        Xsrc, Msrc, metas, cells, split="train"
+    )
+    exact_pcas = {
+        d: pca_from_moments(pooled_mean, pooled_cov, d)
+        for d in pca_dims
+        if d <= len(cells)
+    }
+    for rows_per_class in rows_per_class_grid:
+        for seed in seeds:
+            arrays, train_manifest = build_dataset(
+                Xsrc=Xsrc,
+                Msrc=Msrc,
+                source_index=source_index,
+                source_meta=metas,
+                cell_ids=list(cells),
+                rows_per_class=rows_per_class,
+                seed=seed,
+            )
+            Xtr3, ytr = arrays["train"]
+            reps: list[tuple[str, np.ndarray, np.ndarray, dict[str, Any]]] = []
+            for rep in ("raw_total", "raw_binned"):
+                Ftr, _sc, _pca = track_a_feature_matrix(Xtr3, rep)
+                Fva, _sc, _pca = track_a_feature_matrix(Xval, rep)
+                reps.append((rep, Ftr, Fva, {}))
+            rank_limit = min(Xtr3.shape[0] * Xtr3.shape[2] - 1, Xtr3.shape[1])
+            for dim in pca_dims:
+                if dim > rank_limit:
+                    metric_rows.append(
+                        {
+                            "stage": "row_grid",
+                            "rows_per_class": rows_per_class,
+                            "seed": seed,
+                            "representation": f"pca_cellspace_{dim}",
+                            "status": "skipped_rank_limit",
+                            "rank_limit": int(rank_limit),
+                        }
+                    )
+                    continue
+                Ftr, sc, pca = track_a_feature_matrix(
+                    Xtr3, "pca_cellspace", pca_dim=dim
+                )
+                Fva, _sc, _pca = track_a_feature_matrix(
+                    Xval, "pca_cellspace", pca_dim=dim, scaler=sc, pca=pca
+                )
+                if pca is None:
+                    raise AssertionError("PCA construction failed")
+                reps.append(
+                    (
+                        f"pca_cellspace_{dim}",
+                        Ftr,
+                        Fva,
+                        {
+                            "pca_dim": dim,
+                            "pca_explained_variance_sum": float(
+                                np.sum(pca.explained_variance_ratio_)
+                            ),
+                        },
+                    )
+                )
+                exact_pca = exact_pcas[dim]
+                operator, offset = pca_time_operator(exact_pca, Xtr3.shape[2])
+                reps.append(
+                    (
+                        f"moment_pca_cellspace_{dim}",
+                        Xtr3.reshape(len(Xtr3), -1) @ operator.T + offset,
+                        Xval.reshape(len(Xval), -1) @ operator.T + offset,
+                        {
+                            "pca_dim": dim,
+                            "pca_explained_variance_sum": float(
+                                exact_pca["explained_variance_ratio"].sum()
+                            ),
+                            "pca_basis_policy": "fixed train-Q class-and-time moments",
+                        },
+                    )
+                )
+            for lam in (1.0,):
+                sa = empirical_product_moments_from_sampled_rows(
+                    Xtr3, ytr, label="absent"
+                )
+                sp = empirical_product_moments_from_sampled_rows(
+                    Xtr3, ytr, label="present"
+                )
+                smodel, _scaling = fit_standardized_ridge_from_moments(
+                    sa, sp, lambda_l2=lam
+                )
+                ridge_score = linear_scores(Xval, smodel)
+                prob = ridge_score_to_probability(ridge_score)
+                prefix = {
+                    "stage": "finite_sample_ridge_convergence",
+                    "rows_per_class": rows_per_class,
+                    "seed": seed,
+                    "representation": "raw_binned",
+                    "lambda_l2": lam,
+                    "scaling": "sampled_train_Q_standardized_mapped_to_raw",
+                }
+                metric_rows.append(
+                    {
+                        **prefix,
+                        "status": "complete",
+                        **weighted_binary_metrics(
+                            yval, prob, wval, ranking_score=ridge_score
+                        ),
+                    }
+                )
+                pred_rows.extend(
+                    exact_prediction_rows(
+                        prefix=prefix, y=yval, prob=prob, weights=wval
+                    )
+                )
+            src_Ftr, src_y, levels = source_index_feature_rows(
+                train_manifest, rows_per_class=rows_per_class
+            )
+            src_Fva = exact_source_index_features(val_manifest, levels)
+            if np.any(src_Fva) or not np.array_equal(src_y, ytr):
+                raise ValueError(
+                    "source-ID control leaked held-out identities or misaligned labels"
+                )
+            reps.append(
+                (
+                    "source_index_control",
+                    src_Ftr,
+                    src_Fva,
+                    {"source_feature_count": len(levels)},
+                )
+            )
+            for rep, Ftr, Fva, extra in reps:
+                for c_label, C in (
+                    ("row_normalized", normalized_logistic_c(rows_per_class)),
+                    ("legacy_C1", 1.0),
+                ):
+                    yfit = src_y if rep == "source_index_control" else ytr
+                    prob, _clf, _scaler = (
+                        fit_normalized_logistic(
+                            Ftr,
+                            yfit,
+                            Fva,
+                            rows_per_class=rows_per_class,
+                            random_state=0,
+                        )
+                        if c_label == "row_normalized"
+                        else _fit_sklearn_logistic(Ftr, yfit, Fva, C=C)
+                    )
+                    prefix = {
+                        "stage": "row_grid",
+                        "rows_per_class": rows_per_class,
+                        "seed": seed,
+                        "representation": rep,
+                        "decoder_C_policy": c_label,
+                        "C": C,
+                        **extra,
+                    }
+                    metric_rows.append(
+                        {
+                            **prefix,
+                            "status": "complete",
+                            **weighted_binary_metrics(yval, prob, wval),
+                        }
+                    )
+                    pred_rows.extend(
+                        exact_prediction_rows(
+                            prefix=prefix, y=yval, prob=prob, weights=wval
+                        )
+                    )
+    return metric_rows, pred_rows
+
+
+def _fit_sklearn_logistic(
+    Xtr: np.ndarray, ytr: np.ndarray, Xva: np.ndarray, *, C: float
+) -> tuple[np.ndarray, LogisticRegression, StandardScaler]:
+    scaler = StandardScaler().fit(Xtr)
+    clf = LogisticRegression(
+        C=C, class_weight="balanced", solver="liblinear", random_state=0, max_iter=1000
+    ).fit(scaler.transform(Xtr), ytr)
+    return clf.predict_proba(scaler.transform(Xva))[:, 1], clf, scaler
+
+
+def run_track_a_margins_and_loo(
+    *,
+    Xsrc: np.ndarray,
+    Msrc: np.ndarray,
+    metas: Sequence[SourceMeta],
+    cells: Sequence[str],
+    model: RidgeModel,
+    Xval: np.ndarray,
+    yval: np.ndarray,
+    wval: np.ndarray,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    margin_rows = []
+    loo_rows = []
+    sess_cells = session_cell_index(cells)
+    for split in ("train", "validation"):
+        for label in LABELS:
+            pools = source_indices_by_session_label(
+                metas, tuple(sess_cells), split=split, label=label
+            )
+            for sess, cidx in sess_cells.items():
+                idx = np.asarray(pools[sess], dtype=int)
+                if not np.all(Msrc[np.ix_(idx, cidx)]):
+                    raise ValueError("unobserved source/cell in margin decomposition")
+                block = Xsrc[idx][:, cidx, :].reshape(len(idx), -1)
+                weights = model.coefficients.reshape(len(cells), Xsrc.shape[2])[
+                    cidx
+                ].reshape(-1)
+                scores = block @ weights
+                margin_rows.append(
+                    {
+                        "stage": "source_margin",
+                        "split": split,
+                        "session_id": sess,
+                        "label": label,
+                        "score_mean": float(np.mean(scores)),
+                        "score_min": float(np.min(scores)),
+                        "score_max": float(np.max(scores)),
+                        "score_count": len(scores),
+                        "count_unit": "real_source_trial",
+                        "source_trial_ids": [
+                            metas[int(i)].source_trial_id for i in idx
+                        ],
+                        "source_scores": scores.tolist(),
+                    }
+                )
+    for left_out, cidx in sess_cells.items():
+        keep = np.ones(len(cells), dtype=bool)
+        keep[cidx] = False
+        if not np.any(keep):
+            continue
+        sub_cells = [c for c, k in zip(cells, keep, strict=True) if k]
+        absent = product_conditional_moments(
+            Xsrc[:, keep, :],
+            Msrc[:, keep],
+            metas,
+            sub_cells,
+            split="train",
+            label="absent",
+        )
+        present = product_conditional_moments(
+            Xsrc[:, keep, :],
+            Msrc[:, keep],
+            metas,
+            sub_cells,
+            split="train",
+            label="present",
+        )
+        sub_model, _scaling = fit_standardized_ridge_from_moments(
+            absent, present, lambda_l2=model.lambda_l2
+        )
+        score = linear_scores(Xval[:, keep, :], sub_model)
+        prob = ridge_score_to_probability(score)
+        loo_rows.append(
+            {
+                "stage": "leave_one_session_block_out",
+                "left_out_session": left_out,
+                "kept_cells": int(np.sum(keep)),
+                **weighted_binary_metrics(yval, prob, wval, ranking_score=score),
+            }
+        )
+    return margin_rows, loo_rows
+
+
+def _session_only_coef(coef: np.ndarray, cidx: np.ndarray, n_bins: int) -> np.ndarray:
+    out = np.zeros_like(coef)
+    idx = _block_feature_indices(cidx, n_bins)
+    out[idx] = coef[idx]
+    return out
+
+
+def run_track_a_source_budget(
+    *,
+    Xsrc: np.ndarray,
+    Msrc: np.ndarray,
+    metas: Sequence[SourceMeta],
+    source_index: Mapping[str, int],
+    cells: Sequence[str],
+    Xval: np.ndarray,
+    yval: np.ndarray,
+    wval: np.ndarray,
+    fractions: Sequence[float],
+    seeds: Sequence[int],
+    rows_per_class: int,
+    min_per_label_session: int = 2,
+) -> list[dict[str, Any]]:
+    # ponytail: exact moments remove assembly noise from the source-budget contrast.
+    del source_index, rows_per_class
+    rows: list[dict[str, Any]] = []
+    sessions = tuple(session_cell_index(cells))
+    pools = [
+        idxs
+        for label in LABELS
+        for idxs in source_indices_by_session_label(
+            metas, sessions, split="train", label=label
+        ).values()
+    ]
+    if any(len(p) < min_per_label_session for p in pools):
+        raise ValueError(
+            "source budget requires at least two training sources per class/session"
+        )
+    validation_ids = {m.source_trial_id for m in metas if m.split == "validation"}
+    for frac in fractions:
+        if not 0 < frac <= 1:
+            raise ValueError("source fraction must be in (0, 1]")
+        for seed in seeds:
+            rng = np.random.default_rng(seed)
+            keep_sources: set[str] = set()
+            for idxs in pools:
+                n_keep = max(min_per_label_session, int(math.ceil(len(idxs) * frac)))
+                # Same permutations, longer prefixes: nested source subsets across fractions.
+                chosen = rng.permutation(idxs)[:n_keep]
+                keep_sources.update(metas[int(i)].source_trial_id for i in chosen)
+            if not keep_sources.isdisjoint(validation_ids):
+                raise ValueError("source subset crosses the validation boundary")
+            kept_indices = [
+                i
+                for i, m in enumerate(metas)
+                if m.split != "train" or m.source_trial_id in keep_sources
+            ]
+            sampled_metas = [metas[i] for i in kept_indices]
+            moments = [
+                product_conditional_moments(
+                    Xsrc[kept_indices],
+                    Msrc[kept_indices],
+                    sampled_metas,
+                    cells,
+                    split="train",
+                    label=label,
+                )
+                for label in LABELS
+            ]
+            model, _ = fit_standardized_ridge_from_moments(*moments, lambda_l2=1.0)
+            score = linear_scores(Xval, model)
+            metrics = weighted_binary_metrics(
+                yval, ridge_score_to_probability(score), wval
+            )
+            metrics["auroc"] = safe_weighted_auc(yval, score, wval)
+            rows.append(
+                {
+                    "stage": "source_budget_moment_exact_ridge",
+                    "fraction": frac,
+                    "seed": seed,
+                    "status": "complete",
+                    "lambda_l2": 1.0,
+                    "n_train_sources_used": len(keep_sources),
+                    "n_train_sources_full": sum(m.split == "train" for m in metas),
+                    "train_source_ids": ";".join(sorted(keep_sources)),
+                    "source_subset_hash": stable_hash(sorted(keep_sources)),
+                    "assembly_policy": "none; exact empirical-product moments",
+                    **metrics,
+                }
+            )
+    return rows
+
+
+def run_known_truth_simulations(
+    *,
+    output_dir: Path,
+    seeds: Sequence[int],
+    train_counts: Sequence[int],
+    validation_counts: Sequence[int],
+    mean_differences: Sequence[float],
+) -> list[dict[str, Any]]:
+    rows = []
+    for n in train_counts:
+        for n_val in validation_counts:
+            for signal in mean_differences:
+                for seed in seeds:
+                    X, M, metas, cells, delta, feature_sessions = (
+                        gaussian_source_fixture(
+                            session_cell_counts=(5, 3, 2, 6, 6, 6, 1),
+                            n_bins=10,
+                            train_per_class_session=n,
+                            validation_per_class_session=n_val,
+                            mean_difference=signal,
+                            seed=seed,
+                        )
+                    )
+                    absent = product_conditional_moments(
+                        X, M, metas, cells, split="train", label="absent"
+                    )
+                    present = product_conditional_moments(
+                        X, M, metas, cells, split="train", label="present"
+                    )
+                    model, _scaling = fit_standardized_ridge_from_moments(
+                        absent, present, lambda_l2=1.0
+                    )
+                    groups = session_cell_index(cells)
+                    if n_val ** len(groups) <= 2048:
+                        Xv, yv, wv, _manifest, _support = exact_validation_product(
+                            X, M, metas, cells, max_combinations=2048
+                        )
+                        evaluation_kind = "exact_empirical_Q"
+                    else:
+                        # ponytail: vectorize known-truth simulation draws; no unused training draws.
+                        rng = np.random.default_rng(seed + 1000000)
+                        Xv = np.empty((4096, len(cells), X.shape[2]), dtype=np.float32)
+                        yv = np.repeat([0, 1], 2048)
+                        for label_index, label in enumerate(LABELS):
+                            pools = source_indices_by_session_label(
+                                metas, tuple(groups), split="validation", label=label
+                            )
+                            for session_id, cidx in groups.items():
+                                pool = np.asarray(pools[session_id], dtype=int)
+                                selected = pool[rng.integers(len(pool), size=2048)]
+                                if not np.all(M[selected[:, None], cidx[None, :]]):
+                                    raise ValueError(
+                                        "simulation draw encountered an unobserved cell"
+                                    )
+                                Xv[
+                                    label_index * 2048 : (label_index + 1) * 2048,
+                                    cidx,
+                                    :,
+                                ] = X[selected[:, None], cidx[None, :], :]
+                        wv = exact_class_weights(yv)
+                        evaluation_kind = "Monte_Carlo_empirical_Q_2048_per_class"
+                    score = linear_scores(Xv, model)
+                    metrics = weighted_binary_metrics(
+                        yv, ridge_score_to_probability(score), wv, ranking_score=score
+                    )
+                    true_metrics = analytic_gaussian_linear_metrics(model, delta)
+                    feature_sessions_list = [str(x) for x in feature_sessions]
+                    n_by_session = dict.fromkeys(set(feature_sessions_list), n)
+                    trace = expected_spurious_between_class_trace(
+                        np.ones_like(delta),
+                        feature_sessions_list,
+                        n_by_session,
+                        n_by_session,
+                    )
+                    rows.append(
+                        {
+                            "stage": "known_truth_simulation",
+                            "train_sources_per_class_session": n,
+                            "validation_sources_per_class_session": n_val,
+                            "signal": signal,
+                            "seed": seed,
+                            "expected_spurious_trace": trace,
+                            "measured_between_class_trace": float(
+                                np.sum((present.mean - absent.mean) ** 2) / 4
+                            ),
+                            "true_between_class_trace": float(np.sum(delta**2) / 4),
+                            "evaluation_kind": evaluation_kind,
+                            "coordinate_count": len(delta),
+                            "cell_layout": "5,3,2,6,6,6,1",
+                            **metrics,
+                            **true_metrics,
+                        }
+                    )
+    write_csv(output_dir / "track_a_known_truth_simulations.csv", rows)
+    return rows
+
+
+def _standard_scaler_from_mean_scale(
+    mean: np.ndarray, scale: np.ndarray
+) -> StandardScaler:
+    scaler = StandardScaler()
+    scaler.mean_ = np.asarray(mean, dtype=float)
+    scaler.scale_ = np.asarray(scale, dtype=float)
+    scaler.var_ = scaler.scale_**2
+    scaler.n_features_in_ = int(len(scaler.mean_))  # pyright: ignore[reportAttributeAccessIssue]
+    return scaler
+
+
+def _saved_logistic_probability(
+    npz: np.lib.npyio.NpzFile, features: np.ndarray
+) -> np.ndarray:
+    mean = np.asarray(npz["scaler_mean"], dtype=float)
+    scale = np.asarray(npz["scaler_scale"], dtype=float)
+    scale[scale == 0] = 1.0
+    coef = np.asarray(npz["coef"], dtype=float).reshape(-1)
+    intercept = float(np.asarray(npz["intercept"], dtype=float).reshape(-1)[0])
+    return expit(((features - mean) / scale) @ coef + intercept)
+
+
+def _saved_decoder_probability(
+    npz: np.lib.npyio.NpzFile, embedding: np.ndarray
+) -> np.ndarray:
+    mean = np.asarray(npz["decoder_scaler_mean"], dtype=float)
+    scale = np.asarray(npz["decoder_scaler_scale"], dtype=float)
+    scale[scale == 0] = 1.0
+    coef = np.asarray(npz["decoder_coef"], dtype=float).reshape(-1)
+    intercept = float(np.asarray(npz["decoder_intercept"], dtype=float).reshape(-1)[0])
+    return expit(((embedding - mean) / scale) @ coef + intercept)
+
+
+def _legacy_feature_triplet(
+    X_train: np.ndarray,
+    X_validation: np.ndarray,
+    X_exact: np.ndarray,
+    representation: str,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, dict[str, Any]]:
+    if representation in {"raw_total", "raw_binned"}:
+        ftr, _sc, _pca = track_a_feature_matrix(X_train, representation)
+        fva, _sc, _pca = track_a_feature_matrix(X_validation, representation)
+        fex, _sc, _pca = track_a_feature_matrix(X_exact, representation)
+        return ftr, fva, fex, {"first_stage": "none_saved_head_only"}
+    if representation.startswith("pca_cellspace_"):
+        dim = int(representation.rsplit("_", 1)[1])
+        ftr, sc, pca = track_a_feature_matrix(X_train, "pca_cellspace", pca_dim=dim)
+        fva, _sc, _pca = track_a_feature_matrix(
+            X_validation, "pca_cellspace", pca_dim=dim, scaler=sc, pca=pca
+        )
+        fex, _sc, _pca = track_a_feature_matrix(
+            X_exact, "pca_cellspace", pca_dim=dim, scaler=sc, pca=pca
+        )
+        if pca is None:
+            raise AssertionError("PCA construction failed")
+        return (
+            ftr,
+            fva,
+            fex,
+            {
+                "first_stage": "reconstructed_from_seed_training_array_not_refit_on_exact_q",
+                "pca_dim": dim,
+                "pca_explained_variance_sum": float(
+                    np.sum(pca.explained_variance_ratio_)
+                ),
+            },
+        )
+    raise ValueError(representation)
+
+
+def _prediction_probs_from_csv(
+    path: Path,
+    *,
+    seed: int,
+    representation: str,
+    split: str,
+    dim: int | None = None,
+    C: float | None = None,
+) -> np.ndarray:
+    rows = []
+    with path.open(newline="", encoding="utf-8") as handle:
+        for row in csv.DictReader(handle):
+            if (
+                int(row["seed"]) != seed
+                or row["representation"] != representation
+                or row["split"] != split
+            ):
+                continue
+            if dim is not None and int(row["dim"]) != dim:
+                continue
+            if C is not None and abs(float(row["C"]) - C) > 1e-12:
+                continue
+            rows.append((int(row["row"]), float(row["prob_present"])))
+    if not rows:
+        raise ValueError(
+            f"no saved predictions matched {representation=} {seed=} {split=}"
+        )
+    rows.sort()
+    return np.asarray([p for _i, p in rows], dtype=float)
+
+
+def replay_saved_v8b_heads_on_exact_q(
+    *,
+    stage_dir: Path,
+    legacy_dir: Path,
+    X_exact: np.ndarray,
+    y_exact: np.ndarray,
+    w_exact: np.ndarray,
+    output_dir: Path,
+) -> dict[str, Any]:
+    legacy_dir = validate_under_accepted(legacy_dir)
+    coef_dir = legacy_dir / "v8b" / "coefs"
+    pred_csv = legacy_dir / "v8b" / "v8b_regularization_predictions.csv"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    metrics_rows: list[dict[str, Any]] = []
+    pred_rows: list[dict[str, Any]] = []
+    parity_rows: list[dict[str, Any]] = []
+    for seed in (0, 1, 2):
+        z = np.load(stage_dir / f"pseudo_arrays_seed{seed}.npz")
+        Xtr, ytr = z["X_train"], z["y_train"]
+        Xva, yva = z["X_validation"], z["y_validation"]
+        for rep in ("raw_total", "raw_binned", "pca_cellspace_3", "pca_cellspace_8"):
+            head_path = coef_dir / f"seed{seed}_{rep}_C1.npz"
+            head = np.load(head_path)
+            Ftr, Fva, Fex, first_stage = _legacy_feature_triplet(Xtr, Xva, X_exact, rep)
+            for split, features, y, weights in (
+                ("legacy_train_array_replay", Ftr, ytr, None),
+                ("legacy_validation_array_replay", Fva, yva, None),
+                ("exact_validation_q", Fex, y_exact, w_exact),
+            ):
+                prob = _saved_logistic_probability(head, features)
+                prefix = {
+                    "stage": "legacy_v8b_saved_head_replay",
+                    "replay_type": "saved_logistic_head_no_refit",
+                    "seed": seed,
+                    "representation": rep,
+                    "C": 1.0,
+                    **first_stage,
+                    "split": split,
+                }
+                metrics_rows.append(
+                    {**prefix, **weighted_binary_metrics(y, prob, weights)}
+                )
+                if split == "exact_validation_q":
+                    pred_rows.extend(
+                        exact_prediction_rows(
+                            prefix=prefix, y=y, prob=prob, weights=w_exact
+                        )
+                    )
+                else:
+                    saved = _prediction_probs_from_csv(
+                        pred_csv,
+                        seed=seed,
+                        representation=rep,
+                        split="train"
+                        if split == "legacy_train_array_replay"
+                        else "validation",
+                        C=1.0,
+                    )
+                    parity_rows.append(
+                        {
+                            **prefix,
+                            "old_prediction_max_abs_diff": float(
+                                np.max(np.abs(prob - saved))
+                            ),
+                            "old_prediction_row_count": len(saved),
+                        }
+                    )
+    write_csv(output_dir / "track_a_legacy_v8b_head_metrics.csv", metrics_rows)
+    write_csv(output_dir / "track_a_legacy_v8b_head_predictions_exact_q.csv", pred_rows)
+    write_csv(output_dir / "track_a_legacy_v8b_head_parity.csv", parity_rows)
+    return {
+        "status": "complete",
+        "metric_rows": len(metrics_rows),
+        "prediction_rows": len(pred_rows),
+        "parity_rows": len(parity_rows),
+        "max_old_prediction_diff": max(
+            (r["old_prediction_max_abs_diff"] for r in parity_rows), default=None
+        ),
+        "coef_dir": str(coef_dir),
+    }
+
+
+def replay_saved_v9_cebra_checkpoints_on_exact_q(
+    *,
+    stage_dir: Path,
+    legacy_dir: Path,
+    X_exact: np.ndarray,
+    y_exact: np.ndarray,
+    w_exact: np.ndarray,
+    output_dir: Path,
+    device: str = "cpu",
+) -> dict[str, Any]:
+    import torch
+
+    from scripts.place195_v8b_v9_cebra import embed_rows, make_solver
+
+    legacy_dir = validate_under_accepted(legacy_dir)
+    actual_device = device
+    if device == "cuda" and not torch.cuda.is_available():
+        actual_device = "cpu"
+    pred_csv = legacy_dir / "v9" / "v9_cebra_predictions.csv"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    metrics_rows: list[dict[str, Any]] = []
+    pred_rows: list[dict[str, Any]] = []
+    parity_rows: list[dict[str, Any]] = []
+    for objective in CEBRA_OBJECTIVES:
+        for dim in (3, 8):
+            for seed in (0, 1, 2):
+                fit_dir = (
+                    legacy_dir
+                    / "v9"
+                    / "observed"
+                    / objective
+                    / f"dim{dim}"
+                    / f"seed{seed}"
+                )
+                arrays = np.load(stage_dir / f"pseudo_arrays_seed{seed}.npz")
+                emb = np.load(fit_dir / "embeddings_and_decoder.npz")
+                scaler = _standard_scaler_from_mean_scale(
+                    emb["embedding_scaler_mean"], emb["embedding_scaler_scale"]
+                )
+                input_dim = int(np.asarray(scaler.mean_).shape[0])
+                solver = make_solver(input_dim, dim, 32, 3e-4, actual_device)
+                solver.load_state_dict(
+                    torch.load(
+                        fit_dir / "checkpoint_final.pth", map_location=actual_device
+                    ),
+                    strict=True,
+                )
+                solver.n_features = input_dim
+                Zva = embed_rows(
+                    solver,
+                    scaler,
+                    arrays["X_validation"],
+                    device=actual_device,
+                    dim=dim,
+                )
+                Zex = embed_rows(solver, scaler, X_exact, device=actual_device, dim=dim)
+                pva = _saved_decoder_probability(emb, Zva)
+                pex = _saved_decoder_probability(emb, Zex)
+                saved = _prediction_probs_from_csv(
+                    pred_csv,
+                    seed=seed,
+                    representation=objective,
+                    split="validation",
+                    dim=dim,
+                    # V9 used a fixed C=1 head; its prediction CSV has no C column.
+                )
+                prefix = {
+                    "stage": "legacy_v9_cebra_checkpoint_replay",
+                    "replay_type": "saved_checkpoint_and_decoder_no_refit",
+                    "objective": objective,
+                    "representation": objective,
+                    "dim": dim,
+                    "seed": seed,
+                    "device": actual_device,
+                }
+                metrics_rows.append(
+                    {
+                        **prefix,
+                        "split": "legacy_validation_array_replay",
+                        **weighted_binary_metrics(arrays["y_validation"], pva),
+                    }
+                )
+                metrics_rows.append(
+                    {
+                        **prefix,
+                        "split": "exact_validation_q",
+                        **weighted_binary_metrics(y_exact, pex, w_exact),
+                    }
+                )
+                pred_rows.extend(
+                    exact_prediction_rows(
+                        prefix={**prefix, "split": "exact_validation_q"},
+                        y=y_exact,
+                        prob=pex,
+                        weights=w_exact,
+                    )
+                )
+                parity_rows.append(
+                    {
+                        **prefix,
+                        "split": "legacy_validation_array_replay",
+                        "old_prediction_max_abs_diff": float(
+                            np.max(np.abs(pva - saved))
+                        ),
+                        "old_prediction_row_count": len(saved),
+                    }
+                )
+    write_csv(output_dir / "track_a_legacy_v9_cebra_metrics.csv", metrics_rows)
+    write_csv(output_dir / "track_a_legacy_v9_cebra_predictions_exact_q.csv", pred_rows)
+    write_csv(output_dir / "track_a_legacy_v9_cebra_parity.csv", parity_rows)
+    return {
+        "status": "complete",
+        "metric_rows": len(metrics_rows),
+        "prediction_rows": len(pred_rows),
+        "parity_rows": len(parity_rows),
+        "max_old_prediction_diff": max(
+            (r["old_prediction_max_abs_diff"] for r in parity_rows), default=None
+        ),
+        "device": actual_device,
+    }
+
+
+def run_relaxed40_source_controls(
+    *,
+    stage_dir: Path,
+    output_dir: Path,
+    seeds: Sequence[int],
+    fractions: Sequence[float] = (0.5, 0.75, 1.0),
+) -> dict[str, Any]:
+    """One real source trial per row, with only that session's observed cells."""
+    stage_dir = validate_under_accepted(stage_dir)
+    z, metas, _source_index, cells = _load_v7_stage(stage_dir)
+    Xsrc, Msrc = z["X_source_cell_bin"], z["observed_source_cell_mask"]
+    metric_rows: list[dict[str, Any]] = []
+    for session_number, (session_id, cidx) in enumerate(
+        session_cell_index(cells).items()
+    ):
+        idx = np.asarray([i for i, m in enumerate(metas) if m.session_id == session_id])
+        if not np.all(Msrc[np.ix_(idx, cidx)]):
+            raise ValueError(
+                f"unobserved within-session source/cell entries: {session_id}"
+            )
+        X = Xsrc[idx][:, cidx, :]
+        if not np.all(np.isfinite(X)):
+            raise ValueError(f"nonfinite observed activity: {session_id}")
+        y = np.asarray([LABEL_TO_INT[metas[int(i)].label] for i in idx])
+        train = np.asarray(
+            [j for j, i in enumerate(idx) if metas[int(i)].split == "train"]
+        )
+        val = np.asarray(
+            [j for j, i in enumerate(idx) if metas[int(i)].split == "validation"]
+        )
+        if not len(val) or any(np.sum(y[train] == label) < 2 for label in (0, 1)):
+            raise ValueError(f"insufficient saved real-source support: {session_id}")
+        train_ids = {metas[int(idx[j])].source_trial_id for j in train}
+        val_ids = {metas[int(idx[j])].source_trial_id for j in val}
+        assert train_ids.isdisjoint(val_ids)
+        trial_index = np.asarray(
+            [float(metas[int(i)].source_trial_id.rsplit("trial", 1)[-1]) for i in idx]
+        ).reshape(-1, 1)
+        features = {
+            "raw_total": X.sum(axis=2),
+            "raw_binned": X.reshape(len(X), -1),
+            "trial_index_only": trial_index,
+        }
+        for seed in seeds:
+            rng = np.random.default_rng(np.random.SeedSequence([seed, session_number]))
+            orders = [rng.permutation(train[y[train] == label]) for label in (0, 1)]
+            for fraction in fractions:
+                if not 0 < fraction <= 1:
+                    raise ValueError("source fraction must be in (0, 1]")
+                used = np.concatenate(
+                    [
+                        order[: max(2, int(math.ceil(len(order) * fraction)))]
+                        for order in orders
+                    ]
+                )
+                C = len(train) / len(
+                    used
+                )  # fixed average-loss penalty within this session
+                for representation, F in features.items():
+                    probability, _clf, _scaler = _fit_sklearn_logistic(
+                        F[used], y[used], F[val], C=C
+                    )
+                    metric_rows.append(
+                        {
+                            "stage": "relaxed40_real_session_source_control",
+                            "input_kind": "real_source_trials_not_pseudopopulations",
+                            "session_id": session_id,
+                            "cell_count": len(cidx),
+                            "seed": seed,
+                            "source_fraction": fraction,
+                            "n_train_sources_full": len(train),
+                            "n_train_sources_used": len(used),
+                            "n_validation_sources": len(val),
+                            "decoder_C": C,
+                            "train_source_ids": ";".join(
+                                metas[int(idx[j])].source_trial_id for j in used
+                            ),
+                            "validation_source_ids": ";".join(sorted(val_ids)),
+                            "representation": representation,
+                            **weighted_binary_metrics(
+                                y[val], probability, exact_class_weights(y[val])
+                            ),
+                        }
+                    )
+    write_csv(output_dir / "track_a_relaxed40_source_controls.csv", metric_rows)
+    return {
+        "status": "complete",
+        "metric_rows": len(metric_rows),
+        "cell_count": len(cells),
+        "session_count": len(session_cell_index(cells)),
+        "input_kind": "real_source_trials_not_pseudopopulations",
+        "trial_index_note": "numeric trial index is a temporal diagnostic, not source-ID memorization",
+    }
+
+
+def run_track_a_program(
+    *,
+    Xsrc: np.ndarray,
+    Msrc: np.ndarray,
+    metas: Sequence[SourceMeta],
+    source_index: Mapping[str, int],
+    cells: Sequence[str],
+    output_dir: Path,
+    rows_per_class_grid: Sequence[int],
+    seeds: Sequence[int],
+    pca_dims: Sequence[int],
+    ridge_lambdas: Sequence[float],
+    source_budget_fractions: Sequence[float],
+    simulation_seeds: Sequence[int],
+    simulation_train_counts: Sequence[int],
+    simulation_validation_counts: Sequence[int],
+    max_validation_combinations: int | None,
+    stage_dir: Path | None = None,
+    legacy_dir: Path | None = None,
+    relaxed40_stage_dir: Path | None = None,
+    cebra_replay_device: str = "cpu",
+) -> dict[str, Any]:
+    output_dir.mkdir(parents=True, exist_ok=True)
+    Xval, yval, wval, val_manifest, support = exact_validation_product(
+        Xsrc, Msrc, metas, cells, max_combinations=max_validation_combinations
+    )
+    absent = product_conditional_moments(
+        Xsrc, Msrc, metas, cells, split="train", label="absent"
+    )
+    present = product_conditional_moments(
+        Xsrc, Msrc, metas, cells, split="train", label="present"
+    )
+    ridge_rows = []
+    ridge_pred_rows = []
+    pooled_mean, pooled_cov, pooled_support = pooled_time_cell_moments(
+        Xsrc, Msrc, metas, cells, split="train"
+    )
+    moment_pca_rows = []
+    for dim in pca_dims:
+        if dim > len(cells):
+            continue
+        pc = pca_from_moments(pooled_mean, pooled_cov, dim)
+        operator, offset = pca_time_operator(pc, Xsrc.shape[2])
+        transformed = []
+        for moment in (absent, present):
+            mean, cov = transform_moments_linear(
+                moment.mean, moment.covariance, operator, offset
+            )
+            transformed.append(
+                ProductMoments(
+                    moment.split,
+                    moment.label,
+                    moment.sessions,
+                    mean,
+                    cov,
+                    moment.source_counts_by_session,
+                )
+            )
+        fitted, _ = fit_standardized_ridge_from_moments(*transformed, lambda_l2=1.0)
+        raw_model = RidgeModel(
+            operator.T @ fitted.coefficients,
+            fitted.intercept + float(fitted.coefficients @ offset),
+            1.0,
+        )
+        score = linear_scores(Xval, raw_model)
+        prob = ridge_score_to_probability(score)
+        prefix = {
+            "stage": "moment_exact_pca_ridge",
+            "pca_dim": dim,
+            "representation": f"moment_pca_cellspace_{dim}",
+            "lambda_l2": 1.0,
+            "pca_explained_variance_sum": float(pc["explained_variance_ratio"].sum()),
+        }
+        measured = weighted_binary_metrics(yval, prob, wval)
+        measured["auroc"] = safe_weighted_auc(yval, score, wval)
+        moment_pca_rows.append({**prefix, **measured})
+        ridge_pred_rows.extend(
+            exact_prediction_rows(prefix=prefix, y=yval, prob=prob, weights=wval)
+        )
+        np.savez_compressed(
+            output_dir / f"track_a_train_Q_pca_dim{dim}.npz",
+            mean=pc["mean"],
+            scale=pc["scale"],
+            components=pc["components"],
+            explained_variance=pc["explained_variance"],
+            explained_variance_ratio=pc["explained_variance_ratio"],
+            pooled_covariance=pooled_cov,
+            raw_readout_coef=raw_model.coefficients,
+            raw_readout_intercept=np.asarray([raw_model.intercept]),
+        )
+    write_csv(output_dir / "track_a_moment_pca_metrics.csv", moment_pca_rows)
+    write_json(output_dir / "track_a_moment_pca_support.json", pooled_support)
+    ridge_rows.extend(moment_pca_rows)
+    primary_model: RidgeModel | None = None
+    for lam in ridge_lambdas:
+        model, scaling = fit_standardized_ridge_from_moments(
+            absent, present, lambda_l2=lam
+        )
+        if lam == 1.0:
+            primary_model = model
+        score = linear_scores(Xval, model)
+        prob = ridge_score_to_probability(score)
+        prefix = {
+            "stage": "moment_exact_ridge",
+            "lambda_l2": lam,
+            "scaling": "train_Q_standardized_mapped_to_raw",
+        }
+        ridge_rows.append(
+            {**prefix, **weighted_binary_metrics(yval, prob, wval, ranking_score=score)}
+        )
+        ridge_pred_rows.extend(
+            exact_prediction_rows(prefix=prefix, y=yval, prob=prob, weights=wval)
+        )
+        np.savez_compressed(
+            output_dir / f"track_a_ridge_lambda{lam:g}.npz",
+            coef=model.coefficients,
+            intercept=np.asarray([model.intercept]),
+            train_q_mean=scaling["train_q_mean"],
+            train_q_scale=scaling["train_q_scale"],
+            standardized_coef=scaling["standardized_coef"],
+            standardized_intercept=scaling["standardized_intercept"],
+        )
+    row_grid_rows, row_grid_preds = run_track_a_row_grid(
+        Xsrc=Xsrc,
+        Msrc=Msrc,
+        metas=metas,
+        source_index=source_index,
+        cells=cells,
+        Xval=Xval,
+        yval=yval,
+        wval=wval,
+        val_manifest=val_manifest,
+        rows_per_class_grid=rows_per_class_grid,
+        seeds=seeds,
+        pca_dims=pca_dims,
+    )
+    if primary_model is None:
+        primary_model, _scaling = fit_standardized_ridge_from_moments(
+            absent, present, lambda_l2=1.0
+        )
+    margins, loo = run_track_a_margins_and_loo(
+        Xsrc=Xsrc,
+        Msrc=Msrc,
+        metas=metas,
+        cells=cells,
+        model=primary_model,
+        Xval=Xval,
+        yval=yval,
+        wval=wval,
+    )
+    budget = run_track_a_source_budget(
+        Xsrc=Xsrc,
+        Msrc=Msrc,
+        metas=metas,
+        source_index=source_index,
+        cells=cells,
+        Xval=Xval,
+        yval=yval,
+        wval=wval,
+        fractions=source_budget_fractions,
+        seeds=seeds,
+        rows_per_class=rows_per_class_grid[0],
+    )
+    sims = run_known_truth_simulations(
+        output_dir=output_dir,
+        seeds=simulation_seeds,
+        train_counts=simulation_train_counts,
+        validation_counts=simulation_validation_counts,
+        mean_differences=(0.0, 0.5),
+    )
+    write_csv(
+        output_dir / "track_a_exact_validation_metrics.csv", ridge_rows + row_grid_rows
+    )
+    write_csv(
+        output_dir / "track_a_exact_validation_predictions.csv",
+        ridge_pred_rows + row_grid_preds,
+    )
+    write_csv(output_dir / "track_a_exact_validation_manifest.csv", val_manifest)
+    write_json(output_dir / "track_a_product_support.json", support)
+    write_csv(output_dir / "track_a_source_margins.csv", margins)
+    write_csv(output_dir / "track_a_leave_one_session.csv", loo)
+    write_csv(output_dir / "track_a_source_budget.csv", budget)
+    legacy_head_summary: dict[str, Any] = {"status": "not_requested"}
+    legacy_cebra_summary: dict[str, Any] = {"status": "not_requested"}
+    if stage_dir is not None and legacy_dir is not None:
+        legacy_head_summary = replay_saved_v8b_heads_on_exact_q(
+            stage_dir=stage_dir,
+            legacy_dir=legacy_dir,
+            X_exact=Xval,
+            y_exact=yval,
+            w_exact=wval,
+            output_dir=output_dir,
+        )
+        legacy_cebra_summary = replay_saved_v9_cebra_checkpoints_on_exact_q(
+            stage_dir=stage_dir,
+            legacy_dir=legacy_dir,
+            X_exact=Xval,
+            y_exact=yval,
+            w_exact=wval,
+            output_dir=output_dir,
+            device=cebra_replay_device,
+        )
+    relaxed_summary: dict[str, Any] = {"status": "not_requested"}
+    if relaxed40_stage_dir is not None:
+        relaxed_summary = run_relaxed40_source_controls(
+            stage_dir=relaxed40_stage_dir,
+            output_dir=output_dir,
+            seeds=seeds,
+            fractions=source_budget_fractions,
+        )
+    plots = plot_phase1_result_types(output_dir, output_dir / "figures")
+    completion = {
+        "exact_validation_q": "complete",
+        "moment_ridge": "complete",
+        "moment_exact_cell_PCA_and_matched_head_controls": "complete",
+        "finite_sample_ridge_convergence": "complete",
+        "legacy_v8b_saved_head_replay": legacy_head_summary["status"],
+        "legacy_v9_cebra_checkpoint_replay": legacy_cebra_summary["status"],
+        "row_grid_raw_pca_source_controls": "complete",
+        "source_margins": "complete",
+        "leave_one_session": "complete",
+        "source_budget": "complete",
+        "relaxed40_source_controls": relaxed_summary["status"],
+        "known_truth_simulations": "complete",
+        "plots": "complete" if plots else "no_plots_emitted",
+    }
+    summary = {
+        "status": "complete",
+        "validation_rows": len(yval),
+        "metric_rows": len(ridge_rows) + len(row_grid_rows),
+        "prediction_rows": len(ridge_pred_rows) + len(row_grid_preds),
+        "support": support,
+        "stage_completion": completion,
+        "legacy_head_replay": legacy_head_summary,
+        "legacy_cebra_replay": legacy_cebra_summary,
+        "relaxed40_source_controls": relaxed_summary,
+        "known_truth_rows": len(sims),
+        "plot_count": len(plots),
+        "plots": plots,
+    }
+    write_json(output_dir / "summary.json", summary)
+    return summary
+
+
+# ---------------------------------------------------------------------------
+# Track B: CEBRA config grids and future gated fitting. Synthetic CEBRA smoke is
+# separate and labelled; biological fits require authorization.
+
+
+def observed_cebra_specs() -> list[CebraFitSpec]:
+    specs: list[CebraFitSpec] = []
+    for objective in CEBRA_OBJECTIVES:
+        for assembly_seed in range(5):
+            for optimizer_seed in range(5):
+                specs.append(
+                    CebraFitSpec(
+                        objective,
+                        8,
+                        64,
+                        1000,
+                        assembly_seed,
+                        optimizer_seed,
+                        "crossed_seed_primary",
+                    )
+                )
+        for dim in (3, 16, 29):
+            specs.append(
+                CebraFitSpec(objective, dim, 64, 1000, 0, 0, "dimension_sensitivity")
+            )
+        for rows in (256, 1024):
+            specs.append(
+                CebraFitSpec(objective, 8, rows, 1000, 0, 0, "row_sensitivity")
+            )
+        specs.append(CebraFitSpec(objective, 8, 64, 5000, 0, 0, "paired_long_budget"))
+    # Keep the declared 62 unique fits; duplicate base only lives in the crossed grid.
+    unique = {stable_hash(s.as_dict()): s for s in specs}
+    return list(unique.values())
+
+
+def null_family_cebra_specs(
+    *, permutation_index: int | None = None
+) -> list[CebraFitSpec]:
+    specs: list[CebraFitSpec] = []
+    for objective in CEBRA_OBJECTIVES:
+        specs.append(
+            CebraFitSpec(objective, 8, 64, 1000, 0, 0, "family_null", permutation_index)
+        )
+        for dim in (3, 16, 29):
+            specs.append(
+                CebraFitSpec(
+                    objective, dim, 64, 1000, 0, 0, "family_null", permutation_index
+                )
+            )
+        for rows in (256, 1024):
+            specs.append(
+                CebraFitSpec(
+                    objective, 8, rows, 1000, 0, 0, "family_null", permutation_index
+                )
+            )
+        specs.append(
+            CebraFitSpec(objective, 8, 64, 5000, 0, 0, "family_null", permutation_index)
+        )
+    return specs
+
+
+def cebra_config_manifest() -> dict[str, Any]:
+    observed = [s.as_dict() for s in observed_cebra_specs()]
+    family = [s.as_dict() for s in null_family_cebra_specs()]
+    return {
+        "stage": "track_b_native_cebra_ablation_config",
+        "biological_execution_gate": f"requires --authorized-phase {AUTH_TOKEN}",
+        "observed_fit_count": len(observed),
+        "null_family_config_count": len(family),
+        "null_permutations": 20,
+        "expected_null_fit_count": len(family) * 20,
+        "observed_specs": observed,
+        "null_family_specs": family,
+        "decoder_C_policy": "C = 64 / rows_per_class, preserving penalty relative to average logistic loss",
+        "input_policy": "raw cue counts standardized on training rows; no PCA upstream of CEBRA",
+        "seed_policy": "assembly_seed and optimizer_seed are independent fields",
+        "architecture_caveat": "Observed native offset1 hidden32 architecture is 29->32->32->16->output_dim->L2-normalize; CEBRA dim29 is not a full-dimensional/invertible control.",
+        "scope_caveat": "No wider CEBRA target grid is requested; raw and matched full-rank PCA/orthogonal-rotation controls cover no linear-coordinate loss.",
+    }
+
+
+def _load_v7_stage(stage_dir: Path):
+    validate_under_accepted(stage_dir)
+    z = np.load(stage_dir / "source_level_cue_tensors.npz")
+    metas = [
+        SourceMeta(str(sid), str(sess), str(split), str(label))
+        for sid, sess, split, label in zip(
+            z["source_trial_ids"],
+            z["source_session_ids"],
+            z["source_splits"],
+            z["source_labels"],
+            strict=True,
+        )
+    ]
+    source_index = {m.source_trial_id: i for i, m in enumerate(metas)}
+    cells = [str(c) for c in z["cell_ids"]]
+    return z, metas, source_index, cells
+
+
+def _fit_logreg_with_c(
+    Xtr: np.ndarray, ytr: np.ndarray, Xva: np.ndarray, yva: np.ndarray, *, C: float
+):
+    scaler = StandardScaler().fit(Xtr)
+    clf = LogisticRegression(
+        C=C, class_weight="balanced", solver="liblinear", random_state=0, max_iter=1000
+    ).fit(scaler.transform(Xtr), ytr)
+    pva = clf.predict_proba(scaler.transform(Xva))[:, 1]
+    ptr = clf.predict_proba(scaler.transform(Xtr))[:, 1]
+    return ptr, pva, clf, scaler
+
+
+def summarize_loader_exposures(
+    records: Mapping[str, Sequence[np.ndarray]],
+    row_sources: Mapping[int, Sequence[Mapping[str, str]]],
+    y_rows: np.ndarray,
+    n_bins: int,
+) -> dict[str, Any]:
+    """Summarize CEBRA sample/update/source exposure after fit.
+
+    Records contain flattened sample indices. A flat index maps to one pseudo row;
+    the pseudo row expands to its session/source blocks only in this summary.
+    """
+    out: dict[str, Any] = {
+        "optimizer_index_exposures": {},
+        "source_block_exposures": {},
+    }
+    for role, chunks in records.items():
+        if not chunks:
+            out["optimizer_index_exposures"][role] = {
+                "flat_samples": 0,
+                "pseudo_rows": 0,
+            }
+            out["source_block_exposures"][role] = []
+            continue
+        flat = np.concatenate(
+            [np.asarray(c, dtype=np.int64).reshape(-1) for c in chunks]
+        )
+        rows = flat // n_bins
+        out["optimizer_index_exposures"][role] = {
+            "flat_samples": int(len(flat)),
+            "unique_flat_samples": int(len(np.unique(flat))),
+            "pseudo_rows": int(len(rows)),
+            "unique_pseudo_rows": int(len(np.unique(rows))),
+        }
+        counts: Counter[tuple[str, str, str]] = Counter()
+        for row in rows:
+            label = INT_TO_LABEL[int(y_rows[int(row)])]
+            for source in row_sources.get(int(row), ()):  # one entry per session block
+                counts[(source["session_id"], source["source_trial_id"], label)] += 1
+        out["source_block_exposures"][role] = [
+            {
+                "session_id": sess,
+                "source_trial_id": sid,
+                "label": lab,
+                "exposures": int(n),
+            }
+            for (sess, sid, lab), n in sorted(counts.items())
+        ]
+    return out
+
+
+def _row_sources_from_build_manifest(
+    manifest: Sequence[Mapping[str, str]], *, split: str, rows_per_class: int
+) -> dict[int, list[Mapping[str, str]]]:
+    out: dict[int, list[Mapping[str, str]]] = defaultdict(list)
+    for row in manifest:
+        if row.get("split") != split:
+            continue
+        offset = 0 if row["label"] == LABELS[0] else rows_per_class
+        out[offset + int(row["pseudo_row"])].append(row)
+    return out
+
+
+def cebra_fit_identity(
+    *,
+    spec: CebraFitSpec,
+    Xtr: np.ndarray,
+    ytr: np.ndarray,
+    manifest: Sequence[Mapping[str, str]],
+    Xev: np.ndarray,
+    yev: np.ndarray,
+    wev: np.ndarray,
+    eval_manifest: Sequence[Mapping[str, str]],
+    base_identity: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    payload = dict(base_identity or {})
+    payload.update(
+        {
+            "fit_spec": spec.as_dict(),
+            "train_array_sha256": ndarray_sha256(Xtr),
+            "train_label_sha256": ndarray_sha256(np.asarray(ytr, dtype=np.int64)),
+            "train_manifest_hash": stable_hash(list(manifest)),
+            "eval_array_sha256": ndarray_sha256(Xev),
+            "eval_label_weight_hash": stable_hash(
+                {"y": yev.tolist(), "w": wev.tolist()}
+            ),
+            "eval_manifest_hash": stable_hash(list(eval_manifest)),
+        }
+    )
+    return payload
+
+
+def source_label_shuffle_from_metas(
+    metas: Sequence[SourceMeta], *, seed: int
+) -> tuple[dict[str, str], dict[str, Any]]:
+    rng = random.Random(seed)
+    grouped: dict[tuple[str, str], list[SourceMeta]] = defaultdict(list)
+    for meta in metas:
+        grouped[(meta.session_id, meta.split)].append(meta)
+    out: dict[str, str] = {}
+    movable = 0
+    immovable = 0
+    for rows in grouped.values():
+        labels = [m.label for m in rows]
+        shuffled = labels[:]
+        rng.shuffle(shuffled)
+        if len(set(labels)) < 2 or len(rows) < 2 or labels == shuffled:
+            immovable += len(rows)
+        else:
+            movable += len(rows)
+        for meta, label in zip(rows, shuffled, strict=True):
+            out[meta.source_trial_id] = label
+    total = movable + immovable
+    return out, {
+        "seed": seed,
+        "group_fields": ["session_id", "split"],
+        "source_count": total,
+        "movable_fraction": movable / total if total else 0.0,
+        "immovable_fraction": immovable / total if total else 0.0,
+        "shuffled_label_hash": stable_hash(out),
+    }
+
+
+def cebra_family_key(spec: Mapping[str, Any]) -> tuple[str, int, int, int, int, int]:
+    return (
+        str(spec["objective"]),
+        int(spec["dim"]),
+        int(spec["rows_per_class"]),
+        int(spec["updates"]),
+        int(spec["assembly_seed"]),
+        int(spec["optimizer_seed"]),
+    )
+
+
+def _validation_exact_ba(info: Mapping[str, Any]) -> float | None:
+    for row in info.get("metrics", []):
+        if row.get("split") == "validation_exact_q":
+            value = row.get("balanced_accuracy")
+            return None if value is None else float(value)
+    return None
+
+
+def track_b_family_statistics(infos: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+    family_keys = {cebra_family_key(s.as_dict()) for s in null_family_cebra_specs()}
+    observed: dict[tuple[str, int, int, int, int, int], float] = {}
+    null_by_perm: dict[int, list[float]] = defaultdict(list)
+    for info in infos:
+        spec = info.get("fit_spec", {})
+        if not spec:
+            continue
+        key = cebra_family_key(spec)
+        if key not in family_keys:
+            continue
+        ba = _validation_exact_ba(info)
+        if ba is None:
+            continue
+        if spec.get("family_role") == "family_null":
+            null_by_perm[int(spec.get("permutation_index"))].append(ba)
+        else:
+            observed[key] = ba
+    null_max = {perm: max(vals) for perm, vals in null_by_perm.items() if vals}
+    observed_max = max(observed.values()) if observed else None
+    pvalue = _p_value_greater_equal(observed_max, list(null_max.values()))
+    return {
+        "family_config_count": len(family_keys),
+        "observed_family_configs_scored": len(observed),
+        "null_permutations_scored": len(null_max),
+        "observed_family_max_balanced_accuracy": observed_max,
+        "null_family_max_balanced_accuracy": null_max,
+        "family_max_pvalue": pvalue,
+        "policy": "one-sided exceedance of max validation_exact_q BA across the 14 fixed family configs",
+    }
+
+
+def track_b_prefix_parity(infos: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    import torch
+
+    by_key: dict[tuple[Any, ...], dict[int, Mapping[str, Any]]] = defaultdict(dict)
+    for info in infos:
+        spec = info.get("fit_spec", {})
+        if not spec:
+            continue
+        key = (
+            spec.get("objective"),
+            spec.get("dim"),
+            spec.get("rows_per_class"),
+            spec.get("assembly_seed"),
+            spec.get("optimizer_seed"),
+            spec.get("permutation_index"),
+        )
+        by_key[key][int(spec.get("updates"))] = info
+    rows: list[dict[str, Any]] = []
+    for key, by_update in by_key.items():
+        if 1000 not in by_update or 5000 not in by_update:
+            continue
+        short = by_update[1000]
+        long = by_update[5000]
+        short_fit = Path(str(short["fit_dir"]))
+        long_fit = Path(str(long["fit_dir"]))
+        with (short_fit / "loss_trace.csv").open(
+            newline="", encoding="utf-8"
+        ) as handle:
+            short_loss = [float(r["total"]) for r in csv.DictReader(handle)]
+        with (long_fit / "loss_trace.csv").open(newline="", encoding="utf-8") as handle:
+            long_loss = [float(r["total"]) for r in csv.DictReader(handle)]
+        n = min(len(short_loss), 1000, len(long_loss))
+        step1000_short = short_fit / "checkpoint_step1000.pth"
+        step1000_long = long_fit / "checkpoint_step1000.pth"
+        short_state = torch.load(step1000_short, map_location="cpu", weights_only=True)
+        long_state = torch.load(step1000_long, map_location="cpu", weights_only=True)
+        if short_state["model"].keys() != long_state["model"].keys():
+            raise ValueError("short/long checkpoint model schemas differ")
+        weight_difference = max(
+            float(torch.max(torch.abs(value - long_state["model"][name])))
+            for name, value in short_state["model"].items()
+        )
+        loss_difference = float(
+            np.max(np.abs(np.asarray(short_loss[:n]) - np.asarray(long_loss[:n])))
+        )
+        if n != 1000 or weight_difference != 0.0 or loss_difference != 0.0:
+            raise ValueError(
+                "the 5000-update run did not preserve the paired 1000-update prefix"
+            )
+        rows.append(
+            {
+                "objective": key[0],
+                "dim": key[1],
+                "rows_per_class": key[2],
+                "assembly_seed": key[3],
+                "optimizer_seed": key[4],
+                "permutation_index": key[5],
+                "prefix_steps_compared": n,
+                "weight_prefix_max_abs_diff": weight_difference,
+                "loss_prefix_max_abs_diff": float(
+                    np.max(
+                        np.abs(np.asarray(short_loss[:n]) - np.asarray(long_loss[:n]))
+                    )
+                )
+                if n
+                else None,
+                "checkpoint_step1000_hash_match": sha256_file(step1000_short)
+                == sha256_file(step1000_long)
+                if step1000_short.exists() and step1000_long.exists()
+                else None,
+            }
+        )
+    return rows
+
+
+def run_one_cebra_fit_with_exposure(
+    arrays,
+    manifest,
+    spec: CebraFitSpec,
+    outdir: Path,
+    *,
+    device: str = "cuda",
+    evaluation: tuple[np.ndarray, np.ndarray, np.ndarray, Sequence[Mapping[str, str]]]
+    | None = None,
+    identity: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Fit one CEBRA model and evaluate exact-Q rows when supplied."""
+    import torch
+    from cebra.data.single_session import (  # pyright: ignore[reportMissingImports]
+        DiscreteDataLoader,
+    )
+
+    from scripts.place195_v8b_v9_cebra import (
+        SameTrialTimeLoader,
+        TrialCueDataset,
+        embed_rows,
+        flatten_rows,
+        make_solver,
+    )
+
+    Xtr, ytr = arrays["train"]
+    if evaluation is None:
+        Xev, yev = arrays["validation"]
+        wev = exact_class_weights(yev)
+        eval_manifest: Sequence[Mapping[str, str]] = []
+        eval_split_name = "validation_sampled"
+    else:
+        Xev, yev, wev, eval_manifest = evaluation
+        eval_split_name = "validation_exact_q"
+    random.seed(spec.optimizer_seed)
+    np.random.seed(spec.optimizer_seed)
+    torch.manual_seed(spec.optimizer_seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(spec.optimizer_seed)
+    if device == "cuda" and not torch.cuda.is_available():
+        raise RuntimeError("CEBRA biological Track-B execution requires CUDA")
+    Xflat_raw, trial_raw, bins_raw, labels_raw = flatten_rows(Xtr, ytr)
+    Xflat = np.asarray(Xflat_raw, dtype=np.float32)
+    trial = np.asarray(trial_raw)
+    bins = np.asarray(bins_raw)
+    labels = np.asarray(labels_raw)
+    scaler = StandardScaler().fit(Xflat)
+    Xflat_std = np.asarray(scaler.transform(Xflat), dtype=np.float32)
+    ds = TrialCueDataset(
+        Xflat_std,
+        trial,
+        bins,
+        labels if spec.objective == "cebra_behavior" else None,
+        device=device,
+    )
+    solver = make_solver(ds.input_dimension, spec.dim, 32, 3e-4, device)
+    ds.configure_for(solver.model)
+    records: dict[str, list[Any]] = {
+        "anchor": [],
+        "positive": [],
+        "negative": [],
+    }
+
+    if spec.objective == "cebra_time":
+
+        class RecordedTimeLoader(SameTrialTimeLoader):
+            def get_indices(self, num_samples: int):
+                idx = super().get_indices(num_samples)
+                records["anchor"].append(idx.reference.detach())
+                records["positive"].append(idx.positive.detach())
+                records["negative"].append(idx.negative.detach())
+                return idx
+
+        loader = RecordedTimeLoader(
+            dataset=ds, time_offset=1, num_steps=spec.updates, batch_size=256
+        )
+    elif spec.objective == "cebra_behavior":
+
+        class RecordedDiscreteLoader(DiscreteDataLoader):
+            def get_indices(self, num_samples: int):
+                idx = super().get_indices(num_samples)
+                records["anchor"].append(idx.reference.detach())
+                records["positive"].append(idx.positive.detach())
+                records["negative"].append(idx.negative.detach())
+                return idx
+
+        loader = RecordedDiscreteLoader(
+            dataset=ds, num_steps=spec.updates, batch_size=256, prior="empirical"
+        )
+    else:
+        raise ValueError(spec.objective)
+
+    solver._set_fitted_params(loader)
+    solver.model.train()
+    outdir.mkdir(parents=True, exist_ok=True)
+    if any(outdir.iterdir()):
+        raise FileExistsError(
+            f"refusing to overwrite incomplete or unvalidated fit: {outdir}"
+        )
+    started = time.time()
+    with (outdir / "fit_started.json").open("x", encoding="utf-8") as handle:
+        json.dump(
+            {
+                "fit_spec": spec.as_dict(),
+                "started_unix_seconds": started,
+                "base_identity": identity,
+            },
+            handle,
+        )
+    if torch.cuda.is_available():
+        torch.cuda.reset_peak_memory_stats()
+    checkpoints = []
+    checkpoint_steps = {1, 250, 500, 750, spec.updates}
+    if spec.updates >= 1000:
+        checkpoint_steps.add(1000)
+    for step, batch in enumerate(loader, start=1):
+        solver.step(batch)
+        if step in checkpoint_steps:
+            ckpt = outdir / f"checkpoint_step{step:04d}.pth"
+            torch.save(solver.state_dict(), ckpt)
+            checkpoints.append(str(ckpt))
+    losses = []
+    for i, total in enumerate(solver.log["total"]):
+        row = {"step": i + 1, "total": float(total)}
+        for key in ("pos", "neg", "temperature"):
+            if key in solver.log and len(solver.log[key]) > i:
+                row[key] = float(solver.log[key][i])
+        losses.append(row)
+    training_wall_seconds = time.time() - started
+    if len(losses) != spec.updates or not all(
+        math.isfinite(r["total"]) for r in losses
+    ):
+        raise RuntimeError("incomplete or nonfinite optimization trace")
+    write_csv(outdir / "loss_trace.csv", losses)
+    torch.save(solver.state_dict(), outdir / "checkpoint_final.pth")
+    Ztr = embed_rows(solver, scaler, Xtr, device=device, dim=spec.dim)
+    Zev = embed_rows(solver, scaler, Xev, device=device, dim=spec.dim)
+    reloaded = make_solver(Xtr.shape[1], spec.dim, 32, 3e-4, device)
+    reloaded.load_state_dict(
+        torch.load(outdir / "checkpoint_final.pth", map_location=device), strict=True
+    )
+    reloaded.n_features = Xtr.shape[1]
+    Zev_reload = embed_rows(reloaded, scaler, Xev, device=device, dim=spec.dim)
+    C = normalized_logistic_c(spec.rows_per_class)
+    ptr, pev, clf, zscaler = _fit_logreg_with_c(Ztr, ytr, Zev, yev, C=C)
+    train_metrics = weighted_binary_metrics(ytr, ptr, exact_class_weights(ytr))
+    eval_metrics = weighted_binary_metrics(yev, pev, wev)
+    metrics_rows = [
+        {"split": "train_sampled", **spec.as_dict(), "decoder_C": C, **train_metrics},
+        {"split": eval_split_name, **spec.as_dict(), "decoder_C": C, **eval_metrics},
+    ]
+    pred_rows = []
+    pred_rows.extend(
+        exact_prediction_rows(
+            prefix={"split": "train_sampled", **spec.as_dict(), "decoder_C": C},
+            y=ytr,
+            prob=ptr,
+            weights=exact_class_weights(ytr),
+        )
+    )
+    pred_rows.extend(
+        exact_prediction_rows(
+            prefix={"split": eval_split_name, **spec.as_dict(), "decoder_C": C},
+            y=yev,
+            prob=pev,
+            weights=wev,
+        )
+    )
+    exposures = summarize_loader_exposures(
+        {k: [x.detach().cpu().numpy() for x in v] for k, v in records.items()},
+        _row_sources_from_build_manifest(
+            manifest, split="train", rows_per_class=spec.rows_per_class
+        ),
+        ytr,
+        Xtr.shape[2],
+    )
+    identity_payload = cebra_fit_identity(
+        spec=spec,
+        Xtr=Xtr,
+        ytr=ytr,
+        manifest=manifest,
+        Xev=Xev,
+        yev=yev,
+        wev=wev,
+        eval_manifest=eval_manifest,
+        base_identity=identity,
+    )
+    info = {
+        "fit_spec": spec.as_dict(),
+        "fit_spec_hash": stable_hash(spec.as_dict()),
+        "fit_identity": identity_payload,
+        "fit_identity_hash": stable_hash(identity_payload),
+        "fit_dir": str(outdir),
+        "device": device,
+        "architecture": str(solver.model),
+        "training_wall_seconds": training_wall_seconds,
+        "decoder_C": C,
+        "loss_rows": len(losses),
+        "checkpoints": checkpoints,
+        "metrics": metrics_rows,
+        "exposures": exposures,
+        "save_load_max_abs_embedding_diff": float(np.max(np.abs(Zev - Zev_reload))),
+        "peak_allocated_bytes": int(torch.cuda.max_memory_allocated())
+        if torch.cuda.is_available()
+        else 0,
+        "peak_reserved_bytes": int(torch.cuda.max_memory_reserved())
+        if torch.cuda.is_available()
+        else 0,
+        "input_policy": "CEBRA saw raw count bins after train-only StandardScaler; PCA not used upstream",
+    }
+    np.savez_compressed(
+        outdir / "embeddings_predictions_decoder.npz",
+        Z_train=Ztr,
+        Z_validation=Zev,
+        y_train=ytr,
+        y_validation=yev,
+        validation_weights=wev,
+        decoder_coef=clf.coef_,
+        decoder_intercept=clf.intercept_,
+        neural_scaler_mean=np.asarray(scaler.mean_, dtype=float),
+        neural_scaler_scale=np.asarray(scaler.scale_, dtype=float),
+        decoder_scaler_mean=np.asarray(zscaler.mean_, dtype=float),
+        decoder_scaler_scale=np.asarray(zscaler.scale_, dtype=float),
+    )
+    write_csv(outdir / "metrics.csv", metrics_rows)
+    write_csv(outdir / "predictions.csv", pred_rows)
+    write_csv(outdir / "generated_assembly_manifest.csv", manifest)
+    write_csv(outdir / "exact_evaluation_manifest.csv", eval_manifest)
+    if (
+        not math.isfinite(info["save_load_max_abs_embedding_diff"])
+        or info["save_load_max_abs_embedding_diff"] > 1e-6
+    ):
+        raise RuntimeError("checkpoint reload did not preserve embeddings")
+    info["wall_seconds"] = time.time() - started
+    info["artifact_sha256"] = {
+        p.name: sha256_file(p) for p in outdir.iterdir() if p.is_file()
+    }
+    write_json(outdir / "fit_info.json", info)
+    return info
+
+
+def validate_completed_cebra_fit(fit_dir: Path, identity_hash: str) -> dict[str, Any]:
+    """A completion receipt is valid only with all of its immutable artifacts."""
+    info = json.loads((fit_dir / "fit_info.json").read_text(encoding="utf-8"))
+    if info.get("fit_identity_hash") != identity_hash:
+        raise ValueError("completed fit identity mismatch")
+    hashes = info.get("artifact_sha256", {})
+    required = {
+        "checkpoint_final.pth",
+        "embeddings_predictions_decoder.npz",
+        "loss_trace.csv",
+        "metrics.csv",
+        "predictions.csv",
+        "generated_assembly_manifest.csv",
+        "exact_evaluation_manifest.csv",
+    }
+    if not required <= hashes.keys():
+        raise ValueError("completed fit lacks required artifact hashes")
+    for name, digest in hashes.items():
+        if sha256_file(fit_dir / name) != digest:
+            raise ValueError(f"completed fit artifact changed: {fit_dir / name}")
+    with (fit_dir / "loss_trace.csv").open(newline="", encoding="utf-8") as handle:
+        losses = list(csv.DictReader(handle))
+    updates = int(info["fit_spec"]["updates"])
+    if [int(r["step"]) for r in losses] != list(range(1, updates + 1)):
+        raise ValueError("completed fit has missing or duplicated optimizer steps")
+    if not all(math.isfinite(float(r["total"])) for r in losses):
+        raise ValueError("completed fit has nonfinite losses")
+    difference = float(info["save_load_max_abs_embedding_diff"])
+    if not math.isfinite(difference) or difference > 1e-6:
+        raise ValueError("completed fit failed checkpoint parity")
+    return info
+
+
+def cebra_prefix_parity_smoke(
+    output_dir: Path, *, short_steps: int = 2, long_steps: int = 4
+) -> dict[str, Any]:
+    """Synthetic-only CEBRA smoke check: same seed, short prefix equals long prefix."""
+    import torch
+
+    rng = np.random.default_rng(0)
+    X = rng.normal(size=(8, 3, 4)).astype("float32")
+    y = np.array([0] * 4 + [1] * 4, dtype=int)
+    arrays = {"train": (X, y), "validation": (X.copy(), y.copy())}
+    manifest = [
+        {
+            "split": "train",
+            "label": INT_TO_LABEL[int(y[row])],
+            "pseudo_row": str(row if y[row] == 0 else row - 4),
+            "session_id": "synthetic_session",
+            "source_trial_id": f"synthetic_source_{row}",
+        }
+        for row in range(8)
+    ]
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    short = CebraFitSpec("cebra_time", 2, 4, short_steps, 0, 123, "synthetic_smoke")
+    long = CebraFitSpec("cebra_time", 2, 4, long_steps, 0, 123, "synthetic_smoke")
+    short_info = run_one_cebra_fit_with_exposure(
+        arrays, manifest, short, output_dir / "synthetic_cebra_short", device=device
+    )
+    long_info = run_one_cebra_fit_with_exposure(
+        arrays, manifest, long, output_dir / "synthetic_cebra_long", device=device
+    )
+    short_losses = [
+        float(r["total"])
+        for r in csv.DictReader(
+            (output_dir / "synthetic_cebra_short" / "loss_trace.csv").open()
+        )
+    ]
+    long_losses = [
+        float(r["total"])
+        for r in csv.DictReader(
+            (output_dir / "synthetic_cebra_long" / "loss_trace.csv").open()
+        )
+    ]
+    diff = float(
+        np.max(np.abs(np.asarray(short_losses) - np.asarray(long_losses[:short_steps])))
+    )
+    out = {
+        "label": "software smoke test only; synthetic CEBRA, not biological fitting",
+        "device": device,
+        "short_steps": short_steps,
+        "long_steps": long_steps,
+        "prefix_loss_max_abs_diff": diff,
+        "short_fit_hash": short_info["fit_spec_hash"],
+        "long_fit_hash": long_info["fit_spec_hash"],
+        "short_save_load_max_abs_embedding_diff": short_info[
+            "save_load_max_abs_embedding_diff"
+        ],
+        "long_save_load_max_abs_embedding_diff": long_info[
+            "save_load_max_abs_embedding_diff"
+        ],
+    }
+    write_json(output_dir / "synthetic_cebra_prefix_parity.json", out)
+    return out
+
+
+# ---------------------------------------------------------------------------
+# Track C: guarded development-count export and per-unit endpoint/time/exposure
+# logistic models. Export uses SplitFilteredAccess only and is review-gated.
+
+
+def truthy(value: str | bool | int | None) -> bool:
+    if isinstance(value, bool):
+        return value
+    if value is None:
+        return False
+    return str(value).strip().lower() in {"1", "true", "yes", "y"}
+
+
+def component_tokens(value: str) -> set[str]:
+    if not value:
+        return set()
+    tokens: set[str] = set()
+    for part in value.replace(",", ";").split(";"):
+        part = part.strip()
+        if part:
+            tokens.add(part)
+    return tokens
+
+
+def route_signature_tokens(value: str) -> list[str]:
+    if not value:
+        return []
+    return [part.strip() for part in value.split(">") if part.strip()]
+
+
+def target_label_column(target_mode: str) -> str:
+    if target_mode == "component_label":
+        return "component_label"
+    if target_mode in TRACK_C_TARGETS:
+        return f"{target_mode}_component_label"
+    raise ValueError(f"unknown target mode {target_mode!r}")
+
+
+def component_for_target(
+    target_mode: str,
+    *,
+    primary_component: str = PRIMARY_COMPONENT,
+    supported_middle_component: str = SUPPORTED_MIDDLE_COMPONENT,
+) -> str:
+    if target_mode == "supported_middle":
+        return supported_middle_component
+    if target_mode in {"middle", "anywhere", "component_label"}:
+        return primary_component
+    raise ValueError(f"unknown target mode {target_mode!r}")
+
+
+def presence_scope_for_target(target_mode: str) -> str:
+    if target_mode == "anywhere":
+        return "anywhere"
+    if target_mode in {"middle", "supported_middle", "component_label"}:
+        return "middle"
+    raise ValueError(f"unknown target mode {target_mode!r}")
+
+
+def component_label_from_trial_mapping_row(
+    row: Mapping[str, str], *, component_id: str, target_mode: str
+) -> str | None:
+    if target_mode not in TRACK_C_TARGETS:
+        raise ValueError(
+            f"target_mode must be one of {TRACK_C_TARGETS}; got {target_mode!r}"
+        )
+    middle_present = component_id in component_tokens(
+        row.get("middle_directed_components", "")
+    )
+    anywhere_present = component_id in set(
+        route_signature_tokens(row.get("route_signature", ""))
+    )
+    complete = truthy(row.get("complete_directed_path_coverage"))
+    absence_allowed = truthy(row.get("absence_labels_allowed"))
+    present = (
+        middle_present
+        if presence_scope_for_target(target_mode) == "middle"
+        else anywhere_present
+    )
+    if present:
+        return "present"
+    if complete and absence_allowed:
+        return "absent"
+    return None
+
+
+def track_c_labels_from_trial_mapping_row(
+    row: Mapping[str, str],
+    *,
+    primary_component: str = PRIMARY_COMPONENT,
+    supported_middle_component: str = SUPPORTED_MIDDLE_COMPONENT,
+) -> dict[str, str] | None:
+    labels: dict[str, str] = {}
+    for target in TRACK_C_TARGETS:
+        component = component_for_target(
+            target,
+            primary_component=primary_component,
+            supported_middle_component=supported_middle_component,
+        )
+        label = component_label_from_trial_mapping_row(
+            row, component_id=component, target_mode=target
+        )
+        if label is None:
+            return None
+        labels[target_label_column(target)] = label
+    return labels
+
+
+def behavior_support_funnel_from_allowlist(
+    rows: Sequence[Mapping[str, str]],
+    *,
+    target_mode: str = "component_label",
+    min_context_class_train: int = 3,
+    min_unit_train_sources: int = 20,
+) -> dict[str, Any]:
+    label_col = target_label_column(target_mode)
+    by_context_label: dict[tuple[str, str, str], set[str]] = defaultdict(set)
+    for row in rows:
+        if row["split"] != "train":
+            continue
+        label = row.get(label_col, "")
+        if label not in LABELS:
+            raise ValueError(f"missing/invalid required target column {label_col}")
+        by_context_label[(row["session_id"], row["endpoint_pair"], label)].add(
+            row["source_trial_id"]
+        )
+    contexts = sorted({(sess, endpoint) for sess, endpoint, _lab in by_context_label})
+    eligible_contexts = [
+        (sess, endpoint)
+        for sess, endpoint in contexts
+        if all(
+            len(by_context_label[(sess, endpoint, label)]) >= min_context_class_train
+            for label in LABELS
+        )
+    ]
+    by_session_sources: dict[str, set[str]] = defaultdict(set)
+    for sess, endpoint in eligible_contexts:
+        for label in LABELS:
+            by_session_sources[sess].update(by_context_label[(sess, endpoint, label)])
+    session_rows = [
+        {
+            "session_id": sess,
+            "eligible_context_count": sum(
+                1 for s, _e in eligible_contexts if s == sess
+            ),
+            "eligible_train_source_count": len(sources),
+            "unit_model_train_source_gate_met": len(sources) >= min_unit_train_sources,
+        }
+        for sess, sources in sorted(by_session_sources.items())
+    ]
+    return {
+        "target_mode": target_mode,
+        "context_min_train_sources_per_class": min_context_class_train,
+        "unit_model_train_source_gate": min_unit_train_sources,
+        "eligible_context_count": len(eligible_contexts),
+        "eligible_session_count": len(by_session_sources),
+        "eligible_train_source_count_total": sum(
+            int(r["eligible_train_source_count"]) for r in session_rows
+        ),
+        "qualified_train_source_count_total": sum(
+            int(r["eligible_train_source_count"])
+            for r in session_rows
+            if r["unit_model_train_source_gate_met"]
+        ),
+        "sessions_meeting_unit_source_gate": sum(
+            int(r["unit_model_train_source_gate_met"]) for r in session_rows
+        ),
+        "sessions_with_behavior_contexts_below_unit_source_gate": sum(
+            int(not r["unit_model_train_source_gate_met"]) for r in session_rows
+        ),
+        "session_funnel": session_rows,
+        "scope_note": "behavior/support-only pre-cell-observability funnel; the >=20 gate is this per-unit model's fixed training-source threshold, not a universal minimum",
+    }
+
+
+def _read_trial_mapping_rows(path: Path) -> list[dict[str, str]]:
+    validate_under_accepted(path)
+    with path.open(newline="", encoding="utf-8") as handle:
+        reader = csv.DictReader(handle)
+        if reader.fieldnames is None:
+            raise ValueError(f"missing CSV header: {path}")
+        missing = REQUIRED_TRIAL_MAPPING_COLUMNS - set(reader.fieldnames)
+        if missing:
+            raise ValueError(f"trial_mapping_metrics missing columns {sorted(missing)}")
+        return list(reader)
+
+
+def rank_middle_components_from_trial_mapping(
+    path: Path,
+    *,
+    allowed_splits: Iterable[str] = ("train", "validation"),
+    min_context_class_train: int = 3,
+    min_unit_train_sources: int = 20,
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    raw_rows = _read_trial_mapping_rows(path)
+    allowed = set(allowed_splits)
+    dev_rows = [r for r in raw_rows if r["split"] in allowed]
+    catalog = path.parent / "static_corridor_directed_components.csv"
+    with catalog.open(newline="", encoding="utf-8") as handle:
+        components = sorted({r["component_id"] for r in csv.DictReader(handle)})
+    if len(components) != 24:
+        raise ValueError("expected the fixed 24-component static geometry catalog")
+    ranked: list[dict[str, Any]] = []
+    for component in components:
+        label_rows = []
+        for row in dev_rows:
+            label = component_label_from_trial_mapping_row(
+                row, component_id=component, target_mode="middle"
+            )
+            if label is None:
+                continue
+            label_rows.append(
+                {
+                    "source_trial_id": row["source_trial_id"],
+                    "session_id": row["session_id"],
+                    "split": row["split"],
+                    "trial_index": row["trial_index"],
+                    "endpoint_pair": row["endpoint_pair"],
+                    "component_label": label,
+                }
+            )
+        funnel = behavior_support_funnel_from_allowlist(
+            label_rows,
+            min_context_class_train=min_context_class_train,
+            min_unit_train_sources=min_unit_train_sources,
+        )
+        train_counts = Counter(
+            r["component_label"] for r in label_rows if r["split"] == "train"
+        )
+        ranked.append(
+            {
+                "component_id": component,
+                "sessions_meeting_unit_source_gate": funnel[
+                    "sessions_meeting_unit_source_gate"
+                ],
+                "eligible_train_source_count_total": funnel[
+                    "eligible_train_source_count_total"
+                ],
+                "qualified_train_source_count_total": funnel[
+                    "qualified_train_source_count_total"
+                ],
+                "eligible_context_count": funnel["eligible_context_count"],
+                "eligible_session_count": funnel["eligible_session_count"],
+                "train_present_sources": train_counts.get("present", 0),
+                "train_absent_sources": train_counts.get("absent", 0),
+            }
+        )
+    ranked.sort(
+        key=lambda r: (
+            -int(r["sessions_meeting_unit_source_gate"]),
+            -int(r["qualified_train_source_count_total"]),
+            str(r["component_id"]),
+        )
+    )
+    for i, row in enumerate(ranked, start=1):
+        row["rank"] = i
+    manifest = {
+        "stage": "track_c_supported_middle_behavior_only_target_ranking",
+        "component_count": len(ranked),
+        "selection_rule": "rank the fixed 24 static directed components by sessions with >=20 eligible training sources after context >=3/class, then training sources in those qualifying sessions, then component ID; training behavior only, no neural response values",
+        "selected_supported_middle_component_id": ranked[0]["component_id"]
+        if ranked
+        else None,
+        "expected_supported_middle_component_id": SUPPORTED_MIDDLE_COMPONENT,
+        "selected_matches_expected": bool(
+            ranked and ranked[0]["component_id"] == SUPPORTED_MIDDLE_COMPONENT
+        ),
+        "top5": ranked[:5],
+        "direction_source_note": "Prefit behavior audit found selected-edge traversals use direction_source=adjacent_nodes; no extra direction filter added.",
+        "route_signature_caveat": "route_signature is treated as a sequence of inferred corridor directions, not a guaranteed exact graph walk; binary selected-edge evidence is stronger than complete-route reconstruction.",
+        "source_csv_sha256": sha256_file(path),
+    }
+    return ranked, manifest
+
+
+def load_component_allowlist_from_trial_mapping(
+    path: Path,
+    *,
+    component_id: str = PRIMARY_COMPONENT,
+    target_mode: str = "middle",
+    allowed_splits: Iterable[str] = ("train", "validation"),
+) -> tuple[list[dict[str, str]], dict[str, Any]]:
+    raw_rows = _read_trial_mapping_rows(path)
+    allowed = set(allowed_splits)
+    component_id = component_for_target(target_mode, primary_component=component_id)
+    rows: list[dict[str, str]] = []
+    skipped = Counter()
+    outside_middle = 0
+    for row in raw_rows:
+        if row["split"] not in allowed:
+            skipped["non_development_split"] += 1
+            continue
+        label = component_label_from_trial_mapping_row(
+            row, component_id=component_id, target_mode=target_mode
+        )
+        if label is None:
+            skipped["absence_not_allowed_or_incomplete"] += 1
+            continue
+        middle_present = component_id in component_tokens(
+            row["middle_directed_components"]
+        )
+        anywhere_present = component_id in set(
+            route_signature_tokens(row["route_signature"])
+        )
+        outside_middle += int(anywhere_present and not middle_present)
+        rows.append(
+            {
+                "source_trial_id": row["source_trial_id"],
+                "session_id": row["session_id"],
+                "split": row["split"],
+                "trial_index": row["trial_index"],
+                "start_id": row["start"],
+                "goal_id": row["goal"],
+                "endpoint_pair": row["endpoint_pair"],
+                "component_id": component_id,
+                "target_mode": target_mode,
+                "component_label": label,
+                "middle_component_label": "present" if middle_present else "absent",
+                "anywhere_component_label": "present" if anywhere_present else "absent",
+                "complete_directed_path_coverage": row[
+                    "complete_directed_path_coverage"
+                ],
+                "absence_labels_allowed": row["absence_labels_allowed"],
+                "route_signature": row["route_signature"],
+                "middle_directed_components": row["middle_directed_components"],
+                "qc_flags": row.get("qc_flags", ""),
+            }
+        )
+    seen = Counter(r["source_trial_id"] for r in rows)
+    dup = sorted(k for k, n in seen.items() if n > 1)
+    if dup:
+        raise ValueError(f"duplicate source_trial_id in allowlist, first={dup[:5]}")
+    manifest = {
+        "component_id": component_id,
+        "target_mode": target_mode,
+        "source_count": len(rows),
+        "label_counts": dict(Counter(r["component_label"] for r in rows)),
+        "split_label_counts": {
+            "|".join(k): v
+            for k, v in Counter(
+                (r["split"], r["component_label"]) for r in rows
+            ).items()
+        },
+        "outside_middle_source_count": outside_middle,
+        "behavior_support_funnel": behavior_support_funnel_from_allowlist(rows),
+        "skipped": dict(skipped),
+        "source_csv_sha256": sha256_file(path),
+        "policy": "middle targets use middle_directed_components; anywhere uses route_signature; absence requires complete_directed_path_coverage and absence_labels_allowed",
+    }
+    return rows, manifest
+
+
+def load_track_c_family_allowlist_from_trial_mapping(
+    path: Path,
+    *,
+    primary_component: str = PRIMARY_COMPONENT,
+    supported_middle_component: str = SUPPORTED_MIDDLE_COMPONENT,
+    allowed_splits: Iterable[str] = ("train", "validation"),
+) -> tuple[list[dict[str, str]], dict[str, Any]]:
+    raw_rows = _read_trial_mapping_rows(path)
+    allowed = set(allowed_splits)
+    rows: list[dict[str, str]] = []
+    skipped = Counter()
+    for row in raw_rows:
+        if row["split"] not in allowed:
+            skipped["non_development_split"] += 1
+            continue
+        labels = track_c_labels_from_trial_mapping_row(
+            row,
+            primary_component=primary_component,
+            supported_middle_component=supported_middle_component,
+        )
+        if labels is None:
+            skipped["not_labelable_for_all_targets"] += 1
+            continue
+        rows.append(
+            {
+                "source_trial_id": row["source_trial_id"],
+                "session_id": row["session_id"],
+                "split": row["split"],
+                "trial_index": row["trial_index"],
+                "start_id": row["start"],
+                "goal_id": row["goal"],
+                "endpoint_pair": row["endpoint_pair"],
+                "component_id": primary_component,
+                "primary_component_id": primary_component,
+                "supported_middle_component_id": supported_middle_component,
+                "target_mode": "track_c_three_target_family",
+                "component_label": labels["middle_component_label"],
+                **labels,
+                "complete_directed_path_coverage": row[
+                    "complete_directed_path_coverage"
+                ],
+                "absence_labels_allowed": row["absence_labels_allowed"],
+                "route_signature": row["route_signature"],
+                "middle_directed_components": row["middle_directed_components"],
+                "qc_flags": row.get("qc_flags", ""),
+            }
+        )
+    seen = Counter(r["source_trial_id"] for r in rows)
+    dup = sorted(k for k, n in seen.items() if n > 1)
+    if dup:
+        raise ValueError(f"duplicate source_trial_id in allowlist, first={dup[:5]}")
+    label_counts = {
+        target: dict(Counter(r[target_label_column(target)] for r in rows))
+        for target in TRACK_C_TARGETS
+    }
+    split_label_counts = {
+        target: {
+            "|".join(k): v
+            for k, v in Counter(
+                (r["split"], r[target_label_column(target)]) for r in rows
+            ).items()
+        }
+        for target in TRACK_C_TARGETS
+    }
+    funnels = {
+        target: behavior_support_funnel_from_allowlist(rows, target_mode=target)
+        for target in TRACK_C_TARGETS
+    }
+    manifest = {
+        "stage": "track_c_three_target_development_allowlist",
+        "source_count": len(rows),
+        "primary_component_id": primary_component,
+        "supported_middle_component_id": supported_middle_component,
+        "target_modes": list(TRACK_C_TARGETS),
+        "label_counts_by_target": label_counts,
+        "split_label_counts_by_target": split_label_counts,
+        "behavior_support_funnel_by_target": funnels,
+        "skipped": dict(skipped),
+        "source_csv_sha256": sha256_file(path),
+        "target_policy": "original middle/anywhere use D_N_R_T__N_R_M; supported_middle uses behavior-ranked D_N_C_M__N_C_B with middle occurrence semantics; no neural response values used",
+        "null_policy": "future Track-C inference uses one joint source-label permutation over all three target labels within each stratum; primary middle=>anywhere is preserved because observed joint tuples are permuted intact",
+        "direction_source_note": "Prefit behavior audit found all selected-edge traversals use direction_source=adjacent_nodes; no extra direction filter added.",
+        "route_signature_caveat": "route_signature is a sequence of inferred corridor directions, not a guaranteed exact graph walk; binary selected-edge evidence is stronger than full-route reconstruction.",
+    }
+    return rows, manifest
+
+
+def build_component_allowlist(args: argparse.Namespace) -> dict[str, Any]:
+    args.output_dir.mkdir(parents=True, exist_ok=True)
+    ranking_rows, ranking_manifest = rank_middle_components_from_trial_mapping(
+        args.trial_mapping_metrics
+    )
+    if (
+        ranking_manifest["selected_supported_middle_component_id"]
+        != args.supported_middle_component
+    ):
+        raise ValueError(
+            "behavior-only supported_middle target selection no longer matches the frozen amendment"
+        )
+    rows, manifest = load_track_c_family_allowlist_from_trial_mapping(
+        args.trial_mapping_metrics,
+        primary_component=args.component_id,
+        supported_middle_component=args.supported_middle_component,
+    )
+    write_csv(
+        args.output_dir / "track_c_supported_middle_component_ranking.csv", ranking_rows
+    )
+    write_json(
+        args.output_dir / "track_c_supported_middle_component_ranking_manifest.json",
+        ranking_manifest,
+    )
+    write_csv(args.output_dir / "development_component_allowlist.csv", rows)
+    write_json(
+        args.output_dir / "development_component_allowlist_manifest.json", manifest
+    )
+    combined = {
+        "stage": "track_c_prefit_three_target_behavior_allowlist",
+        "primary_component_id": args.component_id,
+        "supported_middle_component_id": args.supported_middle_component,
+        "target_modes": list(TRACK_C_TARGETS),
+        "supported_middle_target_selection": ranking_manifest,
+        "allowlist_manifest": manifest,
+        "parent_amendment": "supported_middle target added from frozen train-behavior-only 24-component support ranking; original middle/anywhere retained; no neural performance used",
+    }
+    write_json(
+        args.output_dir / "development_component_allowlists_manifest.json", combined
+    )
+    return combined
+
+
+def audit_target_semantics(
+    *,
+    trial_mapping_metrics: Path,
+    source_membership_csv: Path,
+    primary_npz: Path,
+    output_dir: Path,
+    component_id: str = PRIMARY_COMPONENT,
+) -> dict[str, Any]:
+    """Behavior-label semantics audit; no neural values, fits, or importer tables."""
+    validate_under_accepted(trial_mapping_metrics)
+    validate_under_accepted(source_membership_csv)
+    validate_under_accepted(primary_npz)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    primary_sources = {str(x) for x in np.load(primary_npz)["source_trial_ids"]}
+    needed_sources = set(primary_sources)
+    membership_rows = []
+    with source_membership_csv.open(newline="", encoding="utf-8") as handle:
+        reader = csv.DictReader(handle)
+        for row in reader:
+            if (
+                row["selected_component_id"] == component_id
+                and row["endpoint_pair"] == PRIMARY_ENDPOINT
+            ):
+                membership_rows.append(row)
+                needed_sources.add(row["source_trial_id"])
+    trial_by_source: dict[str, dict[str, str]] = {}
+    with trial_mapping_metrics.open(newline="", encoding="utf-8") as handle:
+        reader = csv.DictReader(handle)
+        if reader.fieldnames is None:
+            raise ValueError(f"missing CSV header: {trial_mapping_metrics}")
+        missing = REQUIRED_TRIAL_MAPPING_COLUMNS - set(reader.fieldnames)
+        if missing:
+            raise ValueError(f"trial_mapping_metrics missing columns {sorted(missing)}")
+        for row in reader:
+            sid = row["source_trial_id"]
+            if sid in needed_sources:
+                trial_by_source[sid] = row
+    source_rows: list[dict[str, Any]] = []
+    for m in membership_rows:
+        sid = m["source_trial_id"]
+        row = trial_by_source.get(sid)
+        if row is None:
+            raise ValueError(f"membership source missing from trial mapping: {sid}")
+        middle_present = component_id in component_tokens(
+            row["middle_directed_components"]
+        )
+        route_tokens = route_signature_tokens(row["route_signature"])
+        anywhere_present = component_id in set(route_tokens)
+        old_status = m["component_status"]
+        if old_status == "present" and not middle_present:
+            bucket = "old_present_without_middle_in_trial_mapping"
+        elif old_status == "present":
+            bucket = "middle_present"
+        elif anywhere_present:
+            bucket = "old_absent_anywhere_outside_middle"
+        else:
+            bucket = "old_absent_never_component"
+        source_rows.append(
+            {
+                "source_trial_id": sid,
+                "session_id": m["session_id"],
+                "split": m["split"],
+                "old_component_status": old_status,
+                "middle_component_label": "present" if middle_present else "absent",
+                "anywhere_component_label": "present" if anywhere_present else "absent",
+                "semantic_bucket": bucket,
+                "route_token_count": len(route_tokens),
+                "route_signature": row["route_signature"],
+                "middle_directed_components": row["middle_directed_components"],
+                "qc_flags": row.get("qc_flags", ""),
+                "in_primary_npz": sid in primary_sources,
+            }
+        )
+    session_rows = []
+    for key, n in sorted(
+        Counter(
+            (
+                r["session_id"],
+                r["split"],
+                r["old_component_status"],
+                r["semantic_bucket"],
+                r["in_primary_npz"],
+            )
+            for r in source_rows
+        ).items()
+    ):
+        sess, split, old_status, bucket, in_primary = key
+        session_rows.append(
+            {
+                "session_id": sess,
+                "split": split,
+                "old_component_status": old_status,
+                "semantic_bucket": bucket,
+                "in_primary_npz": in_primary,
+                "source_count": n,
+            }
+        )
+    route_rows = []
+    for key, n in Counter(
+        (r["old_component_status"], r["semantic_bucket"], r["route_signature"])
+        for r in source_rows
+    ).most_common():
+        old_status, bucket, route = key
+        route_rows.append(
+            {
+                "old_component_status": old_status,
+                "semantic_bucket": bucket,
+                "route_signature": route,
+                "source_count": n,
+            }
+        )
+    primary_rows = [r for r in source_rows if r["in_primary_npz"]]
+    summary = {
+        "stage": "phase1_behavior_target_semantics_audit_no_fits",
+        "component_id": component_id,
+        "endpoint_pair": PRIMARY_ENDPOINT,
+        "target_correction": "old absent means not middle-occurrence; some old-absent sources contain the component outside the ordinal middle slot",
+        "source_count": len(source_rows),
+        "primary_npz_source_count": len(primary_sources),
+        "bucket_counts": dict(Counter(r["semantic_bucket"] for r in source_rows)),
+        "split_status_bucket_counts": {
+            "|".join(map(str, k)): v
+            for k, v in Counter(
+                (r["split"], r["old_component_status"], r["semantic_bucket"])
+                for r in source_rows
+            ).items()
+        },
+        "primary_npz_split_status_bucket_counts": {
+            "|".join(map(str, k)): v
+            for k, v in Counter(
+                (r["split"], r["old_component_status"], r["semantic_bucket"])
+                for r in primary_rows
+            ).items()
+        },
+        "old_absent_anywhere_route_token_count_counts": dict(
+            Counter(
+                str(r["route_token_count"])
+                for r in source_rows
+                if r["semantic_bucket"] == "old_absent_anywhere_outside_middle"
+            )
+        ),
+        "qc_flag_counts": dict(Counter(r["qc_flags"] for r in source_rows)),
+        "anywhere_negative_train_counts_by_primary_session": {
+            sess: sum(
+                1
+                for r in primary_rows
+                if r["split"] == "train"
+                and r["session_id"] == sess
+                and r["anywhere_component_label"] == "absent"
+            )
+            for sess in sorted({r["session_id"] for r in primary_rows})
+        },
+        "interpretation_limit": "Complete V6 mapping is an operational route-label property, not verified complete behavioral capture or endpoint-semantics validation.",
+        "hashes": {
+            "trial_mapping_metrics_sha256": sha256_file(trial_mapping_metrics),
+            "source_membership_sha256": sha256_file(source_membership_csv),
+            "primary_npz_sha256": sha256_file(primary_npz),
+        },
+    }
+    write_csv(output_dir / "target_semantics_source_rows.csv", source_rows)
+    write_csv(output_dir / "target_semantics_session_counts.csv", session_rows)
+    write_csv(output_dir / "target_semantics_route_counts.csv", route_rows)
+    write_json(output_dir / "target_semantics_audit.json", summary)
+    write_target_semantics_diagram(
+        output_dir / "target_semantics_route_diagram.md", route_rows
+    )
+    return summary
+
+
+def write_target_semantics_diagram(
+    path: Path, route_rows: Sequence[Mapping[str, Any]]
+) -> None:
+    dominant = [r for r in route_rows if int(r["source_count"]) >= 50][:6]
+    lines = [
+        "# Target semantics route sketch",
+        "",
+        "Behavior-label inspection only; no neural response values or model fits.",
+        "Endpoint labels are inferred/provisional and remain unverified.",
+        "",
+    ]
+    for row in dominant:
+        route = str(row["route_signature"])
+        lines.append(
+            f"- {row['old_component_status']} / {row['semantic_bucket']} / n={row['source_count']}: `{route.replace('>', ' -> ')}`"
+        )
+    with _open_text_write(path) as handle:
+        handle.write("\n".join(lines) + "\n")
+
+
+def build_target_semantics_audit(args: argparse.Namespace) -> dict[str, Any]:
+    return audit_target_semantics(
+        trial_mapping_metrics=args.trial_mapping_metrics,
+        source_membership_csv=args.source_membership_csv,
+        primary_npz=args.primary_npz,
+        output_dir=args.output_dir,
+        component_id=args.component_id,
+    )
+
+
+def parse_nonnegative_integer(value: str, *, field: str) -> int:
+    try:
+        number = float(value)
+    except ValueError as exc:
+        raise ValueError(f"{field} is not numeric: {value!r}") from exc
+    if not math.isfinite(number) or number < 0 or not number.is_integer():
+        raise ValueError(f"{field} must be a nonnegative integer, got {value!r}")
+    return int(number)
+
+
+def selected_cell_scope_hash(cells: Iterable[str]) -> str:
+    blob = json.dumps(sorted(set(cells)), separators=(",", ":")).encode("utf-8")
+    return hashlib.sha256(blob).hexdigest()
+
+
+def _split_cell_list(value: str) -> set[str]:
+    return {part.strip() for part in value.split(";") if part.strip()}
+
+
+def load_selected_cell_ids(
+    path: Path,
+    *,
+    expected_scope_hash: str | None = SELECTED195_CELL_SCOPE_SHA256,
+    expected_count: int | None = 195,
+) -> set[str]:
+    if path.suffix == ".npz":
+        z = np.load(path)
+        if "cell_ids" not in z:
+            raise ValueError(f"selected-cell NPZ lacks cell_ids: {path}")
+        cells = {str(x) for x in z["cell_ids"]}
+    elif path.suffix == ".json":
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        if isinstance(payload, list):
+            cells = {str(x) for x in payload}
+        elif isinstance(payload, dict):
+            cells = set()
+            for key in ("selected_cell_ids", "cell_ids", "shared_observed_cell_ids"):
+                if isinstance(payload.get(key), list):
+                    cells = {str(x) for x in payload[key]}
+                    break
+            if not cells:
+                raise ValueError(
+                    f"selected-cell JSON lacks a recognized cell list: {path}"
+                )
+        else:
+            raise ValueError(f"selected-cell JSON lacks a recognized cell list: {path}")
+    else:
+        cells = set()
+        with _open_text(path) as handle:
+            reader = csv.DictReader(handle)
+            if reader.fieldnames is None:
+                raise ValueError(f"selected-cell CSV missing header: {path}")
+            if "cell_ids" in reader.fieldnames:
+                for row in reader:
+                    cells.update(_split_cell_list(row.get("cell_ids", "")))
+            elif "cell_id" in reader.fieldnames:
+                cells.update(row["cell_id"] for row in reader if row.get("cell_id"))
+            else:
+                raise ValueError(
+                    f"selected-cell CSV must contain cell_ids or cell_id: {path}"
+                )
+    scope_hash = selected_cell_scope_hash(cells)
+    if expected_count is not None and len(cells) != expected_count:
+        raise ValueError(
+            f"selected-cell scope must contain {expected_count} cells, got {len(cells)}"
+        )
+    if expected_scope_hash is not None and scope_hash != expected_scope_hash:
+        raise ValueError(
+            f"selected-cell scope hash mismatch: expected {expected_scope_hash}, got {scope_hash}"
+        )
+    return cells
+
+
+def require_columns(
+    rows: Sequence[Mapping[str, str]], columns: Iterable[str], *, label: str
+) -> None:
+    if not rows:
+        raise ValueError(f"{label} is empty")
+    missing = sorted(set(columns) - set(rows[0]))
+    if missing:
+        raise ValueError(f"{label} missing required columns {missing}")
+
+
+def export_development_cue_counts(
+    *,
+    import_dir: Path,
+    split_dir: Path,
+    allowlist_csv: Path,
+    selected_cells_path: Path,
+    output_dir: Path,
+    authorized_phase: str | None,
+    selected_scope_hash: str | None = SELECTED195_CELL_SCOPE_SHA256,
+    selected_scope_count: int | None = 195,
+) -> dict[str, Any]:
+    require_authorization(authorized_phase, "Track-C mixed-importer development export")
+    output_dir.mkdir(parents=True, exist_ok=True)
+    selected_cells = load_selected_cell_ids(
+        selected_cells_path,
+        expected_scope_hash=selected_scope_hash,
+        expected_count=selected_scope_count,
+    )
+    if not selected_cells:
+        raise ValueError("selected-cell allowlist is empty")
+    with allowlist_csv.open(newline="", encoding="utf-8") as handle:
+        allow_rows = list(csv.DictReader(handle))
+    require_columns(
+        allow_rows,
+        {
+            "source_trial_id",
+            "session_id",
+            "split",
+            "trial_index",
+            "endpoint_pair",
+            "start_id",
+            "goal_id",
+            "component_id",
+            "component_label",
+            "middle_component_label",
+            "anywhere_component_label",
+            "supported_middle_component_label",
+        },
+        label="component allowlist",
+    )
+    allow_by_source = {r["source_trial_id"]: r for r in allow_rows}
+    if len(allow_by_source) != len(allow_rows):
+        raise ValueError("allowlist has duplicate source_trial_id")
+    access = SplitFilteredAccess(
+        import_dir, split_dir, allowed_splits=("train", "validation")
+    )
+    header = set(access.table_header("cue_counts"))
+    missing = REQUIRED_CUE_COUNT_COLUMNS - header
+    if missing:
+        raise ValueError(f"cue_counts table missing required fields {sorted(missing)}")
+    exported: list[dict[str, Any]] = []
+    duplicate_keys: Counter[tuple[str, str]] = Counter()
+    skipped_unselected_cells = 0
+    finite_failures = []
+    split_session_mismatches = []
+    for row in access.iter_cue_counts():
+        sid = row["source_trial_id"]
+        if sid not in allow_by_source:
+            continue
+        cell_id = row["cell_id"]
+        if cell_id not in selected_cells:
+            skipped_unselected_cells += 1
+            continue
+        a = allow_by_source[sid]
+        row_session = row.get("session_id", a["session_id"])
+        if (
+            row["split"] != a["split"]
+            or row_session != a["session_id"]
+            or session_from_cell(cell_id) != a["session_id"]
+        ):
+            split_session_mismatches.append(
+                {
+                    "source_trial_id": sid,
+                    "row_split": row["split"],
+                    "allow_split": a["split"],
+                    "row_session": row_session,
+                    "allow_session": a["session_id"],
+                    "cell_session": session_from_cell(cell_id),
+                }
+            )
+            continue
+        try:
+            cue_count = parse_nonnegative_integer(
+                row["cue_spike_count"], field="cue_spike_count"
+            )
+            start = float(row["cue_window_start_ripple_s"])
+            end = float(row["cue_window_end_ripple_s"])
+        except ValueError as exc:
+            finite_failures.append(
+                {"source_trial_id": sid, "cell_id": cell_id, "reason": str(exc)}
+            )
+            continue
+        duration = end - start
+        if not math.isfinite(duration) or duration <= 0:
+            finite_failures.append(
+                {
+                    "source_trial_id": sid,
+                    "cell_id": cell_id,
+                    "reason": f"invalid duration {duration}",
+                }
+            )
+            continue
+        duplicate_keys[(sid, cell_id)] += 1
+        exported.append(
+            {
+                "source_trial_id": sid,
+                "session_id": a["session_id"],
+                "split": row["split"],
+                "trial_index": a["trial_index"],
+                "endpoint_pair": a["endpoint_pair"],
+                "start_id": a["start_id"],
+                "goal_id": a["goal_id"],
+                "component_id": a["component_id"],
+                "target_mode": a.get("target_mode", "both"),
+                "component_label": a["component_label"],
+                "middle_component_label": a["middle_component_label"],
+                "anywhere_component_label": a["anywhere_component_label"],
+                "supported_middle_component_label": a[
+                    "supported_middle_component_label"
+                ],
+                "primary_component_id": a.get(
+                    "primary_component_id", a["component_id"]
+                ),
+                "supported_middle_component_id": a.get(
+                    "supported_middle_component_id", SUPPORTED_MIDDLE_COMPONENT
+                ),
+                "cell_id": cell_id,
+                "cue_spike_count": cue_count,
+                "cue_duration_s": duration,
+                "candidate_recording_group": row.get("candidate_recording_group", ""),
+                "simultaneity_status": row.get("simultaneity_status", ""),
+                "qc_flags": a.get("qc_flags", ""),
+            }
+        )
+    duplicates = [f"{sid}|{cell}" for (sid, cell), n in duplicate_keys.items() if n > 1]
+    if duplicates:
+        raise ValueError(f"duplicate source/cell cue rows, first={duplicates[:5]}")
+    if finite_failures:
+        raise ValueError(
+            f"nonfinite/noninteger/invalid cue counts or exposure, first={finite_failures[:5]}"
+        )
+    if split_session_mismatches:
+        raise ValueError(
+            f"split/session/cell-session mismatches, first={split_session_mismatches[:5]}"
+        )
+    exported_sources = {str(r["source_trial_id"]) for r in exported}
+    missing_sources = sorted(set(allow_by_source) - exported_sources)
+    label_rows = list(allow_by_source.values())
+    write_csv(output_dir / "development_cue_counts.csv.gz", exported)
+    write_csv(output_dir / "development_component_labels.csv", label_rows)
+    manifest = {
+        "stage": "track_c_guarded_development_cue_count_export",
+        "policy": "SplitFilteredAccess streams mixed-split files and skips test rows; exported rows are development allowlist and selected-cell allowlist only",
+        "exported_count_rows": len(exported),
+        "exported_unique_source_count": len(exported_sources),
+        "exported_cell_count": len({r["cell_id"] for r in exported}),
+        "selected_scope_cell_count": len(selected_cells),
+        "selected_scope_hash": selected_cell_scope_hash(selected_cells),
+        "required_selected_scope_hash": selected_scope_hash
+        or "test_or_review_override",
+        "allowlist_source_count": len(allow_by_source),
+        "missing_allowlist_source_count": len(missing_sources),
+        "missing_allowlist_source_ids_first20": missing_sources[:20],
+        "skipped_unselected_cell_rows": skipped_unselected_cells,
+        "qc_flag_counts": dict(Counter(str(r.get("qc_flags", "")) for r in exported)),
+        "forbidden_rows_yielded": access.audit.as_dict()["forbidden_rows_yielded"],
+        "split_access_audit": access.audit.as_dict(),
+        "input_paths": {
+            "import_dir": str(import_dir),
+            "split_dir": str(split_dir),
+            "allowlist_csv": str(allowlist_csv),
+            "selected_cells_path": str(selected_cells_path),
+        },
+        "input_hashes": {
+            "allowlist_sha256": sha256_file(allowlist_csv),
+            "selected_cells_sha256": sha256_file(selected_cells_path),
+            "cue_counts_sha256": sha256_file(import_dir / "cue_counts.csv.gz"),
+            "source_trial_splits_sha256": sha256_file(
+                split_dir / "source_trial_splits.csv"
+            ),
+            "split_summary_sha256": sha256_file(split_dir / "split_summary.json")
+            if (split_dir / "split_summary.json").exists()
+            else "",
+        },
+    }
+    write_json(output_dir / "development_cue_counts_manifest.json", manifest)
+    return manifest
+
+
+def standardize_train_apply(
+    train_values: np.ndarray, values: np.ndarray
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    mean = np.nanmean(train_values, axis=0)
+    scale = np.nanstd(train_values, axis=0)
+    scale[~np.isfinite(scale) | (scale == 0)] = 1.0
+    return (values - mean) / scale, mean, scale
+
+
+def endpoint_center_slopes(
+    endpoint: Sequence[str],
+    slopes: np.ndarray,
+    endpoint_means: Mapping[str, np.ndarray],
+) -> tuple[np.ndarray, np.ndarray]:
+    slopes = np.asarray(slopes, dtype=float)
+    centered = np.zeros_like(slopes, dtype=float)
+    unseen = np.zeros(len(endpoint), dtype=bool)
+    for i, ep in enumerate(endpoint):
+        mean = endpoint_means.get(ep)
+        if mean is None:
+            unseen[i] = True
+        else:
+            centered[i] = slopes[i] - mean
+    return centered, unseen
+
+
+def _logistic_design(
+    endpoint: Sequence[str], slopes: np.ndarray, endpoint_levels: Sequence[str]
+) -> tuple[np.ndarray, np.ndarray]:
+    level_index = {v: i for i, v in enumerate(endpoint_levels)}
+    unseen = np.array([e not in level_index for e in endpoint], dtype=bool)
+    Xint = np.zeros((len(endpoint), len(endpoint_levels)), dtype=float)
+    for i, e in enumerate(endpoint):
+        if not unseen[i]:
+            Xint[i, level_index[e]] = 1.0
+    return np.c_[Xint, slopes], unseen
+
+
+def fit_endpoint_penalized_logistic(
+    y_train: np.ndarray,
+    endpoint_train: Sequence[str],
+    slopes_train: np.ndarray,
+    *,
+    penalty: float = 1.0,
+) -> PenalizedLogisticModel:
+    y = np.asarray(y_train, dtype=float)
+    if len(set(y.astype(int).tolist())) < 2:
+        raise ValueError("one-class training labels cannot fit logistic model")
+    endpoints = tuple(sorted(set(endpoint_train)))
+    endpoints_arr = np.asarray(endpoint_train)
+    slopes_train = np.asarray(slopes_train, dtype=float)
+    endpoint_means = {
+        ep: np.mean(slopes_train[endpoints_arr == ep], axis=0) for ep in endpoints
+    }
+    centered, unseen_center = endpoint_center_slopes(
+        endpoint_train, slopes_train, endpoint_means
+    )
+    if unseen_center.any():
+        raise AssertionError("training endpoint unexpectedly unseen during centering")
+    slopes_z, mean, scale = standardize_train_apply(centered, centered)
+    X, unseen = _logistic_design(endpoint_train, slopes_z, endpoints)
+    if unseen.any():
+        raise AssertionError("training endpoint unexpectedly unseen")
+    p = len(endpoints)
+
+    def objective(beta: np.ndarray) -> tuple[float, np.ndarray]:
+        eta = X @ beta
+        loss = float(
+            np.mean(np.logaddexp(0.0, eta) - y * eta)
+            + 0.5 * penalty * np.sum(beta[p:] ** 2)
+        )
+        residual = expit(eta) - y
+        grad = X.T @ residual / len(y)
+        grad[p:] += penalty * beta[p:]
+        return loss, grad
+
+    starts = np.zeros(X.shape[1], dtype=float)
+    # Endpoint-specific log-odds starts avoid needless L-BFGS wandering.
+    for i, endpoint in enumerate(endpoints):
+        vals = y[endpoints_arr == endpoint]
+        rate = float(np.clip(vals.mean(), 1e-4, 1 - 1e-4))
+        starts[i] = math.log(rate / (1 - rate))
+    res = minimize(
+        lambda b: objective(b)[0],
+        starts,
+        jac=lambda b: objective(b)[1],
+        method="L-BFGS-B",
+        options={"maxiter": 500},
+    )
+    return PenalizedLogisticModel(
+        endpoints,
+        endpoint_means,
+        mean,
+        scale,
+        np.asarray(res.x, dtype=float),
+        p,
+        penalty,
+        bool(res.success),
+        str(res.message),
+    )
+
+
+def predict_endpoint_penalized_logistic(
+    model: PenalizedLogisticModel, endpoint: Sequence[str], slopes: np.ndarray
+) -> tuple[np.ndarray, np.ndarray]:
+    slopes = np.asarray(slopes, dtype=float)
+    centered, unseen_center = endpoint_center_slopes(
+        endpoint, slopes, model.endpoint_slope_means
+    )
+    slopes_z = (centered - model.slope_mean) / model.slope_scale
+    X, unseen_design = _logistic_design(endpoint, slopes_z, model.endpoint_levels)
+    unseen = unseen_center | unseen_design
+    prob = expit(X @ model.coef)
+    return np.asarray(prob, dtype=float), unseen
+
+
+def per_unit_rows_from_export(
+    count_rows: Sequence[Mapping[str, str]], *, target_mode: str = "component_label"
+) -> dict[str, list[dict[str, Any]]]:
+    label_col = target_label_column(target_mode)
+    out: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    seen_source_cell: set[tuple[str, str]] = set()
+    source_records: dict[str, tuple[str, str, str, str, str, str, str]] = {}
+    for row in count_rows:
+        source = str(row["source_trial_id"])
+        cell = str(row["cell_id"])
+        key = (source, cell)
+        if key in seen_source_cell:
+            raise ValueError(
+                f"duplicate source/cell row in development counts: {source}|{cell}"
+            )
+        seen_source_cell.add(key)
+        try:
+            exposure = float(row["cue_duration_s"])
+            count = parse_nonnegative_integer(
+                str(row["cue_spike_count"]), field="cue_spike_count"
+            )
+            trial_index = float(row["trial_index"])
+        except (KeyError, ValueError) as exc:
+            raise ValueError(
+                f"invalid development count row for {source}|{cell}: {exc}"
+            ) from exc
+        if not math.isfinite(exposure) or exposure <= 0:
+            raise ValueError(f"cue_duration_s must be positive for {source}|{cell}")
+        label = row.get(label_col, "")
+        if label not in LABEL_TO_INT:
+            raise ValueError(
+                f"missing/invalid {label_col} for source {source}: {label!r}"
+            )
+        source_record = (
+            str(row["session_id"]),
+            str(row["split"]),
+            str(row["trial_index"]),
+            str(row["endpoint_pair"]),
+            str(row.get("middle_component_label", "")),
+            str(row.get("anywhere_component_label", "")),
+            str(row.get("supported_middle_component_label", "")),
+        )
+        if source in source_records and source_records[source] != source_record:
+            raise ValueError(f"inconsistent source-level metadata for {source}")
+        source_records[source] = source_record
+        r: dict[str, Any] = dict(row)
+        r["target_mode"] = target_mode
+        r["component_label"] = label
+        r["y"] = LABEL_TO_INT[label]
+        r["trial_index_float"] = trial_index
+        r["cue_duration_float"] = exposure
+        r["cue_spike_count_int"] = count
+        r["log_count_rate"] = math.log1p(count / exposure)
+        out[cell].append(r)
+    return out
+
+
+def eligible_contexts_train_only(
+    rows: Sequence[Mapping[str, Any]], *, min_per_class: int = 3
+) -> set[str]:
+    sources: dict[tuple[str, int], set[str]] = defaultdict(set)
+    for row in rows:
+        if row["split"] == "train":
+            sources[(str(row["endpoint_pair"]), int(row["y"]))].add(
+                str(row["source_trial_id"])
+            )
+    contexts = {endpoint for endpoint, _lab in sources}
+    return {
+        ctx
+        for ctx in contexts
+        if all(len(sources[(ctx, lab)]) >= min_per_class for lab in (0, 1))
+    }
+
+
+def safe_model_metrics(y: np.ndarray, prob: np.ndarray) -> dict[str, Any]:
+    y = np.asarray(y, dtype=int)
+    p = np.clip(np.asarray(prob, dtype=float), 1e-9, 1 - 1e-9)
+    pred = (p >= 0.5).astype(int)
+    out: dict[str, Any] = {
+        "n": int(len(y)),
+        "log_loss": float(log_loss(y, np.c_[1 - p, p], labels=[0, 1]))
+        if len(y)
+        else None,
+        "brier": float(brier_score_loss(y, p)) if len(y) else None,
+        "balanced_accuracy": None,
+        "auroc": None,
+        "positive_rate_true": float(np.mean(y)) if len(y) else None,
+        "positive_rate_pred": float(np.mean(pred)) if len(y) else None,
+    }
+    if len(y) and len(set(y.tolist())) == 2:
+        out["balanced_accuracy"] = float(balanced_accuracy_score(y, pred))
+        out["auroc"] = float(roc_auc_score(y, p))
+    return out
+
+
+def fit_track_c_per_unit_models(
+    count_rows: Sequence[Mapping[str, str]],
+    *,
+    target_mode: str = "component_label",
+    penalty: float = 1.0,
+    min_train_sources_per_unit: int = 20,
+    min_context_class_train: int = 3,
+    output_dir: Path | None = None,
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    by_unit = per_unit_rows_from_export(count_rows, target_mode=target_mode)
+    result_rows: list[dict[str, Any]] = []
+    pred_rows: list[dict[str, Any]] = []
+    coef_rows: list[dict[str, Any]] = []
+    skipped: Counter[str] = Counter()
+    for cell_id, rows in sorted(by_unit.items()):
+        contexts = eligible_contexts_train_only(
+            rows, min_per_class=min_context_class_train
+        )
+        if not contexts:
+            skipped["no_eligible_context"] += 1
+            continue
+        filt = [r for r in rows if r["endpoint_pair"] in contexts]
+        train = [r for r in filt if r["split"] == "train"]
+        val = [r for r in filt if r["split"] == "validation"]
+        if len({r["source_trial_id"] for r in train}) < min_train_sources_per_unit:
+            skipped["unit_train_source_count_below_threshold"] += 1
+            continue
+        ytr = np.asarray([r["y"] for r in train], dtype=int)
+        if len(set(ytr.tolist())) < 2:
+            skipped["one_class_training"] += 1
+            continue
+        yva = np.asarray([r["y"] for r in val], dtype=int)
+        base_train = np.asarray(
+            [[r["trial_index_float"], r["cue_duration_float"]] for r in train],
+            dtype=float,
+        )
+        base_val = np.asarray(
+            [[r["trial_index_float"], r["cue_duration_float"]] for r in val],
+            dtype=float,
+        )
+        aug_train = np.asarray(
+            [
+                [r["trial_index_float"], r["cue_duration_float"], r["log_count_rate"]]
+                for r in train
+            ],
+            dtype=float,
+        )
+        aug_val = np.asarray(
+            [
+                [r["trial_index_float"], r["cue_duration_float"], r["log_count_rate"]]
+                for r in val
+            ],
+            dtype=float,
+        )
+        endpoints_train = [r["endpoint_pair"] for r in train]
+        endpoints_val = [r["endpoint_pair"] for r in val]
+        try:
+            base_model = fit_endpoint_penalized_logistic(
+                ytr, endpoints_train, base_train, penalty=penalty
+            )
+            aug_model = fit_endpoint_penalized_logistic(
+                ytr, endpoints_train, aug_train, penalty=penalty
+            )
+        except ValueError:
+            skipped["fit_value_error"] += 1
+            continue
+        if not (base_model.converged and aug_model.converged):
+            skipped["nonconverged_fit"] += 1
+            continue
+        p_base, unseen_base = predict_endpoint_penalized_logistic(
+            base_model, endpoints_val, base_val
+        )
+        p_aug, unseen_aug = predict_endpoint_penalized_logistic(
+            aug_model, endpoints_val, aug_val
+        )
+        keep = ~(unseen_base | unseen_aug)
+        if not np.any(keep):
+            skipped["no_seen_validation_context"] += 1
+            continue
+        mb = safe_model_metrics(yva[keep], p_base[keep])
+        ma = safe_model_metrics(yva[keep], p_aug[keep])
+        result_rows.append(
+            {
+                "target_mode": target_mode,
+                "cell_id": cell_id,
+                "session_id": train[0]["session_id"],
+                "penalty": penalty,
+                "eligible_context_count": len(contexts),
+                "n_train_sources": len({r["source_trial_id"] for r in train}),
+                "n_validation_rows_scored": int(np.sum(keep)),
+                "validation_unseen_context_rows": int(np.sum(~keep)),
+                "baseline_log_loss": mb["log_loss"],
+                "augmented_log_loss": ma["log_loss"],
+                "delta_log_loss_baseline_minus_augmented": None
+                if mb["log_loss"] is None or ma["log_loss"] is None
+                else float(mb["log_loss"] - ma["log_loss"]),
+                "baseline_balanced_accuracy": mb["balanced_accuracy"],
+                "augmented_balanced_accuracy": ma["balanced_accuracy"],
+                "baseline_auroc": mb["auroc"],
+                "augmented_auroc": ma["auroc"],
+                "baseline_converged": base_model.converged,
+                "augmented_converged": aug_model.converged,
+            }
+        )
+        for local_i, row in enumerate(val):
+            if not keep[local_i]:
+                continue
+            pred_rows.append(
+                {
+                    "target_mode": target_mode,
+                    "cell_id": cell_id,
+                    "source_trial_id": row["source_trial_id"],
+                    "session_id": row["session_id"],
+                    "endpoint_pair": row["endpoint_pair"],
+                    "true_label": INT_TO_LABEL[int(yva[local_i])],
+                    "baseline_prob_present": float(p_base[local_i]),
+                    "augmented_prob_present": float(p_aug[local_i]),
+                }
+            )
+        for model_name, model in (("baseline", base_model), ("augmented", aug_model)):
+            coef_rows.append(
+                {
+                    "target_mode": target_mode,
+                    "cell_id": cell_id,
+                    "model": model_name,
+                    "endpoint_levels": list(model.endpoint_levels),
+                    "endpoint_slope_means": model.endpoint_slope_means,
+                    "slope_mean": model.slope_mean,
+                    "slope_scale": model.slope_scale,
+                    "coef": model.coef,
+                    "intercept_count": model.intercept_count,
+                    "penalty": model.penalty,
+                    "message": model.message,
+                }
+            )
+    summary = {
+        "target_mode": target_mode,
+        "unit_result_count": len(result_rows),
+        "skipped": dict(skipped),
+        "prediction_row_count": len(pred_rows),
+        "aggregation_policy": "aggregate per unit first within session, then equally across sessions",
+        "preprocessing_policy": "continuous predictors are centered within endpoint using train rows, then train-standardized; endpoint intercepts are unpenalized",
+    }
+    if output_dir is not None:
+        output_dir.mkdir(parents=True, exist_ok=True)
+        write_csv(output_dir / f"track_c_{target_mode}_unit_predictions.csv", pred_rows)
+        write_json(
+            output_dir / f"track_c_{target_mode}_unit_model_artifacts.json", coef_rows
+        )
+    return result_rows, summary
+
+
+def track_c_eligibility_signature(
+    count_rows: Sequence[Mapping[str, str]],
+    *,
+    target_mode: str,
+    min_train_sources_per_unit: int = 20,
+    min_context_class_train: int = 3,
+) -> dict[str, Any]:
+    by_unit = per_unit_rows_from_export(count_rows, target_mode=target_mode)
+    entries = []
+    for cell_id, rows in sorted(by_unit.items()):
+        contexts = eligible_contexts_train_only(
+            rows, min_per_class=min_context_class_train
+        )
+        train = [
+            r for r in rows if r["endpoint_pair"] in contexts and r["split"] == "train"
+        ]
+        if (
+            contexts
+            and len({r["source_trial_id"] for r in train}) >= min_train_sources_per_unit
+        ):
+            entries.append(
+                {
+                    "cell_id": cell_id,
+                    "contexts": sorted(contexts),
+                    "train_source_count": len({r["source_trial_id"] for r in train}),
+                }
+            )
+    return {
+        "target_mode": target_mode,
+        "eligible_unit_count": len(entries),
+        "entries": entries,
+        "hash": stable_hash(entries),
+    }
+
+
+def coherent_source_label_shuffle(
+    label_rows: Sequence[Mapping[str, str]],
+    *,
+    seed: int,
+    group_fields: Sequence[str] = ("session_id", "endpoint_pair", "split"),
+) -> tuple[dict[str, str], dict[str, Any]]:
+    rng = random.Random(seed)
+    grouped: dict[tuple[str, ...], list[Mapping[str, str]]] = defaultdict(list)
+    for row in label_rows:
+        grouped[tuple(row[f] for f in group_fields)].append(row)
+    out: dict[str, str] = {}
+    movable = 0
+    immovable = 0
+    movable_strata = 0
+    immovable_strata = 0
+    for rows in grouped.values():
+        labels = [r["component_label"] for r in rows]
+        shuffled = labels[:]
+        rng.shuffle(shuffled)
+        if len(set(labels)) < 2 or len(rows) < 2 or shuffled == labels:
+            immovable += len(rows)
+            immovable_strata += 1
+        else:
+            movable += len(rows)
+            movable_strata += 1
+        for row, label in zip(rows, shuffled, strict=True):
+            out[row["source_trial_id"]] = label
+    total = movable + immovable
+    return out, {
+        "group_fields": list(group_fields),
+        "source_count": total,
+        "movable_fraction": movable / total if total else 0.0,
+        "immovable_fraction": immovable / total if total else 0.0,
+        "movable_strata_count": movable_strata,
+        "immovable_strata_count": immovable_strata,
+    }
+
+
+def coherent_joint_target_shuffle(
+    label_rows: Sequence[Mapping[str, str]],
+    *,
+    seed: int,
+    group_fields: Sequence[str] = ("session_id", "endpoint_pair", "split"),
+) -> tuple[dict[str, dict[str, str]], dict[str, Any]]:
+    """Shuffle all Track-C target labels together within strata."""
+    rng = random.Random(seed)
+    grouped: dict[tuple[str, ...], list[Mapping[str, str]]] = defaultdict(list)
+    label_cols = [target_label_column(target) for target in TRACK_C_TARGETS]
+    for row in label_rows:
+        grouped[tuple(row[f] for f in group_fields)].append(row)
+    out: dict[str, dict[str, str]] = {}
+    movable = 0
+    immovable = 0
+    movable_strata = 0
+    immovable_strata = 0
+    for rows in grouped.values():
+        tuples = [tuple(r[col] for col in label_cols) for r in rows]
+        shuffled = tuples[:]
+        rng.shuffle(shuffled)
+        if len(set(tuples)) < 2 or len(rows) < 2 or shuffled == tuples:
+            immovable += len(rows)
+            immovable_strata += 1
+        else:
+            movable += len(rows)
+            movable_strata += 1
+        for row, labels in zip(rows, shuffled, strict=True):
+            out[row["source_trial_id"]] = dict(zip(label_cols, labels, strict=True))
+    total = movable + immovable
+    violations = sum(
+        1
+        for labels in out.values()
+        if labels["middle_component_label"] == "present"
+        and labels["anywhere_component_label"] != "present"
+    )
+    return out, {
+        "group_fields": list(group_fields),
+        "source_count": total,
+        "target_label_columns": label_cols,
+        "movable_fraction": movable / total if total else 0.0,
+        "immovable_fraction": immovable / total if total else 0.0,
+        "middle_implies_anywhere_violations": violations,
+        "movable_strata_count": movable_strata,
+        "immovable_strata_count": immovable_strata,
+        "policy": "same permutation of joint Track-C source labels; preserves strata label-tuple counts and primary middle=>anywhere",
+    }
+
+
+def apply_joint_target_shuffle(
+    count_rows: Sequence[Mapping[str, str]],
+    joint_labels: Mapping[str, Mapping[str, str]],
+) -> list[dict[str, str]]:
+    out = []
+    for row in count_rows:
+        rr = dict(row)
+        labels = joint_labels.get(row["source_trial_id"])
+        if labels:
+            rr.update(labels)
+        out.append(rr)
+    return out
+
+
+def label_rows_from_count_rows(
+    count_rows: Sequence[Mapping[str, str]],
+) -> list[dict[str, str]]:
+    by_source: dict[str, dict[str, str]] = {}
+    for row in count_rows:
+        sid = row["source_trial_id"]
+        record = {
+            "source_trial_id": sid,
+            "session_id": row["session_id"],
+            "endpoint_pair": row["endpoint_pair"],
+            "split": row["split"],
+            "trial_index": row["trial_index"],
+            "middle_component_label": row.get("middle_component_label", ""),
+            "anywhere_component_label": row.get("anywhere_component_label", ""),
+            "supported_middle_component_label": row.get(
+                "supported_middle_component_label", ""
+            ),
+        }
+        if sid in by_source and by_source[sid] != record:
+            raise ValueError(f"inconsistent source-level labels for {sid}")
+        by_source[sid] = record
+    return list(by_source.values())
+
+
+def add_training_temporal_halves(
+    label_rows: Sequence[Mapping[str, str]],
+) -> list[dict[str, str]]:
+    by_session: dict[str, list[Mapping[str, str]]] = defaultdict(list)
+    for row in label_rows:
+        if row["split"] == "train":
+            by_session[row["session_id"]].append(row)
+    cut: dict[str, float] = {}
+    for sess, rows in by_session.items():
+        vals = sorted(float(r["trial_index"]) for r in rows)
+        cut[sess] = vals[len(vals) // 2] if vals else math.inf
+    out: list[dict[str, str]] = []
+    for row in label_rows:
+        rr = dict(row)
+        boundary = cut.get(row["session_id"], math.inf)
+        rr["training_temporal_half"] = (
+            "early" if float(row["trial_index"]) < boundary else "late"
+        )
+        out.append(rr)
+    return out
+
+
+def aggregate_unit_session_results(
+    rows: Sequence[Mapping[str, Any]],
+    metric: str = "delta_log_loss_baseline_minus_augmented",
+) -> dict[str, Any]:
+    by_session: dict[str, list[float]] = defaultdict(list)
+    for row in rows:
+        val = row.get(metric)
+        if val is not None and math.isfinite(float(val)):
+            by_session[str(row["session_id"])].append(float(val))
+    session_means = {s: float(np.mean(v)) for s, v in by_session.items() if v}
+    return {
+        "metric": metric,
+        "session_count": len(session_means),
+        "session_means": session_means,
+        "equal_session_mean": float(np.mean(list(session_means.values())))
+        if session_means
+        else None,
+    }
+
+
+def _p_value_greater_equal(
+    observed: float | None, null_values: Sequence[float]
+) -> dict[str, Any]:
+    vals = [float(v) for v in null_values if math.isfinite(float(v))]
+    if observed is None or not math.isfinite(float(observed)) or not vals:
+        return {
+            "observed": observed,
+            "nulls": len(vals),
+            "exceedances": None,
+            "p_value": None,
+        }
+    # Inclusive comparisons must not split mathematical ties after floating reductions.
+    tolerance = 64 * sys.float_info.epsilon * max(1.0, abs(float(observed)))
+    exc = sum(v >= float(observed) - tolerance for v in vals)
+    return {
+        "observed": float(observed),
+        "nulls": len(vals),
+        "exceedances": exc,
+        "p_value": (1 + exc) / (len(vals) + 1),
+        "tie_tolerance": tolerance,
+        "comparison_policy": "inclusive with floating-reduction tolerance; exact BA audit preferred",
+    }
+
+
+def fit_track_c_three_target_family(
+    count_rows: Sequence[Mapping[str, str]],
+    *,
+    penalty: float = 1.0,
+    min_train_sources_per_unit: int = 20,
+    min_context_class_train: int = 3,
+    nulls: int = 0,
+    temporal_nulls: int = 0,
+    seed0: int = 90000,
+    output_dir: Path | None = None,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[str, Any]]:
+    """Fit the frozen three Track-C targets plus matched joint-label nulls."""
+    observed_rows: list[dict[str, Any]] = []
+    null_rows: list[dict[str, Any]] = []
+    observed_signatures = {
+        target: track_c_eligibility_signature(
+            count_rows,
+            target_mode=target,
+            min_train_sources_per_unit=min_train_sources_per_unit,
+            min_context_class_train=min_context_class_train,
+        )
+        for target in TRACK_C_TARGETS
+    }
+    observed_stats: dict[str, Any] = {}
+    observed_values: dict[str, float | None] = {}
+    for target in TRACK_C_TARGETS:
+        rows, summary = fit_track_c_per_unit_models(
+            count_rows,
+            target_mode=target,
+            penalty=penalty,
+            min_train_sources_per_unit=min_train_sources_per_unit,
+            min_context_class_train=min_context_class_train,
+            output_dir=output_dir,
+        )
+        observed_rows.extend(rows)
+        agg = aggregate_unit_session_results(rows)
+        observed_values[target] = agg["equal_session_mean"]
+        observed_stats[target] = {**summary, "session_aggregate": agg}
+    finite_observed = [v for v in observed_values.values() if v is not None]
+    observed_values[TRACK_C_FAMILY_MAX_TARGET] = (
+        max(finite_observed) if finite_observed else None
+    )
+
+    label_rows = label_rows_from_count_rows(count_rows)
+    null_values: dict[str, dict[str, list[float]]] = defaultdict(
+        lambda: defaultdict(list)
+    )
+
+    def run_null_family(
+        *,
+        family: str,
+        labels: Sequence[Mapping[str, str]],
+        count: int,
+        group_fields: Sequence[str],
+        seed_offset: int,
+    ) -> None:
+        for null_index in range(count):
+            joint, shuffle_info = coherent_joint_target_shuffle(
+                labels, seed=seed0 + seed_offset + null_index, group_fields=group_fields
+            )
+            shuffled_count_rows = apply_joint_target_shuffle(count_rows, joint)
+            target_values = []
+            matches = []
+            for target in TRACK_C_TARGETS:
+                rows, _summary = fit_track_c_per_unit_models(
+                    shuffled_count_rows,
+                    target_mode=target,
+                    penalty=penalty,
+                    min_train_sources_per_unit=min_train_sources_per_unit,
+                    min_context_class_train=min_context_class_train,
+                )
+                agg = aggregate_unit_session_results(rows)
+                stat = agg["equal_session_mean"]
+                if stat is not None:
+                    target_values.append(float(stat))
+                    null_values[family][target].append(float(stat))
+                sig = track_c_eligibility_signature(
+                    shuffled_count_rows,
+                    target_mode=target,
+                    min_train_sources_per_unit=min_train_sources_per_unit,
+                    min_context_class_train=min_context_class_train,
+                )
+                match = sig["hash"] == observed_signatures[target]["hash"]
+                matches.append(match)
+                null_rows.append(
+                    {
+                        "null_family": family,
+                        "null_index": null_index,
+                        "target_mode": target,
+                        "equal_session_mean_delta_log_loss": stat,
+                        "eligible_signature_hash": sig["hash"],
+                        "eligible_signature_matches_observed": match,
+                        "movable_fraction": shuffle_info["movable_fraction"],
+                        "immovable_fraction": shuffle_info["immovable_fraction"],
+                        "movable_strata_count": shuffle_info["movable_strata_count"],
+                        "immovable_strata_count": shuffle_info[
+                            "immovable_strata_count"
+                        ],
+                        "middle_implies_anywhere_violations": shuffle_info[
+                            "middle_implies_anywhere_violations"
+                        ],
+                    }
+                )
+            family_stat = max(target_values) if target_values else None
+            if family_stat is not None:
+                null_values[family][TRACK_C_FAMILY_MAX_TARGET].append(
+                    float(family_stat)
+                )
+            null_rows.append(
+                {
+                    "null_family": family,
+                    "null_index": null_index,
+                    "target_mode": TRACK_C_FAMILY_MAX_TARGET,
+                    "equal_session_mean_delta_log_loss": family_stat,
+                    "eligible_signature_hash": "",
+                    "eligible_signature_matches_observed": all(matches),
+                    "movable_fraction": shuffle_info["movable_fraction"],
+                    "immovable_fraction": shuffle_info["immovable_fraction"],
+                    "movable_strata_count": shuffle_info["movable_strata_count"],
+                    "immovable_strata_count": shuffle_info["immovable_strata_count"],
+                    "middle_implies_anywhere_violations": shuffle_info[
+                        "middle_implies_anywhere_violations"
+                    ],
+                }
+            )
+
+    run_null_family(
+        family="session_endpoint_split",
+        labels=label_rows,
+        count=nulls,
+        group_fields=("session_id", "endpoint_pair", "split"),
+        seed_offset=0,
+    )
+    run_null_family(
+        family="session_endpoint_split_temporal_half",
+        labels=add_training_temporal_halves(label_rows),
+        count=temporal_nulls,
+        group_fields=("session_id", "endpoint_pair", "split", "training_temporal_half"),
+        seed_offset=100000,
+    )
+
+    pvalues = {
+        family: {
+            target: _p_value_greater_equal(observed_values[target], vals)
+            for target, vals in by_target.items()
+        }
+        for family, by_target in null_values.items()
+    }
+    summary = {
+        "target_modes": list(TRACK_C_TARGETS),
+        "observed_stats": observed_stats,
+        "observed_eligibility_signatures": observed_signatures,
+        "observed_global_statistics": observed_values,
+        "nulls": nulls,
+        "temporal_nulls": temporal_nulls,
+        "pvalues": pvalues,
+        "null_policy": "same source permutation of joint Track-C labels within strata; family statistic is max over original middle, anywhere, and supported_middle global statistics",
+        "temporal_null_policy": "coarse temporal-half sensitivity adds training-derived trial-index half to session/endpoint/split strata",
+        "eligibility_note": "Target cohorts may differ under fixed train-only thresholds; null signature mismatches are reported, not silently ignored.",
+    }
+    return observed_rows, null_rows, summary
+
+
+# ---------------------------------------------------------------------------
+# Plotting: six simple plot types from saved/synthetic results.
+
+
+def plot_phase1_result_types(input_dir: Path, output_dir: Path) -> list[str]:
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+    made: list[str] = []
+
+    def save(name: str) -> None:
+        plt.tight_layout()
+        path = output_dir / name
+        plt.savefig(path, dpi=120)
+        plt.close()
+        made.append(str(path))
+
+    def first_existing(*names: str) -> Path | None:
+        for name in names:
+            path = input_dir / name
+            if path.exists():
+                return path
+        return None
+
+    # 1 exact/linear metric bars: actual Track-A first, synthetic fallback.
+    metrics_csv = first_existing(
+        "track_a_exact_validation_metrics.csv", "synthetic_track_a_metrics.csv"
+    )
+    if metrics_csv is not None:
+        rows = list(csv.DictReader(metrics_csv.open(newline="", encoding="utf-8")))
+        if rows:
+            sample = rows[: min(16, len(rows))]
+            labels = [
+                str(
+                    r.get("stage") or r.get("model") or r.get("representation", "model")
+                )[:24]
+                for r in sample
+            ]
+            plt.figure(figsize=(max(6, len(sample) * 0.45), 3))
+            plt.bar(labels, [float(r["balanced_accuracy"]) for r in sample])
+            plt.axhline(0.5, color="k", linestyle="--", linewidth=1)
+            plt.ylabel("balanced accuracy")
+            plt.xticks(rotation=30, ha="right")
+            save("plot01_track_a_metric_ba.png")
+
+    # 2 source support by label/session.
+    support_json = first_existing(
+        "track_a_product_support.json", "synthetic_product_support.json"
+    )
+    if support_json is not None:
+        support = json.loads(support_json.read_text(encoding="utf-8"))
+        labels = []
+        vals = []
+        for lab, counts in support.items():
+            for sess, n in counts.items():
+                labels.append(f"{lab}\n{sess}")
+                vals.append(n)
+        plt.figure(figsize=(max(6, len(vals) * 0.5), 3))
+        plt.bar(range(len(vals)), vals)
+        plt.xticks(range(len(vals)), labels, fontsize=7)
+        plt.ylabel("source count")
+        save("plot02_source_support.png")
+
+    # 3 PCA explained variance/sensitivity.
+    if metrics_csv is not None and metrics_csv.name.startswith("track_a_"):
+        rows = [
+            r
+            for r in csv.DictReader(metrics_csv.open(newline="", encoding="utf-8"))
+            if r.get("pca_dim") and r.get("pca_explained_variance_sum")
+        ]
+        if rows:
+            by_dim: dict[int, list[float]] = defaultdict(list)
+            for row in rows:
+                by_dim[int(float(row["pca_dim"]))].append(
+                    float(row["pca_explained_variance_sum"])
+                )
+            dims = sorted(by_dim)
+            plt.figure(figsize=(5, 3))
+            plt.plot(dims, [float(np.mean(by_dim[d])) for d in dims], marker="o")
+            plt.xlabel("PCA cell-space dimension")
+            plt.ylabel("mean explained variance sum")
+            save("plot03_pca_sensitivity.png")
+    else:
+        pca_json = input_dir / "synthetic_pca_moments.json"
+        if pca_json.exists():
+            pca = json.loads(pca_json.read_text(encoding="utf-8"))
+            vals = pca.get("explained_variance_ratio", [])
+            plt.figure(figsize=(5, 3))
+            plt.plot(np.arange(1, len(vals) + 1), vals, marker="o")
+            plt.xlabel("component")
+            plt.ylabel("explained variance ratio")
+            save("plot03_pca_variance.png")
+
+    # 4 matched rotation invariance check, if this synthetic/control artifact exists.
+    rotation_json = input_dir / "synthetic_rotation_invariance.json"
+    if rotation_json.exists():
+        rotation = json.loads(rotation_json.read_text(encoding="utf-8"))
+        plt.figure(figsize=(4, 3))
+        plt.bar(["max |Δp|"], [float(rotation.get("max_abs_probability_diff", 0.0))])
+        plt.ylabel("probability difference")
+        save("plot04_rotation_invariance.png")
+
+    # 5 CEBRA loss: actual Track-B fit first, synthetic fallback.
+    loss_candidates = sorted((input_dir / "fits").glob("*/loss_trace.csv"))
+    if not loss_candidates:
+        loss_candidates = [input_dir / "synthetic_cebra_long" / "loss_trace.csv"]
+    loss = (
+        loss_candidates[0] if loss_candidates and loss_candidates[0].exists() else None
+    )
+    if loss is not None:
+        rows = list(csv.DictReader(loss.open(newline="", encoding="utf-8")))
+        plt.figure(figsize=(5, 3))
+        plt.plot([int(r["step"]) for r in rows], [float(r["total"]) for r in rows])
+        plt.xlabel("optimizer step")
+        plt.ylabel("CEBRA loss")
+        save("plot05_cebra_loss.png")
+
+    # 6 per-unit delta distribution: actual Track-C first, synthetic fallback.
+    unit_csv = first_existing(
+        "track_c_unit_metrics.csv", "synthetic_track_c_unit_metrics.csv"
+    )
+    if unit_csv is not None:
+        vals = [
+            float(r["delta_log_loss_baseline_minus_augmented"])
+            for r in csv.DictReader(unit_csv.open(newline="", encoding="utf-8"))
+            if r.get("delta_log_loss_baseline_minus_augmented")
+        ]
+        if vals:
+            plt.figure(figsize=(5, 3))
+            plt.hist(vals, bins=min(10, max(3, len(vals))))
+            plt.axvline(0, color="k", linestyle="--", linewidth=1)
+            plt.xlabel("baseline - augmented log loss")
+            save("plot06_unit_delta_logloss.png")
+
+    # 7 null/family max statistic or synthetic shuffle mobility.
+    null_csv = input_dir / "track_c_joint_target_null_metrics.csv"
+    if null_csv.exists():
+        vals = [
+            float(r["equal_session_mean_delta_log_loss"])
+            for r in csv.DictReader(null_csv.open(newline="", encoding="utf-8"))
+            if r.get("target_mode") == TRACK_C_FAMILY_MAX_TARGET
+            and r.get("equal_session_mean_delta_log_loss")
+        ]
+        if vals:
+            plt.figure(figsize=(5, 3))
+            plt.hist(vals, bins=min(20, max(4, len(vals))))
+            plt.xlabel("null family-max delta log loss")
+            save("plot07_track_c_family_null.png")
+    else:
+        null_json = input_dir / "synthetic_track_c_shuffle.json"
+        if null_json.exists():
+            payload = json.loads(null_json.read_text(encoding="utf-8"))
+            vals = [
+                payload.get("movable_fraction", 0),
+                payload.get("immovable_fraction", 0),
+            ]
+            plt.figure(figsize=(4, 3))
+            plt.bar(["movable", "immovable"], vals)
+            plt.ylim(0, 1)
+            plt.ylabel("fraction")
+            save("plot07_shuffle_movable_fraction.png")
+
+    return made
+
+
+# ---------------------------------------------------------------------------
+# Synthetic bounded smoke. No accepted biological arrays are scored here.
+
+
+def run_synthetic_smoke(
+    output_dir: Path, *, include_cebra: bool = False
+) -> dict[str, Any]:
+    if (output_dir / "summary.json").exists():
+        raise FileExistsError(f"refusing to clobber smoke output {output_dir}")
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    # Track A tiny product/moment/ridge positive control.
+    Xsrc, Msrc, metas, cells, _delta, _feature_sessions = gaussian_source_fixture(
+        session_cell_counts=(2, 1),
+        n_bins=2,
+        train_per_class_session=4,
+        validation_per_class_session=2,
+        mean_difference=0.8,
+        seed=0,
+    )
+    absent = product_conditional_moments(
+        Xsrc, Msrc, metas, cells, split="train", label="absent"
+    )
+    present = product_conditional_moments(
+        Xsrc, Msrc, metas, cells, split="train", label="present"
+    )
+    ridge, _ridge_scaling = fit_standardized_ridge_from_moments(
+        absent, present, lambda_l2=1.0
+    )
+    Xv, yv, wv, _manifest, counts = exact_validation_product(Xsrc, Msrc, metas, cells)
+    scores = linear_scores(Xv, ridge)
+    prob = ridge_score_to_probability(scores)
+    ridge_metrics = weighted_binary_metrics(yv, prob, wv)
+    write_csv(
+        output_dir / "synthetic_track_a_metrics.csv",
+        [{"model": "moment_exact_ridge", **ridge_metrics}],
+    )
+    write_json(output_dir / "synthetic_product_support.json", counts)
+    mean_cell, cov_cell, _pool_info = pooled_time_cell_moments(
+        Xsrc, Msrc, metas, cells, split="train"
+    )
+    pca = pca_from_moments(mean_cell, cov_cell, n_components=min(3, len(cells)))
+    write_json(
+        output_dir / "synthetic_pca_moments.json",
+        {"explained_variance_ratio": pca["explained_variance_ratio"]},
+    )
+    rotation_check = rotation_invariance_check()
+    write_json(output_dir / "synthetic_rotation_invariance.json", rotation_check)
+
+    # Track C tiny real-row model smoke.
+    count_rows: list[dict[str, str]] = []
+    rng = np.random.default_rng(1)
+    for sess in ("s0_session01", "s1_session01"):
+        for endpoint in ("A->B", "A->C"):
+            for split, n in (("train", 16), ("validation", 6)):
+                for i in range(n):
+                    middle = "present" if i % 2 else "absent"
+                    anywhere = (
+                        "present" if middle == "present" or i % 4 == 0 else "absent"
+                    )
+                    supported = "present" if i % 3 else "absent"
+                    for cell in (f"{sess}/array/cell0", f"{sess}/array/cell1"):
+                        lam = 3.0 + (2.0 if middle == "present" else 0.0)
+                        count_rows.append(
+                            {
+                                "source_trial_id": f"{sess}_{endpoint}_{split}_{i}",
+                                "session_id": sess,
+                                "split": split,
+                                "trial_index": str(
+                                    i + (100 if split == "validation" else 0)
+                                ),
+                                "endpoint_pair": endpoint,
+                                "start_id": endpoint.split("->")[0],
+                                "goal_id": endpoint.split("->")[1],
+                                "component_id": PRIMARY_COMPONENT,
+                                "primary_component_id": PRIMARY_COMPONENT,
+                                "supported_middle_component_id": SUPPORTED_MIDDLE_COMPONENT,
+                                "component_label": middle,
+                                "middle_component_label": middle,
+                                "anywhere_component_label": anywhere,
+                                "supported_middle_component_label": supported,
+                                "cell_id": cell,
+                                "cue_spike_count": str(int(rng.poisson(lam))),
+                                "cue_duration_s": "1.0",
+                            }
+                        )
+    unit_rows, unit_summary = fit_track_c_per_unit_models(
+        count_rows,
+        penalty=1.0,
+        min_train_sources_per_unit=20,
+        min_context_class_train=3,
+    )
+    write_csv(output_dir / "synthetic_track_c_unit_metrics.csv", unit_rows)
+    write_json(output_dir / "synthetic_track_c_unit_summary.json", unit_summary)
+    label_rows = []
+    seen = set()
+    for row in count_rows:
+        if row["source_trial_id"] in seen:
+            continue
+        seen.add(row["source_trial_id"])
+        label_rows.append(
+            {
+                k: row[k]
+                for k in (
+                    "source_trial_id",
+                    "session_id",
+                    "split",
+                    "trial_index",
+                    "endpoint_pair",
+                    "component_label",
+                )
+            }
+        )
+    _shuf, shuf_info = coherent_source_label_shuffle(label_rows, seed=0)
+    write_json(output_dir / "synthetic_track_c_shuffle.json", shuf_info)
+    family_rows, family_null_rows, family_summary = fit_track_c_three_target_family(
+        count_rows,
+        penalty=1.0,
+        min_train_sources_per_unit=20,
+        min_context_class_train=3,
+        nulls=2,
+        temporal_nulls=1,
+        seed0=91000,
+        output_dir=output_dir,
+    )
+    write_csv(
+        output_dir / "synthetic_track_c_three_target_unit_metrics.csv", family_rows
+    )
+    write_csv(output_dir / "track_c_joint_target_null_metrics.csv", family_null_rows)
+    write_json(
+        output_dir / "synthetic_track_c_three_target_summary.json", family_summary
+    )
+
+    cebra_info: dict[str, Any] = {
+        "status": "not_requested",
+        "label": "synthetic CEBRA smoke only; no biological arrays",
+    }
+    if include_cebra:
+        cebra_info = cebra_prefix_parity_smoke(output_dir)
+
+    plots = plot_phase1_result_types(output_dir, output_dir / "figures")
+    summary = {
+        "stage": "phase1_synthetic_smoke_only",
+        "track_a_ridge_balanced_accuracy": ridge_metrics["balanced_accuracy"],
+        "track_c_unit_rows": len(unit_rows),
+        "track_c_three_target_unit_rows": len(family_rows),
+        "track_c_three_target_null_rows": len(family_null_rows),
+        "track_c_three_target_targets": family_summary["target_modes"],
+        "cebra_smoke": cebra_info,
+        "rotation_invariance": rotation_check,
+        "plot_count": len(plots),
+        "plots": plots,
+        "no_biological_fits": True,
+    }
+    write_json(output_dir / "summary.json", summary)
+    return summary
+
+
+# ---------------------------------------------------------------------------
+# Future gated biological stage entry points.
+
+
+def run_track_a_gated(args: argparse.Namespace) -> dict[str, Any]:
+    require_authorization(
+        args.authorized_phase, "Track-A exact product/moment biological analysis"
+    )
+    root = validate_accepted_root(args.accepted_root)
+    stage_dir = validate_under_accepted(
+        root / "v7-v8-neural-experiments/primary29_min3train_min1val/bin100ms", root
+    )
+    legacy_dir = validate_under_accepted(
+        root / "v8b-v9-cebra-final-20260905T224554Z", root
+    )
+    relaxed40_stage_dir = validate_under_accepted(
+        root / "v7-v8-neural-experiments/relaxed40_min2train_min1val/bin100ms", root
+    )
+    output_dir = args.output_dir
+    if (output_dir / "summary.json").exists():
+        raise FileExistsError(
+            f"refusing to clobber completed Track-A output {output_dir}"
+        )
+    config = freeze_config(
+        output_dir,
+        {
+            "stage": "track_a_exact_product_moments_legacy_replay_sampling_diagnostics",
+            "input_stage_dir": str(stage_dir),
+            "legacy_v8b_v9_dir": str(legacy_dir),
+            "relaxed40_stage_dir": str(relaxed40_stage_dir),
+            "source_npz_sha256": sha256_file(
+                stage_dir / "source_level_cue_tensors.npz"
+            ),
+            "validation_policy": "enumerate all complete validation product combinations; class weight 0.5 each",
+            "ridge_probability_link": "ridge predicts E[y] for +/-1 labels; P(present)=clip((score+1)/2)",
+            "ridge_lambdas": args.ridge_lambdas,
+            "rows_per_class_grid": args.rows_per_class_grid,
+            "assembly_seeds": args.assembly_seeds,
+            "pca_dims": args.pca_dims,
+            "source_budget_fractions": args.source_budget_fractions,
+            "simulation_seeds": args.simulation_seeds,
+            "simulation_train_counts": args.simulation_train_counts,
+            "simulation_validation_counts": args.simulation_validation_counts,
+        },
+    )
+    z, metas, source_index, cells = _load_v7_stage(stage_dir)
+    Xsrc, Msrc = z["X_source_cell_bin"], z["observed_source_cell_mask"]
+    summary = run_track_a_program(
+        Xsrc=Xsrc,
+        Msrc=Msrc,
+        metas=metas,
+        source_index=source_index,
+        cells=cells,
+        output_dir=output_dir,
+        rows_per_class_grid=args.rows_per_class_grid,
+        seeds=args.assembly_seeds,
+        pca_dims=args.pca_dims,
+        ridge_lambdas=args.ridge_lambdas,
+        source_budget_fractions=args.source_budget_fractions,
+        simulation_seeds=args.simulation_seeds,
+        simulation_train_counts=args.simulation_train_counts,
+        simulation_validation_counts=args.simulation_validation_counts,
+        max_validation_combinations=args.max_validation_combinations,
+        stage_dir=stage_dir,
+        legacy_dir=legacy_dir,
+        relaxed40_stage_dir=relaxed40_stage_dir,
+        cebra_replay_device=args.cebra_replay_device,
+    )
+    summary = {**summary, "config_hash": config["config_hash"]}
+    write_json(output_dir / "summary.json", summary)
+    return summary
+
+
+def run_track_b_gated(args: argparse.Namespace) -> dict[str, Any]:
+    require_authorization(
+        args.authorized_phase, "Track-B native CEBRA biological ablation"
+    )
+    root = validate_accepted_root(args.accepted_root)
+    if not args.quick_limit and args.null_permutations < 20:
+        raise ValueError("Track-B reviewed inference requires 20 null permutations")
+    stage_dir = validate_under_accepted(
+        root / "v7-v8-neural-experiments/primary29_min3train_min1val/bin100ms", root
+    )
+    config = freeze_config(
+        args.output_dir,
+        {
+            **cebra_config_manifest(),
+            "stage_dir": str(stage_dir),
+            "source_npz_sha256": sha256_file(
+                stage_dir / "source_level_cue_tensors.npz"
+            ),
+            "script_sha256": sha256_file(Path(__file__)),
+            "quick_limit": args.quick_limit,
+            "null_family_only": args.null_family_only,
+            "null_permutations_requested": args.null_permutations,
+            "validation_policy": "train sampled pseudopopulations; evaluate fitted encoder/head on exact validation empirical-Q rows with class weights 0.5/0.5",
+            "resume_policy": "reuse only when full fit_identity_hash matches spec, source arrays, labels, manifest, exact-eval labels/weights, shuffle metadata, config hash, and script hash",
+        },
+    )
+    z, metas, source_index, cells = _load_v7_stage(stage_dir)
+    Xsrc, Msrc = z["X_source_cell_bin"], z["observed_source_cell_mask"]
+
+    jobs: list[tuple[CebraFitSpec, Mapping[str, str] | None, dict[str, Any]]] = []
+    if not args.null_family_only:
+        jobs.extend(
+            (spec, None, {"role": "observed"}) for spec in observed_cebra_specs()
+        )
+    for null_index in range(args.null_permutations):
+        shuffled, shuffle_info = source_label_shuffle_from_metas(
+            metas, seed=50000 + null_index
+        )
+        jobs.extend(
+            (spec, shuffled, shuffle_info)
+            for spec in null_family_cebra_specs(permutation_index=null_index)
+        )
+    if args.quick_limit:
+        jobs = jobs[: args.quick_limit]
+
+    all_infos: list[dict[str, Any]] = []
+    metric_rows: list[dict[str, Any]] = []
+    exact_manifest_written = False
+    for spec, shuffled, shuffle_info in jobs:
+        arrays, manifest = build_dataset(
+            Xsrc=Xsrc,
+            Msrc=Msrc,
+            source_index=source_index,
+            source_meta=metas,
+            cell_ids=cells,
+            rows_per_class=spec.rows_per_class,
+            seed=spec.assembly_seed,
+            shuffled_labels=shuffled,
+        )
+        Xev, yev, wev, eval_manifest, eval_support = exact_validation_product(
+            Xsrc,
+            Msrc,
+            metas,
+            cells,
+            max_combinations=args.max_validation_combinations,
+            shuffled_labels=shuffled,
+        )
+        if not exact_manifest_written:
+            write_csv(
+                args.output_dir / "track_b_exact_validation_manifest.csv", eval_manifest
+            )
+            write_json(
+                args.output_dir / "track_b_exact_validation_support.json", eval_support
+            )
+            exact_manifest_written = True
+        if (
+            sha256_file(stage_dir / "source_level_cue_tensors.npz")
+            != config["source_npz_sha256"]
+        ):
+            raise ValueError("source tensor changed during the experiment")
+        base_identity = {
+            "config_hash": config["config_hash"],
+            "source_npz_sha256": sha256_file(
+                stage_dir / "source_level_cue_tensors.npz"
+            ),
+            "script_sha256": sha256_file(Path(__file__)),
+            "stage_dir": str(stage_dir),
+            "shuffle": shuffle_info,
+        }
+        expected_identity = cebra_fit_identity(
+            spec=spec,
+            Xtr=arrays["train"][0],
+            ytr=arrays["train"][1],
+            manifest=manifest,
+            Xev=Xev,
+            yev=yev,
+            wev=wev,
+            eval_manifest=eval_manifest,
+            base_identity=base_identity,
+        )
+        identity_hash = stable_hash(expected_identity)
+        fit_dir = args.output_dir / "fits" / identity_hash[:16]
+        if (fit_dir / "fit_info.json").exists():
+            info = validate_completed_cebra_fit(fit_dir, identity_hash)
+        else:
+            info = run_one_cebra_fit_with_exposure(
+                arrays,
+                manifest,
+                spec,
+                fit_dir,
+                device="cuda",
+                evaluation=(Xev, yev, wev, eval_manifest),
+                identity=base_identity,
+            )
+            if info["fit_identity_hash"] != identity_hash:
+                raise AssertionError(
+                    "CEBRA fit identity changed between resume check and fit"
+                )
+        all_infos.append(info)
+        for row in info["metrics"]:
+            metric_rows.append(
+                {
+                    **row,
+                    "fit_identity_hash": info["fit_identity_hash"],
+                    "fit_dir": info["fit_dir"],
+                }
+            )
+
+    write_csv(args.output_dir / "track_b_cebra_metrics.csv", metric_rows)
+    write_json(args.output_dir / "track_b_fit_infos.json", all_infos)
+    family = track_b_family_statistics(all_infos)
+    prefix = track_b_prefix_parity(all_infos)
+    write_json(args.output_dir / "track_b_family_null_pvalues.json", family)
+    write_csv(args.output_dir / "track_b_prefix_parity.csv", prefix)
+    expected_fits = (
+        0 if args.null_family_only else len(observed_cebra_specs())
+    ) + args.null_permutations * len(null_family_cebra_specs())
+    if not args.quick_limit:
+        if (
+            len(all_infos) != expected_fits
+            or family["null_permutations_scored"] != args.null_permutations
+        ):
+            raise ValueError("Track B did not complete the declared fit family")
+        if not args.null_family_only and family["observed_family_configs_scored"] != 14:
+            raise ValueError(
+                "Track B observed comparison does not contain all 14 family configurations"
+            )
+        expected_pairs = 2 * args.null_permutations + (
+            0 if args.null_family_only else 2
+        )
+        if len(prefix) != expected_pairs:
+            raise ValueError("missing paired short/long optimization comparisons")
+    summary = {
+        "status": "incomplete_quick_limit" if args.quick_limit else "complete",
+        "config_hash": config["config_hash"],
+        "expected_fit_count": expected_fits,
+        "fit_count": len(all_infos),
+        "metric_rows": len(metric_rows),
+        "family_null_pvalues": family,
+        "prefix_parity_rows": len(prefix),
+        "fit_info_paths": [
+            str(Path(info["fit_dir"]) / "fit_info.json") for info in all_infos
+        ],
+    }
+    write_json(args.output_dir / "summary.json", summary)
+    return summary
+
+
+def run_track_c_export_gated(args: argparse.Namespace) -> dict[str, Any]:
+    return export_development_cue_counts(
+        import_dir=args.import_dir,
+        split_dir=args.split_dir,
+        allowlist_csv=args.allowlist_csv,
+        selected_cells_path=args.selected_cells_path,
+        output_dir=args.output_dir,
+        authorized_phase=args.authorized_phase,
+    )
+
+
+def run_track_c_models_gated(args: argparse.Namespace) -> dict[str, Any]:
+    require_authorization(
+        args.authorized_phase, "Track-C per-unit biological response models"
+    )
+    if (args.output_dir / "summary.json").exists():
+        raise FileExistsError(
+            f"refusing to clobber completed Track-C model output {args.output_dir}"
+        )
+    with _open_text(args.development_counts) as handle:
+        rows = list(csv.DictReader(handle))
+    config = freeze_config(
+        args.output_dir,
+        {
+            "stage": "track_c_per_unit_endpoint_time_exposure_component_decoding",
+            "development_counts": str(args.development_counts),
+            "development_counts_sha256": sha256_file(args.development_counts),
+            "penalty": args.penalty,
+            "target_mode": args.target_mode,
+            "nulls": args.nulls,
+            "temporal_nulls": args.temporal_nulls,
+            "three_target_null_policy": "target_mode=both runs all three frozen Track-C targets; use one joint source-label permutation per null and max over the three global statistics",
+            "min_train_sources_per_unit": args.min_train_sources_per_unit,
+            "min_context_class_train": args.min_context_class_train,
+        },
+    )
+    if args.target_mode != "both":
+        raise ValueError("reviewed Track-C inference requires --target-mode both")
+    if args.nulls < MIN_TRACK_C_NULLS or args.temporal_nulls < MIN_TRACK_C_NULLS:
+        raise ValueError(
+            f"Track-C inference requires at least {MIN_TRACK_C_NULLS} primary and temporal nulls"
+        )
+    result_rows, null_rows, summary = fit_track_c_three_target_family(
+        rows,
+        penalty=args.penalty,
+        min_train_sources_per_unit=args.min_train_sources_per_unit,
+        min_context_class_train=args.min_context_class_train,
+        nulls=args.nulls,
+        temporal_nulls=args.temporal_nulls,
+        output_dir=args.output_dir,
+    )
+    write_csv(args.output_dir / "track_c_unit_metrics.csv", result_rows)
+    write_csv(args.output_dir / "track_c_joint_target_null_metrics.csv", null_rows)
+    summary = {
+        **summary,
+        "status": "complete",
+        "config_hash": config["config_hash"],
+    }
+    write_json(args.output_dir / "summary.json", summary)
+    return summary
+
+
+# ---------------------------------------------------------------------------
+# CLI
+
+
+def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description=__doc__)
+    sub = parser.add_subparsers(dest="cmd", required=True)
+
+    s = sub.add_parser(
+        "inspect-schemas", help="phase-1 allowed saved-artifact schema inspection only"
+    )
+    s.add_argument("--accepted-root", type=Path, default=ACCEPTED_INPUT_ROOT)
+    s.add_argument(
+        "--output-dir",
+        type=Path,
+        default=OWNED_OUTPUT_ROOT / "phase1_schema_inspection",
+    )
+
+    smoke = sub.add_parser(
+        "smoke", help="bounded synthetic smoke; no biological arrays"
+    )
+    smoke.add_argument(
+        "--output-dir", type=Path, default=OWNED_OUTPUT_ROOT / "phase1_synthetic_smoke"
+    )
+    smoke.add_argument(
+        "--include-cebra",
+        action="store_true",
+        help="also run tiny synthetic CEBRA prefix-parity smoke",
+    )
+
+    cfg = sub.add_parser(
+        "cebra-config", help="write Track-B declared fit grid without fitting"
+    )
+    cfg.add_argument(
+        "--output-dir", type=Path, default=OWNED_OUTPUT_ROOT / "track_b_config"
+    )
+
+    allow = sub.add_parser(
+        "build-track-c-allowlist",
+        help="build development component allowlist from accepted V6 mapping artifact",
+    )
+    allow.add_argument(
+        "--trial-mapping-metrics",
+        type=Path,
+        default=ACCEPTED_INPUT_ROOT
+        / "v6-reset-graph-support-audit/v6a_geometry_mapping/trial_mapping_metrics.csv",
+    )
+    allow.add_argument("--component-id", default=PRIMARY_COMPONENT)
+    allow.add_argument(
+        "--supported-middle-component", default=SUPPORTED_MIDDLE_COMPONENT
+    )
+    allow.add_argument(
+        "--target-mode",
+        choices=("middle", "anywhere", "supported_middle", "both"),
+        default="both",
+        help="retained for compatibility; the frozen family allowlist always writes all three Track-C targets",
+    )
+    allow.add_argument(
+        "--output-dir", type=Path, default=OWNED_OUTPUT_ROOT / "track_c_allowlist"
+    )
+
+    ta = sub.add_parser(
+        "target-semantics-audit",
+        help="behavior-label semantics audit from accepted V6 artifacts; no fits",
+    )
+    ta.add_argument(
+        "--trial-mapping-metrics",
+        type=Path,
+        default=ACCEPTED_INPUT_ROOT
+        / "v6-reset-graph-support-audit/v6a_geometry_mapping/trial_mapping_metrics.csv",
+    )
+    ta.add_argument(
+        "--source-membership-csv",
+        type=Path,
+        default=ACCEPTED_INPUT_ROOT
+        / "v6-reset-graph-support-audit/v6c_population_membership/selected_component_source_membership.csv",
+    )
+    ta.add_argument(
+        "--primary-npz",
+        type=Path,
+        default=ACCEPTED_INPUT_ROOT
+        / "v7-v8-neural-experiments/primary29_min3train_min1val/bin100ms/source_level_cue_tensors.npz",
+    )
+    ta.add_argument("--component-id", default=PRIMARY_COMPONENT)
+    ta.add_argument(
+        "--output-dir", type=Path, default=OWNED_OUTPUT_ROOT / "target_semantics_audit"
+    )
+
+    a = sub.add_parser(
+        "run-track-a", help="future gated Track-A exact product/moment/linear analysis"
+    )
+    a.add_argument("--accepted-root", type=Path, default=ACCEPTED_INPUT_ROOT)
+    a.add_argument(
+        "--output-dir", type=Path, default=OWNED_OUTPUT_ROOT / "track_a_exact"
+    )
+    a.add_argument("--authorized-phase")
+    a.add_argument("--ridge-lambdas", type=float, nargs="+", default=[1.0, 0.1, 10.0])
+    a.add_argument(
+        "--rows-per-class-grid", type=int, nargs="+", default=[16, 64, 256, 1024]
+    )
+    a.add_argument("--assembly-seeds", type=int, nargs="+", default=list(range(20)))
+    a.add_argument("--pca-dims", type=int, nargs="+", default=[3, 8, 16, 29])
+    a.add_argument(
+        "--source-budget-fractions", type=float, nargs="+", default=[0.5, 0.75, 1.0]
+    )
+    a.add_argument("--simulation-seeds", type=int, nargs="+", default=list(range(100)))
+    a.add_argument(
+        "--simulation-train-counts", type=int, nargs="+", default=[3, 10, 30]
+    )
+    a.add_argument(
+        "--simulation-validation-counts", type=int, nargs="+", default=[1, 5, 20]
+    )
+    a.add_argument("--max-validation-combinations", type=int, default=100000)
+    a.add_argument("--cebra-replay-device", choices=("cpu", "cuda"), default="cpu")
+
+    b = sub.add_parser("run-track-b", help="future gated Track-B native CEBRA ablation")
+    b.add_argument("--accepted-root", type=Path, default=ACCEPTED_INPUT_ROOT)
+    b.add_argument(
+        "--output-dir", type=Path, default=OWNED_OUTPUT_ROOT / "track_b_cebra"
+    )
+    b.add_argument("--authorized-phase")
+    b.add_argument("--quick-limit", type=int, default=0)
+    b.add_argument("--null-family-only", action="store_true")
+    b.add_argument("--null-permutations", type=int, default=20)
+    b.add_argument("--max-validation-combinations", type=int, default=100000)
+
+    ce = sub.add_parser(
+        "export-track-c-counts",
+        help="future gated Track-C SplitFilteredAccess cue-count export",
+    )
+    ce.add_argument("--import-dir", type=Path, required=True)
+    ce.add_argument("--split-dir", type=Path, required=True)
+    ce.add_argument("--allowlist-csv", type=Path, required=True)
+    ce.add_argument(
+        "--selected-cells-path",
+        type=Path,
+        default=ACCEPTED_INPUT_ROOT
+        / "v6-reset-graph-support-audit/v6c_population_membership/selected_component_source_membership.csv",
+    )
+    ce.add_argument(
+        "--output-dir",
+        type=Path,
+        default=OWNED_OUTPUT_ROOT / "track_c_development_export",
+    )
+    ce.add_argument("--authorized-phase")
+
+    cm = sub.add_parser(
+        "fit-track-c-models",
+        help="future gated Track-C per-unit endpoint/time/exposure models",
+    )
+    cm.add_argument("--development-counts", type=Path, required=True)
+    cm.add_argument(
+        "--output-dir", type=Path, default=OWNED_OUTPUT_ROOT / "track_c_models"
+    )
+    cm.add_argument("--authorized-phase")
+    cm.add_argument("--penalty", type=float, default=1.0)
+    cm.add_argument(
+        "--target-mode",
+        choices=("middle", "anywhere", "supported_middle", "both"),
+        default="both",
+        help="reviewed inference currently requires both, which runs all three frozen Track-C targets",
+    )
+    cm.add_argument("--nulls", type=int, default=MIN_TRACK_C_NULLS)
+    cm.add_argument("--temporal-nulls", type=int, default=MIN_TRACK_C_NULLS)
+    cm.add_argument("--min-train-sources-per-unit", type=int, default=20)
+    cm.add_argument("--min-context-class-train", type=int, default=3)
+
+    p = sub.add_parser(
+        "plot-results", help="make six simple plot types from saved/synthetic results"
+    )
+    p.add_argument("--input-dir", type=Path, required=True)
+    p.add_argument("--output-dir", type=Path, required=True)
+    return parser.parse_args(argv)
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    args = parse_args(argv)
+    if args.cmd == "inspect-schemas":
+        payload = inspect_allowed_artifact_schemas(args.accepted_root, args.output_dir)
+        print(
+            json.dumps(
+                {
+                    "schema_count": len(payload["schemas"]),
+                    "output": str(args.output_dir),
+                },
+                indent=2,
+            )
+        )
+    elif args.cmd == "smoke":
+        print(
+            json.dumps(
+                run_synthetic_smoke(args.output_dir, include_cebra=args.include_cebra),
+                indent=2,
+                sort_keys=True,
+            )
+        )
+    elif args.cmd == "cebra-config":
+        args.output_dir.mkdir(parents=True, exist_ok=True)
+        manifest = cebra_config_manifest()
+        write_json(args.output_dir / "track_b_cebra_config_manifest.json", manifest)
+        print(
+            json.dumps(
+                {
+                    "observed_fit_count": manifest["observed_fit_count"],
+                    "null_family_config_count": manifest["null_family_config_count"],
+                    "output": str(args.output_dir),
+                },
+                indent=2,
+            )
+        )
+    elif args.cmd == "build-track-c-allowlist":
+        print(json.dumps(build_component_allowlist(args), indent=2, sort_keys=True))
+    elif args.cmd == "target-semantics-audit":
+        print(json.dumps(build_target_semantics_audit(args), indent=2, sort_keys=True))
+    elif args.cmd == "run-track-a":
+        print(json.dumps(run_track_a_gated(args), indent=2, sort_keys=True))
+    elif args.cmd == "run-track-b":
+        print(json.dumps(run_track_b_gated(args), indent=2, sort_keys=True))
+    elif args.cmd == "export-track-c-counts":
+        print(json.dumps(run_track_c_export_gated(args), indent=2, sort_keys=True))
+    elif args.cmd == "fit-track-c-models":
+        print(json.dumps(run_track_c_models_gated(args), indent=2, sort_keys=True))
+    elif args.cmd == "plot-results":
+        print(
+            json.dumps(
+                {"plots": plot_phase1_result_types(args.input_dir, args.output_dir)},
+                indent=2,
+            )
+        )
+    else:  # pragma: no cover
+        raise AssertionError(args.cmd)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -1,0 +1,66 @@
+"""No-fit descriptive audit of the completed run and retained interrupted attempt."""
+import collections
+import gzip
+import json
+from pathlib import Path
+import statistics
+
+ROOT = Path('/home/hongyi-home-lab/neuro_science-path-autoresearch-20260908')
+RUN = ROOT / 'outputs/path-preprocessing-autoresearch-20260908/biological-20260908T115508Z'
+FINAL = RUN / 'final-20260908T133200Z'
+MANAGER = Path('/home/hongyi-home-lab/neuro_science/outputs/path-autoresearch-management-20260908')
+
+
+def load(path):
+    with (gzip.open if path.suffix == '.gz' else open)(path, 'rt') as stream:
+        return json.load(stream)
+
+
+def fit_ledger(directory):
+    counts, bad, iterations = collections.Counter(), 0, []
+    for line in (directory / 'progress.jsonl').open():
+        row = json.loads(line)
+        if row['event'] in ('cv_fit_complete', 'diagnostic_fit_complete', 'nuisance_fit_complete'):
+            counts[row['event']] += 1
+            assert row['fit_count'] == sum(counts.values())
+            bad += row.get('converged') is False
+            iterations.append(row['n_iter'])
+    return {'recorded_fits': sum(counts.values()), 'events': dict(counts),
+            'reported_nonconverged': bad, 'iteration_min': min(iterations), 'iteration_max': max(iterations)}
+
+
+def main():
+    summary = load(FINAL / 'final_summary.json')
+    sources = load(MANAGER / 'prefit-selected-sources.json')
+    original = {r['source_trial_id']: r['supported_middle_component_label'] for r in sources}
+    result = {'new_model_fits': 0, 'source_count': len(original), 'final': fit_ledger(FINAL),
+              'failed_attempt': fit_ledger(RUN / 'final-20260908T125617Z'), 'null_mobility': {}}
+    assert result['final']['recorded_fits'] == 81983
+    assert result['failed_attempt']['recorded_fits'] == 12850
+    result['prior_cv_fits'] = 300
+    result['total_recorded_biological_fits_including_interrupted_attempt'] = 300 + 81983 + 12850
+    pools = summary['validation_source_pool_sizes']
+    result['validation_pools'] = {'total': len(pools), 'singletons': sum(n == 1 for n in pools.values()),
+        'by_endpoint': {e: {'total': sum(k.startswith(e+'|') for k in pools),
+                           'singletons': sum(n == 1 for k, n in pools.items() if k.startswith(e+'|'))}
+                        for e in sorted({k.split('|')[0] for k in pools})}}
+    for kind in ('ordinary', 'temporal_half'):
+        changed = []
+        for directory in sorted((FINAL / f'null_{kind}').glob('world-*')):
+            permutation = load(directory / 'permutation.json')
+            changed.append(sum(label != original[key] for key, label in permutation['labels'].items()) / len(original))
+        strata = permutation['audit']['strata']
+        pure = [s for s in strata if len([v for v in s['counts'].values() if v]) < 2]
+        result['null_mobility'][kind] = {'worlds': len(changed), 'strata': len(strata),
+            'structurally_pure_strata': len(pure), 'sources_in_pure_strata': sum(s['n'] for s in pure),
+            'actual_changed_source_fraction_min_median_max': [min(changed), statistics.median(changed), max(changed)],
+            'producer_movable_fraction_definition': 'fraction of records in strata with any realized label change; not actual changed-source fraction'}
+    path = RUN / 'descriptive-audit.json'
+    with path.open('x') as stream:
+        json.dump(result, stream, indent=2, sort_keys=True)
+        stream.write('\n')
+    print(json.dumps(result, indent=2))
+
+
+if __name__ == '__main__':
+    main()

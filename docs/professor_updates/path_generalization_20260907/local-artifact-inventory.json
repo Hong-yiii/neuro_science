@@ -1,0 +1,165 @@
+{
+  "captured_utc": "2026-09-08T09:59:03.775095+00:00",
+  "root": "outputs/path-generalization-20260907",
+  "scope": "all regular files then present in this new study output tree; not raw/importer data, V6-V9 dependencies, runtime or worktrees",
+  "local_only": true,
+  "offsite_backup_created": false,
+  "files": 5253,
+  "bytes": 506404782,
+  "sha256_manifest": "LOCAL_SHA256SUMS",
+  "status_rules": "STATUS.md distinguishes accepted, failed, preflight, original report and new packaging artifacts",
+  "stages": {
+    "audits": {
+      "files": 1,
+      "bytes": 664
+    },
+    "frozen": {
+      "files": 3,
+      "bytes": 460573
+    },
+    "parent-final-synthetic-smoke": {
+      "files": 47,
+      "bytes": 401376
+    },
+    "parent-full-program-smoke": {
+      "files": 17,
+      "bytes": 127950
+    },
+    "phase1_schema_inspection": {
+      "files": 3,
+      "bytes": 22495
+    },
+    "phase1_schema_inspection_after_blocker_fixes": {
+      "files": 3,
+      "bytes": 27775
+    },
+    "phase1_schema_inspection_three_target": {
+      "files": 3,
+      "bytes": 27775
+    },
+    "phase1_schema_inspection_three_target_final": {
+      "files": 3,
+      "bytes": 27775
+    },
+    "phase1_synthetic_cebra_smoke": {
+      "files": 32,
+      "bytes": 344384
+    },
+    "phase1_synthetic_smoke": {
+      "files": 14,
+      "bytes": 98212
+    },
+    "phase1_synthetic_smoke_after_blocker_fixes": {
+      "files": 32,
+      "bytes": 347415
+    },
+    "phase1_synthetic_smoke_three_target": {
+      "files": 41,
+      "bytes": 396654
+    },
+    "phase1_synthetic_smoke_three_target_final": {
+      "files": 41,
+      "bytes": 396732
+    },
+    "results-20260907T081200Z/assembly_transfer": {
+      "files": 3,
+      "bytes": 76962
+    },
+    "results-20260907T081200Z/audits": {
+      "files": 16,
+      "bytes": 6790887
+    },
+    "results-20260907T081200Z/data_gate_checks.json": {
+      "files": 1,
+      "bytes": 776
+    },
+    "results-20260907T081200Z/execution_gate.json": {
+      "files": 1,
+      "bytes": 897
+    },
+    "results-20260907T081200Z/final_report_manifest.json": {
+      "files": 1,
+      "bytes": 2867
+    },
+    "results-20260907T081200Z/report_assets": {
+      "files": 38,
+      "bytes": 1462817
+    },
+    "results-20260907T081200Z/track_a": {
+      "files": 21,
+      "bytes": 9094988
+    },
+    "results-20260907T081200Z/track_a_reader_fix.json": {
+      "files": 1,
+      "bytes": 553
+    },
+    "results-20260907T081200Z/track_a_v2": {
+      "files": 29,
+      "bytes": 10282679
+    },
+    "results-20260907T081200Z/track_b": {
+      "files": 4840,
+      "bytes": 441823241
+    },
+    "results-20260907T081200Z/track_c": {
+      "files": 10,
+      "bytes": 358728
+    },
+    "results-20260907T081200Z/track_c_allowlist": {
+      "files": 5,
+      "bytes": 4658132
+    },
+    "results-20260907T081200Z/track_c_export": {
+      "files": 3,
+      "bytes": 5153373
+    },
+    "target_semantics_audit": {
+      "files": 5,
+      "bytes": 130806
+    },
+    "target_semantics_audit_after_blocker_fixes": {
+      "files": 5,
+      "bytes": 130806
+    },
+    "target_semantics_audit_three_target": {
+      "files": 5,
+      "bytes": 130806
+    },
+    "target_semantics_audit_three_target_final": {
+      "files": 5,
+      "bytes": 130806
+    },
+    "track_b_config": {
+      "files": 1,
+      "bytes": 24964
+    },
+    "track_b_config_after_blocker_fixes": {
+      "files": 1,
+      "bytes": 24964
+    },
+    "track_b_config_three_target": {
+      "files": 1,
+      "bytes": 24964
+    },
+    "track_b_config_three_target_final": {
+      "files": 1,
+      "bytes": 24964
+    },
+    "track_c_allowlist": {
+      "files": 5,
+      "bytes": 7028839
+    },
+    "track_c_allowlist_after_blocker_fixes": {
+      "files": 5,
+      "bytes": 7051987
+    },
+    "track_c_allowlist_three_target_final": {
+      "files": 5,
+      "bytes": 4657098
+    },
+    "track_c_allowlist_three_target_prefit": {
+      "files": 5,
+      "bytes": 4657098
+    }
+  }
+}

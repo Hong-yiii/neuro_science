@@ -1,0 +1,357 @@
+{
+  "assembly_transfer": {
+    "device": "cpu",
+    "fits_replayed": 50,
+    "maximum_embedding_CPU_GPU_difference": 1.1317431926727295e-05,
+    "maximum_probability_CPU_GPU_difference": 5.028619558811176e-07,
+    "metric_rows": 250,
+    "new_fits": 0,
+    "scope": "CPU forward only; same training-source pools, not independent biological validation",
+    "script_sha256": "c7c69eb1df97a9760b327402a6047abeb92afb487c55781046d7dab2e1b078d4",
+    "source_npz_sha256": "688e3b52f69a872c7aec420da99ebb6f0b80464351ded3813b077cd7ed3cf567"
+  },
+  "track_a": {
+    "finite_by_rows": {
+      "1024": [
+        0.4802083333333334,
+        0.4791666666666667,
+        0.5
+      ],
+      "16": [
+        0.475,
+        0.3333333333333333,
+        0.5833333333333334
+      ],
+      "256": [
+        0.4802083333333334,
+        0.4375,
+        0.5
+      ],
+      "64": [
+        0.48125,
+        0.4375,
+        0.5
+      ]
+    },
+    "known_truth_rows": 1800,
+    "lambda1_ba": 0.4791666666666667,
+    "rank_audit": {
+      "absolute_rank_tolerance": 1e-10,
+      "conditional_rank_upper_bounds": {
+        "train": {
+          "absent": 23,
+          "balanced_mixture_rank_bound": 69,
+          "present": 45
+        },
+        "validation": {
+          "absent": 5,
+          "balanced_mixture_rank_bound": 9,
+          "present": 3
+        }
+      },
+      "exact_validation_matrix_rank": 9,
+      "matrix_shape": [
+        30,
+        290
+      ],
+      "new_fits": 0,
+      "proof": "Each empirical source block/class has affine dimension <=n_sources-1; within-class block product ranks add; mixing two class means adds at most1.",
+      "scope": "rank bound of constructed WHOLE-CUE 290-feature empirical Q, NOT brain intrinsic dimension, not the pooled29-cell PCA covariance or nonlinear CEBRA output"
+    },
+    "source_budget_by_fraction": {
+      "0.5": [
+        0.44375,
+        0.020833333333333332,
+        0.8541666666666666
+      ],
+      "0.75": [
+        0.4708333333333333,
+        0.37499999999999994,
+        0.7708333333333333
+      ],
+      "1.0": [
+        0.4791666666666667,
+        0.4791666666666667,
+        0.4791666666666667
+      ]
+    },
+    "source_code_sha256": {
+      "driver": "340bd4fa14ee90b0a57cbc384785dff5be5936ab08146aee1e6620c0050d7bfb",
+      "place195_split_filtered_access.py": "2cd7e7a14f6a045078c59d2489e6d06a615f033dc0f6c0cbea14533561608c0d",
+      "place195_v7_v8_neural_experiments.py": "39ed10704d7b3258a4d7109c9c4ce7ddecc5de98d4c11efe66f019d3cb973089",
+      "place195_v8b_v9_cebra.py": "737ad148dcc261c3ec1bbbd1ada395b34b47b2b37c5920370d3107c209976f9a"
+    },
+    "validation_products": {
+      "absent": 24,
+      "present": 6
+    }
+  },
+  "track_b": {
+    "complete_null_permutations": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19
+    ],
+    "exact_audit": {
+      "audit": {
+        "all_numeric_prefix_differences_zero": true,
+        "all_producer_reload_differences_zero": true,
+        "artifacts_hashed": 4488,
+        "correction": "Null19 has the same exact BA7/12 as observed, but 0.5833333333333333 versus0.5833333333333334 caused raw>= to omit one tie. Exact fractions restore the intended inclusive test. No models/predictions changed.",
+        "exceedances_including_exact_ties": 18,
+        "family_configs": 14,
+        "family_max_pvalue": 0.9047619047619048,
+        "family_max_pvalue_exact": "19/21",
+        "fits": 342,
+        "null_maxima": {
+          "0": 1.0,
+          "1": 1.0,
+          "10": 0.5833333333333334,
+          "11": 0.5833333333333334,
+          "12": 1.0,
+          "13": 1.0,
+          "14": 0.8125,
+          "15": 0.5,
+          "16": 0.5,
+          "17": 1.0,
+          "18": 1.0,
+          "19": 0.5833333333333334,
+          "2": 0.6666666666666666,
+          "3": 0.8541666666666666,
+          "4": 0.75,
+          "5": 0.875,
+          "6": 1.0,
+          "7": 0.9375,
+          "8": 0.6458333333333334,
+          "9": 0.8333333333333334
+        },
+        "null_maxima_exact": {
+          "0": "1",
+          "1": "1",
+          "10": "7/12",
+          "11": "7/12",
+          "12": "1",
+          "13": "1",
+          "14": "13/16",
+          "15": "1/2",
+          "16": "1/2",
+          "17": "1",
+          "18": "1",
+          "19": "7/12",
+          "2": "2/3",
+          "3": "41/48",
+          "4": "3/4",
+          "5": "7/8",
+          "6": "1",
+          "7": "15/16",
+          "8": "31/48",
+          "9": "5/6"
+        },
+        "nulls": 20,
+        "observed_family_max_ba": 0.5833333333333334,
+        "observed_family_max_exact": "7/12",
+        "optimizer_updates": 510000,
+        "original_float_comparison_pvalue": 0.8571428571428571,
+        "prefix_pairs": 42,
+        "roles": {
+          "crossed_seed_primary": 50,
+          "dimension_sensitivity": 6,
+          "family_null": 280,
+          "paired_long_budget": 2,
+          "row_sensitivity": 4
+        },
+        "scope": "recomputed exact rational BA from saved decisions; allartifacthashes/losssteps/source-disjointness/producerreloadreceipts checked; no newfits",
+        "status": "complete"
+      },
+      "csv_path": "/home/hongyi-home-lab/neuro_science-path-diagnosis/outputs/path-generalization-20260907/results-20260907T081200Z/audits/track_b_exact_ba.csv",
+      "exceedances_including_exact_ties": 18,
+      "family_max_pvalue": 0.9047619047619048,
+      "family_max_pvalue_exact": "19/21",
+      "matches": true,
+      "null_maxima": [
+        1.0,
+        1.0,
+        0.6666666666666666,
+        0.8541666666666666,
+        0.75,
+        0.875,
+        1.0,
+        0.9375,
+        0.6458333333333334,
+        0.8333333333333334,
+        0.5833333333333334,
+        0.5833333333333334,
+        1.0,
+        1.0,
+        0.8125,
+        0.5,
+        0.5,
+        1.0,
+        1.0,
+        0.5833333333333334
+      ],
+      "null_maxima_exact": {
+        "0": "1",
+        "1": "1",
+        "2": "2/3",
+        "3": "41/48",
+        "4": "3/4",
+        "5": "7/8",
+        "6": "1",
+        "7": "15/16",
+        "8": "31/48",
+        "9": "5/6",
+        "10": "7/12",
+        "11": "7/12",
+        "12": "1",
+        "13": "1",
+        "14": "13/16",
+        "15": "1/2",
+        "16": "1/2",
+        "17": "1",
+        "18": "1",
+        "19": "7/12"
+      },
+      "observed_family_max_ba": 0.5833333333333334,
+      "observed_family_max_exact": "7/12",
+      "path": "/home/hongyi-home-lab/neuro_science-path-diagnosis/outputs/path-generalization-20260907/results-20260907T081200Z/audits/track_b_exact_audit.json",
+      "row_count": 342,
+      "status": "complete"
+    },
+    "expected_total_fits": 342,
+    "expected_updates": 510000,
+    "family_exceedances": 18,
+    "family_pvalue": 0.9047619047619048,
+    "family_pvalue_exact": "19/21",
+    "final_ready": true,
+    "fit_info_count_read": 342,
+    "null_completed_fit_count": 280,
+    "observed_by_role": {
+      "crossed_seed_primary": 50,
+      "dimension_sensitivity": 6,
+      "paired_long_budget": 2,
+      "row_sensitivity": 4
+    },
+    "source_code_sha256": {
+      "driver": "2821317f843ca2b285f2db20d9587c5dd594511e42b5fd63ad304130e4417de1",
+      "place195_split_filtered_access.py": "2cd7e7a14f6a045078c59d2489e6d06a615f033dc0f6c0cbea14533561608c0d",
+      "place195_v7_v8_neural_experiments.py": "39ed10704d7b3258a4d7109c9c4ce7ddecc5de98d4c11efe66f019d3cb973089",
+      "place195_v8b_v9_cebra.py": "737ad148dcc261c3ec1bbbd1ada395b34b47b2b37c5920370d3107c209976f9a"
+    }
+  },
+  "track_c": {
+    "data_gate": {
+      "count_rows": 64051,
+      "data_sha256": "b0f00cff980d0b813b638a3a2d51fff44e52809041957cd0af4bc817c16919d2",
+      "expected_rows": 64051,
+      "modeled_support_metadata": {
+        "anywhere": {
+          "cells": 12,
+          "flagged_sources": [],
+          "sessions": 4,
+          "source_counts": {
+            "train": 108,
+            "validation": 22
+          }
+        },
+        "middle": {
+          "cells": 15,
+          "flagged_sources": [],
+          "sessions": 5,
+          "source_counts": {
+            "train": 134,
+            "validation": 25
+          }
+        },
+        "supported_middle": {
+          "cells": 43,
+          "flagged_sources": [],
+          "sessions": 11,
+          "source_counts": {
+            "train": 267,
+            "validation": 52
+          }
+        }
+      },
+      "rectangular_within_session_source_cells": true,
+      "source_ids": 19162
+    },
+    "observed_global_statistics": {
+      "anywhere": 0.0018779946739230224,
+      "family_max_three_targets": 0.0038601434776949326,
+      "middle": -0.010680532277341484,
+      "supported_middle": 0.0038601434776949326
+    },
+    "pvalues": {
+      "session_endpoint_split": {
+        "anywhere": {
+          "exceedances": 39,
+          "nulls": 100,
+          "observed": 0.0018779946739230224,
+          "p_value": 0.39603960396039606
+        },
+        "family_max_three_targets": {
+          "exceedances": 47,
+          "nulls": 100,
+          "observed": 0.0038601434776949326,
+          "p_value": 0.4752475247524752
+        },
+        "middle": {
+          "exceedances": 92,
+          "nulls": 100,
+          "observed": -0.010680532277341484,
+          "p_value": 0.9207920792079208
+        },
+        "supported_middle": {
+          "exceedances": 9,
+          "nulls": 100,
+          "observed": 0.0038601434776949326,
+          "p_value": 0.09900990099009901
+        }
+      },
+      "session_endpoint_split_temporal_half": {
+        "anywhere": {
+          "exceedances": 30,
+          "nulls": 100,
+          "observed": 0.0018779946739230224,
+          "p_value": 0.3069306930693069
+        },
+        "family_max_three_targets": {
+          "exceedances": 43,
+          "nulls": 100,
+          "observed": 0.0038601434776949326,
+          "p_value": 0.43564356435643564
+        },
+        "middle": {
+          "exceedances": 84,
+          "nulls": 100,
+          "observed": -0.010680532277341484,
+          "p_value": 0.8415841584158416
+        },
+        "supported_middle": {
+          "exceedances": 19,
+          "nulls": 100,
+          "observed": 0.0038601434776949326,
+          "p_value": 0.19801980198019803
+        }
+      }
+    }
+  }
+}

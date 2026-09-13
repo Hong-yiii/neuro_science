@@ -1,0 +1,18 @@
+diff --git a/scripts/verify_path_generalization_package.py b/scripts/verify_path_generalization_package.py
+index b01feaa..9bff57e 100644
+--- a/scripts/verify_path_generalization_package.py
++++ b/scripts/verify_path_generalization_package.py
+@@ -89,9 +89,10 @@ def check():
+     except (OSError, ValueError) as exc:
+         raise SystemExit(f"Unreadable package evidence: {exc}") from exc
+     assert audit["family_max_pvalue_exact"] == "19/21"
+-    assert hashlib.sha256((package / name).read_bytes()).hexdigest() == manifest[
+-        "report_sha256"
+-    ]
++    assert (
++        hashlib.sha256((package / name).read_bytes()).hexdigest()
++        == manifest["report_sha256"]
++    )
+     return {"status": "verified", "files": files, "unchanged_tables": 9, "figures": 12}
+ 
+ 

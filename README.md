@@ -1,6 +1,9 @@
 # Neuro Science Workspace
 
-This folder is the top-level home for neuroscience work, lab context, and references to analysis code.
+This is the single neuroscience workspace: `~/neuro_science`.
+Start with the [current session and recovery guide](docs/workspace.md) for the
+September 10 consolidation, artifact locations, and reproducible setup.
+Earlier sessions are exploratory history, not separate active workspaces.
 
 ## Layout
 
@@ -28,13 +31,26 @@ learned independently by an artificial navigation agent is H2, a stretch aim.
 Place, view, and conjunctive analyses remain supporting validation and confound
 checks rather than the primary question.
 
-Latest exploratory results: [`V6–V9 teaching and audit report`](docs/reports/place195-v6-v9-autoresearch-20260906.md)
-(2026-09-06): geometry graph, pseudopopulation support, cue bins, PCA, and GPU CEBRA.
-The bounded benchmark was nonpositive; the report documents sparse source support
-and an early holdout-exposure incident, so it is not confirmatory H1 evidence.
+**Start with the [research handoff index](docs/reports/README.md)** (2026-09-08):
+current synthesis, completed endpoint and path studies, portable teaching reports,
+source-code preservation, verification, and explicit supersession labels.
+Endpoint-condition decoding improved in later settings; neither that success nor
+the nonpositive path analyses establish confirmatory H1 evidence. The original
+holdout-exposure record remains in force.
+
+- **Latest completed study:** [path-preprocessing report](docs/reports/path-preprocessing-autoresearch-20260908.md), [offline HTML](docs/reports/path-preprocessing-autoresearch-20260908.html), [agent brief](docs/reports/path-preprocessing-autoresearch-20260908-agent.md), and [September 9 review](docs/reports/path-preprocessing-review-20260909.md). Stronger regularization helped probability loss, but the historical result was 6→1-dominated and did not establish broad robustness. The prior verification replayed 82,283 model-fit instances with zero new fits.
+- [Earlier cross-study synthesis](docs/reports/recent-learnings-20260908.md) and [agent brief](docs/reports/recent-learnings-20260908-agent.md).
+- [PCA and below-chance explanation with plots](learning/place195-pca-and-below-chance-20260908.md).
+- [Artifact preservation and verification](docs/reports/research-release-20260908.md): Git is not a backup of ignored data/models.
+- [Path-generalization package](docs/professor_updates/path_generalization_20260907/README.md): corrected self-contained report, code, evidence and historical status labels. The study ran 342 CEBRA fits; cross-assembly checks of 50 observed encoders transferred across mixtures of training sources, but did not establish reliable source-pool generalization. Corrected family p is **19/21**; the cause of the gap is not uniquely established.
+- [Current condition-level proposal](docs/reports/path-generalization-next-steps-20260908.md): source-safe pseudopopulations, independent-source replication and endpoint controls; per-unit checks are complementary, not individual-significance gates. Exact same-trial claims retain their stronger recording contract.
+- [Path-study status/deprecation ledger](docs/professor_updates/path_generalization_20260907/STATUS.md) and [presentation corrections](docs/professor_updates/path_generalization_20260907/CORRECTIONS.md).
+
+The [V6–V9 teaching and audit report](docs/reports/place195-v6-v9-autoresearch-20260906.md)
+remains the accepted historical account of geometry, support, cue bins, PCA, and GPU CEBRA.
 
 - [Professor HTML report](docs/professor_updates/place195_v6_v9_20260906/place195-v6-v9-professor-methods-results-validity-20260906.html): download for offline reading with embedded figures.
-- [Audit instructions and non-pseudopopulation next steps](docs/reports/place195-audit-and-next-steps-20260907.md).
+- [Earlier audit guide and alternatives to forced common-panel pseudopopulations](docs/reports/place195-audit-and-next-steps-20260907.md).
 - [Data-volume comparison with CEBRA and hippocampal studies](docs/reports/cebra-data-volume-comparison-20260907.md).
 
 Raw data, detailed run artifacts, and runtime environments remain local/ignored;

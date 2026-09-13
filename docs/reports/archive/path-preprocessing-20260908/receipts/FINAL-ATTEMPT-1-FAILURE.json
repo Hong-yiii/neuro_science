@@ -1,0 +1,28 @@
+{
+  "status": "incomplete operational attempt; excluded from accepted final inference",
+  "background_task": "b4615b9d9",
+  "directory": "/home/hongyi-home-lab/neuro_science-path-autoresearch-20260908/outputs/path-preprocessing-autoresearch-20260908/biological-20260908T115508Z/final-20260908T125617Z",
+  "failure": "Output exceeded cap of 20.0MB; terminating task",
+  "background_reported_duration_seconds": 495,
+  "last_durable_progress_utc": "2026-09-08T13:05:39.009935+00:00",
+  "last_durable_fit_count": 12850,
+  "complete_ordinary_worlds": 29,
+  "complete_final_summary": false,
+  "last_incomplete_world_progress_fits_without_completed_model_package": 267,
+  "in_flight_unrecorded_fit_status": "unknown; not counted as completed",
+  "process_pid_checked_absent": 1141692,
+  "core_driver_sha256": "0b49c6d84e4b59842e4d64d8f6e18e075811590bd11dcd2834f1e0555b32782f",
+  "resolution": "Unchanged deterministic protocol restarted into a fresh output directory; stdout/stderr redirected to an owned file, not streamed through capped task output",
+  "rerun_task": "b2ef23df5",
+  "rerun_directory_name": "final-20260908T133200Z",
+  "rerun_core_code_or_scientific_policy_changed": false,
+  "redirected_stdout_smoke": {"task": "b50c02e54", "payload_bytes": 22020097, "exit_code": 0, "temporary_payload_removed": true},
+  "real_rerun_feedback_check": {"utc": "2026-09-08T13:44:55.653777+00:00", "fit_count": 19223, "redirected_log_bytes": 31391718, "background_status": "running beyond former cap"},
+  "identical_old_and_rerun_decompressed_prediction_sha256": {
+    "observed/validation_predictions.csv.gz": "26f665086d2a140eff72e1eedfc62c80811487b057e62059bd2400656fd0253c",
+    "nuisance/predictions.csv.gz": "a2de20c54d87cdeacb1cc95fe36a0244aa747db4d7d9248d055f7ac3dc76cb20",
+    "assembly_sensitivity/seed-1/validation_predictions.csv.gz": "3d11e15227e36343229daf7a533297591226c79ba90037e658b2afd70c823dcb",
+    "assembly_sensitivity/seed-2/validation_predictions.csv.gz": "eff98b6369bdec989ea23f4e43ebb1a58eb1363442f2ea7da52f16e83229ac33"
+  },
+  "interpretation": "Software/orchestration failure, not biological evidence. Duplicate seeds/fits are not replication or extra independent null worlds. No partial p-values or bootstrap intervals used."
+}

@@ -1,0 +1,199 @@
+"""Independent recomputation of saved study metrics and source assembly invariants."""
+from collections import Counter, defaultdict
+import csv
+import hashlib
+import json
+from pathlib import Path
+import sys
+import time
+import traceback
+
+import joblib
+import numpy as np
+from sklearn.metrics import accuracy_score, balanced_accuracy_score, f1_score, log_loss
+import torch
+
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
+from scripts.start_goal_autoresearch import BASE, PAIRS, arrays, encoder_rows, hidden_features, source_data, verify_inputs
+from scripts.place195_v8b_v9_cebra import flatten_rows, make_solver
+from scripts.place195_v7_v8_neural_experiments import session_from_cell
+
+STUDY = Path(__file__).resolve().parent
+
+
+def sha(path):
+    h = hashlib.sha256()
+    with path.open('rb') as f:
+        for block in iter(lambda: f.read(1024*1024), b''):
+            h.update(block)
+    return h.hexdigest()
+
+
+def csvrows(path):
+    with path.open() as f:
+        return list(csv.DictReader(f))
+
+
+def verify_metrics(phase):
+    recomputed = []
+    pairs = np.asarray(PAIRS)
+    for path in sorted(phase.rglob('*_metrics.json')):
+        row = json.loads(path.read_text())
+        with np.load(path.with_name(path.name.replace('_metrics.json', '_predictions.npz'))) as z:
+            y, pred, prob = z['y'], z['pred'], z['prob']
+        values = {'accuracy': accuracy_score(y,pred), 'balanced_accuracy': balanced_accuracy_score(y,pred),
+                  'macro_f1': f1_score(y,pred,average='macro',zero_division=0)}
+        if prob.size:
+            assert np.isfinite(prob).all() and np.all(prob >= 0)
+            np.testing.assert_allclose(prob.sum(axis=1),1,atol=1e-6)
+            values['log_loss'] = log_loss(y,prob,labels=np.unique(y))
+            np.testing.assert_array_equal(np.unique(y)[prob.argmax(axis=1)], pred)
+        else:
+            assert row['log_loss'] is None and row['decoder']=='svm'
+        if row['target']=='joint':
+            values.update(start_accuracy=accuracy_score(pairs[y,0],pairs[pred,0]),
+                          goal_accuracy=accuracy_score(pairs[y,1],pairs[pred,1]))
+        for name, value in values.items():
+            assert np.isclose(value,row[name],rtol=0,atol=1e-12), (path,name,value,row[name])
+        assert row['n_rows']==len(y)
+        recomputed.append(row)
+    expected=json.loads((phase/'metrics.json').read_text())
+    canonical=lambda rows: Counter(json.dumps(r,sort_keys=True) for r in rows)
+    assert canonical(expected)==canonical(recomputed), phase
+    return len(recomputed)
+
+
+def verify_components(source, parent):
+    x, mask, index, metadata, cells = source
+    original={m.source_trial_id:m for m in metadata}
+    splitrows={m['source_trial_id']:m for m in csvrows(parent/'source_splits.csv')}
+    assert set(splitrows)<=set(original)
+    support=json.loads((parent/'support.json').read_text())
+    selected=[cells.index(c) for c in support['cells']]
+    sessions=defaultdict(list)
+    for local,global_index in enumerate(selected):
+        cell=cells[global_index]
+        session=session_from_cell(cell)
+        sessions[session].append((local,global_index))
+    shuffle=json.loads((parent/'source_shuffle.json').read_text()) if (parent/'source_shuffle.json').exists() else None
+    if shuffle is not None:
+        groups=defaultdict(list)
+        for sid,row in splitrows.items():
+            groups[row['session_id'],row['split']].append(sid)
+        for sids in groups.values():
+            assert Counter(original[sid].label for sid in sids)==Counter(shuffle[sid] for sid in sids)
+    with np.load(parent/'arrays.npz') as z:
+        data={s:(z[f'X_{s}'],z[f'y_{s}']) for s in ('train','development')}
+    used=defaultdict(set)
+    seen=set()
+    for row in csvrows(parent/'components.csv'):
+        sid=row['source_trial_id']; split=row['split']; session=row['session_id']; i=int(row['pseudo_row'])
+        assert original[sid].session_id==session and splitrows[sid]['split']==split
+        label=shuffle[sid] if shuffle is not None else original[sid].label
+        assert label==row['label']
+        target='development' if split=='validation' else split
+        xx, yy=data[target]
+        assert label=='%s->%s' % PAIRS[yy[i]]
+        assert (split,i,session) not in seen
+        seen.add((split,i,session)); used[split].add(sid)
+        local,global_indices=zip(*sessions[session])
+        assert mask[index[sid],list(global_indices)].all()
+        np.testing.assert_array_equal(xx[i,list(local),:],x[index[sid],list(global_indices),:])
+    assert not used['train'] & used['validation']
+    assert len(seen)==sum(len(xx) for xx,_ in data.values())*len(sessions)
+    if not support['chronological_within_condition'] and shuffle is None:
+        seed=int(parent.name.rsplit('seed',1)[1])
+        base=arrays(seed)
+        np.testing.assert_array_equal(data['development'][0],base['development'][0][:,selected,:])
+    if support['chronological_within_condition']:
+        groups=defaultdict(lambda:defaultdict(list))
+        for sid,row in splitrows.items():groups[row['session_id'],row['label']][row['split']].append(sid)
+        for pool in groups.values():assert max(pool['train'])<min(pool['validation'])
+    assert len(used['train'])==support['used_train_sources']
+    assert len(used['validation'])==support['used_development_sources']
+    return len(seen)
+
+
+def model_data(folder, config):
+    for parent in (folder.parent,folder.parent.parent):
+        file=parent/'arrays.npz'
+        if file.exists():
+            with np.load(file) as z:
+                return {s:(z[f'X_{s}'],z[f'y_{s}']) for s in ('train','development')}
+    return arrays(config['seed'])
+
+
+def check_scalers_and_ce_heads(study):
+    scalers, heads=0,0
+    for file in study.glob('*/**/input_scaler.joblib'):
+        if '00-smoke' in str(file):continue
+        folder=file.parent
+        config=json.loads((folder/'config.json').read_text())
+        data=model_data(folder,config)
+        whole=config.get('whole',False)
+        xx=encoder_rows(data['train'][0],whole)
+        flat=flatten_rows(xx,data['train'][1])[0]
+        scaler=joblib.load(file)
+        np.testing.assert_allclose(scaler.mean_,flat.mean(axis=0,dtype=np.float64),rtol=0,atol=1e-10)
+        scalers+=1
+        if not (folder/'model.pth').exists():continue
+        state=torch.load(folder/'model.pth',map_location='cpu',weights_only=False)
+        model=make_solver(flat.shape[1],8,32,.001,'cpu').model
+        model.load_state_dict(state['encoder'],strict=True)
+        dev=encoder_rows(data['development'][0],whole)
+        features=hidden_features(model,scaler,dev,'cpu',8)
+        head=torch.nn.Linear(features.shape[1],30)
+        head.load_state_dict(state['head'],strict=True)
+        with torch.no_grad():prob=torch.softmax(head(torch.as_tensor(features)),dim=1).numpy()
+        with np.load(folder/'head/development_predictions.npz') as z:
+            np.testing.assert_allclose(prob,z['prob'],rtol=1e-4,atol=3e-6)
+            np.testing.assert_array_equal(prob.argmax(axis=1),z['pred'])
+        heads+=1
+    return scalers,heads
+
+
+def main():
+    torch.set_num_threads(2)
+    started=time.monotonic()
+    result={'status':'running'}
+    try:
+        result['baseline_used_input_hashes']=len(verify_inputs())
+        result['artifact_hashes']=0; result['metrics']=0; result['parity_checks']=0
+        for path in sorted(STUDY.glob('*/manifest.json')):
+            manifest=json.loads(path.read_text()); assert manifest['status']=='completed',path
+            phase=path.parent
+            for relative,expected in json.loads((phase/'artifact_hashes.json').read_text()).items():
+                assert sha(phase/relative)==expected,(phase,relative)
+                result['artifact_hashes']+=1
+            result['metrics']+=verify_metrics(phase)
+            for parity in phase.rglob('parity.json'):
+                assert json.loads(parity.read_text())['max_abs_diff']<=1e-6
+                result['parity_checks']+=1
+        source=source_data(); total=0
+        for phase in ('04-scaling','05-nulls'):
+            for parent in sorted((STUDY/phase).glob('*_seed*')):
+                total+=verify_components(source,parent)
+        result['checked_session_source_components']=total
+        result['training_only_scalers'],result['ce_head_cpu_replays']=check_scalers_and_ce_heads(STUDY)
+        cross=0
+        for seed in (0,1,2):
+            data=arrays(seed); goal=np.asarray(PAIRS)[data['development'][1],1]
+            parent=STUDY/'01-baselines'/f'student_seed{seed}'
+            models={b:joblib.load(parent/f'bin{b}_goal/decoder.joblib') for b in range(10)}
+            for r in csvrows(parent/'cross_temporal_goal.csv'):
+                pred=models[int(r['train_bin'])].predict(data['development'][0][:,:,int(r['development_bin'])])
+                assert np.isclose(accuracy_score(goal,pred),float(r['accuracy']),atol=1e-12)
+                cross+=1
+        result['cross_temporal_entries']=cross
+        result['status']='passed'
+    except Exception:
+        result['status']='failed'; result['traceback']=traceback.format_exc()
+        raise
+    finally:
+        result['seconds']=time.monotonic()-started
+        (STUDY/'validation.json').write_text(json.dumps(result,indent=2)+'\n')
+        print(json.dumps(result,indent=2))
+
+
+if __name__=='__main__':main()

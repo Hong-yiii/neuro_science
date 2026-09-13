@@ -1,0 +1,122 @@
+[
+  {
+    "source": "/home/hongyi-home-lab/neuro_science-path-autoresearch-20260908/work/path-autoresearch-20260908/code-snapshots/final-inference/place195_path_preprocessing_autoresearch.py",
+    "path": "docs/reports/archive/path-preprocessing-20260908/code/final-inference/place195_path_preprocessing_autoresearch.py.txt",
+    "sha256": "0b49c6d84e4b59842e4d64d8f6e18e075811590bd11dcd2834f1e0555b32782f"
+  },
+  {
+    "source": "/home/hongyi-home-lab/neuro_science-path-autoresearch-20260908/work/path-autoresearch-20260908/code-snapshots/final-inference/place195_split_filtered_access.py",
+    "path": "docs/reports/archive/path-preprocessing-20260908/code/final-inference/place195_split_filtered_access.py.txt",
+    "sha256": "2cd7e7a14f6a045078c59d2489e6d06a615f033dc0f6c0cbea14533561608c0d"
+  },
+  {
+    "source": "/home/hongyi-home-lab/neuro_science-path-autoresearch-20260908/work/path-autoresearch-20260908/code-snapshots/final-inference/place195_v7_v8_neural_experiments.py",
+    "path": "docs/reports/archive/path-preprocessing-20260908/code/final-inference/place195_v7_v8_neural_experiments.py.txt",
+    "sha256": "39ed10704d7b3258a4d7109c9c4ce7ddecc5de98d4c11efe66f019d3cb973089"
+  },
+  {
+    "source": "/home/hongyi-home-lab/neuro_science-path-autoresearch-20260908/work/path-autoresearch-20260908/code-snapshots/final-inference/test_place195_path_preprocessing_autoresearch.py",
+    "path": "docs/reports/archive/path-preprocessing-20260908/code/final-inference/test_place195_path_preprocessing_autoresearch.py.txt",
+    "sha256": "809c48de233725c9ad97e4e7d43e4511949f6bb165a74f90b1af9f157f8cd3ec"
+  },
+  {
+    "source": "/home/hongyi-home-lab/neuro_science-path-autoresearch-20260908/work/path-autoresearch-20260908/code-snapshots/final-inference/verify_path_preprocessing_results.py",
+    "path": "docs/reports/archive/path-preprocessing-20260908/code/final-inference/verify_path_preprocessing_results.py.txt",
+    "sha256": "48d2999fce61e49cf763216c4edc9ad11e596d2f5bc5b03dc1c04a4c1500fe0b"
+  },
+  {
+    "source": "/home/hongyi-home-lab/neuro_science-path-autoresearch-20260908/work/path-autoresearch-20260908/code-snapshots/gated-export-round1/place195_path_preprocessing_autoresearch.py",
+    "path": "docs/reports/archive/path-preprocessing-20260908/code/gated-export-round1/place195_path_preprocessing_autoresearch.py.txt",
+    "sha256": "2daafc6501dd0c974c21dea2d8513fb169e6adc8716107e4d25cd43a5de5deb0"
+  },
+  {
+    "source": "/home/hongyi-home-lab/neuro_science-path-autoresearch-20260908/work/path-autoresearch-20260908/code-snapshots/gated-export-round1/place195_split_filtered_access.py",
+    "path": "docs/reports/archive/path-preprocessing-20260908/code/gated-export-round1/place195_split_filtered_access.py.txt",
+    "sha256": "2cd7e7a14f6a045078c59d2489e6d06a615f033dc0f6c0cbea14533561608c0d"
+  },
+  {
+    "source": "/home/hongyi-home-lab/neuro_science-path-autoresearch-20260908/work/path-autoresearch-20260908/code-snapshots/gated-export-round1/place195_v7_v8_neural_experiments.py",
+    "path": "docs/reports/archive/path-preprocessing-20260908/code/gated-export-round1/place195_v7_v8_neural_experiments.py.txt",
+    "sha256": "39ed10704d7b3258a4d7109c9c4ce7ddecc5de98d4c11efe66f019d3cb973089"
+  },
+  {
+    "source": "/home/hongyi-home-lab/neuro_science/outputs/path-autoresearch-management-20260908/PROTOCOL-FROZEN-V1.md",
+    "path": "docs/reports/archive/path-preprocessing-20260908/receipts/PROTOCOL-FROZEN-V1.md",
+    "sha256": "7e47c384791f7bab11ce743ae83562807c21a5583a2a7e788dfc9009b8cdd862"
+  },
+  {
+    "source": "/home/hongyi-home-lab/neuro_science/outputs/path-autoresearch-management-20260908/SELECTION-FROZEN.json",
+    "path": "docs/reports/archive/path-preprocessing-20260908/receipts/SELECTION-FROZEN.json",
+    "sha256": "bcf77b3b07d0e5a75f18edd796418a154359caefa57b522eee23204ebe772ab3"
+  },
+  {
+    "source": "/home/hongyi-home-lab/neuro_science/outputs/path-autoresearch-management-20260908/ROUND2-DECISION.md",
+    "path": "docs/reports/archive/path-preprocessing-20260908/receipts/ROUND2-DECISION.md",
+    "sha256": "16fadac12cf20962c515e74b159b30144c1ada7088ec8aba3a8af66d3f80a33c"
+  },
+  {
+    "source": "/home/hongyi-home-lab/neuro_science/outputs/path-autoresearch-management-20260908/FINAL-ATTEMPT-1-FAILURE.json",
+    "path": "docs/reports/archive/path-preprocessing-20260908/receipts/FINAL-ATTEMPT-1-FAILURE.json",
+    "sha256": "9f18abb365885d9194da3f42adafd382009430fc0d5411d076d25dd06197b640"
+  },
+  {
+    "source": "/home/hongyi-home-lab/neuro_science/outputs/path-autoresearch-management-20260908/REVIEW-RESOLUTION.md",
+    "path": "docs/reports/archive/path-preprocessing-20260908/receipts/REVIEW-RESOLUTION.md",
+    "sha256": "c6ccaf5dec6015af7a101f80f44a7abf3803e7e8f2b4570a0306e9f57b0243f2"
+  },
+  {
+    "source": "/home/hongyi-home-lab/neuro_science-path-autoresearch-20260908/scripts/build_path_preprocessing_report.py",
+    "path": "docs/reports/archive/path-preprocessing-20260908/code/completed-study/build_path_preprocessing_report.py.txt",
+    "sha256": "f9376ff483bcab7d9bc03089a1f1a9d402e5734c5ba610daebbe33875b9d5c0d"
+  },
+  {
+    "source": "/home/hongyi-home-lab/neuro_science-path-autoresearch-20260908/scripts/place195_path_preprocessing_autoresearch.py",
+    "path": "docs/reports/archive/path-preprocessing-20260908/code/completed-study/place195_path_preprocessing_autoresearch.py.txt",
+    "sha256": "0b49c6d84e4b59842e4d64d8f6e18e075811590bd11dcd2834f1e0555b32782f"
+  },
+  {
+    "source": "/home/hongyi-home-lab/neuro_science-path-autoresearch-20260908/scripts/test_place195_path_preprocessing_autoresearch.py",
+    "path": "docs/reports/archive/path-preprocessing-20260908/code/completed-study/test_place195_path_preprocessing_autoresearch.py.txt",
+    "sha256": "327cec642dd254be5e36c14dba0e566aea3fd23756b8f805719aa46bae2d6514"
+  },
+  {
+    "source": "/home/hongyi-home-lab/neuro_science-path-autoresearch-20260908/scripts/verify_path_preprocessing_results.py",
+    "path": "docs/reports/archive/path-preprocessing-20260908/code/completed-study/verify_path_preprocessing_results.py.txt",
+    "sha256": "b8b1030d6e322faf0d8e3e6fdf19e5aec1e6a0a5cb0ab9474cf6ede2385c3dea"
+  },
+  {
+    "source": "/home/hongyi-home-lab/neuro_science/work/retired-worktrees/neuro_science-path-autoresearch-20260908/work/path-autoresearch-20260908/summarize_final_evidence.py",
+    "path": "docs/reports/archive/path-preprocessing-20260908/code/helpers/summarize_final_evidence.py.txt",
+    "sha256": "43a7a576c1e8462a29523768d013ada0e2b544b9d8d3c56d10d4aacf64ce66eb"
+  },
+  {
+    "source": "/home/hongyi-home-lab/neuro_science/work/retired-worktrees/neuro_science-path-autoresearch-20260908/work/path-autoresearch-20260908/make_portable_bundle.py",
+    "path": "docs/reports/archive/path-preprocessing-20260908/code/helpers/make_portable_bundle.py.txt",
+    "sha256": "15f7d5e54643b3fa12f6590937ba0e03d53ab31237eff97894e2b97e70c80156"
+  },
+  {
+    "source": "/home/hongyi-home-lab/neuro_science/work/retired-worktrees/neuro_science-path-autoresearch-20260908/work/path-autoresearch-20260908/check_report_delivery.py",
+    "path": "docs/reports/archive/path-preprocessing-20260908/code/helpers/check_report_delivery.py.txt",
+    "sha256": "ae50d544b507286cee08ea061d4acef21b4778c923f5543760e57bff237fceba"
+  },
+  {
+    "source": "/home/hongyi-home-lab/neuro_science/outputs/path-autoresearch-management-20260908/audit_prefit_support.py",
+    "path": "docs/reports/archive/path-preprocessing-20260908/code/helpers/audit_prefit_support.py.txt",
+    "sha256": "6e4bdaa31b47f7bc02376f58f1cb1c6721cffb0f2ecb7da3c6896b142971ec40"
+  },
+  {
+    "source": "/home/hongyi-home-lab/neuro_science/outputs/path-preprocessing-autoresearch-20260908/biological-20260908T115508Z/verification-final.json",
+    "path": "docs/reports/archive/path-preprocessing-20260908/receipts/verification-final.json",
+    "sha256": "e4579525257ef48157093f6552f0430b3162d7a2c8a9a4b4b7307cd829719dac"
+  },
+  {
+    "source": "/home/hongyi-home-lab/neuro_science/outputs/path-preprocessing-autoresearch-20260908/biological-20260908T115508Z/descriptive-audit.json",
+    "path": "docs/reports/archive/path-preprocessing-20260908/receipts/descriptive-audit.json",
+    "sha256": "48c6c291927b6971ada355eeaa297ffdc73b30e5ca2aa76734f25f1e5643f20b"
+  },
+  {
+    "source": "/home/hongyi-home-lab/neuro_science/outputs/path-preprocessing-autoresearch-20260908/biological-20260908T115508Z/final-20260908T133200Z/final_summary.json",
+    "path": "docs/reports/archive/path-preprocessing-20260908/receipts/final_summary.json",
+    "sha256": "6f6f80bf17400e2c3dcd8057e52134517475d63ce9a88c93301b0fc7b2f97b47"
+  }
+]

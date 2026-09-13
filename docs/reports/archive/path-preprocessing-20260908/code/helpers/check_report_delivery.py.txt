@@ -1,0 +1,94 @@
+"""Check the actual report table, local links, offline resources and evidence hashes."""
+import csv
+import gzip
+import hashlib
+from html.parser import HTMLParser
+import importlib.metadata
+import json
+from pathlib import Path
+import statistics
+from urllib.parse import unquote, urlsplit
+
+from markdown_it import MarkdownIt
+
+ROOT = Path('/home/hongyi-home-lab/neuro_science-path-autoresearch-20260908')
+RUN = ROOT / 'outputs/path-preprocessing-autoresearch-20260908/biological-20260908T115508Z'
+DOCS = ROOT / 'docs/reports'
+NAME = 'path-preprocessing-autoresearch-20260908'
+
+
+class Page(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.ids, self.links, self.resources = [], [], []
+        self.svg = self.figures = 0
+
+    def handle_starttag(self, tag, attrs):
+        attrs = dict(attrs)
+        if 'id' in attrs:
+            self.ids.append(attrs['id'])
+        if tag == 'a':
+            self.links.append(attrs.get('href', ''))
+        if tag in ('img', 'script', 'iframe', 'object', 'embed', 'link', 'image'):
+            self.resources.append((tag, attrs))
+        if tag == 'svg':
+            self.svg += 1
+            assert attrs.get('role') == 'img' and attrs.get('aria-labelledby')
+        self.figures += tag == 'figure'
+
+
+def main():
+    body = (DOCS / f'{NAME}.md').read_text()
+    family = json.loads((RUN / 'round2/round2_summary.json').read_text())['family20_summary_rows']
+    with gzip.open(RUN / 'final-20260908T133200Z/observed/validation_metrics.csv.gz', 'rt') as stream:
+        observed = list(csv.DictReader(stream))
+    checked = 0
+    for line in body.splitlines():
+        if not line.startswith(('| 1 /', '| 2 /', '| 5 /', '| **1 /')):
+            continue
+        name, cv, validation, accuracy = [x.strip().replace('**', '').replace('−', '-') for x in line.strip('|').split('|')]
+        bins, transform, scaler, penalty = name.split(' / ')
+        row = next(r for r in family if (r['temporal_bins'], r['transform'], r['scaler'], r['lambda_l2']) ==
+                   (int(bins), transform + '_rate', 'variance_floor' if scaler == 'floor' else scaler, float(penalty)))
+        data = [r for r in observed if r['candidate_key'] == row['candidate_key']]
+        assert abs(float(cv) - row['primary_cv_delta_log_loss']) <= .0000051
+        assert abs(float(validation) - statistics.mean(float(r['delta_log_loss_baseline_minus_model']) for r in data)) <= .0000051
+        assert abs(float(accuracy.rstrip('%')) - 100 * statistics.mean(float(r['balanced_accuracy']) for r in data)) <= .0051
+        checked += 1
+    assert checked == 20
+    parser = Page()
+    page = (DOCS / f'{NAME}.html').read_text()
+    parser.feed(page)
+    assert len(parser.ids) == len(set(parser.ids))
+    assert parser.svg == parser.figures == 4 and not parser.resources
+    assert 'figure:' not in page and '<script' not in page
+    for label in ('Source bootstrap', 'Influence', 'Recorded completion'):
+        assert f'<strong>{label}:</strong>' in page, label
+    checked_links = 0
+    for path in (DOCS / f'{NAME}.md', DOCS / f'{NAME}-agent.md', DOCS / 'path-preprocessing-prefit-20260908.md'):
+        for token in MarkdownIt('commonmark').parse(path.read_text()):
+            for child in token.children or []:
+                if child.type == 'link_open':
+                    url = urlsplit(child.attrGet('href'))
+                    if not url.scheme and url.path:
+                        assert (path.parent / unquote(url.path)).is_file(), url.path
+                        checked_links += 1
+    receipt = json.loads((RUN / 'verification-final.json').read_text())
+    unchanged = 0
+    for relative, expected in receipt['artifact_hashes'].items():
+        assert hashlib.sha256((RUN / relative).read_bytes()).hexdigest() == expected, relative
+        unchanged += 1
+    result = {'status': 'passed', 'new_model_fits': 0, 'candidate_rows_checked': checked,
+              'embedded_accessible_svgs': parser.svg, 'duplicate_html_ids': 0, 'external_page_resources': 0,
+              'new_report_local_links_checked': checked_links, 'verified_run_files_unchanged': unchanged,
+              'renderer_versions': {p: importlib.metadata.version(p) for p in ('matplotlib', 'markdown-it-py')},
+              'report_hashes': {p.name: hashlib.sha256(p.read_bytes()).hexdigest()
+                  for p in (DOCS / f'{NAME}.md', DOCS / f'{NAME}.html', DOCS / f'{NAME}-agent.md', DOCS / 'path-preprocessing-prefit-20260908.md')}}
+    with (RUN / 'report-validation.json').open('x') as stream:
+        json.dump(result, stream, indent=2, sort_keys=True)
+        stream.write('\n')
+    print(json.dumps(result, indent=2))
+
+
+if __name__ == '__main__':
+    main()

@@ -1,0 +1,11 @@
+{
+  "scope": "CPU forward only; same training-source pools, not independent biological validation",
+  "fits_replayed": 50,
+  "metric_rows": 250,
+  "new_fits": 0,
+  "device": "cpu",
+  "script_sha256": "c7c69eb1df97a9760b327402a6047abeb92afb487c55781046d7dab2e1b078d4",
+  "source_npz_sha256": "688e3b52f69a872c7aec420da99ebb6f0b80464351ded3813b077cd7ed3cf567",
+  "maximum_embedding_CPU_GPU_difference": 1.1317431926727295e-05,
+  "maximum_probability_CPU_GPU_difference": 5.028619558811176e-07
+}

@@ -1,6 +1,16 @@
-# Place195 audit guide and alternatives to forced pseudopopulations
+# Place195 audit guide and alternatives to forced common-panel pseudopopulations
 
-Status: documentation of completed exploratory work and a proposed next step, not a new fitting stage. The original holdout is not pristine. This guide preserves the earlier inline audit instructions without depending on temporary cmux URLs.
+> **Earlier recommendation, partially superseded 2026-09-08.** Audit procedures
+> and V6–V9 results remain historical evidence. The [completed follow-up](../professor_updates/path_generalization_20260907/README.md)
+> now includes the proposed support audit and real-trial controls. Use the
+> [current plan](path-generalization-next-steps-20260908.md) for next work:
+> source-safe pseudopopulations remain central for condition-level inference;
+> per-unit checks complement them and do not require individually significant
+> neurons or a large simultaneous195 recording.
+
+> **Historical guide — updated status, 2026-09-08:** the source-preserving per-unit work proposed below was subsequently completed as Track C. Read the [current handoff](README.md) and [latest synthesis](recent-learnings-20260908.md) before treating its next-step section as pending. The audit procedure and incident disclosures remain relevant.
+
+Original status: documentation of completed exploratory work and a proposed next step, not a new fitting stage. The original holdout is not pristine. This guide preserves the earlier inline audit instructions without depending on temporary cmux URLs.
 
 ## What is portable in this repository
 
@@ -65,7 +75,7 @@ The reduction combines behavioral eligibility, a fixed endpoint contrast, neural
 
 Then consider, in order:
 
-1. **Per-unit encoding and supported per-session decoding.** Model observed cue counts with exposure and appropriate endpoint/context controls; use unit/session effects and partial pooling only where supported. Encoding association is not automatically operational decoding. For decoding, preserve one real trial per row and aggregate held-out performance improvements across sessions, not fake population vectors. Do not average signed neuronal coefficients and interpret cancellation as absent information.
+1. **Per-unit encoding and supported per-session decoding.** Model observed cue counts with exposure and appropriate endpoint/context controls; use unit/session effects and partial pooling only where supported. Encoding association is not automatically operational decoding. For decoding, preserve one real trial per row and aggregate held-out performance improvements across sessions, not pretending a synthetic population vector is one real simultaneous trial. Do not average signed neuronal coefficients and interpret cancellation as absent information.
 2. **Shared latent models with session-specific mappings.** LFADS dynamic stitching is a relevant precedent: separate readin/readout mappings share a generative model. Its demonstrated alignment used condition-averaged PCA and must be training-only in our design. A bidirectional encoder must receive cue-period input only, not later navigation activity. Shared latent structure does not establish unobserved simultaneity.
 3. **Larger multi-session models only after support checks.** POYO/NDT2 show how heterogeneous recordings can share models without fixed neuron correspondence. Their data regimes do not establish effectiveness on our sparse selected-unit cohort or a universal minimum sample size.
 
@@ -79,4 +89,4 @@ If expanding endpoint coverage, do not reuse the current `source_level_shuffle` 
 - [POYO primary proceedings](https://proceedings.neurips.cc/paper_files/paper/2023/hash/8ca113d122584f12a6727341aaf58887-Abstract-Conference.html): heterogeneous-unit architecture; much larger pretraining regime.
 - [NDT2 primary paper](https://proceedings.neurips.cc/paper_files/paper/2023/file/fe51de4e7baf52e743b679e3bdba7905-Paper-Conference.pdf): multi-context neural pretraining, not a proven remedy for this dataset.
 
-No non-pseudopopulation model was fitted by this follow-up review. The recommendation is to preserve real trial–neural links and share parameters where justified, not to invent missing observations or expand the selected-cell scope silently.
+No non-pseudopopulation model was fitted by this earlier follow-up review; the subsequent path-generalization study did fit per-unit real-trial controls. The recommendation is to preserve real trial–neural links and share parameters where justified, not to invent missing observations or expand the selected-cell scope silently.

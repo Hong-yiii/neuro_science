@@ -1,0 +1,72 @@
+{
+  "status": "reviewed_for_pull_request",
+  "released_utc": "2026-09-08T09:59:26.671653+00:00",
+  "report_path": "docs/professor_updates/path_generalization_20260907/path-generalization-teaching-audit-20260907.html",
+  "report_sha256": "cc941bed4aad08ff042c09895f871ce7f809221fc002d81f0078954c5cd65ec2",
+  "report_bytes": 845785,
+  "inline_figures": 12,
+  "word_count_method": "generator estimate, including audit tables/path fragments",
+  "word_count": 13209,
+  "worktree": "/home/hongyi-home-lab/neuro_science-path-diagnosis",
+  "branch": "research/path-generalization-20260907",
+  "base_head": "a9d8dacbbe38d0d82b9f75444e5f538b5e411352",
+  "results_root": "outputs/path-generalization-20260907/results-20260907T081200Z",
+  "generator_path": "scripts/build_path_generalization_report.py",
+  "generator_sha256": "f508ba7d5d543b796479086d5a054877d6078a574995e9b36ffd22cd4dfbbafd",
+  "frozen_model_driver_sha256": "2821317f843ca2b285f2db20d9587c5dd594511e42b5fd63ad304130e4417de1",
+  "track_a_reader_fixed_driver_sha256": "340bd4fa14ee90b0a57cbc384785dff5be5936ab08146aee1e6620c0050d7bfb",
+  "protocol_sha256": "14e13571233b12727b7ab5e51022eddb6e379bfbe881ba83f405afcd6e14483b",
+  "live_driver_postrun_note": "live source includes a regression-tested inclusive floating-tie comparison correction; frozen producers and models remain unchanged",
+  "live_driver_sha256": "aaaf174114de0db500fb85a153fe7d5e9c447cb4702c172863bd4f6da29cf6f4",
+  "new_cebra_fits": 342,
+  "new_cebra_updates": 510000,
+  "numeric_prefix_pairs": 42,
+  "hashed_fit_artifacts": 4488,
+  "exact_family_p": "19/21",
+  "original_test_pristine": false,
+  "new_test_model_evaluation": false,
+  "tests_passed": 38,
+  "reviews": [
+    "evidence/reviews/track-a-results-review.md",
+    "evidence/reviews/track-b-final-review.md",
+    "evidence/reviews/track-c-results-review.md",
+    "evidence/reviews/assembly-transfer-review.md",
+    "evidence/reviews/final-html-pedagogy-review.md",
+    "evidence/reviews/final-html-factual-review.md",
+    "evidence/reviews/final-release-followup-review.md"
+  ],
+  "review_scope": "Historical AI QA applies to its pinned hashes; packaging reviews approve the current cc941bed report and documented delta. Not external human peer review.",
+  "render_checks": {
+    "browser": "Headless Chrome152",
+    "desktop_opening_visually_checked": true,
+    "corrected_figure1_visually_checked": true,
+    "landscape_numeric_appendix_visually_checked": true,
+    "full_a4_pdf_pages": 36,
+    "audit_render_directory": "outputs/path-generalization-20260907/results-20260907T081200Z/audits/pr-packaging-20260908"
+  },
+  "presentation_revision": "2026-09-08",
+  "original_release": {
+    "report_path": "docs/professor_updates/path_generalization_20260907/archive/release-20260907/path-generalization-teaching-audit-20260907.html",
+    "manifest_path": "docs/professor_updates/path_generalization_20260907/archive/release-20260907/report-manifest.json",
+    "report_sha256": "31c745a626d4fcad3a38f7e9842dce1ac57321594aca0464904ce3718d55a2d7"
+  },
+  "correction_note": "docs/professor_updates/path_generalization_20260907/CORRECTIONS.md",
+  "packaging_base_head": "ca8301c",
+  "new_biological_fits_during_packaging": 0,
+  "numerical_tables_unchanged": 9,
+  "local_payload_retained_not_uploaded": true,
+  "packaging_reviews": [
+    "evidence/reviews/pr-package-integrity-review.md",
+    "evidence/reviews/pr-package-scientific-review.md"
+  ],
+  "packaging_review_completed_utc": "2026-09-08T10:12:50.262186+00:00",
+  "packaging_checks": {
+    "code_only_checkout_passed": true,
+    "all_staged_bytes_match_working_files": true,
+    "common_secret_pattern_screen_passed": true,
+    "new_raw_or_checkpoint_payload_staged": false,
+    "full_local_inventory_verified_files": 5253,
+    "numerical_tables_unchanged": 9,
+    "new_biological_fits": 0
+  }
+}

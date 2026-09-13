@@ -1,0 +1,1151 @@
+"""Source-safe endpoint study: run with python -m scripts.start_goal_autoresearch."""
+
+from __future__ import annotations
+
+import argparse
+import csv
+import importlib.metadata
+import json
+import random
+import shutil
+import sys
+import time
+import traceback
+from collections import Counter, defaultdict
+from dataclasses import asdict, dataclass, replace
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any
+import joblib
+import numpy as np
+import torch
+from cebra.data import BatchIndex, Loader
+from cebra.data.single_session import DiscreteDataLoader
+from cebra.models import FixedCosineInfoNCE
+from sklearn.cross_decomposition import PLSRegression
+from sklearn.decomposition import PCA
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, balanced_accuracy_score, f1_score, log_loss
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.svm import SVC
+
+from scripts.place195_v7_v8_neural_experiments import (
+    SourceMeta,
+    git,
+    session_from_cell,
+    sha256_file,
+    source_level_shuffle,
+    source_reuse,
+    write_csv,
+    write_json,
+)
+from scripts.place195_v8b_v9_cebra import (
+    SameTrialTimeLoader,
+    TrialCueDataset,
+    embed_rows,
+    flatten_rows,
+    make_solver,
+)
+from scripts.start_goal_cebra_baseline import LABELS, PAIRS, assemble_dataset
+
+ROOT = Path(__file__).resolve().parents[1]
+BASE = ROOT / "outputs/start-goal-cebra-20260907"
+SEEDS = (0, 1, 2)
+SPLITS = ("train", "development")
+
+
+@dataclass(frozen=True)
+class Cfg:
+    mode: str = "behavior"
+    temperature: float = 0.3
+    dim: int = 8
+    width: int = 32
+    steps: int = 3000
+    target: str = "joint"
+    whole: bool = False
+
+
+def configurations():
+    return {
+        "time_t1": Cfg(mode="time", temperature=1),
+        "behavior_t1": Cfg(temperature=1, steps=10000),
+        "behavior_t03": Cfg(),
+        "behavior_t01": Cfg(temperature=0.1),
+        "positive_bin_t03": Cfg(mode="positive_bin"),
+        "positive_grouped_t03": Cfg(mode="positive_grouped"),
+        "matched_bin_t1": Cfg(mode="matched_bin", temperature=1),
+        "matched_bin_t03": Cfg(mode="matched_bin", steps=10000),
+        "matched_bin_goal_t03": Cfg(mode="matched_bin", target="goal"),
+        "matched_bin_start_t03": Cfg(mode="matched_bin", target="start"),
+        "behavior_w128_t03": Cfg(width=128),
+        "behavior_d16_t03": Cfg(dim=16),
+        "behavior_whole_t03": Cfg(whole=True),
+    }
+
+
+def seed_all(seed):
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+
+
+def csv_rows(path):
+    with Path(path).open(newline="") as f:
+        return list(csv.DictReader(f))
+
+
+def arrays(seed):
+    with np.load(BASE / "observed" / f"seed{seed}" / "pseudo_arrays.npz") as z:
+        result = {
+            "train": (z["X_train"], z["y_train"]),
+            "development": (z["X_validation"], z["y_validation"]),
+        }
+    for x, y in result.values():
+        if not np.isfinite(x).all() or not np.array_equal(np.unique(y), np.arange(30)):
+            raise ValueError("invalid saved pseudo arrays")
+    return result
+
+
+def verify_inputs():
+    receipt = json.loads((BASE / "artifact_hashes.json").read_text())
+    paths = [
+        "source_splits.csv",
+        "source_tensor.npz",
+        "inputs.json",
+        "source_audit.json",
+    ]
+    for seed in SEEDS:
+        paths += [
+            f"observed/seed{seed}/pseudo_arrays.npz",
+            f"observed/seed{seed}/pseudo_components.csv",
+        ]
+        for variant in ("cebra_time", "cebra_behavior"):
+            prefix = f"observed/seed{seed}/{variant}"
+            paths += [f"{prefix}/input_scaler.npz", f"{prefix}/decoder.npz"]
+            paths += [
+                f"{prefix}/checkpoint_step{step:04}.pth"
+                for step in (1, 250, 500, 750, 1000)
+            ]
+    for name in paths:
+        if sha256_file(BASE / name) != receipt[name]:
+            raise ValueError(f"input hash mismatch: {name}")
+    sources = csv_rows(BASE / "source_splits.csv")
+    if any(r["original_split"] != "train" for r in sources):
+        raise ValueError("original holdout source found")
+    audit = json.loads((BASE / "source_audit.json").read_text())
+    if audit["access_audit"]["forbidden_rows_yielded"]:
+        raise ValueError("baseline source gate failed")
+    used = {
+        s: {r["source_trial_id"] for r in sources if r["split"] == s}
+        for s in ("train", "validation")
+    }
+    if used["train"] & used["validation"]:
+        raise ValueError("source overlap")
+    return {name: receipt[name] for name in paths}
+
+
+def target_labels(y, target):
+    if target == "joint":
+        return y
+    if target not in ("start", "goal"):
+        raise ValueError(target)
+    return np.asarray(PAIRS)[y, 0 if target == "start" else 1]
+
+
+def save_scores(out, y, pred, prob, meta):
+    if not np.isfinite(pred).all() or len(pred) != len(y):
+        raise ValueError("invalid predictions")
+    row = {
+        **meta,
+        "n_rows": len(y),
+        "accuracy": float(accuracy_score(y, pred)),
+        "balanced_accuracy": float(balanced_accuracy_score(y, pred)),
+        "macro_f1": float(f1_score(y, pred, average="macro", zero_division=0)),  # type: ignore[reportArgumentType]  # sklearn accepts numeric zero
+        "log_loss": None,
+    }
+    if prob is not None:
+        if not np.isfinite(prob).all() or not np.allclose(prob.sum(axis=1), 1):
+            raise ValueError("invalid probabilities")
+        row["log_loss"] = float(log_loss(y, prob, labels=np.unique(y)))
+    if meta["target"] == "joint":
+        pairs = np.asarray(PAIRS)
+        row["start_accuracy"] = float(accuracy_score(pairs[y, 0], pairs[pred, 0]))
+        row["goal_accuracy"] = float(accuracy_score(pairs[y, 1], pairs[pred, 1]))
+    out.mkdir(parents=True, exist_ok=True)
+    np.savez_compressed(
+        out / f"{meta['split']}_predictions.npz",
+        y=y,
+        pred=pred,
+        prob=np.empty((0, 0)) if prob is None else prob,
+    )
+    write_json(out / f"{meta['split']}_metrics.json", row)
+    return row
+
+
+def readout(out, features, ys, meta, *, kind="logistic", target="joint", c=0.01):
+    out.mkdir(parents=True, exist_ok=False)
+    labels = {s: target_labels(y, target) for s, y in ys.items()}
+    decoder = None
+    if kind == "logistic":
+        decoder = LogisticRegression(C=c, max_iter=2000)
+        model = make_pipeline(StandardScaler(), decoder)
+    elif kind == "svm":
+        model = make_pipeline(StandardScaler(), SVC(C=1, kernel="rbf", gamma="scale"))
+    elif kind == "lda":
+        model = LinearDiscriminantAnalysis()
+    elif kind == "lda_shrink":
+        model = LinearDiscriminantAnalysis(solver="lsqr", shrinkage="auto")
+    else:
+        raise ValueError(kind)
+    t0 = time.monotonic()
+    model.fit(features["train"], labels["train"])
+    seconds = time.monotonic() - t0
+    if decoder is not None and max(decoder.n_iter_) >= 2000:
+        raise RuntimeError("decoder failed to converge")
+    rows, probs = [], {}
+    for split in SPLITS:
+        prob = None if kind == "svm" else model.predict_proba(features[split])
+        pred = model.predict(features[split])
+        probs[split] = prob
+        rows.append(
+            save_scores(
+                out,
+                labels[split],
+                pred,
+                prob,
+                {
+                    **meta,
+                    "target": target,
+                    "split": split,
+                    "decoder": kind,
+                    "decoder_C": c if kind == "logistic" else None,
+                    "features": features[split].shape[1],
+                    "fit_seconds": seconds,
+                },
+            )
+        )
+    joblib.dump(model, out / "decoder.joblib")
+    print(
+        json.dumps(
+            {k: rows[-1][k] for k in ("case", "seed", "target", "balanced_accuracy")}
+        ),
+        flush=True,
+    )
+    return rows, probs
+
+
+def pca_features(data, whole=False):
+    x = {s: pair[0] for s, pair in data.items()}
+    flat = {
+        s: v.reshape(len(v), -1)
+        if whole
+        else v.transpose(0, 2, 1).reshape(-1, v.shape[1])
+        for s, v in x.items()
+    }
+    model = make_pipeline(StandardScaler(), PCA(n_components=8, svd_solver="full"))
+    model.fit(flat["train"])
+    features = {s: model.transform(v).reshape(len(x[s]), -1) for s, v in flat.items()}
+    return features, model
+
+
+def geometry(features, dim):
+    output = {}
+    for split, z in features.items():
+        flat = z.reshape(-1, dim).astype(float)
+        sv = np.linalg.svd(flat - flat.mean(axis=0), compute_uv=False)
+        power = sv * sv
+        total = power.sum()
+        fractions = power / total if total > 0 else np.zeros_like(power)
+        output[split] = {
+            "variance_fractions": fractions,
+            "participation_ratio": float(1 / np.sum(fractions**2))
+            if total > 0
+            else 0.0,
+            "norm_mean": float(np.linalg.norm(flat, axis=1).mean()),
+            "norm_std": float(np.linalg.norm(flat, axis=1).std()),
+        }
+    return output
+
+
+class BinLabelLoader(Loader):
+    """Same-label/same-bin positives; optionally time-matched negatives."""
+
+    def __post_init__(self):
+        super().__post_init__()
+        if not isinstance(self.dataset, TrialCueDataset):
+            raise TypeError("bin sampler requires audited trial/bin identities")
+        self.n_samples = len(self.dataset)
+        discrete = self.dataset.discrete_index
+        if discrete is None or self.n_samples == 0:
+            raise ValueError("nonempty discrete labels required")
+        labels = discrete.detach().cpu().numpy()
+        bins = self.dataset.bin_ids.detach().cpu().numpy()
+        self.positive_pool, self.positive_size, self.positive_group = self.pool(
+            labels * (int(bins.max()) + 1) + bins
+        )
+        self.negative_pool, self.negative_size, self.negative_group = self.pool(bins)
+        self.match_negative = True
+        self.group_references = True
+
+    def pool(self, keys):
+        unique, inverse = np.unique(keys, return_inverse=True)
+        members = [np.flatnonzero(inverse == i) for i in range(len(unique))]
+        sizes = np.array([len(m) for m in members])
+        table = np.zeros((len(unique), int(sizes.max())), dtype=np.int64)
+        for i, member in enumerate(members):
+            table[i, : len(member)] = member
+        return (
+            torch.as_tensor(table, device=self.device),
+            torch.as_tensor(sizes, device=self.device),
+            torch.as_tensor(inverse, device=self.device),
+        )
+
+    def get_indices(self, num_samples):
+        if self.group_references:
+            # InfoNCE compares EVERY reference with EVERY negative: one bin/batch.
+            bin_group = torch.randint(len(self.negative_pool), (1,), device=self.device)
+            offsets = (
+                torch.rand(num_samples, device=self.device)
+                * self.negative_size[bin_group]
+            ).long()
+            ref = self.negative_pool[bin_group, offsets]
+        else:
+            if self.match_negative:
+                raise ValueError(
+                    "all-to-all negatives require bin-homogeneous references"
+                )
+            ref = torch.randint(self.n_samples, (num_samples,), device=self.device)
+        group = self.positive_group[ref]
+        pos = self.positive_pool[
+            group,
+            (
+                torch.rand(num_samples, device=self.device) * self.positive_size[group]
+            ).long(),
+        ]
+        if self.match_negative:
+            group = self.negative_group[ref]
+            neg = self.negative_pool[
+                group,
+                (
+                    torch.rand(num_samples, device=self.device)
+                    * self.negative_size[group]
+                ).long(),
+            ]
+        else:
+            neg = torch.randint(self.n_samples, (num_samples,), device=self.device)
+        return BatchIndex(reference=ref, positive=pos, negative=neg)
+
+
+def encoder_rows(x, whole):
+    return x.reshape(len(x), -1, 1) if whole else x
+
+
+def solver_for(input_dim, cfg, device):
+    solver = make_solver(input_dim, cfg.dim, cfg.width, 0.001, device)
+    criterion = FixedCosineInfoNCE(temperature=cfg.temperature).to(device)
+    if list(criterion.parameters()):
+        raise ValueError(
+            "fixed-criterion replacement unexpectedly has trainable parameters"
+        )
+    solver.criterion = criterion
+    return solver
+
+
+def hidden_features(model, scaler, x, device, layer):
+    flat, _, _, _ = flatten_rows(x, np.zeros(len(x), dtype=int))
+    flat = np.asarray(scaler.transform(flat), dtype="float32")
+    chunks = []
+    model.eval()
+    with torch.no_grad():
+        for lo in range(0, len(flat), 1024):
+            z = torch.as_tensor(flat[lo : lo + 1024], device=device).unsqueeze(-1)
+            for i, module in enumerate(model.net):
+                z = module(z)
+                if i == layer:
+                    break
+            chunks.append(z.detach().cpu().numpy().reshape(len(z), -1))
+    return np.concatenate(chunks).reshape(len(x), -1)
+
+
+def evaluate_checkpoint(out, solver, scaler, data, cfg, meta, probes=False):
+    transformed = {s: encoder_rows(pair[0], cfg.whole) for s, pair in data.items()}
+    ys = {s: pair[1] for s, pair in data.items()}
+    z = {
+        s: embed_rows(solver, scaler, x, device=solver.device, dim=cfg.dim)
+        for s, x in transformed.items()
+    }
+    if not all(np.isfinite(v).all() for v in z.values()):
+        raise ValueError("nonfinite embedding")
+    rows, _ = readout(out / "joint", z, ys, meta)
+    np.savez_compressed(
+        out / "embeddings.npz", train=z["train"], development=z["development"]
+    )
+    write_json(out / "geometry.json", geometry(z, cfg.dim))
+    if probes:
+        for name, layer in (
+            ("hidden1", 2),
+            ("hidden2", 4),
+            ("hidden3", 6),
+            ("prenorm", 7),
+        ):
+            h = {
+                s: hidden_features(solver.model, scaler, x, solver.device, layer)
+                for s, x in transformed.items()
+            }
+            rr, _ = readout(out / name, h, ys, {**meta, "probe": name})
+            rows.extend(rr)
+        for b in range(transformed["train"].shape[2]):
+            zz = {s: v.reshape(len(v), -1, cfg.dim)[:, b, :] for s, v in z.items()}
+            for target in ("start", "goal", "joint"):
+                rr, _ = readout(
+                    out / f"bin{b:02}_{target}",
+                    zz,
+                    ys,
+                    {**meta, "probe": "bin", "bin": b},
+                    target=target,
+                )
+                rows.extend(rr)
+    return rows, z
+
+
+def train_cebra_case(out, data, cfg, meta, device, checkpoints=None, probes=False):
+    seed_all(meta["seed"])
+    out.mkdir(parents=True, exist_ok=False)
+    write_json(
+        out / "config.json",
+        {
+            **asdict(cfg),
+            **meta,
+            "device": device,
+            "batch_size": 256,
+            "lr": 0.001,
+            "shapes": {s: x.shape for s, (x, _) in data.items()},
+        },
+    )
+    tr = encoder_rows(data["train"][0], cfg.whole)
+    y = target_labels(data["train"][1], cfg.target)
+    flat, tid, bid, labels = flatten_rows(tr, y)
+    scaler = StandardScaler().fit(flat)
+    flat = np.asarray(scaler.transform(flat), dtype="float32")
+    ds = TrialCueDataset(
+        flat, tid, bid, None if cfg.mode == "time" else labels, device=device
+    )
+    solver = solver_for(flat.shape[1], cfg, device)
+    ds.configure_for(solver.model)
+    kwargs: dict[str, Any] = {"dataset": ds, "num_steps": cfg.steps, "batch_size": 256}
+    loader: (
+        Any  # CEBRA 0.6.1 annotates its generator __iter__ as a Batch, not Iterator.
+    )
+    if cfg.mode == "time":
+        if cfg.whole:
+            raise ValueError("a whole-cue row has no within-trial time positives")
+        loader = SameTrialTimeLoader(time_offset=1, **kwargs)  # type: ignore[reportCallIssue]  # inherited dataclass field
+    elif cfg.mode == "behavior":
+        loader = DiscreteDataLoader(prior="empirical", **kwargs)  # type: ignore[reportCallIssue]  # runtime dataclass signature checked
+    elif cfg.mode in ("positive_bin", "positive_grouped", "matched_bin"):
+        loader = BinLabelLoader(**kwargs)
+        loader.match_negative = cfg.mode == "matched_bin"
+        loader.group_references = cfg.mode != "positive_bin"
+    else:
+        raise ValueError(cfg.mode)
+    solver._set_fitted_params(loader)
+    solver.model.train()
+    marks = sorted(
+        set(checkpoints or [250, 1000, 3000, cfg.steps]) & set(range(1, cfg.steps + 1))
+    )
+    if cfg.steps not in marks:
+        marks.append(cfg.steps)
+    started = time.monotonic()
+    times = {}
+    for step, batch in enumerate(loader, 1):
+        solver.step(batch)
+        if step in marks:
+            times[step] = time.monotonic() - started
+            torch.save(solver.state_dict(), out / f"step{step:05}.pth")
+    if not np.isfinite(np.asarray(solver.log["total"])).all():
+        raise RuntimeError("nonfinite contrastive loss")
+    write_csv(
+        out / "loss.csv",
+        [{"step": i + 1, "total": float(v)} for i, v in enumerate(solver.log["total"])],
+    )
+    joblib.dump(scaler, out / "input_scaler.joblib")
+    rows = []
+    for step in marks:
+        loaded = solver_for(flat.shape[1], cfg, device)
+        loaded.load_state_dict(
+            torch.load(
+                out / f"step{step:05}.pth", map_location=device, weights_only=True
+            ),
+            strict=True,
+        )
+        loaded.n_features = flat.shape[1]
+        rr, z = evaluate_checkpoint(
+            out / f"readout{step:05}",
+            loaded,
+            scaler,
+            data,
+            cfg,
+            {
+                **meta,
+                "step": step,
+                "temperature": cfg.temperature,
+                "width": cfg.width,
+                "dim": cfg.dim,
+                "whole": cfg.whole,
+                "training_seconds": times[step],
+                "parameters": sum(p.numel() for p in solver.model.parameters()),
+            },
+            probes=probes and step == cfg.steps,
+        )
+        rows.extend(rr)
+        if step == cfg.steps:
+            direct = embed_rows(
+                solver,
+                scaler,
+                encoder_rows(data["development"][0], cfg.whole),
+                device=device,
+                dim=cfg.dim,
+            )
+            parity = float(np.max(np.abs(direct - z["development"])))
+            if parity > 1e-6:
+                raise RuntimeError("checkpoint reload mismatch")
+            write_json(out / "parity.json", {"max_abs_diff": parity})
+        del loaded
+    write_json(out / "metrics.json", rows)
+    return rows
+
+
+def train_ce_case(
+    out, data, meta, device, whole=False, steps=3000, weight_decay=0.001, checkpoints=()
+):
+    seed_all(meta["seed"])
+    out.mkdir(parents=True, exist_ok=False)
+    transformed = {s: encoder_rows(x, whole) for s, (x, _) in data.items()}
+    tr, _, _, _ = flatten_rows(transformed["train"], data["train"][1])
+    scaler = StandardScaler().fit(tr)
+    nbin = transformed["train"].shape[2]
+    encoder = make_solver(tr.shape[1], 8, 32, 0.001, device).model
+    head = torch.nn.Linear(nbin * 8, 30).to(device)
+    opt = torch.optim.Adam(
+        list(encoder.parameters()) + list(head.parameters()),
+        lr=0.001,
+        weight_decay=weight_decay,
+    )
+    xt = torch.as_tensor(
+        np.asarray(scaler.transform(tr), dtype="float32").reshape(
+            len(data["train"][0]), nbin, -1
+        ),
+        device=device,
+    )
+    yt = torch.as_tensor(data["train"][1], device=device)
+    loss_trace = []
+    start = time.monotonic()
+    encoder.train()
+    for step in range(steps):
+        ix = torch.randint(len(xt), (min(128, len(xt)),), device=device)
+        z = encoder(xt[ix].reshape(-1, xt.shape[2]).unsqueeze(-1)).reshape(len(ix), -1)
+        loss = torch.nn.functional.cross_entropy(head(z), yt[ix])
+        opt.zero_grad()
+        loss.backward()
+        opt.step()
+        loss_trace.append(float(loss.detach()))
+        if step + 1 in checkpoints:
+            torch.save(
+                {"encoder": encoder.state_dict(), "head": head.state_dict()},
+                out / f"model_step{step + 1:04}.pth",
+            )
+    seconds = time.monotonic() - start
+    if not np.isfinite(loss_trace).all():
+        raise RuntimeError("nonfinite supervised loss")
+    torch.save(
+        {
+            "encoder": encoder.state_dict(),
+            "head": head.state_dict(),
+            "optimizer": opt.state_dict(),
+        },
+        out / "model.pth",
+    )
+    joblib.dump(scaler, out / "input_scaler.joblib")
+    write_csv(
+        out / "loss.csv",
+        [{"step": i + 1, "total": v} for i, v in enumerate(loss_trace)],
+    )
+    features = {
+        s: hidden_features(encoder, scaler, x, device, 8)
+        for s, x in transformed.items()
+    }
+    ys = {s: y for s, (_, y) in data.items()}
+    info = {
+        **meta,
+        "step": steps,
+        "whole": whole,
+        "training_seconds": seconds,
+        "parameters": sum(p.numel() for p in encoder.parameters())
+        + sum(p.numel() for p in head.parameters()),
+    }
+    rows, _ = readout(out / "joint", features, ys, info)
+    with torch.no_grad():
+        for split in SPLITS:
+            prob = (
+                torch.softmax(
+                    head(torch.as_tensor(features[split], device=device)), dim=1
+                )
+                .cpu()
+                .numpy()
+            )
+            rows.append(
+                save_scores(
+                    out / "head",
+                    ys[split],
+                    prob.argmax(axis=1),
+                    prob,
+                    {
+                        **info,
+                        "target": "joint",
+                        "split": split,
+                        "decoder": "trained_ce_head",
+                    },
+                )
+            )
+    loaded = make_solver(tr.shape[1], 8, 32, 0.001, device).model
+    loaded.load_state_dict(
+        torch.load(out / "model.pth", map_location=device, weights_only=True)["encoder"]
+    )
+    checked = hidden_features(loaded, scaler, transformed["development"], device, 8)
+    diff = float(np.max(np.abs(checked - features["development"])))
+    if diff > 1e-6:
+        raise RuntimeError("CE encoder reload mismatch")
+    write_json(out / "parity.json", {"max_abs_diff": diff})
+    write_json(
+        out / "config.json",
+        {
+            **info,
+            "batch_size": min(128, len(xt)),
+            "lr": 0.001,
+            "weight_decay": weight_decay,
+            "checkpoints": list(checkpoints),
+        },
+    )
+    write_json(out / "metrics.json", rows)
+    return rows
+
+
+def classical(out, data, meta, extended=True):
+    out.mkdir(parents=True, exist_ok=False)
+    ys = {s: y for s, (_, y) in data.items()}
+    rows = []
+    for whole in (False, True) if extended else (False,):
+        z, pca = pca_features(data, whole)
+        case = "pca_whole8" if whole else "pca_bin8"
+        rr, _ = readout(out / case, z, ys, {**meta, "case": case, "whole": whole})
+        joblib.dump(pca, out / case / "representation.joblib")
+        rows.extend(rr)
+    if not extended:
+        return rows
+    total = {s: x.sum(axis=2) for s, (x, _) in data.items()}
+    flat = {s: x.reshape(len(x), -1) for s, (x, _) in data.items()}
+    for name, z, kind in (
+        ("raw_total", total, "logistic"),
+        ("raw_binned", flat, "logistic"),
+        ("raw_rbf_svm", flat, "svm"),
+        ("total_shrink_lda", total, "lda_shrink"),
+        ("fullcue_lda", flat, "lda"),
+    ):
+        rr, _ = readout(out / name, z, ys, {**meta, "case": name}, kind=kind)
+        rows.extend(rr)
+    pls = PLSRegression(n_components=8, max_iter=500)
+    pls.fit(flat["train"], np.eye(30)[ys["train"]])
+    z = {s: pls.transform(v) for s, v in flat.items()}
+    rr, _ = readout(out / "pls_whole8", z, ys, {**meta, "case": "pls_whole8"})
+    joblib.dump(pls, out / "pls_whole8" / "representation.joblib")
+    rows.extend(rr)
+    write_json(out / "metrics.json", rows)
+    return rows
+
+
+def student(out, data, meta):
+    out.mkdir(parents=True, exist_ok=False)
+    ys = {s: y for s, (_, y) in data.items()}
+    rows = []
+    for b in [*range(10), -1]:
+        x = {
+            s: v.reshape(len(v), -1) if b == -1 else v[:, :, b]
+            for s, (v, _) in data.items()
+        }
+        predictions = {}
+        for target in ("start", "goal", "joint"):
+            rr, p = readout(
+                out / f"bin{b}_{target}",
+                x,
+                ys,
+                {**meta, "case": "student_lda", "bin": b},
+                kind="lda",
+                target=target,
+            )
+            rows.extend(rr)
+            predictions[target] = p
+        for split in SPLITS:
+            prob = np.stack(
+                [
+                    predictions["start"][split][:, s - 1]
+                    * predictions["goal"][split][:, g - 1]
+                    for s, g in PAIRS
+                ],
+                axis=1,
+            )
+            prob /= np.maximum(prob.sum(axis=1, keepdims=True), 1e-300)
+            rows.append(
+                save_scores(
+                    out / f"bin{b}_factorized",
+                    ys[split],
+                    prob.argmax(axis=1),
+                    prob,
+                    {
+                        **meta,
+                        "case": "factorized_lda",
+                        "bin": b,
+                        "target": "joint",
+                        "split": split,
+                    },
+                )
+            )
+        if b >= 0:
+            rr, _ = readout(
+                out / f"bin{b}_shrink",
+                x,
+                ys,
+                {**meta, "case": "student_shrink_lda", "bin": b},
+                kind="lda_shrink",
+            )
+            rows.extend(rr)
+    cross = []
+    for b in range(10):
+        model = LinearDiscriminantAnalysis().fit(
+            data["train"][0][:, :, b], target_labels(ys["train"], "goal")
+        )
+        for t in range(10):
+            pred = model.predict(data["development"][0][:, :, t])
+            cross.append(
+                {
+                    "seed": meta["seed"],
+                    "train_bin": b,
+                    "development_bin": t,
+                    "accuracy": float(
+                        accuracy_score(target_labels(ys["development"], "goal"), pred)
+                    ),
+                }
+            )
+    write_csv(out / "cross_temporal_goal.csv", cross)
+    write_json(out / "metrics.json", rows)
+    return rows
+
+
+def source_data():
+    with np.load(BASE / "source_tensor.npz") as z:
+        x, mask, ids, cells = (
+            z["counts"],
+            z["observed"],
+            z["source_ids"].tolist(),
+            z["cells"].tolist(),
+        )
+    metadata = [
+        SourceMeta(r["source_trial_id"], r["session_id"], r["split"], r["label"])
+        for r in csv_rows(BASE / "source_splits.csv")
+    ]
+    return x, mask, {sid: i for i, sid in enumerate(ids)}, metadata, cells
+
+
+def subset_sources(metadata, fraction, seed, chronological=False):
+    grouped = defaultdict(list)
+    for m in metadata:
+        grouped[m.session_id, m.label].append(m)
+    rng = np.random.default_rng(seed + 773)
+    result = []
+    for key in sorted(grouped):
+        pool = sorted(grouped[key], key=lambda m: m.source_trial_id)
+        if chronological:
+            ntrain = sum(m.split == "train" for m in pool)
+            result.extend(
+                replace(m, split="train" if i < ntrain else "validation")
+                for i, m in enumerate(pool)
+            )
+        else:
+            tr = [m for m in pool if m.split == "train"]
+            keep = set(
+                rng.permutation(len(tr))[
+                    : max(1, int(np.ceil(fraction * len(tr))))
+                ].tolist()
+            )
+            result.extend(m for i, m in enumerate(tr) if i in keep)
+            result.extend(m for m in pool if m.split == "validation")
+    return sorted(result, key=lambda m: m.source_trial_id)
+
+
+def altered_arrays(
+    source,
+    out,
+    seed,
+    fraction=1.0,
+    train_rows=16,
+    n_units=195,
+    chronological=False,
+    null_id=None,
+):
+    x, mask, index, metadata, cells = source
+    metadata = subset_sources(metadata, fraction, seed, chronological)
+    shuffled = (
+        None if null_id is None else source_level_shuffle(metadata, 50000 + null_id)
+    )
+    old, components = assemble_dataset(
+        x, mask, index, metadata, cells, train_rows, 8, seed, shuffled
+    )
+    data = {"train": old["train"], "development": old["validation"]}
+    selected = np.sort(
+        np.random.default_rng(seed + 919).permutation(len(cells))[:n_units]
+    )
+    data = {s: (xx[:, selected, :], y) for s, (xx, y) in data.items()}
+    sessions = {session_from_cell(cells[i]) for i in selected}
+    components = [r for r in components if r["session_id"] in sessions]
+    out.mkdir(parents=True, exist_ok=False)
+    write_csv(out / "source_splits.csv", [asdict(m) for m in metadata])
+    write_csv(out / "components.csv", components)
+    if shuffled is not None:
+        write_json(out / "source_shuffle.json", shuffled)
+    write_json(out / "reuse.json", source_reuse(components))
+    used = {
+        s: {r["source_trial_id"] for r in components if r["split"] == s}
+        for s in ("train", "validation")
+    }
+    if used["train"] & used["validation"]:
+        raise ValueError("altered assembly source leakage")
+    base = arrays(seed)
+    if (
+        not chronological
+        and null_id is None
+        and not np.array_equal(
+            data["development"][0], base["development"][0][:, selected, :]
+        )
+    ):
+        raise ValueError("unintended development-array change")
+    support = Counter(
+        (m.session_id, m.label, m.split) for m in metadata if m.session_id in sessions
+    )
+    write_csv(
+        out / "support.csv",
+        [
+            {"session": s, "label": label, "split": split, "sources": n}
+            for (s, label, split), n in sorted(support.items())
+        ],
+    )
+    write_json(
+        out / "support.json",
+        {
+            "fraction_requested": fraction,
+            "n_units": n_units,
+            "n_sessions": len(sessions),
+            "cells": [cells[i] for i in selected],
+            "train_rows_per_class": train_rows,
+            "eligible_sources": len([m for m in metadata if m.session_id in sessions]),
+            "eligible_train_sources": sum(
+                m.session_id in sessions and m.split == "train" for m in metadata
+            ),
+            "eligible_development_sources": sum(
+                m.session_id in sessions and m.split == "validation" for m in metadata
+            ),
+            "used_train_sources": len(used["train"]),
+            "used_development_sources": len(used["validation"]),
+            "minimum_pool": min(support.values()),
+            "chronological_within_condition": chronological,
+        },
+    )
+    np.savez_compressed(
+        out / "arrays.npz",
+        X_train=data["train"][0],
+        y_train=data["train"][1],
+        X_development=data["development"][0],
+        y_development=data["development"][1],
+    )
+    return data
+
+
+def old_checkpoints(out, seed, device):
+    out.mkdir(parents=True, exist_ok=False)
+    data = arrays(seed)
+    rows = []
+    for variant in ("cebra_time", "cebra_behavior"):
+        base = BASE / "observed" / f"seed{seed}" / variant
+        scaler = StandardScaler().fit(
+            flatten_rows(data["train"][0], data["train"][1])[0]
+        )
+        with np.load(base / "input_scaler.npz") as z:
+            np.testing.assert_array_equal(np.asarray(scaler.mean_), z["mean"])
+            np.testing.assert_array_equal(np.asarray(scaler.scale_), z["scale"])
+        for step in (1, 250, 500, 750, 1000):
+            cfg = Cfg(
+                mode="time" if variant == "cebra_time" else "behavior", temperature=1
+            )
+            solver = solver_for(195, cfg, device)
+            solver.load_state_dict(
+                torch.load(
+                    base / f"checkpoint_step{step:04}.pth",
+                    map_location=device,
+                    weights_only=True,
+                ),
+                strict=True,
+            )
+            solver.n_features = 195
+            rr, z = evaluate_checkpoint(
+                out / f"{variant}_{step}",
+                solver,
+                scaler,
+                data,
+                cfg,
+                {"case": f"old_{variant}", "seed": seed, "step": step},
+                probes=False,
+            )
+            rows.extend(rr)
+            if step == 1000:
+                with np.load(base / "decoder.npz") as stored:
+                    diff = float(
+                        np.max(np.abs(z["development"] - stored["features_validation"]))
+                    )
+                if diff > 1e-6:
+                    raise ValueError("old saved embedding replay mismatch")
+    write_json(out / "metrics.json", rows)
+    return rows
+
+
+def chronological_support(source, out):
+    groups = defaultdict(list)
+    for m in source[3]:
+        groups[m.session_id].append(m)
+    rows = []
+    for session, pool in sorted(groups.items()):
+        ordered = sorted(pool, key=lambda m: m.source_trial_id)
+        cut = int(len(ordered) * 0.75)
+        a, b = (
+            Counter(m.label for m in ordered[:cut]),
+            Counter(m.label for m in ordered[cut:]),
+        )
+        rows.append(
+            {
+                "session": session,
+                "min_train": min(a[k] for k in LABELS),
+                "min_development": min(b[k] for k in LABELS),
+            }
+        )
+    write_csv(out / "strict_chronological_support.csv", rows)
+
+
+def synthetic_control(out, device):
+    rng = np.random.default_rng(440)
+    prototypes = np.full((30, 195), 0.05)
+    for k in range(30):
+        prototypes[k, k * 6 : (k + 1) * 6] = 5
+    data = {}
+    for split, repetitions in (("train", 16), ("development", 8)):
+        y = np.repeat(np.arange(30), repetitions)
+        x = rng.poisson(prototypes[y, :, None] * np.ones((1, 1, 10))).astype("float32")
+        data[split] = (x, y)
+    out.mkdir(parents=True)
+    rows = train_cebra_case(
+        out / "positive_cebra",
+        data,
+        Cfg(steps=1000),
+        {"case": "synthetic_positive", "seed": 0},
+        device,
+        checkpoints=[1000],
+    )
+    passed = rows[-1]["balanced_accuracy"] >= 0.8
+    zeros = {s: np.zeros((len(y), 8)) for s, (_, y) in data.items()}
+    rr, _ = readout(
+        out / "constant",
+        zeros,
+        {s: y for s, (_, y) in data.items()},
+        {"case": "constant_input", "seed": 0},
+    )
+    if not np.isclose(rr[-1]["balanced_accuracy"], 1 / 30):
+        raise ValueError("constant-input chance check failed")
+    write_json(
+        out / "control.json",
+        {
+            "positive_accuracy": rows[-1]["balanced_accuracy"],
+            "positive_passed": passed,
+            "constant_chance_passed": True,
+        },
+    )
+    if not passed:
+        raise ValueError(
+            "CEBRA positive control failed; diagnose before real comparisons"
+        )
+    return rows + rr
+
+
+def run_phase(args):
+    rows = []
+    out, device = args.output_dir, args.device
+    if args.phase == "smoke":
+        return synthetic_control(out / "synthetic", device)
+    if args.phase == "baseline":
+        for seed in args.seeds:
+            data = arrays(seed)
+            rows += old_checkpoints(out / f"checkpoints_seed{seed}", seed, device)
+            rows += classical(
+                out / f"classical_seed{seed}", data, {"case": "classical", "seed": seed}
+            )
+            rows += student(
+                out / f"student_seed{seed}", data, {"case": "student", "seed": seed}
+            )
+    elif args.phase == "cebra":
+        cases = configurations()
+        for name in args.cases or list(cases):
+            cfg = cases[name]
+            for seed in args.seeds:
+                rows += train_cebra_case(
+                    out / f"{name}_seed{seed}",
+                    arrays(seed),
+                    cfg,
+                    {"case": name, "seed": seed},
+                    device,
+                    probes=name in ("behavior_t1", "matched_bin_t03"),
+                )
+                write_json(out / "metrics.json", rows)
+    elif args.phase == "supervised":
+        for whole in (False, True):
+            name = "ce_whole" if whole else "ce_bin"
+            for seed in args.seeds:
+                rows += train_ce_case(
+                    out / f"{name}_seed{seed}",
+                    arrays(seed),
+                    {"case": name, "seed": seed},
+                    device,
+                    whole=whole,
+                )
+    elif args.phase in ("scaling", "null"):
+        source = source_data()
+        settings: list[tuple[str, dict[str, Any]]]
+        if args.phase == "scaling":
+            chronological_support(source, out)
+            settings = [
+                ("reference", {}),
+                ("source25", {"fraction": 0.25}),
+                ("source50", {"fraction": 0.5}),
+                ("units50", {"n_units": 50}),
+                ("units100", {"n_units": 100}),
+                ("pseudo8", {"train_rows": 8}),
+                ("pseudo64", {"train_rows": 64}),
+                ("chronological", {"chronological": True}),
+            ]
+        else:
+            settings = [(f"null{i}", {"null_id": i}) for i in range(args.nulls)]
+        for label, kwargs in settings:
+            for seed in args.seeds:
+                parent = out / f"{label}_seed{seed}"
+                data = altered_arrays(source, parent, seed, **kwargs)
+                meta = {"case": "matched_bin_t03", "seed": seed, "condition": label}
+                rows += classical(parent / "classical", data, meta, extended=False)
+                rows += train_cebra_case(
+                    parent / "cebra",
+                    data,
+                    Cfg(mode="matched_bin"),
+                    meta,
+                    device,
+                    checkpoints=[3000],
+                )
+                if args.phase == "null":
+                    rows += train_ce_case(
+                        parent / "supervised", data, {**meta, "case": "ce_bin"}, device
+                    )
+                write_json(out / "metrics.json", rows)
+    else:
+        raise ValueError(args.phase)
+    return rows
+
+
+def main(argv=None):
+    p = argparse.ArgumentParser(description=__doc__)
+    p.add_argument(
+        "--phase",
+        required=True,
+        choices=("smoke", "baseline", "cebra", "supervised", "scaling", "null"),
+    )
+    p.add_argument("--output-dir", type=Path, required=True)
+    p.add_argument("--device", default="cuda", choices=("cuda", "cpu"))
+    p.add_argument("--seeds", type=int, nargs="+", default=list(SEEDS))
+    p.add_argument("--cases", nargs="*")
+    p.add_argument("--nulls", type=int, default=5)
+    args = p.parse_args(argv)
+    if (
+        len(set(args.seeds)) != len(args.seeds)
+        or not set(args.seeds) <= set(SEEDS)
+        or args.nulls < 1
+    ):
+        p.error("unique seeds drawn from 0/1/2 and positive null count required")
+    if args.cases and (
+        args.phase != "cebra" or not set(args.cases) <= set(configurations())
+    ):
+        p.error("--cases must name declared CEBRA configurations")
+    args.output_dir = args.output_dir.resolve()
+    args.output_dir.mkdir(parents=True, exist_ok=False)
+    torch.set_num_threads(2)
+    start = time.monotonic()
+    manifest = {
+        "created_utc": datetime.now(timezone.utc).isoformat(),
+        "status": "running",
+        "scientific_status": "exploratory_conditional_synthetic_development",
+        "config": vars(args),
+        "git": git(["-C", str(ROOT), "rev-parse", "HEAD"]),
+        "dirty": git(["-C", str(ROOT), "status", "--short"]),
+        "executable": sys.executable,
+        "packages": {
+            d.metadata["Name"]: d.version for d in importlib.metadata.distributions()
+        },
+        "device_name": torch.cuda.get_device_name(0)
+        if torch.cuda.is_available()
+        else "CPU",
+    }
+    write_json(args.output_dir / "manifest.json", manifest)
+    try:
+        if args.device == "cuda" and not torch.cuda.is_available():
+            raise ValueError("CUDA unavailable; no silent fallback")
+        manifest["input_hashes"] = verify_inputs()
+        code = args.output_dir / "code"
+        code.mkdir()
+        files = [
+            Path(__file__),
+            ROOT / "scripts/start_goal_cebra_baseline.py",
+            ROOT / "scripts/place195_v7_v8_neural_experiments.py",
+            ROOT / "scripts/place195_v8b_v9_cebra.py",
+            ROOT / "docs/reports/start-goal-autoresearch-plan.md",
+        ]
+        for source in files:
+            shutil.copy2(source, code / source.name)
+        write_json(code / "hashes.json", {f.name: sha256_file(f) for f in files})
+        write_json(args.output_dir / "manifest.json", manifest)
+        rows = run_phase(args)
+        write_json(args.output_dir / "metrics.json", rows)
+        manifest["status"] = "completed"
+        manifest["metric_rows"] = len(rows)
+    except Exception:
+        manifest["status"] = "failed"
+        manifest["traceback"] = traceback.format_exc()
+        raise
+    finally:
+        manifest["elapsed_seconds"] = time.monotonic() - start
+        manifest["finished_utc"] = datetime.now(timezone.utc).isoformat()
+        write_json(args.output_dir / "manifest.json", manifest)
+    write_json(
+        args.output_dir / "artifact_hashes.json",
+        {
+            str(f.relative_to(args.output_dir)): sha256_file(f)
+            for f in sorted(args.output_dir.rglob("*"))
+            if f.is_file()
+        },
+    )
+
+
+if __name__ == "__main__":
+    main()

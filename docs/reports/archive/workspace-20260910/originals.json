@@ -1,0 +1,235 @@
+[
+  {
+    "root": "/home/hongyi-home-lab/neuro_science",
+    "head": "a9d8dacbbe38d0d82b9f75444e5f538b5e411352",
+    "branch": "place195-v6-v9-audit-reports",
+    "files": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "e798f0e3a45a1dc1a425d9c08d4bbc93b660afa17cb2cb5c9151fdfcb1ffdf72",
+        "untracked": false,
+        "matches_release": false
+      },
+      {
+        "path": "README.md",
+        "sha256": "4bf4ebcd2c015cbc75f5a33a843ce37a11958d1e547fd03d6f62b401608c9831",
+        "untracked": false,
+        "matches_release": false
+      },
+      {
+        "path": "docs/reports/recent-learnings-20260908-agent.md",
+        "sha256": "09999988f70deafe9d79136a6640e755b2184826069a3bf1fdc6c0ba868286dc",
+        "untracked": true,
+        "matches_release": false
+      },
+      {
+        "path": "docs/reports/recent-learnings-20260908.md",
+        "sha256": "7420856de844f11840e1179fd617d849a1aee25b88236305dad49600fda18c69",
+        "untracked": true,
+        "matches_release": false
+      },
+      {
+        "path": "scripts/place195_graph_path_baseline.py",
+        "sha256": "ae0aae9b7f0783951955c5c804ae61d12cc0dd84eda60d1bcfd7c79ef2689588",
+        "untracked": false,
+        "matches_release": false
+      }
+    ]
+  },
+  {
+    "root": "/home/hongyi-home-lab/neuro_science-path-autoresearch-20260908",
+    "head": "a50016807ab14fbdfceb242e673f2a39a1f42a91",
+    "branch": "research/path-preprocessing-autoresearch-20260908",
+    "files": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "380dd0ca48826a29e4231689dc3e98b4751535b584fff56e4b614ed7551167fc",
+        "untracked": false,
+        "matches_release": false
+      },
+      {
+        "path": "README.md",
+        "sha256": "9d5f0bd6821cdc63a7af14ccead4529fc1c2b2c33d4df4c16f9a412aeaefbb65",
+        "untracked": false,
+        "matches_release": false
+      },
+      {
+        "path": "docs/reports/README.md",
+        "sha256": "fa22b75af56fc976afd02c8286d8a814daf4290075d1e922b9571322247aa67d",
+        "untracked": false,
+        "matches_release": false
+      },
+      {
+        "path": "docs/reports/path-preprocessing-autoresearch-20260908-agent.md",
+        "sha256": "fc02ed0b7406d6944fff0166ec4342e6d9bbd7e762e86270db4a7d9071a0de0d",
+        "untracked": true,
+        "matches_release": false
+      },
+      {
+        "path": "docs/reports/path-preprocessing-autoresearch-20260908.html",
+        "sha256": "29d27a4c603a2146ae59a68e1e7b9efa1d662f09e3be0553fb79fcb6ad54fc17",
+        "untracked": true,
+        "matches_release": false
+      },
+      {
+        "path": "docs/reports/path-preprocessing-autoresearch-20260908.md",
+        "sha256": "50c2419e2599bb403028ea77c7926e9f1e81ab55855fecae9153f1a31596f52f",
+        "untracked": true,
+        "matches_release": false
+      },
+      {
+        "path": "docs/reports/path-preprocessing-prefit-20260908.md",
+        "sha256": "bb9686b45a83f66b55dca66df66dbc231600790387b20ff1d0ac2a2dc0530e08",
+        "untracked": true,
+        "matches_release": false
+      },
+      {
+        "path": "docs/reports/path-preprocessing-review-20260909.md",
+        "sha256": "42c328017c55cb1dee63d667866ef9be2207327fb2d395304bc0e22b7027801e",
+        "untracked": true,
+        "matches_release": false
+      },
+      {
+        "path": "scripts/build_path_preprocessing_report.py",
+        "sha256": "f9376ff483bcab7d9bc03089a1f1a9d402e5734c5ba610daebbe33875b9d5c0d",
+        "untracked": true,
+        "matches_release": false
+      },
+      {
+        "path": "scripts/place195_path_preprocessing_autoresearch.py",
+        "sha256": "0b49c6d84e4b59842e4d64d8f6e18e075811590bd11dcd2834f1e0555b32782f",
+        "untracked": true,
+        "matches_release": false
+      },
+      {
+        "path": "scripts/test_place195_path_preprocessing_autoresearch.py",
+        "sha256": "327cec642dd254be5e36c14dba0e566aea3fd23756b8f805719aa46bae2d6514",
+        "untracked": true,
+        "matches_release": false
+      },
+      {
+        "path": "scripts/verify_path_preprocessing_results.py",
+        "sha256": "b8b1030d6e322faf0d8e3e6fdf19e5aec1e6a0a5cb0ab9474cf6ede2385c3dea",
+        "untracked": true,
+        "matches_release": false
+      }
+    ]
+  },
+  {
+    "root": "/home/hongyi-home-lab/neuro_science-path-diagnosis",
+    "head": "9e0457438c901ad6aa0c06be107d2cc130e7a884",
+    "branch": "research/path-generalization-20260907",
+    "files": [
+      {
+        "path": "scripts/verify_path_generalization_package.py",
+        "sha256": "a94f35f5988c1f476f2800724830c3224beff5b99accd1965a5739fd44fe6157",
+        "untracked": false,
+        "matches_release": false
+      }
+    ]
+  },
+  {
+    "root": "/home/hongyi-home-lab/neuro_science-release-20260908",
+    "head": "af5c3eb6cf3d2db4e11428c2b897dcf767af358c",
+    "branch": "release/research-consolidation-20260908",
+    "files": [
+      {
+        "path": "scripts/test_verify_endpoint_saved_artifacts.py",
+        "sha256": "60adfadcf4f41dcbac7940712d92751ef9490b18cf27a600aa25d545ce4aacde",
+        "untracked": false,
+        "matches_release": false
+      },
+      {
+        "path": "scripts/verify_endpoint_saved_artifacts.py",
+        "sha256": "f053bd56dc55e54267a4f7eac1a00393e9dd11b4a5147ee5eed3849eb108b288",
+        "untracked": false,
+        "matches_release": false
+      }
+    ]
+  },
+  {
+    "root": "/home/hongyi-home-lab/neuro_science-start-goal-cebra",
+    "head": "a9d8dacbbe38d0d82b9f75444e5f538b5e411352",
+    "branch": "baseline/start-goal-cebra",
+    "files": [
+      {
+        "path": "README.md",
+        "sha256": "e703193eb134f998dfd735c0369ea331fbbfc567c4636e5e3c81bdb9f1380f1c",
+        "untracked": false,
+        "matches_release": false
+      },
+      {
+        "path": "context/previous-student-analysis.md",
+        "sha256": "a3655432e40d8c8e0c52e22d817b5f61a3e72254065c045c24b1cc2807f0d740",
+        "untracked": false,
+        "matches_release": true
+      },
+      {
+        "path": "docs/reports/start-goal-autoresearch-journal.md",
+        "sha256": "06108bb58837a2b9a5b7c3b7d2ba133b9d76f340779fb1946aa4a6d416d2ae13",
+        "untracked": true,
+        "matches_release": true
+      },
+      {
+        "path": "docs/reports/start-goal-autoresearch-plan.md",
+        "sha256": "aa69126cc93e3be1414edc0fc3b8fc29f18495aead8e781d1998cdb929b80e02",
+        "untracked": true,
+        "matches_release": true
+      },
+      {
+        "path": "docs/reports/start-goal-autoresearch.md",
+        "sha256": "0283fe5c09883a5b06797e68b9008a5cf8ed4ea617e8533bc22ff9e9a4b69c9d",
+        "untracked": true,
+        "matches_release": false
+      },
+      {
+        "path": "docs/reports/start-goal-cebra-baseline.md",
+        "sha256": "6e0fb745ea7b78f8eecc77325f6391ad6c63cf400b21bcb8b2eb977ed2909186",
+        "untracked": true,
+        "matches_release": true
+      },
+      {
+        "path": "docs/reports/start-goal-cebra-diagnosis.md",
+        "sha256": "c6dd47af8b2dbec4844762693dcc42119105611b6f9d749ee00ef13c83269c7f",
+        "untracked": true,
+        "matches_release": true
+      },
+      {
+        "path": "scripts/render_start_goal_autoresearch.py",
+        "sha256": "41d277a236e687a98cd022c890fa070b1c61c18dadc201478c55b75777b28eaa",
+        "untracked": true,
+        "matches_release": true
+      },
+      {
+        "path": "scripts/start_goal_autoresearch.py",
+        "sha256": "c8f4e31879701c4f6b89473a3f35fe47fa86c4ebb8425561fe095c43b4dd739e",
+        "untracked": true,
+        "matches_release": true
+      },
+      {
+        "path": "scripts/start_goal_ce_followup.py",
+        "sha256": "4f159fee09c2eaa76a2a867bfc84a23139c3f2318ff2b0ae4049b4e104beb5bf",
+        "untracked": true,
+        "matches_release": true
+      },
+      {
+        "path": "scripts/start_goal_cebra_baseline.py",
+        "sha256": "5b1b8ccee071def732e465407259b7116724ca2d46ca3cc1ee70ca9fd041d8db",
+        "untracked": true,
+        "matches_release": true
+      },
+      {
+        "path": "scripts/test_start_goal_autoresearch.py",
+        "sha256": "4f7849fb966289a0bf729f44991b1291c8a85fbb53f3b91af56fada14f5abb1a",
+        "untracked": true,
+        "matches_release": true
+      },
+      {
+        "path": "scripts/test_start_goal_cebra_baseline.py",
+        "sha256": "79047bb2d1c86e739c94c0acde55049d8c067cfbceb188ea8175078ee2b6d289",
+        "untracked": true,
+        "matches_release": true
+      }
+    ]
+  }
+]

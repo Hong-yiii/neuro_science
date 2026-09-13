@@ -1,0 +1,33 @@
+{
+  "status": "selection frozen BEFORE historical validation predictive evaluation",
+  "selected_candidate": {
+    "candidate_key": "t1_raw_rate_variance_floor_l2_1",
+    "endpoint_count": 5,
+    "endpoint_mean_delta_log_loss": {
+      "2->1": -0.0017820096071398857,
+      "3->1": 0.13861647818040423,
+      "4->1": 0.006180191215893934,
+      "5->1": 0.0173575544634883,
+      "6->1": 0.3026892281567007
+    },
+    "fold_count": 15,
+    "lambda_l2": 1.0,
+    "mean_cv_balanced_accuracy": 0.6373971193415638,
+    "mean_cv_log_loss": 0.6005348920780758,
+    "primary_cv_delta_log_loss": 0.09261228848186945,
+    "representation_key": "t1_raw_rate_variance_floor",
+    "scaler": "variance_floor",
+    "temporal_bins": 1,
+    "transform": "raw_rate"
+  },
+  "input_hashes": {
+    "/home/hongyi-home-lab/neuro_science-path-autoresearch-20260908/outputs/path-preprocessing-autoresearch-20260908/biological-20260908T115508Z/round1/round1_summary.json": "58293361401f99038392d63cf9f6c92f74810640039d37077e5dc333c2acbcae",
+    "/home/hongyi-home-lab/neuro_science-path-autoresearch-20260908/outputs/path-preprocessing-autoresearch-20260908/biological-20260908T115508Z/round2/round2_summary.json": "dcd188a9dd8a2e331915024055333a6843c8789c3b7055907775943217649146",
+    "/home/hongyi-home-lab/neuro_science-path-autoresearch-20260908/outputs/path-preprocessing-autoresearch-20260908/biological-20260908T115508Z/export/source_tensors.npz": "6fa3e836fad756b6007f69115de5e6758c7238cfb9a786b4a4e7a0d4ac849e3a"
+  },
+  "primary_seed": 0,
+  "family_count": 20,
+  "biological_cv_fits_completed": 300,
+  "no_original_test_evaluation": true,
+  "final_inference_pending_independent_review": true
+}

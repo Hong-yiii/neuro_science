@@ -1,0 +1,53 @@
+Traceback (most recent call last):
+  File "/home/hongyi-home-lab/neuro_science-path-diagnosis/outputs/path-generalization-20260907/frozen/driver.py", line 5587, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/home/hongyi-home-lab/neuro_science-path-diagnosis/outputs/path-generalization-20260907/frozen/driver.py", line 5567, in main
+    print(json.dumps(run_track_a_gated(args), indent=2, sort_keys=True))
+                     ~~~~~~~~~~~~~~~~~^^^^^^
+  File "/home/hongyi-home-lab/neuro_science-path-diagnosis/outputs/path-generalization-20260907/frozen/driver.py", line 5096, in run_track_a_gated
+    summary = run_track_a_program(
+        Xsrc=Xsrc,
+    ...<17 lines>...
+        cebra_replay_device=args.cebra_replay_device,
+    )
+  File "/home/hongyi-home-lab/neuro_science-path-diagnosis/outputs/path-generalization-20260907/frozen/driver.py", line 2275, in run_track_a_program
+    legacy_cebra_summary = replay_saved_v9_cebra_checkpoints_on_exact_q(
+        stage_dir=stage_dir,
+    ...<5 lines>...
+        device=cebra_replay_device,
+    )
+  File "/home/hongyi-home-lab/neuro_science-path-diagnosis/outputs/path-generalization-20260907/frozen/driver.py", line 1923, in replay_saved_v9_cebra_checkpoints_on_exact_q
+    saved = _prediction_probs_from_csv(
+        pred_csv,
+    ...<4 lines>...
+        C=1.0,
+    )
+  File "/home/hongyi-home-lab/neuro_science-path-diagnosis/outputs/path-generalization-20260907/frozen/driver.py", line 1772, in _prediction_probs_from_csv
+    if C is not None and abs(float(row["C"]) - C) > 1e-12:
+                                   ~~~^^^^^
+KeyError: 'C'
+Command exited with non-zero status 1
+	Command being timed: "/home/hongyi-home-lab/neuro_science/scratch/v6-v9-runtime/bin/python outputs/path-generalization-20260907/frozen/driver.py run-track-a --authorized-phase reviewed-code-data-gate --cebra-replay-device cuda --output-dir outputs/path-generalization-20260907/results-20260907T081200Z/track_a"
+	User time (seconds): 99.31
+	System time (seconds): 1.40
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:40.73
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 1447236
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 1
+	Minor (reclaiming a frame) page faults: 289142
+	Voluntary context switches: 126
+	Involuntary context switches: 605
+	Swaps: 0
+	File system inputs: 5040
+	File system outputs: 17872
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1
