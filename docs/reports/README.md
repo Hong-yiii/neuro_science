@@ -1,6 +1,6 @@
 # Research handoff: what to read, what is current, what is retained
 
-**Updated: 2026-09-09.** This index separates the scientific question, completed exploratory studies, teaching explanations and historical evidence. The earlier consolidation did not fit models; the subsequent bounded preprocessing study below did. Both preserve the selected195 scope.
+**Updated: 2026-09-14.** This index separates the scientific question, completed exploratory studies, teaching explanations and historical evidence. The earlier consolidation did not fit models; the bounded preprocessing and matched PCA studies below did. All preserve the selected195 scope.
 
 ## Start here
 
@@ -12,7 +12,9 @@ current path map. This consolidation adds no biological fits.
 
 **Concise retrospective:** [what worked, what did not, and what remains unknown](path-preprocessing-review-20260909.md) — three-angle review of the completed preprocessing study; no new fits.
 
-**Latest experiment:** [path-preprocessing teaching report](path-preprocessing-autoresearch-20260908.md), [offline illustrated HTML](path-preprocessing-autoresearch-20260908.html), and [agent handoff](path-preprocessing-autoresearch-20260908-agent.md). Twenty observed-data recipes and source-coherent controls are complete. Stronger regularization improved probability loss, but the small historical diagnostic was6→1-dominated and did not establish broad robustness. All82,283 accepted model-fit instances were forward-replayed without fitting. [Frozen methods](path-preprocessing-prefit-20260908.md).
+**Latest matched comparison:** [PCA versus raw verdict](path-pca-matched/README.md), [offline HTML](path-pca-matched/report.html), and [evidence index](path-pca-matched/evidence.md). Six recipes on identical first-second/source-safe inputs: PCA improved historical probability loss by **0.007023 nats**, with **55% balanced accuracy for both arms**. Source sensitivity spans both signs; only 2/5 endpoints beat baseline in either arm. All 26,266 fit instances forward-replayed without fitting. This answers the narrow missing comparison, not robust biological generalization or confirmatory H1.
+
+**Earlier preprocessing experiment:** [path-preprocessing teaching report](path-preprocessing-autoresearch-20260908.md), [offline illustrated HTML](path-preprocessing-autoresearch-20260908.html), and [agent handoff](path-preprocessing-autoresearch-20260908-agent.md). Twenty observed-data recipes and source-coherent controls are complete. Stronger regularization improved probability loss, but the small historical diagnostic was6→1-dominated and did not establish broad robustness. All82,283 accepted model-fit instances were forward-replayed without fitting. [Frozen methods](path-preprocessing-prefit-20260908.md).
 
 Earlier cross-study context:
 
@@ -29,6 +31,7 @@ Normative authority remains [research questions](../research-questions.md) and [
 
 | Study | Best entry point | Scope / status |
 | --- | --- | --- |
+| Matched PCA/raw, September 13–14 | [Human verdict](path-pca-matched/README.md), [offline HTML](path-pca-matched/report.html), [evidence](path-pca-matched/evidence.md) | Completed bounded six-recipe exploratory comparison. Small PCA loss advantage (+.007023), unchanged BA55%, source sensitivity spanning both signs. 26,266 forward replays, zero verification fits. |
 | Path preprocessing, September 8 | [Teaching report](path-preprocessing-autoresearch-20260908.md), [offline HTML](path-preprocessing-autoresearch-20260908.html), [agent brief](path-preprocessing-autoresearch-20260908-agent.md) | Completed exploratory first-second count/time/scaling/L2 study:147train+41historical-validation sources,49unit IDs,13sessions. Selected Δ+.0286/BA55%; only2/5 positive; declared null p=.139–.356 and source sensitivity crosses0. No broad H1 win. |
 | V6–V9, September 6 | [Teaching/audit Markdown](place195-v6-v9-autoresearch-20260906.md), [self-contained professor HTML](../professor_updates/place195_v6_v9_20260906/place195-v6-v9-professor-methods-results-validity-20260906.html) | Accepted **historical** 29-cell/7-session, fixed-endpoint interior-component benchmark. Whole-cue generalization nonpositive/unstable; not superseded numerically by a different task. |
 | Endpoint baseline/diagnosis, September 7 | [Baseline](start-goal-cebra-baseline.md), [diagnosis](start-goal-cebra-diagnosis.md) | Accepted initial 30-class endpoint benchmark and subsequent diagnostics; original settings are not the latest best development settings. |

@@ -1,0 +1,13 @@
+{
+  "status": "verified",
+  "new_fits": 0,
+  "models_forward_replayed": 272,
+  "selected": {
+    "raw": "t1_raw_rate_variance_floor_l2_0p01",
+    "pca": "t1_raw_rate_variance_floor_pca90_l2_0p01"
+  },
+  "primary_raw_loss_minus_pca_loss": 0.021413177600303035,
+  "summary_sha256": "cfc51a5af3a683fdda3e0914e3a2d582a7d700d60c53dd8e9509b7d26f1791f5",
+  "shared_helper_limitation": "assembly, permutation/bootstrap construction, feature aggregation and forward transform reused; metrics, selection and inferential summaries independently recalculated; PCA checked with covariance identities, not fitted again",
+  "verifier_sha256": "79ee8180b6ca154ae40a37809d5e673e1292b2672377c508e80163a7040180ab"
+}
