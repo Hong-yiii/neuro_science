@@ -31,6 +31,19 @@ balanced accuracy and source sensitivity spanning both signs. All 26,266 fits
 were forward-replayed without fitting. [Draft PR #7](https://github.com/Hong-yiii/neuro_science/pull/7)
 remains open for user review; no more biological fits are queued by this handoff.
 
+**Explicit temporary exception, September 24–25:** Hongyi requested a PR for a
+bounded exploratory CEBRA broader-training → cue-only decoding trial. Branch
+`feat/cebra-full-trial-transfer` lives at
+`~/neuro_science/work/cebra-full-trial-transfer`, based on refreshed `origin/main`
+`8340631` (PR #7 is now merged; the older open/draft statement above is historical).
+The [frozen protocol](reports/cebra-full-trial-transfer/protocol.md) defines the
+fixed 29-unit/7-session, 4→3 comparison. Private inputs/runtime remain canonical;
+new artifacts go directly to
+`~/neuro_science/outputs/cebra-full-trial-transfer-20260924/`. Preserve this worktree
+through PR review. After approved merge, verify canonical artifact hashes and
+worktree cleanliness before deliberately removing only this worktree. Do not
+remove the independent issue #6 worktree as part of this task. No new service.
+
 Pi/Codex transcripts were not concatenated, rewritten or deleted. This session
 started from the account home; its transcript remains in the host-local Pi session
 store. The previous canonical Pi process was not killed. Do not continue writing
@@ -124,7 +137,8 @@ The inaccessible Mac worktree at
 contents on this host. Its stale registration was pruned only after verifying its
 index matched retained commit `4946c1b` and copying its metadata to
 `work/workspace-consolidation-20260910/stale-mac-registration/`. No Mac directory
-was deleted or claimed backed up. There is now one registered local worktree.
+was deleted or claimed backed up. There was one registered local worktree after consolidation; the explicitly
+requested temporary PR worktrees above are later exceptions.
 
 ## Recreate the software checkout
 
