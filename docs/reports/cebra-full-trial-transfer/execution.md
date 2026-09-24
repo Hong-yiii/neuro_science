@@ -30,6 +30,22 @@ The shipped runner adds only identity `typing.cast` calls, a typing import and e
 
 After that clarification: scoped Pyright **0 errors / 0 warnings**, the same **113 software tests passed**, and a second complete no-fit replay succeeded under the shipped code (`-verify-shipping`). No biological fit was repeated. Old approval hashes intentionally do not authorize fitting changed source bytes: use the executed revision for exact reproduction or obtain new review before any newly authorized run.
 
+## Final delivery review and browser QA
+
+Fresh claim/delivery review `8a31cbf1-dd37-46b4-b12c-5b2543d12ce4`
+[approved with no findings](reviews/final-claim-review.md). It checked report
+numbers and limits, frozen-protocol identity, type-only changes and verification
+receipts, and independently recalculated sampled source-resample/deletion rows.
+No fitting or raw extraction was repeated by either result reviewer.
+
+Parent headless-Chrome checks passed at 1280×1000 and 390×844. Both rendered DOMs
+contained the expected result text and two embedded figures, with no script tags
+or external resources. Desktop/mobile screenshots were inspected; temporary
+browser profiles were removed. [Delivery QA receipt](reviews/delivery-qa.json)
+records the report hash and checks. No server or remote endpoint was started.
+The harness Lens cache had no dispatched worktree files; static assurance comes
+from the explicit scoped Pyright CLI check, not from an empty cached result.
+
 ## Reproduction and artifact authorities
 
 All commands below assume the private inputs and existing runtime are present. **Completed study: these are procedures, not permission for more fits.** Original fitting/audit commands and strict approval conditions are in the frozen protocol. No environment installation is necessary on this host.
