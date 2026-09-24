@@ -26,7 +26,7 @@ from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 import cebra.data
 import numpy as np
@@ -172,7 +172,8 @@ class CebraVectorDataset(SingleSessionDataset):
         self.neural = torch.as_tensor(X, dtype=torch.float32, device=device)
         self.labels = torch.as_tensor(labels, dtype=torch.long, device=device)
         self.phase = torch.as_tensor(phase, dtype=torch.long, device=device)
-        self.offset = None
+        # CEBRA configures the concrete model offset before iteration.
+        self.offset = None  # pyright: ignore[reportAttributeAccessIssue]
 
     @property
     def input_dimension(self) -> int:
@@ -307,7 +308,7 @@ class PhaseTimeLoader(cebra.data.Loader):
                 )
         self.reference_phase_counts += torch.bincount(phase, minlength=2)
         self.negative_phase_counts += torch.bincount(neg_phase, minlength=2)
-        if not torch.all(self.dataset.labels[ref] == self.dataset.labels[pos]):
+        if not torch.all(cast(CebraVectorDataset, self.dataset).labels[ref] == cast(CebraVectorDataset, self.dataset).labels[pos]):
             raise AssertionError("Time positive changed label")
         for counts, indices in zip(self.sample_counts, (ref, pos, neg), strict=True):
             counts.index_add_(0, indices, torch.ones_like(indices))
@@ -459,7 +460,7 @@ class PhaseBehaviorLoader(cebra.data.Loader):
         self.reference_phase_counts += torch.bincount(ref_phase, minlength=2)
         self.positive_phase_counts += torch.bincount(pos_phase, minlength=2)
         self.negative_phase_counts += torch.bincount(neg_phase, minlength=2)
-        if not torch.all(self.dataset.labels[ref] == self.dataset.labels[pos]):
+        if not torch.all(cast(CebraVectorDataset, self.dataset).labels[ref] == cast(CebraVectorDataset, self.dataset).labels[pos]):
             raise AssertionError("Behavior positive label mismatch")
         for counts, indices in zip(self.sample_counts, (ref, pos, neg), strict=True):
             counts.index_add_(0, indices, torch.ones_like(indices))
@@ -1770,7 +1771,8 @@ def train_encoder(
     for step in (250, 500, 750):
         if step <= iterations:
             checkpoint_steps.add(step)
-    for step, batch in enumerate(loader, start=1):
+    # CEBRA 0.6.1's generator __iter__ is annotated as Batch, not Iterator.
+    for step, batch in enumerate(cast(Iterable[Any], loader), start=1):
         if step % 100 == 1:
             check_deadline(deadline)
         solver.step(batch)

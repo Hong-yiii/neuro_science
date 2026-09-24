@@ -44,6 +44,18 @@ through PR review. After approved merge, verify canonical artifact hashes and
 worktree cleanliness before deliberately removing only this worktree. Do not
 remove the independent issue #6 worktree as part of this task. No new service.
 
+**Completed September 25:** [Results and report](reports/cebra-full-trial-transfer/README.md),
+[execution/review ledger](reports/cebra-full-trial-transfer/execution.md),
+[PR #9](https://github.com/Hong-yiii/neuro_science/pull/9). Broader-training
+CEBRA-Time improved cue-only logistic loss 1.010464→0.710618 and mean balanced
+accuracy 32.64%→61.81%; Behavior loss worsened. The primary criterion failed
+because loss remained worse than constant-.5, and absolute discrimination varied
+strongly by seed. All 1,071 fitted artifacts were forward-replayed without fitting;
+independent numerical review passed. Accepted run:
+`outputs/cebra-full-trial-transfer-20260924/biological-run-20260924T162913Z/`.
+Known-label-conditioned historical source pools, not simultaneous natural trials
+or confirmed H1. No further fitting, merge or worktree removal is queued.
+
 Pi/Codex transcripts were not concatenated, rewritten or deleted. This session
 started from the account home; its transcript remains in the host-local Pi session
 store. The previous canonical Pi process was not killed. Do not continue writing
