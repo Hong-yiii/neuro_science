@@ -1,0 +1,581 @@
+{
+  "created_utc": "2026-09-24T03:28:35.570898+00:00",
+  "command": [
+    "/home/hongyi-home-lab/neuro_science/scripts/cebra_latent_atlas.py",
+    "--output",
+    "outputs/cebra-latent-atlas-20260924/atlas"
+  ],
+  "git": "438856e18f90250a1e8a0b8a7525e7018ac57d28",
+  "dirty": " M docs/professor_updates/start_goal_20260907/endpoint-research-report.html\n M docs/reports/README.md\n M docs/reports/start-goal-autoresearch.md\n M docs/workspace.md\n?? docs/professor_updates/weekly_progress_20260913/\n?? docs/reports/cebra-decoder-prefit-20260924.md\n?? docs/reports/cebra-latent-atlas-protocol-20260924.md\n?? docs/reports/cebra-latent-atlas-results-20260924.md\n?? docs/reports/cebra-latent-geometry-review-20260923.md\n?? docs/reports/cebra-nonlinear-readout-research-20260923.md\n?? docs/reports/path-pca-matched-prd-20260913.md\n?? scripts/cebra_decoder_autoresearch.py\n?? scripts/cebra_latent_atlas.html\n?? scripts/cebra_latent_atlas.py\n?? scripts/test_cebra_decoder_autoresearch.py\n?? scripts/test_cebra_latent_atlas.py\n",
+  "python": "3.13.2 | packaged by Anaconda, Inc. | (main, Feb  6 2025, 18:56:02) [GCC 11.2.0]",
+  "executable": "/home/hongyi-home-lab/neuro_science/scratch/v6-v9-runtime/bin/python",
+  "device": "CPU",
+  "random_seed": 20260924,
+  "packages": {
+    "numpy": "2.3.4",
+    "scipy": "1.16.3",
+    "matplotlib": "3.10.7"
+  },
+  "inputs": {
+    "outputs/start-goal-cebra-20260907/artifact_hashes.json": {
+      "sha256": "cb81c6e61f98b1815cbd818b5830f7c8abe02711c8cb044444bb0e82b06ff377",
+      "historical_hash_checked": false
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/artifact_hashes.json": {
+      "sha256": "359a348fbe0545b21e1939e9c16b288785177924960b384ed596e8efa43444b1",
+      "historical_hash_checked": false
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/manifest.json": {
+      "sha256": "79acc3266d568bd8e2d391adc151e72fe7b7fb12a90cd08ed6a7adb8b823430c",
+      "historical_hash_checked": true
+    },
+    "outputs/prospective_path_first_run/place195-v6-v9-autoresearch-20260906/v8b-v9-cebra-final-20260905T224554Z/prefit_config_manifest.json": {
+      "sha256": "21465065fbc425d97d22f88603bc122a8344454e21c621b87251efc6e2440cab",
+      "historical_hash_checked": false
+    },
+    "outputs/start-goal-cebra-20260907/source_splits.csv": {
+      "sha256": "ab158a23c4f3cc9dd46f27710c355fee74965a32892c6e662d2d4a29dd628bf8",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-cebra-20260907/observed/seed0/pseudo_arrays.npz": {
+      "sha256": "e7f3df22ac85394098f4a6ed420d6d2a4383e8f7d00d1ad2fcbbe560290b4148",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-cebra-20260907/observed/seed0/pseudo_components.csv": {
+      "sha256": "0bb28a95f7f827cd55abb939a60c91197e2ccaa308e33b53f5b2264361d1338b",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-cebra-20260907/observed/seed0/raw_binned/decoder.npz": {
+      "sha256": "10148187242bcf1cf7bb053d71ad58f8d75632acff244f7bd814ebb5693840c5",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-cebra-20260907/observed/seed0/pca8/decoder.npz": {
+      "sha256": "4d417299ad87edc238b9b4dc2b5ab778ef974a404c70645a5ea730305929b6e1",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/positive_bin_t03_seed0/config.json": {
+      "sha256": "3d7667c190f9e24cca3a4a2ed6811d7824f8e84f64f098b67a39e40c400aa10d",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/positive_bin_t03_seed0/readout00250/embeddings.npz": {
+      "sha256": "266e36b78687048ab92d5c0c28c59bcd2edba43d592db0c9211a97d4b797872d",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/positive_bin_t03_seed0/readout00250/joint/train_predictions.npz": {
+      "sha256": "110bc2518c9bdb84630ce8954978de3a1118db69dc775e504ddfc50e5acd32cf",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/positive_bin_t03_seed0/readout00250/joint/train_metrics.json": {
+      "sha256": "9454fb3b744eb173d39865319a26fcc8cc477b4d984d69a6344473060599192f",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/positive_bin_t03_seed0/readout00250/joint/development_predictions.npz": {
+      "sha256": "f65d8b522413b165995b7e14d3d567b987314d23046dc9bc3f4c9ecfe1d0725d",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/positive_bin_t03_seed0/readout00250/joint/development_metrics.json": {
+      "sha256": "c4f7e2ecb47221bbc1e1dd181da336c211621bb73ff2593ce319bab7d5c82976",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/positive_bin_t03_seed0/readout03000/embeddings.npz": {
+      "sha256": "83c66605fc3671fde9a787dd8917c2b8c45ce64da4c0674d0cb70342c28ccbd6",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/positive_bin_t03_seed0/readout03000/joint/train_predictions.npz": {
+      "sha256": "3279b6ab803a9aa15aeb84abe5a61d669bff5dd985dd5e1e2c3d2ea465acebde",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/positive_bin_t03_seed0/readout03000/joint/train_metrics.json": {
+      "sha256": "9d8fd2e70f3700d6d191ae600b8fb5388ecfd3d358293f26386a4293ae718a20",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/positive_bin_t03_seed0/readout03000/joint/development_predictions.npz": {
+      "sha256": "c8288f032c32e78581fda4a473ac9c7553b9d0e0c7953445c5e90605e29ac99d",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/positive_bin_t03_seed0/readout03000/joint/development_metrics.json": {
+      "sha256": "3961d54bb49a246e96bbd030a18f05cc4ce2e59e1bc25d4acb4f6741f84e314b",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/time_t1_seed0/config.json": {
+      "sha256": "f103c2e78026133e5a3494b3c23fa6a05a5701e02740485dd5df07cb0b67df48",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/time_t1_seed0/readout00250/embeddings.npz": {
+      "sha256": "21b3adbc01525443aae4c076c223e4d114f2d319b8c7c289da29d514f5058a5f",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/time_t1_seed0/readout00250/joint/train_predictions.npz": {
+      "sha256": "7f16663ccc828c0f75352e873b804f23f638ede021557bfd3e1c37bf71169eb7",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/time_t1_seed0/readout00250/joint/train_metrics.json": {
+      "sha256": "f130ff437c5a91eda5631e697e5727bb9f843bcf4386eca074fd0e4b01261adb",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/time_t1_seed0/readout00250/joint/development_predictions.npz": {
+      "sha256": "22199294d63a00d7bf98fd5901b04ee98165df11a87fa07586c20ce05523a744",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/time_t1_seed0/readout00250/joint/development_metrics.json": {
+      "sha256": "b3951add52456238e933f1794dbbef94b307a4fa3a6fee4a589d70237d1d46ce",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/time_t1_seed0/readout01000/embeddings.npz": {
+      "sha256": "d6a8127db01369a1a8be840ee445673e90aecbc0d67b2f9deddc4efa8582a978",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/time_t1_seed0/readout01000/joint/train_predictions.npz": {
+      "sha256": "3ed2750e6b4bd53544a17bc25c9698f16d41393ceb7ecd5d0a2354c2bcb1e9bb",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/time_t1_seed0/readout01000/joint/train_metrics.json": {
+      "sha256": "3ebc753ab4e65993e1ca3bf869b4f71f54844c38ae5751dec04d84b90c122b1e",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/time_t1_seed0/readout01000/joint/development_predictions.npz": {
+      "sha256": "7ee1a3f82bf48fc38e024f055e1b26eb1f3f3809278dedcb72eba4d702edde02",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/time_t1_seed0/readout01000/joint/development_metrics.json": {
+      "sha256": "20293bb502f688f7b26310c58ba520d6171d561b79b7918405430cb9f35dbc9c",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/behavior_t03_seed0/config.json": {
+      "sha256": "8903deebb643ddf8bf703d797ed5434f7a5e0148a033718a25ac5ac8006e6e3e",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/behavior_t03_seed0/readout00250/embeddings.npz": {
+      "sha256": "0508f3b2d93b4533e02cda8b056eb70d5c837fd2950fe534dbb02e59d065daf7",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/behavior_t03_seed0/readout00250/joint/train_predictions.npz": {
+      "sha256": "1fac139d63867f894d62bbdae323ebc3986b9839651b376740890b5c9c275df8",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/behavior_t03_seed0/readout00250/joint/train_metrics.json": {
+      "sha256": "a506a57bbe162532c9ce7fb371b9a506acfb1d7acc07c6b7a7437c5417ff36f1",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/behavior_t03_seed0/readout00250/joint/development_predictions.npz": {
+      "sha256": "22d6066f7d1d00413a915be77682c95ce23a07b3c4989515563b8c6a7dd56356",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/behavior_t03_seed0/readout00250/joint/development_metrics.json": {
+      "sha256": "988f380767d505234a48fb3fab377c50969723cd1063298e8bcc53335da39f2e",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-cebra-20260907/observed/seed1/pseudo_arrays.npz": {
+      "sha256": "0278a942ccf233522e2c14ab43802cd40acb1981272cbc004b2702bd58fd5607",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-cebra-20260907/observed/seed1/pseudo_components.csv": {
+      "sha256": "31fcb446b2cd89872b72d90d279797f8ccc4767eaa19b5b33475114772ae2ccf",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-cebra-20260907/observed/seed1/raw_binned/decoder.npz": {
+      "sha256": "e80c2fe2facf1069b10fb75e2aa5a793e1e1be8e1acfc4de8f2e79a5718eafcd",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-cebra-20260907/observed/seed1/pca8/decoder.npz": {
+      "sha256": "ae0336099fc750ce8ae0b002ad47fb71e26c25d8b4b87afd9eff1ff1d200bc20",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/positive_bin_t03_seed1/config.json": {
+      "sha256": "d04b1c0e89eaa670967037a9ed9b30c033435ea3edb84aec6b659fc71fb040f3",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/positive_bin_t03_seed1/readout00250/embeddings.npz": {
+      "sha256": "a79be2527e58e2a8bd02e84c97a7a4cb89fadc7ea975b50e7b72286586c79c78",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/positive_bin_t03_seed1/readout00250/joint/train_predictions.npz": {
+      "sha256": "d7d3f25edf1e70890f137f2213c5c93e73929f466509dde4c9ce52fc4bff8d0c",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/positive_bin_t03_seed1/readout00250/joint/train_metrics.json": {
+      "sha256": "ee4bdf47843c1e6f00d95455eae9987649dfe26a261a49db5cd97526d5aa8215",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/positive_bin_t03_seed1/readout00250/joint/development_predictions.npz": {
+      "sha256": "94674738171b47172b8ad86283f935298a41c576c4e0a9e1aa14b5b1164fd420",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/positive_bin_t03_seed1/readout00250/joint/development_metrics.json": {
+      "sha256": "a2994c0cc7988673dbc1ac43f2fadf565315d534c7478c6b9a01365f9f30a39b",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/positive_bin_t03_seed1/readout03000/embeddings.npz": {
+      "sha256": "8a7baca9d6c829f711306acc4cb1e4bb6bdd2fa290897e19a84e1f002ea03f10",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/positive_bin_t03_seed1/readout03000/joint/train_predictions.npz": {
+      "sha256": "d94c0599c2541e2b42372c6cff5fefe4d5e293547e8d3c0b98655eefc9eaaec6",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/positive_bin_t03_seed1/readout03000/joint/train_metrics.json": {
+      "sha256": "42b2cbddbfef5af8afdbcba65f81efc941e89cf3fc5bcd1b2d257d8bbdf51210",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/positive_bin_t03_seed1/readout03000/joint/development_predictions.npz": {
+      "sha256": "1d4fe9aa3bd3283bd643eea3ecb5647dc40695ad755264872c448daac1dcc81a",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/positive_bin_t03_seed1/readout03000/joint/development_metrics.json": {
+      "sha256": "b6380bad967ea6e71e1f4381dc4d7fd244882dfb5a49b3051dcfdc6eb2035410",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/time_t1_seed1/config.json": {
+      "sha256": "0341c1b861734f92b4f81c733f52b94c729bfd5bd45fa43b3a2bce2a006e2764",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/time_t1_seed1/readout00250/embeddings.npz": {
+      "sha256": "140c29c7742a053411a91ea79be376a16c1f179793388314e8c8575dbc234604",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/time_t1_seed1/readout00250/joint/train_predictions.npz": {
+      "sha256": "35a58eea62b1fab6759c97466d4694baaea9d3d17c48fe9ae6ff554a7ed539b9",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/time_t1_seed1/readout00250/joint/train_metrics.json": {
+      "sha256": "bf6217f409248de71814c7e9bc423f3a7778f1c81808058c8f92e849d551d1df",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/time_t1_seed1/readout00250/joint/development_predictions.npz": {
+      "sha256": "881c1dd81e8e783c67ad546e9425c316ad3e19f74bae01a2e14c18e524fcf52a",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/time_t1_seed1/readout00250/joint/development_metrics.json": {
+      "sha256": "15cf55e5fb49ad9c613b8f0d1951168dc1857e040590e18e0e7a6da021082370",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/time_t1_seed1/readout01000/embeddings.npz": {
+      "sha256": "6624b7c712aaf223de4586f8e6dfde803e7ad4daba225b360353bb26b3159b63",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/time_t1_seed1/readout01000/joint/train_predictions.npz": {
+      "sha256": "9418f520799245462e91548a05120e584d18feca22e0467d023f0bd5b587a332",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/time_t1_seed1/readout01000/joint/train_metrics.json": {
+      "sha256": "e482f373181db336041f398f5a184db27d48aa7b32372b32aa1c704b3f75b92f",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/time_t1_seed1/readout01000/joint/development_predictions.npz": {
+      "sha256": "b152162e9ccd00d2363d3ffb2cf46e5391a0571ee5d5a1b36ff0abcd97a933cc",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/time_t1_seed1/readout01000/joint/development_metrics.json": {
+      "sha256": "b4eabd11aa76e861f6526c9016be5ceb72641b51e3d7c14b42e3aca4c35d77a3",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/behavior_t03_seed1/config.json": {
+      "sha256": "1ffb9b7ee78425950e8cdebdd8e53f5258ffb2a02e3bf0deef0faaab5ae85b7c",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/behavior_t03_seed1/readout00250/embeddings.npz": {
+      "sha256": "9bc6cb288e53d4e93ad51d3573d22e4509138b5bdd8c82dd4c2420a3a517b79d",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/behavior_t03_seed1/readout00250/joint/train_predictions.npz": {
+      "sha256": "14cc311fe0e09b3a8b042268dd5e0821e6d2c6364078f98341f0dcbb2ffe6a63",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/behavior_t03_seed1/readout00250/joint/train_metrics.json": {
+      "sha256": "c7eda5f9a1d847c6fe3f67b29f27e8f9658cfbcafc613b2ace9bf55d4970e40b",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/behavior_t03_seed1/readout00250/joint/development_predictions.npz": {
+      "sha256": "73958362cb5563bd31e9b7d248b6b2481a74e6045b229a55d49c809002c17796",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/behavior_t03_seed1/readout00250/joint/development_metrics.json": {
+      "sha256": "5a2f8994b41f35afb02e10a474379ba70e07cffab974ac79d47582c9422f50d8",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-cebra-20260907/observed/seed2/pseudo_arrays.npz": {
+      "sha256": "d58875c5b466fcf388432bf1100da02b29102038b374279cb7e690c7c5be1ba9",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-cebra-20260907/observed/seed2/pseudo_components.csv": {
+      "sha256": "ad3ae6193b876784f51d161f818c028d118c700b75d46a576a7e2b7a82e8deb1",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-cebra-20260907/observed/seed2/raw_binned/decoder.npz": {
+      "sha256": "0c40bb90ca0d283c97bc1eb631d7532a4315cf6c3e38ebaa28e8530f6ce813f4",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-cebra-20260907/observed/seed2/pca8/decoder.npz": {
+      "sha256": "f2f1f6a1449c54863516530810ca898d3fa0a1b3f57bbac2ba30719a4c73d326",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/positive_bin_t03_seed2/config.json": {
+      "sha256": "e12abd29b6ed6d0025d34904b381be27d37363541077dd987b847353b3c3c39e",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/positive_bin_t03_seed2/readout00250/embeddings.npz": {
+      "sha256": "591731101d94a417d67cbf4a176f28682ff3e1817f838fb4bce011cfd32dcc29",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/positive_bin_t03_seed2/readout00250/joint/train_predictions.npz": {
+      "sha256": "bfa200eeb4b663bf4fada215a1f1c24f6faa217209a1e545014b2422d2be5b6d",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/positive_bin_t03_seed2/readout00250/joint/train_metrics.json": {
+      "sha256": "06b4c80ab4c2230e93a340d7243ebfac8a47f9c9591685318273ac776966b297",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/positive_bin_t03_seed2/readout00250/joint/development_predictions.npz": {
+      "sha256": "52f901646031517c6d5e4f4db35f665290754b9b3b6e30ba0c9d93430c9337b2",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/positive_bin_t03_seed2/readout00250/joint/development_metrics.json": {
+      "sha256": "7594a90435bf1a0d934095a60f74267ebb8b8e9b6a6a43df7d2111d80977dbe7",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/positive_bin_t03_seed2/readout03000/embeddings.npz": {
+      "sha256": "8ded6b6858fe2d2b424c88ea07d1588691e68b0e3b6e224220eb595566a12a5c",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/positive_bin_t03_seed2/readout03000/joint/train_predictions.npz": {
+      "sha256": "7b20fccaad6c12cf094c9484c2607025199333cff2c9fafec0d9505a9292a82b",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/positive_bin_t03_seed2/readout03000/joint/train_metrics.json": {
+      "sha256": "0270688859dbc886e72d6926aaeeae1b8dd6e082f44bfc70921f13276f625fd3",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/positive_bin_t03_seed2/readout03000/joint/development_predictions.npz": {
+      "sha256": "de1d5331c05078ec9b0d50cb616239b0165fd6356e05fd9fd698ce6b95305655",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/positive_bin_t03_seed2/readout03000/joint/development_metrics.json": {
+      "sha256": "6debb5a78ddccedb801f6777ae5bb7d859dec75d48d71cf49a738765a01af7cc",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/time_t1_seed2/config.json": {
+      "sha256": "6a521c36233320ba9dd56ef57ea5c92c27684fd5787f0e516f65fb659cd38d73",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/time_t1_seed2/readout00250/embeddings.npz": {
+      "sha256": "71a4d5a6e4869a580dc616bede9ad4ec37b47c131e3313a3d4fcfeb1bc9ffc27",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/time_t1_seed2/readout00250/joint/train_predictions.npz": {
+      "sha256": "75cfbf6e30e89c4253ccdb63c35a0173e1d194616779e1adbe7799b287a1acb6",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/time_t1_seed2/readout00250/joint/train_metrics.json": {
+      "sha256": "f06c31c9aa55a96cfbe2bafae22ee13d29703885d41e224f768b5a2c3bfdf836",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/time_t1_seed2/readout00250/joint/development_predictions.npz": {
+      "sha256": "da4f73a695e149ae0f9993462ee87de7588251b3c138de909278599eff1fac70",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/time_t1_seed2/readout00250/joint/development_metrics.json": {
+      "sha256": "728d13278a903fec2346f7906028b4446788e2ded76ed7c892b131cdba455c74",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/time_t1_seed2/readout01000/embeddings.npz": {
+      "sha256": "a9969af959fde31cd29c32030e0d90f38b5351bb9c7bbcd3a22299fe13318f51",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/time_t1_seed2/readout01000/joint/train_predictions.npz": {
+      "sha256": "cd2537758a7dd365327b9e1b81e272d618b2c4317f2680848d9da9b99a949d29",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/time_t1_seed2/readout01000/joint/train_metrics.json": {
+      "sha256": "5189dc4d78ebe1f7b31fe3fd6a6edc5e01691d3db92cd1d21b17f4317983a82b",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/time_t1_seed2/readout01000/joint/development_predictions.npz": {
+      "sha256": "71e651bb74956e8e179f4ef52799538eafd0aa1ee050088d94c493a1c66504e4",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/time_t1_seed2/readout01000/joint/development_metrics.json": {
+      "sha256": "5a345a14059678363d9845446e1090609379b28e29798345cebdd7b03d78e0b0",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/behavior_t03_seed2/config.json": {
+      "sha256": "68af335338a537406779673caba1482ded2bfce44f682c03d43538c0606524e4",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/behavior_t03_seed2/readout00250/embeddings.npz": {
+      "sha256": "9d9afd2d036244d18fdc8a2572988883ab74df8a3005b6a0b41c2637f2c7f39a",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/behavior_t03_seed2/readout00250/joint/train_predictions.npz": {
+      "sha256": "f88a75cf4d52c4df7041fe3e6af19df6d12c35d35b25c3ec9b22da09b2fdd31a",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/behavior_t03_seed2/readout00250/joint/train_metrics.json": {
+      "sha256": "2e6638d6e505dc019bd178d267fdda93f4fcf8def8bc1d8f6e2c64130ffdb0ac",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/behavior_t03_seed2/readout00250/joint/development_predictions.npz": {
+      "sha256": "d099b399e808bf5d4441db53cd2f4b8b82ca68ce19b1abf20374270daf60cf9d",
+      "historical_hash_checked": true
+    },
+    "outputs/start-goal-autoresearch-20260907/02-cebra/behavior_t03_seed2/readout00250/joint/development_metrics.json": {
+      "sha256": "12618d848fbf6bff9c9ac290f5cb5399b0b6e6c8551f2a52771f63e38e9ebf0b",
+      "historical_hash_checked": true
+    },
+    "outputs/prospective_path_first_run/place195-v6-v9-autoresearch-20260906/v7-v8-neural-experiments/primary29_min3train_min1val/bin100ms/source_level_cue_tensors.npz": {
+      "sha256": "688e3b52f69a872c7aec420da99ebb6f0b80464351ded3813b077cd7ed3cf567",
+      "historical_hash_checked": true
+    },
+    "outputs/prospective_path_first_run/place195-v6-v9-autoresearch-20260906/v8b-v9-cebra-final-20260905T224554Z/v9/v9_cebra_metrics.csv": {
+      "sha256": "8cce8afd294773bc9cf8bca3e038a9cd0cc5a37300aec5070411e3a7a583007c",
+      "historical_hash_checked": false
+    },
+    "outputs/prospective_path_first_run/place195-v6-v9-autoresearch-20260906/v7-v8-neural-experiments/primary29_min3train_min1val/bin100ms/pseudo_arrays_seed0.npz": {
+      "sha256": "a86f85a4f46132cb3a64237fc151e3f2539ac6e158cc4b639c14e74a98d488ac",
+      "historical_hash_checked": false
+    },
+    "outputs/prospective_path_first_run/place195-v6-v9-autoresearch-20260906/v7-v8-neural-experiments/primary29_min3train_min1val/bin100ms/pseudo_manifest_seed0.csv": {
+      "sha256": "1e3ee6bbfe4f09f7a3f473a4dac551b61cf4dfe87dbbc25520b66f77e10a766c",
+      "historical_hash_checked": false
+    },
+    "outputs/prospective_path_first_run/place195-v6-v9-autoresearch-20260906/v7-v8-neural-experiments/primary29_min3train_min1val/bin100ms/train_only_pca_seed0.npz": {
+      "sha256": "a27416087ef4a8dd9ac3df3dbe49a32be1b52a097bb704ec0929b0476cdf661a",
+      "historical_hash_checked": false
+    },
+    "outputs/prospective_path_first_run/place195-v6-v9-autoresearch-20260906/v8b-v9-cebra-final-20260905T224554Z/v8b/v8b_v9_same_array_comparator_baselines.csv": {
+      "sha256": "855e289e11dd78f1700235f0b83401a2f9ea0ef8c40df3f23441c9354ea86586",
+      "historical_hash_checked": false
+    },
+    "outputs/prospective_path_first_run/place195-v6-v9-autoresearch-20260906/v8b-v9-cebra-final-20260905T224554Z/v9/observed/cebra_time/dim3/seed0/embeddings_and_decoder.npz": {
+      "sha256": "9d53a9039a9d7449708e962e595c78cd7daf0181659a501ac7b9f9f81aac4e0f",
+      "historical_hash_checked": false
+    },
+    "outputs/prospective_path_first_run/place195-v6-v9-autoresearch-20260906/v8b-v9-cebra-final-20260905T224554Z/v9/observed/cebra_time/dim8/seed0/embeddings_and_decoder.npz": {
+      "sha256": "d6d2aa74997a1621c882b51fd947ba6d66de83e7650b620fc66d5a7c59076d04",
+      "historical_hash_checked": false
+    },
+    "outputs/prospective_path_first_run/place195-v6-v9-autoresearch-20260906/v8b-v9-cebra-final-20260905T224554Z/v9/observed/cebra_behavior/dim3/seed0/embeddings_and_decoder.npz": {
+      "sha256": "32ed40c0a56af7bcafe1964ad2f963e7764cdae9f17a540af82abac997d4ab03",
+      "historical_hash_checked": false
+    },
+    "outputs/prospective_path_first_run/place195-v6-v9-autoresearch-20260906/v8b-v9-cebra-final-20260905T224554Z/v9/observed/cebra_behavior/dim8/seed0/embeddings_and_decoder.npz": {
+      "sha256": "080a4eb5d43b2d7304be89c90e9ffa8ae4b9a84cfd211e68a689a852f8d58ec2",
+      "historical_hash_checked": false
+    },
+    "outputs/prospective_path_first_run/place195-v6-v9-autoresearch-20260906/v7-v8-neural-experiments/primary29_min3train_min1val/bin100ms/pseudo_arrays_seed1.npz": {
+      "sha256": "20e1bba70715b299efa6294d5892d0a5c040ebeb129ebf128b304b74c5bf7ab8",
+      "historical_hash_checked": false
+    },
+    "outputs/prospective_path_first_run/place195-v6-v9-autoresearch-20260906/v7-v8-neural-experiments/primary29_min3train_min1val/bin100ms/pseudo_manifest_seed1.csv": {
+      "sha256": "e7a2a2d8ae60e4dbfe862fb8384ce24733bd28be6dbf4039da9697eb3890bef3",
+      "historical_hash_checked": false
+    },
+    "outputs/prospective_path_first_run/place195-v6-v9-autoresearch-20260906/v7-v8-neural-experiments/primary29_min3train_min1val/bin100ms/train_only_pca_seed1.npz": {
+      "sha256": "0ec71a6e2a126470ae256d5541ddef5d552e4724600c802e66f242a6d27113b8",
+      "historical_hash_checked": false
+    },
+    "outputs/prospective_path_first_run/place195-v6-v9-autoresearch-20260906/v8b-v9-cebra-final-20260905T224554Z/v9/observed/cebra_time/dim3/seed1/embeddings_and_decoder.npz": {
+      "sha256": "6f95ec33a9a2e9ae10756ba90e0c6bfc65b8c1fa92c00d910c256942f865a951",
+      "historical_hash_checked": false
+    },
+    "outputs/prospective_path_first_run/place195-v6-v9-autoresearch-20260906/v8b-v9-cebra-final-20260905T224554Z/v9/observed/cebra_time/dim8/seed1/embeddings_and_decoder.npz": {
+      "sha256": "4b17196e8dfbf8e69e843e0d1960ccdea1497ca4ba6a767cb1fb92217ab9f1e3",
+      "historical_hash_checked": false
+    },
+    "outputs/prospective_path_first_run/place195-v6-v9-autoresearch-20260906/v8b-v9-cebra-final-20260905T224554Z/v9/observed/cebra_behavior/dim3/seed1/embeddings_and_decoder.npz": {
+      "sha256": "8dfec9dc6d72b76a73458f20e0c2fec22f15f5011ba87f5d3d0f901da353f03f",
+      "historical_hash_checked": false
+    },
+    "outputs/prospective_path_first_run/place195-v6-v9-autoresearch-20260906/v8b-v9-cebra-final-20260905T224554Z/v9/observed/cebra_behavior/dim8/seed1/embeddings_and_decoder.npz": {
+      "sha256": "b682db8ba808123305ff46cf8abde9de82a2ff8b07837c293f8ef5f18dfac4b6",
+      "historical_hash_checked": false
+    },
+    "outputs/prospective_path_first_run/place195-v6-v9-autoresearch-20260906/v7-v8-neural-experiments/primary29_min3train_min1val/bin100ms/pseudo_arrays_seed2.npz": {
+      "sha256": "3a06fb67902b16f79a48d33917019736d1eb0c312f2f495a9cfdb86ab861d67a",
+      "historical_hash_checked": false
+    },
+    "outputs/prospective_path_first_run/place195-v6-v9-autoresearch-20260906/v7-v8-neural-experiments/primary29_min3train_min1val/bin100ms/pseudo_manifest_seed2.csv": {
+      "sha256": "2caf44e2244b2e5f77475373c211cbdeaa1cc7ab0787273d9304ebebe0510dbc",
+      "historical_hash_checked": false
+    },
+    "outputs/prospective_path_first_run/place195-v6-v9-autoresearch-20260906/v7-v8-neural-experiments/primary29_min3train_min1val/bin100ms/train_only_pca_seed2.npz": {
+      "sha256": "d53c336909c6059ffb62a4117ea955e0746261d7db51795bbc1856bc21889dfa",
+      "historical_hash_checked": false
+    },
+    "outputs/prospective_path_first_run/place195-v6-v9-autoresearch-20260906/v8b-v9-cebra-final-20260905T224554Z/v9/observed/cebra_time/dim3/seed2/embeddings_and_decoder.npz": {
+      "sha256": "fc716f6fab27bb1a1f22f84d45904002aee958bfb0c3320bd1be73deca22b28d",
+      "historical_hash_checked": false
+    },
+    "outputs/prospective_path_first_run/place195-v6-v9-autoresearch-20260906/v8b-v9-cebra-final-20260905T224554Z/v9/observed/cebra_time/dim8/seed2/embeddings_and_decoder.npz": {
+      "sha256": "5f10e3bb155538c47310ce1b5c129aeda66334873191c693f81cc4278efd4ca8",
+      "historical_hash_checked": false
+    },
+    "outputs/prospective_path_first_run/place195-v6-v9-autoresearch-20260906/v8b-v9-cebra-final-20260905T224554Z/v9/observed/cebra_behavior/dim3/seed2/embeddings_and_decoder.npz": {
+      "sha256": "475dd6ecee9d8b66652820d81c9321e788c2681758416b9264df97f22687cded",
+      "historical_hash_checked": false
+    },
+    "outputs/prospective_path_first_run/place195-v6-v9-autoresearch-20260906/v8b-v9-cebra-final-20260905T224554Z/v9/observed/cebra_behavior/dim8/seed2/embeddings_and_decoder.npz": {
+      "sha256": "d0d7b39cda050999f83066decd4fbce5fa705130775e3b122ecad5d83d3d71ef",
+      "historical_hash_checked": false
+    }
+  },
+  "code": {
+    "scripts/cebra_latent_atlas.py": "c717594eb630f58cf41e15d2c46476482b9cfc8d0ac39d8e94575a02f584cdfe",
+    "scripts/cebra_latent_atlas.html": "6ff4a2c2991c6374b6b42d7c021ee1e584759d400a1f23b834055e7951a286a7",
+    "scripts/test_cebra_latent_atlas.py": "5d2038f823d8096ea729db4528171689706feda359ed3d71f1412da0e325f2c4",
+    "docs/reports/cebra-latent-atlas-protocol-20260924.md": "c387ce269bb95fbe15f9dcd9740c6654238ea051c62a8088ac0a39d7ea8f15a5"
+  },
+  "outputs": {
+    "atlas.html": "dba38d33c0f03ecd9a10a4246175280788312f6abfdadb4fc6727f1dafa445d5",
+    "code/cebra-latent-atlas-protocol-20260924.md": "c387ce269bb95fbe15f9dcd9740c6654238ea051c62a8088ac0a39d7ea8f15a5",
+    "code/cebra_latent_atlas.html": "6ff4a2c2991c6374b6b42d7c021ee1e584759d400a1f23b834055e7951a286a7",
+    "code/cebra_latent_atlas.py": "c717594eb630f58cf41e15d2c46476482b9cfc8d0ac39d8e94575a02f584cdfe",
+    "code/test_cebra_latent_atlas.py": "5d2038f823d8096ea729db4528171689706feda359ed3d71f1412da0e325f2c4",
+    "endpoint-native-pairs.png": "99ef6cf523e46da08e9a2cc48d1006f9df6cf0332539ff02dcf8bdf74d070d64",
+    "endpoint-projection.png": "416d3f9ebc516188bb842274032db313622e5cec2111da6d1e13445c9f82887b",
+    "path-native-pairs.png": "91d0903c255cabc2e98e636432e5aa64dee916370499f488c83b8ad8c65c5cf4",
+    "path-projection.png": "0a28897c1df04d5870396333f39d3d44668f8be3f3e36b3a8a4b2ec08bdf201f",
+    "projection-retention.png": "098a67787129829be92a4e0275b7dd24192cb407c0cf1431848fd571f4760f31",
+    "projections/endpoint-behavior_t03-step250-seed0.npz": "d1790cada9aea5b5e10d50649ecbb81049bbd9963135d7d5f09095a97fc82dab",
+    "projections/endpoint-behavior_t03-step250-seed1.npz": "1510abbe16910d525f7c8e67536d0b97f09c9496591ee45d7b578693e3341c02",
+    "projections/endpoint-behavior_t03-step250-seed2.npz": "486e3b02c9803a22f325a0e65facd8776dd1a12e4e4a5d97fc5611263dbe7269",
+    "projections/endpoint-pca8-seed0.npz": "ab066a99433ff73cb5b26f810fec491b281ad89c15e889ba6a26f3343e63a771",
+    "projections/endpoint-pca8-seed1.npz": "6c05ec624555b872e66005ea1deeef75f944c6a0b8e2513fc92d91dd5bd493ba",
+    "projections/endpoint-pca8-seed2.npz": "87637809def791c8f7cef8ea1ab4345e90a57c2b992799148e1d7ff06322705b",
+    "projections/endpoint-positive_bin_t03-step250-seed0.npz": "7c29e019368ef03f28a624566d07599eb3a1e17882d2c10abcea5e7a3192e90f",
+    "projections/endpoint-positive_bin_t03-step250-seed1.npz": "95327755afe300fb8f2c8717c69c918114919ee6ac5ff52197fc96c2185a634c",
+    "projections/endpoint-positive_bin_t03-step250-seed2.npz": "2010d0fb24c3e1b0a99c0966ef4dec01b23c4e0532a19acbfb78984d77ec2e19",
+    "projections/endpoint-positive_bin_t03-step3000-seed0.npz": "5fc409309e00d5e078307a86cec5aaaa4ab0bca766d1c976abc4ec4705df0c63",
+    "projections/endpoint-positive_bin_t03-step3000-seed1.npz": "670a09b0087c6b80a39f08f0533c0c0a71ac4c559e97de2457a57e2de2312a3d",
+    "projections/endpoint-positive_bin_t03-step3000-seed2.npz": "ea2c59981da4c6e9feaa8cdaf5171b8ec222929142abd9b9ba663d4cd6216fe5",
+    "projections/endpoint-raw-seed0.npz": "3c9e25407019c226676c3db56433cec2291b106552c6f269fcd3517ea3edab9f",
+    "projections/endpoint-raw-seed1.npz": "bf4e15e4005b079fab6041c8133027915da18e52b702c77ff77125296b036b18",
+    "projections/endpoint-raw-seed2.npz": "42ace035f69350ef13775a7dfe80313ec0c7ab3ef1c4ac6672401258112a9db3",
+    "projections/endpoint-time_t1-step1000-seed0.npz": "0d5d463ce26cc4613f9f7454f23b82bde81f1bca2bd36d84ccc823c688a5bf4c",
+    "projections/endpoint-time_t1-step1000-seed1.npz": "8e34542b88e7d4c689adadc141fa95b942d5a9122c2e467535a773345e2130bd",
+    "projections/endpoint-time_t1-step1000-seed2.npz": "c4d49efb6faa76f812b82f2a4196cfa14e45da29fca1b157d9062f0f5f5640c4",
+    "projections/endpoint-time_t1-step250-seed0.npz": "bab3d2853a4c8361d4b6aa5a59e6df5658122c4e73c115124a040bfb5e11ea6f",
+    "projections/endpoint-time_t1-step250-seed1.npz": "20b61d218521eb25e3392c33fd0aa28707dc20d8deac449d6e9724dfbd21652c",
+    "projections/endpoint-time_t1-step250-seed2.npz": "0b6a6e834fe0373ff853ff2fe445af9ab62f5993da4b5967e4f08547f29846f0",
+    "projections/path-cebra_behavior-dim3-seed0.npz": "bcdd2f61e077dc4704c6183c051a061c8ec1f5b0d8807ad250a92a9bd572edb0",
+    "projections/path-cebra_behavior-dim3-seed1.npz": "6ce35146f4a9dbbb4603455a9e45d77e64065bbd62c239162514034e10faec50",
+    "projections/path-cebra_behavior-dim3-seed2.npz": "0e294133b579770cb7e7072803e61a179ffb87393ed6933c1039fa8a5ba33058",
+    "projections/path-cebra_behavior-dim8-seed0.npz": "d2a639b349ce82919b94aab1715a1761ea15ca7b9938251ebcd75cd4900c98eb",
+    "projections/path-cebra_behavior-dim8-seed1.npz": "7be2c5bade9b7740ac79993c40e92da3606763da571ee4a61218d065778831d0",
+    "projections/path-cebra_behavior-dim8-seed2.npz": "2ee1f017631cde396d0720032beb8730e946754e48ba40d5456f5db29e69ca05",
+    "projections/path-cebra_time-dim3-seed0.npz": "7e892acb075768a63348ebe26866233375f1e1a33ee6dbda017a890db2abc2c8",
+    "projections/path-cebra_time-dim3-seed1.npz": "f16931f281ad49955bdc8538cbdf5b45dd1663ba35f03afbf1be627d46b7786e",
+    "projections/path-cebra_time-dim3-seed2.npz": "28b449b5a5f13d0c1609b304777c686e06af98bdfda37b2003ac45d31f6c4315",
+    "projections/path-cebra_time-dim8-seed0.npz": "56a485f30a95ba576b832178f4cca287d8f6e7dcb7fa49fa6b1e8f78a335ab09",
+    "projections/path-cebra_time-dim8-seed1.npz": "271078137ae1e13b4699ae3f089f5fa619feb08275a2af1cbcc2ef8210390201",
+    "projections/path-cebra_time-dim8-seed2.npz": "32e3a3d3c0a8d0bbb63bf98d501773d799fdf8e7c12f50e319bc52aa0fed06f8",
+    "projections/path-pca8-seed0.npz": "9dcc179b3b94983e087f5b84838a97c8948978b1d337ccdd4375999d7423cda4",
+    "projections/path-pca8-seed1.npz": "99971247eaeb424264580fde2ccdf72afa294ad8628fe02adf69c82865aecbdf",
+    "projections/path-pca8-seed2.npz": "f49c9840d2e2ab306a67c21ae3b3caa0564d9d6c02479b287bdecf955dcb4ab8",
+    "projections/path-raw-seed0.npz": "eaa72a3797de955260a633c43321ebc13c664dc5ad9ee42d31f2afb63a36a841",
+    "projections/path-raw-seed1.npz": "757eac17a0dc6c294a848d11230c2c66e49eb67bd6472464970833a7f33d7b2d",
+    "projections/path-raw-seed2.npz": "1add2ba5f995580f31096b45be5b7e379995baca6a8d8dc0fd7f25f5b3e1075b",
+    "spectra.png": "c968dbbf2cf4b22d5666f4452edd3303d291571d65e44501d53e711dfffac812",
+    "summary.json": "af80291a2815ce537082293db892dcab7bc6520c59efae84f69ece6ddb245e33"
+  },
+  "limitations": "No new source split, topology/null test, biological independence, or checkpoint replay."
+}

@@ -1,6 +1,6 @@
 # Research handoff: what to read, what is current, what is retained
 
-**Updated: 2026-09-14.** This index separates the scientific question, completed exploratory studies, teaching explanations and historical evidence. The earlier consolidation did not fit models; the bounded preprocessing and matched PCA studies below did. All preserve the selected195 scope.
+**Updated: 2026-09-24.** This index separates the scientific question, completed exploratory studies, teaching explanations and historical evidence. The earlier consolidation did not fit models; the bounded preprocessing and matched PCA studies below did. All preserve the selected195 scope.
 
 ## Start here
 
@@ -9,6 +9,8 @@ and [consolidation ledger](workspace-consolidation-20260910/README.md). The
 September 10 session, resumed September 13, supersedes the earlier exploratory
 sessions. Historical absolute worktree paths below are provenance; use the
 current path map. This consolidation adds no biological fits.
+
+**Saved CEBRA visualization, September 24:** [interactive offline atlas](cebra-latent-atlas/atlas.html), [illustrated pipeline/paper review](cebra-latent-atlas/review.html), [results](cebra-latent-atlas-results-20260924.md), and [frozen protocol](cebra-latent-atlas-protocol-20260924.md). Thirty-nine Time/Behavior/raw/PCA objects across all three seeds, source-aware point definitions and full-space/projection diagnostics. No new encoder/decoder fits. The promising endpoint Behavior view hides substantial geometry; attractive path views do not rescue nonpositive readouts. Download the HTML files for offline use; no preview server is required.
 
 **Concise retrospective:** [what worked, what did not, and what remains unknown](path-preprocessing-review-20260909.md) — three-angle review of the completed preprocessing study; no new fits.
 
