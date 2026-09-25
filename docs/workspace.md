@@ -60,7 +60,7 @@ or confirmed H1. No further fitting, merge or worktree removal is queued.
 on the CEBRA-Time transfer result and a PR. The standalone
 [lesson](../learning/cebra-time-transfer-teach-max-20260925.html) lives on
 `docs/cebra-time-transfer-teach-max` in `~/neuro_science/work/cebra-time-teach`,
-branched from experiment PR #9 at `c19d07c`. Its separate PR is stacked on
+branched from experiment PR #9 at `c19d07c`. [Teaching PR #10](https://github.com/Hong-yiii/neuro_science/pull/10) is open, not merged, and stacked on
 `feat/cebra-full-trial-transfer`, not `main`, to avoid duplicating the experiment
 changes before #9 merges. This is teaching/documentation QA only: no new model
 fitting, raw extraction, scientific-code change, tuning or merging. Preserve both
