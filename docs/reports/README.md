@@ -1,18 +1,49 @@
 # Research handoff: what to read, what is current, what is retained
 
-**Updated: 2026-09-09.** This index separates the scientific question, completed exploratory studies, teaching explanations and historical evidence. The earlier consolidation did not fit models; the subsequent bounded preprocessing study below did. Both preserve the selected195 scope.
+**Updated: 2026-09-26.** This index separates the scientific question, completed exploratory studies, teaching explanations and historical evidence. The earlier consolidation did not fit models; the subsequent bounded preprocessing study below did. Both preserve the selected195 scope.
 
 ## Start here
 
-**Current workspace/session:** [single workspace and recovery guide](../workspace.md)
-and [consolidation ledger](workspace-consolidation-20260910/README.md). The
-September 10 session, resumed September 13, supersedes the earlier exploratory
-sessions. Historical absolute worktree paths below are provenance; use the
-current path map. This consolidation adds no biological fits.
+**Current cross-session review:** [September26 research reset and decision trajectory](research-reset-20260926/README.md)
+([portable HTML](research-reset-20260926/review.html)). Reconciles the last three
+sessions, matched PCA completion, decoder/atlas/transfer results and four-worktree
+cleanup risks. Includes a proposed no-fit next milestone; no new research fits.
+
+**Completed broader-training experiment (PR #9, open):**
+[verified report](https://github.com/Hong-yiii/neuro_science/blob/c19d07c/docs/reports/cebra-full-trial-transfer/README.md).
+Time cue-only readout improved relative to cue-only encoder training, but the
+predeclared primary rule failed. PR #10 is a teaching-only follow-up stacked on
+PR #9. Local reports live under `work/cebra-full-trial-transfer/`; private accepted
+outputs remain canonical. Neither PR was merged by this reset.
+
+**Current workspace/recovery:** [workspace guide](../workspace.md), including the
+September26 four-worktree inventory. The [September10–13 consolidation ledger](workspace-consolidation-20260910/README.md)
+is retained history. Its single-worktree state is no longer current; historical
+absolute paths remain provenance. The latest review above adds no biological fits.
+
+**Professor-facing CEBRA/PCA review (evidence through September 24):** [meeting document](../professor_updates/cebra_review_20260924/review.md), [portable HTML](../professor_updates/cebra_review_20260924/review.html). Reconciles the recent path decoder/null results with the endpoint sampler improvements, explains representation versus readout complexity, and proposes bounded discussion decisions. Synthesis only; no new fits. Printable PDF and delivery checks are retained in `outputs/cebra-review-delivery-20260924/`.
+
+**Completed hyperparameter diagnosis, September24:** [meaningful diagnosis](cebra-hyperparameter-diagnosis-20260924.md), [offline illustrated HTML](cebra-hyperparameter-diagnosis-20260924.html), [frozen protocol](cebra-hyperparameter-prefit-20260924.md).1700new decoder fits and20null-world PCA transforms; zero CEBRA/observed-PCA retraining. Weakening L2 did not rescue CEBRA; bandwidth changes reached at most chance mean BA. Temperature improved loss without discrimination. Source-transfer failure is observed, but no unique encoder fault or intrinsic task incompatibility is established. New A0 matched raw/PCA null checks do not establish the77.5% PCA lead; they do not directly test its five-assembly mean.2500model records/395000predictions replayed;117software tests passed.
+
+**Completed frozen-CEBRA decoder experiment, September 24:** [results and interpretation](cebra-decoder-autoresearch-20260924.md), [offline HTML](cebra-decoder-autoresearch-20260924.html), [frozen protocol](cebra-decoder-prefit-20260924.md). Eight fixed recipes,710 new readout fits, zero new biological CEBRA fits; all800 saved model/forward outputs verified after a no-fit lineage repair. No nonlinear CEBRA rescue: best mean BA37.33% Time/35.67% Behavior. Matched PCA+scaled RBF reached77.50% BA, an exploratory lead with no matched PCA null test here. No extra tuning or execution of the separate PCA study within that decoder session; the PCA
+study had already completed separately and merged as PR #7.
+
+**Executed CEBRA visualization, September 24:** [results and offline atlas](cebra-latent-atlas-results-20260924.md), [frozen protocol](cebra-latent-atlas-protocol-20260924.md). Thirty-nine saved Time/Behavior/raw/PCA objects across three seeds; rotatable train/development views, full-space spectra and projection/condition-geometry checks. Zero encoder/decoder fits. Early endpoint Behavior needs more than three linear display axes; visual structure does not rescue the nonpositive path results.
+
+**CEBRA visualization research, September 23:** [latent geometry, website image references and saved-run atlas proposal](cebra-latent-geometry-review-20260923.md). Three-angle paper/artifact review; exact interactive/video links, existing Time/Behavior embedding inventory, higher-dimensional interpretation and bounded next steps. No new fits or latent plots; does not replace the separate matched PCA experiment PRD.
 
 **Concise retrospective:** [what worked, what did not, and what remains unknown](path-preprocessing-review-20260909.md) — three-angle review of the completed preprocessing study; no new fits.
 
-**Latest experiment:** [path-preprocessing teaching report](path-preprocessing-autoresearch-20260908.md), [offline illustrated HTML](path-preprocessing-autoresearch-20260908.html), and [agent handoff](path-preprocessing-autoresearch-20260908-agent.md). Twenty observed-data recipes and source-coherent controls are complete. Stronger regularization improved probability loss, but the small historical diagnostic was6→1-dominated and did not establish broad robustness. All82,283 accepted model-fit instances were forward-replayed without fitting. [Frozen methods](path-preprocessing-prefit-20260908.md).
+**Completed September13–14; merged September23 as PR #7:**
+[matched PCA/non-PCA results](https://github.com/Hong-yiii/neuro_science/blob/8340631/docs/reports/path-pca-matched/report.md).
+Same-source six-recipe comparison: raw−PCA loss **+0.007023 nats**, both selected
+arms **55% BA**; source sensitivity spans zero. A descriptive PCA lead, not
+superiority or H1 confirmation. The [original PRD](path-pca-matched-prd-20260913.md)
+is planning history. The root checkout is stale; code/results are in current
+main and `work/issue-6-pca`, whose ignored artifacts must be preserved before
+retirement. Earlier Sept24 “unexecuted” statements are superseded.
+
+**Completed preprocessing study, September 8:** [path-preprocessing teaching report](path-preprocessing-autoresearch-20260908.md), [offline illustrated HTML](path-preprocessing-autoresearch-20260908.html), and [agent handoff](path-preprocessing-autoresearch-20260908-agent.md). Twenty observed-data recipes and source-coherent controls are complete. Stronger regularization improved probability loss, but the small historical diagnostic was6→1-dominated and did not establish broad robustness. All82,283 accepted model-fit instances were forward-replayed without fitting. [Frozen methods](path-preprocessing-prefit-20260908.md).
 
 Earlier cross-study context:
 
@@ -29,6 +60,8 @@ Normative authority remains [research questions](../research-questions.md) and [
 
 | Study | Best entry point | Scope / status |
 | --- | --- | --- |
+| CEBRA hyperparameter diagnosis, September24 | [Results](cebra-hyperparameter-diagnosis-20260924.md), [offline HTML](cebra-hyperparameter-diagnosis-20260924.html) | Same29-unit/4→3 source assay, fixed observed embeddings. Six logistic C values/nine RBF settings: no CEBRA rescue; confidence versus transfer distinguished. Anchored CEBRA/raw-PCA/joint family tails18/21,15/21,19/21 are new-family references, not seed-mean/superiority tests. |
+| Frozen CEBRA decoders, September 24 | [Results](cebra-decoder-autoresearch-20260924.md), [offline HTML](cebra-decoder-autoresearch-20260924.html) | Existing29-unit/7-session4→3 component;82train+22development sources. No CEBRA nonlinear criterion passes; A0/O0 CEBRA-only family17/21. PCA+RBF77.5% is a control lead, not a PCA null result or H1 discovery.710new readouts; recovery added0fits. |
 | Path preprocessing, September 8 | [Teaching report](path-preprocessing-autoresearch-20260908.md), [offline HTML](path-preprocessing-autoresearch-20260908.html), [agent brief](path-preprocessing-autoresearch-20260908-agent.md) | Completed exploratory first-second count/time/scaling/L2 study:147train+41historical-validation sources,49unit IDs,13sessions. Selected Δ+.0286/BA55%; only2/5 positive; declared null p=.139–.356 and source sensitivity crosses0. No broad H1 win. |
 | V6–V9, September 6 | [Teaching/audit Markdown](place195-v6-v9-autoresearch-20260906.md), [self-contained professor HTML](../professor_updates/place195_v6_v9_20260906/place195-v6-v9-professor-methods-results-validity-20260906.html) | Accepted **historical** 29-cell/7-session, fixed-endpoint interior-component benchmark. Whole-cue generalization nonpositive/unstable; not superseded numerically by a different task. |
 | Endpoint baseline/diagnosis, September 7 | [Baseline](start-goal-cebra-baseline.md), [diagnosis](start-goal-cebra-diagnosis.md) | Accepted initial 30-class endpoint benchmark and subsequent diagnostics; original settings are not the latest best development settings. |

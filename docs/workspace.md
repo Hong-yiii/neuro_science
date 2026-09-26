@@ -4,7 +4,29 @@
 2026 (Asia/Singapore).** The date `20260910` in consolidation paths identifies this
 session, not the date every operation completed.
 
-## One working copy, one current handoff
+## Current navigation refresh — September 26, 2026
+
+Start with the [research reset and decision trajectory](reports/research-reset-20260926/README.md)
+([offline HTML](reports/research-reset-20260926/review.html)). This is the current
+cross-session review/cleanup map; proposals there are not authorization to fit.
+The original consolidation/recovery history below is retained, not rewritten.
+
+The root checkout is still dirty at `438856e` on the old release branch. Cached
+`origin/main` is `8340631`; live GitHub inspection confirms **PR #7 merged
+September 23**, after its matched PCA experiment completed September 13–14.
+Statements below or in Sept24 reports calling that experiment unexecuted are
+superseded. Its [merged result](https://github.com/Hong-yiii/neuro_science/blob/8340631/docs/reports/path-pca-matched/README.md)
+is also available in `work/issue-6-pca/docs/reports/path-pca-matched/`.
+
+There are **four registered worktrees**, not one: this root plus
+`work/issue-6-pca`, `work/cebra-full-trial-transfer` (open PR #9), and
+`work/cebra-time-teach` (open PR #10 stacked on #9). Atlas PR #8 is also open.
+PR7's unique ignored model/output files remain inside its worktree. Do not remove
+any worktree from merge status alone or overwrite the uncommitted decoder,
+diagnosis and professor-review work here. The reset records preservation and
+integration gates; no branch switch, merge, data move or model fit was performed.
+
+## September 10–13 historical consolidation handoff
 
 Use **`~/neuro_science`** for neuroscience work. This session
 `01a08ab0-4fd4-704c-ac18-3b002e40c116` is the current durable handoff, at Hongyi's
@@ -13,10 +35,14 @@ queues. Read this document and the [research index](reports/README.md) rather th
 reconstructing instructions from old transcripts. Do not spawn lasting sibling
 worktrees without an explicit need and a removal/handoff plan.
 
-The checked-out branch is `release/research-consolidation-20260908`, associated
-with [PR #5](https://github.com/Hong-yiii/neuro_science/pull/5). It is **not merged
-into `main`** by this cleanup. PRs #1–4 were already merged. The older local `main`
-branch is not the latest research handoff; use the PR branch until it is merged.
+**GitHub status refreshed September 13, 2026 at 23:10 +08:00:**
+[PR #5](https://github.com/Hong-yiii/neuro_science/pull/5) was merged at
+13:53:21Z into `main`, merge commit
+`d1228d3e04ca932d56ddad62e18f206545283ee5`. The checkout still has
+`release/research-consolidation-20260908` at `438856e18f90250a1e8a0b8a7525e7018ac57d28`;
+no local branch switch was performed by this refresh. Recheck remote state,
+preserve uncommitted work, and base the next experiment branch on current
+`origin/main`, not the old local `main`. PRs #1–4 were already merged.
 No force-push, branch deletion, or research fitting is part of consolidation.
 
 Pi/Codex transcripts were not concatenated, rewritten or deleted. This session
@@ -43,11 +69,72 @@ repository first and use these Git-backed notes as context.
 
 Read the [September 9 review](reports/path-preprocessing-review-20260909.md) for
 what worked and the [agent brief](reports/path-preprocessing-autoresearch-20260908-agent.md)
-for exact evidence. Next steps are **decisions, not permission to run**: verify
-metadata/nuisance controls, define a worthwhile effect, and freeze any 6→1
-follow-up before genuinely new sources. Preserve the selected-195 scope.
+for exact evidence. Historical next steps remain **decisions, not permission to
+restart old studies**: verify metadata/nuisance controls, define a worthwhile
+effect, and freeze any 6→1 follow-up before genuinely new sources. Preserve the
+selected-195 scope.
 
-## Where everything lives now
+**New request, September 13:** Hongyi requested a PRD and new-session handoff for
+a matched PCA/non-PCA path-component experiment, ending in results, independent
+reviews, documentation, and a PR. The [new exploratory PRD](reports/path-pca-matched-prd-20260913.md)
+defined a bounded six-recipe comparison and prefit gates. **Status corrected
+September 26:** it ran September 13–14 and merged as PR #7 on September 23; see
+the current navigation above. The original PRD is preserved as planning history,
+not a pending queue or permission to rerun.
+
+## September24 hyperparameter diagnosis — completed
+
+Professor-facing synthesis: [meeting document](professor_updates/cebra_review_20260924/review.md)
+and [portable HTML](professor_updates/cebra_review_20260924/review.html).
+This reconciles endpoint/PCA performance with the new path diagnosis; it adds no
+fits. Delivery PDF/checks are in `outputs/cebra-review-delivery-20260924/`.
+The first-principles `/teach max` lesson was updated in place at
+`/tmp/pi-teach/20260924T095420Z-cebra-first-principles.html`; its temporary preview
+is not durable scientific authority. Use the report if that preview expires.
+
+[Human diagnosis](reports/cebra-hyperparameter-diagnosis-20260924.md) and
+[offline illustrated HTML](reports/cebra-hyperparameter-diagnosis-20260924.html)
+report the separately authorized six-C/nine-SVM-setting ablation on the same
+frozen29-unit/4→3 representations.1700new readouts and20null-only PCA transforms,
+zero CEBRA or observed-PCA refits;2500model records/395000predictions verified;
+117software tests passed. Weakening decoder regularization did not rescue CEBRA.
+Confidence changes explain large loss improvements without better discrimination;
+source-transfer failure is observed, but its unique cause and CEBRA's intrinsic
+task suitability remain unresolved. PCA's77.5% mean remains descriptive; new
+anchored raw/PCA null checks do not establish it and do not directly test that mean.
+
+Accepted run:
+`outputs/cebra-hyperparameter-diagnosis-20260924/run-20260924T105957Z/`.
+Protocol, full curves/grids, source/null caveats and code/review provenance are in
+the report. This is complete, not a pending encoder-tuning task. The separate
+September13 five-panel PCA/non-PCA study is also complete (PR #7; corrected in the
+September26 navigation above). No new service,
+raw/test/lab access, installs, branch change or commit/push occurred.
+
+## September 24 frozen-CEBRA decoder follow-up — completed
+
+[Human results](reports/cebra-decoder-autoresearch-20260924.md) and
+[offline HTML](reports/cebra-decoder-autoresearch-20260924.html) report the separately
+authorized eight-readout experiment on retained29-unit/7-session4→3 embeddings.
+No nonlinear CEBRA criterion passed (best mean BA37.33% Time/35.67% Behavior).
+Matched PCA+scaled RBF reached77.50% BA, an exploratory control lead requiring its
+own matched null/nuisance checks and new-source evaluation, not a confirmed H1 result.
+The separate September13 PCA/non-PCA study is also complete; see the September26
+status correction above.
+
+Accepted artifacts:
+`outputs/cebra-decoder-autoresearch-20260924/recovery-20260924T042259Z/`.
+Exactly710 new readouts and90 saved-baseline forwards were completed; zero new
+biological CEBRA fits. Five planned PCA transforms plus three disclosed preflight
+PCA fits make eight cumulatively. Postprocessing initially failed because
+class-local product-row IDs were merged; the fresh recovery repaired only lineage
+and replayed800 saved models with all fit APIs blocked. Original fit arrays/models
+were unchanged. Verification, independent numerical review and111 software tests
+passed. Preserve the failed attempt and journal as provenance; do not pool it as
+another result or restart fitting from its stale running flag. No new daemon,
+branch change, commit/push, lab access or raw/test import was introduced.
+
+## September 13 relocation map — historical
 
 All paths below are relative to `~/neuro_science`.
 
@@ -65,7 +152,7 @@ logs, `.pi-subagents/` review/session artifacts and caches—are preserved under
 **not another Git worktree**. Nothing there authorizes a new run. No environment,
 model, PDF, raw data, failed-attempt record or session history was discarded.
 
-The latest accepted run is
+The accepted September8 preprocessing run is
 `outputs/path-preprocessing-autoresearch-20260908/biological-20260908T115508Z/final-20260908T133200Z/`.
 The interrupted `final-20260908T125617Z/` is retained separately and excluded from
 accepted inference. The manager remains `outputs/path-autoresearch-management-20260908/`.
@@ -112,7 +199,8 @@ The inaccessible Mac worktree at
 contents on this host. Its stale registration was pruned only after verifying its
 index matched retained commit `4946c1b` and copying its metadata to
 `work/workspace-consolidation-20260910/stale-mac-registration/`. No Mac directory
-was deleted or claimed backed up. There is now one registered local worktree.
+was deleted or claimed backed up. There was one registered local worktree at that
+consolidation checkpoint; the September26 inventory above supersedes that count.
 
 ## Recreate the software checkout
 

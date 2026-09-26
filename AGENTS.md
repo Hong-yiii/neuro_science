@@ -4,13 +4,20 @@ This is Hongyi's neuroscience workspace. Treat it as a living context repo for l
 
 ## Current Session Authority
 
-Use `~/neuro_science` as the single working copy. Hongyi designated session
+Use `~/neuro_science` as the canonical working copy. Hongyi designated session
 `01a08ab0-4fd4-704c-ac18-3b002e40c116` (begun September 10; consolidation resumed
 September 13, 2026) as the current durable session; earlier sessions are
 exploratory history. Read `docs/workspace.md` first for the consolidated paths,
 PR status, recovery records and safe verification commands. Do not recreate old
 sibling worktrees or restart experiments from historical pending-work flags.
 Keep new durable decisions in Git-backed notes, not only in a chat transcript.
+
+**September 26 review refresh:** read
+`docs/reports/research-reset-20260926/README.md` for the latest three-session
+synthesis and proposed decision/cleanup sequence. PR #7 is completed and merged;
+PRs #8/#9/#10 remain open at inspection, and three retained review worktrees
+exist under `work/`. Older single-worktree/PCA-pending statements are historical.
+No new fits or worktree retirement are authorized by the review itself.
 
 ## Workspace Role
 
