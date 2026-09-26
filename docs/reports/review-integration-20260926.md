@@ -51,7 +51,11 @@ A read-only rollout researcher and compatibility scout checked session metadata,
 
 ## Validation
 
-**Passed:** all **134 software tests** in 50.758 seconds; the separate PR10 check verified **18 metric cells, four accessible diagrams, anchors and offline resources**; review HTML freshness/anchors/local-reference checks passed. Pi task `b181e04df` completed in 55 seconds with exit 0. Log: `outputs/review-integration-20260926/software-checks.log`. Independent review and final containment/preservation checks are recorded below before delivery.
+**Passed:** all **134 software tests** in 50.758 seconds; the separate PR10 check verified **18 metric cells, four accessible diagrams, anchors and offline resources**; review HTML freshness/anchors/local-reference checks passed. Pi task `b181e04df` completed in 55 seconds with exit 0. Log: `outputs/review-integration-20260926/software-checks.log`. The subsequent integration-status banner was regenerated and the HTML freshness check passed again.
+
+**Preservation/containment passed at merge `2a1525f`:** all five input tips are ancestors; **46 PR-file comparisons** are byte-identical outside navigation; all **31 backup copies and safety-commit originals** match their recorded hashes; **22 current local files** remain identical and **nine** have the documented atlas/navigation/status reconciliation. The three other worktrees retain their original commits and clean status. The canonical working tree was clean after the merge. Receipt: `outputs/review-integration-20260926/integration-check.json`.
+
+**Independent final review:** fresh-context, read-only reviewer `df62541c-844c-4d43-9356-61e4f535c10a` returned **no findings**, confirming it is safe to continue source/doc work on the combined branch. It inspected Git, source/docs, receipts and test logs, but did not independently rerun tests or inspect/replay private raw/model artifacts. Review: `.pi-subagents/artifacts/outputs/df62541c-844c-4d43-9356-61e4f535c10a/work/review-integration-20260926/final-review.md`. This receipt's final update is documentation-only.
 
 Commands use the retained environment, two CPU threads, no GPU and no new packages:
 
@@ -66,6 +70,6 @@ PY=/home/hongyi-home-lab/neuro_science/scratch/v6-v9-runtime/bin/python
 
 The software suite includes tiny **invented-data** CPU fits and synthetic state replay, not biological-model refits. Two named pre-existing private-input checks remain excluded by its runner. The PR10 checker is run separately because test discovery only covers `scripts/test_*.py`. Full private saved-artifact replay is not part of this integration.
 
-Static check before testing: six Python files requested via primary LSP; two confirmed clean and four timed out. Zero returned diagnostics is **not** a claim that those four completed a type check. Existing PR receipts and executable software checks provide separate evidence; no claim of project-wide static cleanliness.
+Static check before testing: six Python files requested via primary LSP; two confirmed clean and four timed out. Zero returned diagnostics is **not** a claim that those four completed a type check. Existing PR receipts and executable software checks provide separate evidence; no claim of project-wide static cleanliness. Final session diagnostics reported **no blocking errors**. Marksman missing/ambiguous-document warnings were checked against **128 local links, all existing** (`outputs/review-integration-20260926/link-check.json`); retained duplicate worktree docs and the newly merged files explain the index warnings. Spelling warnings on BA/PN and an assertion-in-test warning do not warrant changing historical scientific terminology or tests.
 
 Local execution/provenance receipts and logs are under `outputs/review-integration-20260926/`. No service, listener, scheduled job or new Git worktree was created.
