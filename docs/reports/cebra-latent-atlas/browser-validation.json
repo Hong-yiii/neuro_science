@@ -1,0 +1,14 @@
+{
+  "status": "passed",
+  "viewports": [
+    "1500x1400",
+    "390x1300"
+  ],
+  "ui_control_smoke": "passed",
+  "fractional_sequence_row_guard": "passed",
+  "no_horizontal_document_overflow": true,
+  "embedded_static_figures": 6,
+  "external_runtime_resources": 0,
+  "attempt01_metric_bytes_unchanged": true,
+  "atlas_sha256": "dba38d33c0f03ecd9a10a4246175280788312f6abfdadb4fc6727f1dafa445d5"
+}
