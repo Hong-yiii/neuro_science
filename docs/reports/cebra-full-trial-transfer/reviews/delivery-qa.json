@@ -1,0 +1,27 @@
+{
+  "status": "passed",
+  "local_links_checked": 12,
+  "embedded_figures": 2,
+  "external_resources": 0,
+  "script_tags": 0,
+  "desktop_viewport": [
+    1280,
+    1000
+  ],
+  "mobile_viewport": [
+    390,
+    844
+  ],
+  "browser": "headless Google Chrome, isolated temporary profile, file:// only",
+  "screenshots": "canonical management/report-{desktop,mobile}.png",
+  "html_sha256": "f5ca360c70f7ac3dd420ad3bc5e855e62e70399cf66570ed7c6c35bf51323775",
+  "shipping_replay_status": "verified_forward_only",
+  "shipping_replay_artifacts": 1071,
+  "shipping_replay_comparison": {
+    "max_metric_abs_diff": 7.68564258901705e-08,
+    "max_prediction_score_abs_diff": 1.941272509409231e-07
+  },
+  "scoped_pyright_errors": 0,
+  "software_tests_passed": 113,
+  "lens_cache": "no dispatched files; not evidence of clean LSP diagnostics"
+}
