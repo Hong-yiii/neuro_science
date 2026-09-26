@@ -56,6 +56,21 @@ independent numerical review passed. Accepted run:
 Known-label-conditioned historical source pools, not simultaneous natural trials
 or confirmed H1. No further fitting, merge or worktree removal is queued.
 
+**Explicit teaching-PR exception, September 25:** user requested `/teach max`
+on the CEBRA-Time transfer result and a PR. The standalone
+[lesson](../learning/cebra-time-transfer-teach-max-20260925.html) lives on
+`docs/cebra-time-transfer-teach-max` in `~/neuro_science/work/cebra-time-teach`,
+branched from experiment PR #9 at `c19d07c`. [Teaching PR #10](https://github.com/Hong-yiii/neuro_science/pull/10) is open, not merged, and stacked on
+`feat/cebra-full-trial-transfer`, not `main`, to avoid duplicating the experiment
+changes before #9 merges. This is teaching/documentation QA only: no new model
+fitting, raw extraction, scientific-code change, tuning or merging. Preserve both
+worktrees and canonical dirty work. Retain this teaching worktree until review;
+remove only after approval and cleanliness/artifact checks. QA lives directly in
+canonical `outputs/cebra-time-teach-20260925/`, so removal cannot strand it.
+The explicitly bounded preview on loopback8766 uses Pi task `be7695c35` and expires
+2026-09-25 23:54 SGT; the lesson footer, learning index and host registry document
+health/stop/expiry. No boot service or new public ingress was introduced.
+
 Pi/Codex transcripts were not concatenated, rewritten or deleted. This session
 started from the account home; its transcript remains in the host-local Pi session
 store. The previous canonical Pi process was not killed. Do not continue writing
