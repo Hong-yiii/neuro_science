@@ -1,9 +1,14 @@
 # Neuro Science Workspace
 
-This is the single neuroscience workspace: `~/neuro_science`.
-Start with the [current session and recovery guide](docs/workspace.md) for the
-September 10 consolidation, artifact locations, and reproducible setup.
-Earlier sessions are exploratory history, not separate active workspaces.
+Canonical neuroscience workspace: `~/neuro_science`.
+Current working branch: **`review/research-consolidated-20260926`** — main +
+PRs #8/#9/#10 + preserved local research. [Integration and recovery](docs/reports/review-integration-20260926.md).
+GitHub main and the individual PRs are unchanged; this review branch is local.
+Start with the [September 26 research review and decision trajectory](docs/reports/research-reset-20260926/README.md)
+([offline HTML](docs/reports/research-reset-20260926/review.html)), then the
+[current workspace and recovery guide](docs/workspace.md).
+Three registered review worktrees remain under `work/`; they contain open PRs
+or unique ignored artifacts. Do not remove them based on older single-worktree guidance.
 
 ## Layout
 
@@ -31,15 +36,15 @@ learned independently by an artificial navigation agent is H2, a stretch aim.
 Place, view, and conjunctive analyses remain supporting validation and confound
 checks rather than the primary question.
 
-**Start with the [research handoff index](docs/reports/README.md)** (2026-09-14):
+**Use the [research handoff index](docs/reports/README.md)** (refreshed 2026-09-26):
 current synthesis, completed endpoint and path studies, portable teaching reports,
 source-code preservation, verification, and explicit supersession labels.
 Endpoint-condition decoding improved in later settings; neither that success nor
 the nonpositive path analyses establish confirmatory H1 evidence. The original
 holdout-exposure record remains in force.
 
-- **Latest matched comparison:** [PCA versus raw verdict](docs/reports/path-pca-matched/README.md), [offline HTML](docs/reports/path-pca-matched/report.html), and [evidence index](docs/reports/path-pca-matched/evidence.md). PCA improved historical loss by 0.007023 nats; both arms had 55% balanced accuracy and source sensitivity spanned both signs. All 26,266 fit instances replayed without fitting. Small exploratory method advantage, not robust biological generalization or H1 confirmation.
-- **Earlier preprocessing study:** [path-preprocessing report](docs/reports/path-preprocessing-autoresearch-20260908.md), [offline HTML](docs/reports/path-preprocessing-autoresearch-20260908.html), [agent brief](docs/reports/path-preprocessing-autoresearch-20260908-agent.md), and [September 9 review](docs/reports/path-preprocessing-review-20260909.md). Stronger regularization helped probability loss, but the historical result was 6→1-dominated and did not establish broad robustness. The prior verification replayed 82,283 model-fit instances with zero new fits.
+- **Matched PCA comparison:** [PCA versus raw verdict](docs/reports/path-pca-matched/README.md), [offline HTML](docs/reports/path-pca-matched/report.html), and [evidence index](docs/reports/path-pca-matched/evidence.md). PCA improved historical loss by 0.007023 nats; both arms had 55% balanced accuracy and source sensitivity spanned both signs. All 26,266 fit instances replayed without fitting. Small exploratory method advantage, not robust biological generalization or H1 confirmation.
+- **Historical September 8 preprocessing study:** [path-preprocessing report](docs/reports/path-preprocessing-autoresearch-20260908.md), [offline HTML](docs/reports/path-preprocessing-autoresearch-20260908.html), [agent brief](docs/reports/path-preprocessing-autoresearch-20260908-agent.md), and [September 9 review](docs/reports/path-preprocessing-review-20260909.md). Stronger regularization helped probability loss, but the historical result was 6→1-dominated and did not establish broad robustness. The prior verification replayed 82,283 model-fit instances with zero new fits.
 - [Earlier cross-study synthesis](docs/reports/recent-learnings-20260908.md) and [agent brief](docs/reports/recent-learnings-20260908-agent.md).
 - [PCA and below-chance explanation with plots](learning/place195-pca-and-below-chance-20260908.md).
 - [Artifact preservation and verification](docs/reports/research-release-20260908.md): Git is not a backup of ignored data/models.
