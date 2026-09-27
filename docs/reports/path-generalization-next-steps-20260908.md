@@ -1,6 +1,8 @@
 # Way forward: reliable prospective-path coding with pseudopopulations
 
-Date: 2026-09-08. **Current proposed direction, not a new experiment or positive biological result.**
+Date: 2026-09-08. **Historical proposal; active scope superseded by the
+[September27 agreed direction](../project-direction.md).** The principles and
+evidence below remain background, not a new experiment or current run queue.
 
 This consolidates the discussion after the [completed path-generalization study](../professor_updates/path_generalization_20260907/README.md). It supersedes any reading of the earlier recommendations as requiring a large simultaneous population or abandoning pseudopopulations. H1a/H1b remain defined in [research questions](../research-questions.md).
 

@@ -1,14 +1,36 @@
 # Getting Started Tasks
 
-> **Historical onboarding ledger; current next steps updated 2026-09-08.**
-> Earlier unchecked items below are not evidence that the completed V6–V9 and
-> path-generalization experiments never ran, nor that confirmatory H1 gates have
-> passed. Start with the [completed-study/status index](professor_updates/path_generalization_20260907/README.md)
-> and [current proposed study](reports/path-generalization-next-steps-20260908.md).
+> **Current entry point: [September27 agreed direction](project-direction.md).**
+> The active next-session checklist is immediately below. Phases0–6 and the
+> September8 list farther down are historical onboarding/planning, not commands
+> to repeat completed experiments. H2 is removed, not waiting in a stretch queue.
+> The [completed-study/status index](professor_updates/path_generalization_20260907/README.md)
+> preserves earlier evidence and claim limits.
 > Fixed195 is a scope restriction, not a requirement for a195-column common panel.
 > Original test exposure is permanent; old “locked/untouched” statements are dated.
 
-This is the practical checklist for the prospective hippocampal path project and its later artificial-agent extension. Each task should be small enough to complete independently and leave behind a note, command, screenshot, or verified outcome.
+This is the practical checklist for the prospective hippocampal path project.
+
+## Active Next Session — Agreed September27
+
+- [ ] Read [direction](project-direction.md), [hypotheses](research-questions.md)
+  and [contract](analysis-contract.md). Retain H1, remove H2; no central-question pivot.
+- [ ] Prepare the pseudopopulation construction artifact: provenance, a worked
+  row example, source/phase lineage, shapes, counts and runnable mechanical checks.
+  Reuse existing code/tests; do not launch a new broad validation campaign.
+- [ ] Propose deliberate real-source folds before assembly, with class/endpoint
+  support, temporal dependence, exposure and session/feature identity documented.
+- [ ] Specify A's component assay and B's ordered graph-path target/feasibility;
+  define valid B ground truth for the evaluation object, not an arbitrary source's path.
+- [ ] Freeze one CEBRA-Time configuration, cue-only/joint arms, two checkpoint
+  counts, PCA/LDA roles and a full bounded fit budget. No encoder-setting sweep.
+- [ ] Resolve the **open decoder choice/training policy**, metrics, endpoint
+  reference and necessary nulls/uncertainty; do not silently choose an MLP or rerun
+  a broad readout grid. Earlier logistic and RBF decoders were already trained.
+- [ ] Incorporate the mentor's phase-selectivity/rotation literature and intended
+  validation once clarified. Do not invent a shared-latent hypothesis meanwhile.
+- [ ] Obtain explicit run authorization and independent protocol/code review
+  before biological fits, expanded data access or cleanup. This update runs nothing.
 
 ## How To Use This
 
@@ -172,16 +194,15 @@ This is the practical checklist for the prospective hippocampal path project and
   where those variables are available.
 - [ ] Write a conservative result note with explicit claim boundaries.
 
-## Phase 7: H2 — Artificial-Agent Stretch Aim
+## Former Phase 7: H2 — Removed
 
-- [ ] Receive or locate the Unity agent rollout or checkpoint.
-- [ ] Record environment, checkpoint, seed, observation, action, and reward provenance.
-- [ ] Export cue/planning-equivalent hidden states and subsequent agent paths.
-- [ ] Apply the same path representation, splits, baselines, and controls.
-- [ ] Predefine whether comparison means information, geometry, or dynamics.
-- [ ] Repeat across multiple seeds or checkpoints where available.
+Artificial-agent comparison was removed from active scope on September27.
+Historical implementation/reading notes are not pending tasks.
 
-## Immediate Next Tasks — Proposed 2026-09-08
+## Historical Proposed Tasks — September8, Superseded
+
+The active next-session checklist is at the top. This list records the earlier
+proposal; it is not authorization for another study.
 
 1. [ ] Freeze a meaningful route-component definition and cue window using task
    meaning and training support, not a neural-outcome winner. Distinguish

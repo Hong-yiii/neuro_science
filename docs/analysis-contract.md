@@ -1,7 +1,9 @@
 # Analysis Contract
 
-This document defines the minimum shared data shape for prospective-path
-analysis and the later biological/artificial-agent comparison.
+This document defines the data and evaluation contract for prospective-path
+analysis. The [September27 agreed direction](project-direction.md) retains H1,
+removes artificial-agent H2, narrows the encoder comparison and leaves decoder
+choice open. This is not a frozen new-run protocol.
 
 ## Unit Of Analysis
 
@@ -12,9 +14,10 @@ aligned sequences:
 cue-period population activity -> subsequent observed navigation path
 ```
 
-For biological data, a population feature is a curated neuron/unit represented
-by spike counts or firing rates. For model data, it is an RNN or other agent
-hidden dimension represented by its activation.
+A biological population feature is a curated neuron/unit represented by spike
+counts or firing rates. PCA/LDA/CEBRA coordinates are derived features, not new
+neurons or independent observations. Artificial-agent activation export is no
+longer an active requirement.
 
 Adjacent time bins are not independent samples. All bins from a source trial
 must remain in one validation split. Trials and units are nested within recording
@@ -44,8 +47,15 @@ cross-session noise correlations.
 
 Per-unit real-trial checks and source-safe pseudopopulation analyses are
 complementary; individual-cell significance is not required for population
-information. See the [current plan](reports/path-generalization-next-steps-20260908.md)
-and [completed study](professor_updates/path_generalization_20260907/README.md).
+information. See the [agreed direction](project-direction.md) and
+[completed study](professor_updates/path_generalization_20260907/README.md).
+
+The next methods artifact must trace source ledger → folds → matching pools →
+session-block draws → pseudorow lineage → phase tensors, with a worked example
+and runnable checks. Reuse existing code/tests; do not launch a broad validation
+campaign by default. Check source overlap, timing/count/shape/label consistency,
+missingness and reconstruction of lineage. Passing mechanical checks is not
+proof of simultaneity or biological validity.
 
 ## Required Trial Identity And Events
 
@@ -82,19 +92,36 @@ source_trial_id, session_id, simultaneous_recording_group,
 cue_time_bin, cell_id, spike_count, start_id, goal_id, cue_id
 ```
 
-Minimum model fields for H2:
+Cell identities may differ across sessions; a claimed **real-trial** population
+vector needs verified simultaneity. Label cross-session pseudopopulations
+explicitly; they cannot fulfill exact trial-specific H1. Selected195 describes
+the archive scope, not a mandatory fully observed195-column panel. Document the
+actual matching key; current component-conditioned rows are not necessarily
+matched by whole-route identity.
 
-```text
-source_trial_id, cue_time_bin, hidden_unit_id, activation,
-start_id, goal_id, cue_id
-```
+## Joint Cue/Navigation Training And Folds
 
-Cell identities may differ across sessions, but units within one claimed
-population vector must be verified as simultaneous. A cross-session
-pseudopopulation must be labeled as such and cannot answer trial-specific H1. The
-planned fixed-195 design is therefore a condition-level route-family analysis:
-trials are matched by behavior-defined route family, not claimed to be one real
-simultaneous 195-cell trial.
+Both phases of one real source trial and all their derivatives share one fold.
+Assign folds before assembly or learned transformations. Only training-source
+navigation activity may enter joint encoder learning; decoder training and
+held-out predictions use cue inputs only. Preserve source/bin/phase lineage,
+clock units, boundary handling, masks and the chosen cross-session phase
+alignment; normalized progress is not a simultaneously observed trajectory.
+
+The next encoder comparison uses CEBRA-Time, cue-only versus joint training,
+two predefined checkpoints and one configuration. Freeze phase exposure weights,
+update counts, preprocessing policy, seed budget and readout policy before fitting.
+Saving two checkpoints need not require two independent training trajectories.
+Shared parameters and within-phase Time positives do not prove cross-phase
+biological alignment; sequential navigation pretraining/cue fine-tuning is a
+different intervention, not implicitly authorized.
+
+Fold count/grouping and treatment of serial dependence remain open. Check class,
+endpoint and session support before selecting a scheme; never split synthetic
+rows while allowing their real sources to overlap. Session holdout changes
+feature identity when different neurons were recorded, so it needs a separate
+admissible design. Fit all transforms/readouts inside training folds; keep model
+selection off outer evaluation folds. Exposed-source resplits remain exploratory.
 
 ## Subsequent Path Table
 
@@ -159,6 +186,23 @@ are dropped for the planned experiment. When `start_id` is inferred from the
 previous goal, the primary endpoint-labelled subset is `success_after_success`:
 the previous and current trials both ended successfully.
 
+## Component Assay A And Ordered-Path Target B
+
+A predicts a behavior-defined interior component/segment. B, the desired
+capability, predicts an ordered graph walk. Both remain in scope; endpoint
+classification does not replace them. Define a target-appropriate held-out
+metric and start/goal-only predictor for each task. A is a simpler assay, not a
+statistical baseline for a different B task, and not a universal significance
+gate before B can be considered.
+
+For B, first define meaningful graph granularity/order/revisit semantics and a
+valid target for every evaluation object. Component-conditioned pseudorows may
+combine different full paths: one contributing trial's path cannot silently
+become the row's ground truth. Demonstrate route-level support and distinguish
+condition-level route targets from genuine single-trial prediction. A canonical
+endpoint-derived route is not incremental neural information. Metric, target
+construction and success threshold must be specified before fitting.
+
 ## Shared Path Components Across Conditions
 
 When exact route variation within one `(start, goal)` condition is sparse, a
@@ -206,18 +250,25 @@ estimable without requiring individually significant units or unrecorded
 simultaneity. The relevant evaluation should also be able to produce:
 
 - a start-and-goal-only path baseline;
-- raw-population and PCA neural baselines;
-- a trial-aware CEBRA-Time representation;
-- optionally, a behavior-conditioned CEBRA representation;
-- the same simple downstream path decoder for each neural representation;
+- PCA and supervised LDA baselines, with their task-specific role specified;
+- CEBRA-Time cue-only/joint representations at two predefined checkpoints;
+- a bounded, matched decoder/readout policy, **still to be chosen**;
 - held-out path predictions and path-appropriate errors;
 - within-start-goal permutation nulls;
 - for compositional H1b analyses, matched cross-condition path-component
   contrasts and target-free neural/path representational dissimilarity matrices.
 
-In behavior-conditioned CEBRA, path labels or continuous path features supervise
-the embedding. A separate downstream decoder is still required to evaluate
-held-out prediction.
+CEBRA-Behavior is historical, not an optional new arm in this narrowed study.
+Time's objective omits target labels, but existing assembly uses them, including
+at evaluation. PCA does not use target labels in its transform; LDA does, with
+at most K−1 discriminant dimensions for K classes. Fit it only on training labels;
+its role for B is unresolved. Do not infer intrinsic geometry from LDA separation.
+Raw features remain a possible simple reference, not another tuning grid.
+
+Choose a justified, bounded null/uncertainty scheme for the actual target and
+full label-dependent construction. Necessary leakage/null checks are not removed
+by the decision to reduce candidate encoder settings. List all planned fitting
+instances before execution, including readouts and null refits.
 
 ## Supporting Analysis Objects
 
@@ -230,6 +281,9 @@ Where data permits, retain support for:
 - complete-trial train/test splits and null distributions.
 
 These characterize and control H1; they are not the primary research question.
+The mentor's cue/navigation selectivity and rotation question remains open
+pending task-variable support, validation design and the referenced literature;
+it is not an adopted phase-geometry hypothesis.
 
 ## Current Data Boundary
 
@@ -262,12 +316,16 @@ They do not remove the metadata/observability limits above. The original test wa
 exposed during early V6 reconnaissance and is not pristine; references above to
 an untouched test describe a prospective design, not the status of that dataset.
 
-## Open Decisions
+## Open Decisions Before A New Run
 
-- graph granularity and path-distance metric;
-- whether stable path clusters exist;
-- handling of unsuccessful and timeout trials;
-- cue window and neural bin size;
-- decoder target and primary metric;
-- trial-, session-, and start-goal-held-out evaluation levels;
-- Python, Julia, or mixed implementation.
+- A's component/segment, B's target/feasibility, graph granularity and path metric;
+- cue window/binning, cohort and handling of unsuccessful/timeout trials;
+- source-fold grouping/count, temporal dependence, exposure and support checks;
+- two checkpoint counts, one encoder configuration, phase weighting and seed policy;
+- decoder type/training policy, baseline dimensions/roles (especially LDA for B);
+- primary metric, meaningful improvement, null/uncertainty plan and total fit budget;
+- phase-selectivity/rotation literature and interpretation after mentor input.
+
+See [next-session sequence](project-direction.md#7-next-session-resolve-document-then-proposenot-launch).
+No new biological fitting, data expansion or artifact migration is authorized by
+this contract update.

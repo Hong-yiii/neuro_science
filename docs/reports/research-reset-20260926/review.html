@@ -20,13 +20,17 @@ code{font-size:.86em;overflow-wrap:anywhere}pre{overflow:auto;background:#e9ebe4
 <p><strong>Review date:</strong> 26 September 2026, Asia/Singapore. <strong>Evidence window:</strong> 19–26 September; three most recently active prior neuroscience sessions. <strong>Status:</strong> retrospective evidence review and proposed roadmap, not a new analysis or authorization to fit. <a href="#top">Portable review · currently open</a>.</p>
 <p><strong>Later workspace update (September27):</strong> Hongyi authorized integration,
 publication and then merging <a href="https://github.com/Hong-yiii/neuro_science/pull/11">consolidated PR #11</a>.
-Main (<code>e8f2308</code>) now includes PRs #8/#9/#10 and preserved local studies. The
-canonical checkout is on the new local <code>planning/project-direction-20260927</code>
-branch for high-level decisions to steer the project. Those decisions are
-<strong>not yet made</strong>. See the integration receipt <span class="local-source">[local: <code>docs/reports/review-integration-20260926.md</code>]</span>.
-GitHub also marked #8/#9 merged; stacked #10 remains open despite its included
-commits. The inventory and cleanup discussion below describe the
-<strong>pre-integration</strong> review, not a fresh experiment or destructive-cleanup queue.</p>
+Main (<code>e8f2308</code>) includes PRs #8/#9/#10 and preserved local studies; #10 was
+subsequently closed as already included. <strong>Decisions are now recorded in
+September27 project direction <span class="local-source">[local: <code>docs/project-direction.md</code>]</span>:</strong> retain H1, remove
+H2, narrow to CEBRA-Time cue-only/joint training with two checkpoints and
+source-safe folds, retain PCA/LDA, leave the decoder open, and keep full ordered
+graph-path prediction as the ambition beyond the simpler component assay.
+The construction artifact and phase-selectivity follow-up are described there.
+That update—not all recommendations below—is the next-session authority.
+See the integration receipt <span class="local-source">[local: <code>docs/reports/review-integration-20260926.md</code>]</span>. The inventory
+and cleanup discussion below remain <strong>pre-integration history</strong>, not a new
+experiment or destructive-cleanup queue.</p>
 <blockquote>
 <p><strong>Bottom line:</strong> we have learned more about the measurement pipeline than established new biology. Stop treating CEBRA as the question. Decide which prospective-path claim the available recordings can identify; then consolidate the software around that evaluation.</p>
 </blockquote>

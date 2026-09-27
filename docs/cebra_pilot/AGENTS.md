@@ -3,6 +3,14 @@
 These rules apply to every file under `docs/cebra_pilot/` and supplement the
 workspace-level `AGENTS.md`.
 
+**September27 scope supersession:** [agreed project direction](../project-direction.md)
+and the current hypothesis/analysis contract govern new work. The pilot-specific
+plans and blocked/deferred lists below are historical context, not a current
+execution queue. H2/ANN comparison is removed; the next encoder family is
+CEBRA-Time only, decoder choice is open, and condition-level pseudopopulations
+retain their separate valid contract. Do not revive optional path-conditioned
+encoder arms, old data-gate statuses or fits from these historical lists.
+
 ## Directory Role
 
 This directory is the definitive home for artifacts unique to the first CEBRA
@@ -26,7 +34,7 @@ Do not place data, generated outputs, credentials, or copyrighted PDFs here.
 
 When documents disagree, use this order:
 
-1. `../../AGENTS.md` — workspace conduct and research rigor;
+1. `../../AGENTS.md` and `../project-direction.md` — conduct, rigor and agreed scope;
 2. `../research-questions.md` — canonical scientific hypotheses and claims;
 3. `../analysis-contract.md` and `../dataset-card.md` — required data and
    verified dataset facts;
@@ -45,7 +53,7 @@ corrections in `verification.md` or `formalization.md`, never in the original.
 Before changing this pilot, read:
 
 1. this file and `README.md`;
-2. `../research-questions.md`, `../analysis-contract.md`, and
+2. `../project-direction.md`, `../research-questions.md`, `../analysis-contract.md`, and
    `../dataset-card.md`;
 3. `formalization.md`;
 4. `cebra-pilot-plan.md`; and

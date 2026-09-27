@@ -6,22 +6,29 @@ session, not the date every operation completed.
 
 ## Current navigation refresh — September 27, 2026
 
-Start with the [research reset and decision trajectory](reports/research-reset-20260926/README.md)
-([offline HTML](reports/research-reset-20260926/review.html)). This is the current
-cross-session review/cleanup map; proposals there are not authorization to fit.
-The original consolidation/recovery history below is retained, not rewritten.
+**Start next session with [agreed project direction](project-direction.md), then
+[research questions](research-questions.md) and [analysis contract](analysis-contract.md).**
+H1 remains; H2 is removed. Narrow to CEBRA-Time cue-only/joint training, two
+checkpoints, source-safe folds and PCA/LDA baselines. Decoder choice is open;
+component assay A supports the desired ordered graph-path capability B, not
+replacement by endpoints. Construction documentation/checks are the next methods
+artifact; phase-selectivity/rotation interpretation awaits mentor input.
 
-**Current working branch:** `planning/project-direction-20260927`, created and
-checked out here at Hongyi's request from merged `main` (`e8f2308`). This new
-branch is local-only, without an upstream or PR yet. Its purpose is to make
-high-level decisions to steer the project; no research direction, new experiment
-or cleanup beyond branch setup has been chosen.
+The direction update was authored on `planning/project-direction-20260927` from
+merged main (`e8f2308`). Hongyi authorized publishing and merging this follow-up;
+**after that merge, start from updated `main` in this canonical checkout**.
+Do not infer a model-run authorization from the Git operation. The
+[September26 retrospective](reports/research-reset-20260926/README.md)
+([HTML](reports/research-reset-20260926/review.html)) remains evidence/history,
+not authority to substitute its unadopted recommendations. Original recovery
+history below is retained. Final publication/merge checks and preservation
+receipts live under `outputs/project-direction-20260927/convergence/`.
 
 [Consolidated PR #11](https://github.com/Hong-yiii/neuro_science/pull/11) merged
 September27 at 09:09:51 UTC with its commit ancestry preserved. It includes
 PRs #8/#9/#10 and the local studies/review; GitHub automatically marked #8/#9
-merged. Stacked #10 remains open against its original base although its head
-is included in main. No source branch was deleted or manually retargeted.
+merged. Stacked #10 was subsequently closed as already included, after verifying
+its full head ancestry in main. No source branch was deleted or retargeted.
 See the [integration/recovery receipt](reports/review-integration-20260926.md).
 The original dirty release checkout was captured in safety commit `8baf68f` and
 a verified local Git bundle before switching branches.
@@ -32,7 +39,7 @@ Statements below or in Sept24 reports calling it unexecuted are superseded. Its
 
 There are **four registered worktrees**, not one: this root plus
 `work/issue-6-pca`, `work/cebra-full-trial-transfer` (merged PR #9), and
-`work/cebra-time-teach` (open PR #10, already included via #11). Atlas PR #8 is
+`work/cebra-time-teach` (PR #10 closed as included via #11). Atlas PR #8 is
 merged too; merge status does not authorize deleting any of these worktrees.
 PR7's unique ignored model/output files remain inside its worktree. Do not remove
 any worktree from merge status alone. Decoder, diagnosis and professor-review
@@ -64,8 +71,9 @@ research queue or permission to restart historical searches. No new service.
 The study completed September 14: [human verdict and reviewed evidence](reports/path-pca-matched/README.md).
 PCA's matched historical loss advantage was small (+.007023), with unchanged 55%
 balanced accuracy and source sensitivity spanning both signs. All 26,266 fits
-were forward-replayed without fitting. [Draft PR #7](https://github.com/Hong-yiii/neuro_science/pull/7)
-remains open for user review; no more biological fits are queued by this handoff.
+were forward-replayed without fitting. [PR #7](https://github.com/Hong-yiii/neuro_science/pull/7)
+was still a draft at that checkpoint; it merged September23. No more biological
+fits are queued by this historical handoff.
 
 **Explicit temporary exception, September 24–25:** Hongyi requested a PR for a
 bounded exploratory CEBRA broader-training → cue-only decoding trial. Branch
@@ -96,9 +104,11 @@ or confirmed H1. No further fitting, merge or worktree removal is queued.
 on the CEBRA-Time transfer result and a PR. The standalone
 [lesson](../learning/cebra-time-transfer-teach-max-20260925.html) lives on
 `docs/cebra-time-transfer-teach-max` in `~/neuro_science/work/cebra-time-teach`,
-branched from experiment PR #9 at `c19d07c`. [Teaching PR #10](https://github.com/Hong-yiii/neuro_science/pull/10) is open, not merged, and stacked on
-`feat/cebra-full-trial-transfer`, not `main`, to avoid duplicating the experiment
-changes before #9 merges. This is teaching/documentation QA only: no new model
+branched from experiment PR #9 at `c19d07c`. [Teaching PR #10](https://github.com/Hong-yiii/neuro_science/pull/10)
+was originally open and stacked on `feat/cebra-full-trial-transfer`, not `main`,
+to avoid duplicating the experiment before #9 merged. **Superseded September27:**
+its commits entered main through #11, and #10 was closed as already included.
+The teaching work described here was documentation QA only: no new model
 fitting, raw extraction, scientific-code change, tuning or merging. Preserve both
 worktrees and canonical dirty work. Retain this teaching worktree until review;
 remove only after approval and cleanliness/artifact checks. QA lives directly in
@@ -267,9 +277,9 @@ consolidation checkpoint; the September26 inventory above supersedes that count.
 ## Recreate the historical software checkout
 
 The clone below restores the historical release branch. For the consolidated
-software merged through PR #11, substitute `--branch main`. The new
-`planning/project-direction-20260927` branch is local-only until deliberately
-published. Every checkout needs authorized private inputs/artifacts separately;
+software and accepted direction follow-up, substitute `--branch main` after
+verifying the direction PR is merged. Historical branches are recovery points,
+not competing instructions. Every checkout needs private inputs/artifacts separately;
 cloning Git does not restore those.
 
 ```sh

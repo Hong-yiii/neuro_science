@@ -4,17 +4,22 @@
 
 ## Start here
 
-**Current cross-session review:** [September26 research reset and decision trajectory](research-reset-20260926/README.md)
+**Current decisions:** [September27 agreed project direction](../project-direction.md).
+Retain H1; remove H2; narrow to CEBRA-Time cue-only/joint training, two checkpoints,
+source folds and PCA/LDA baselines. Decoder remains open; component assay A and
+ordered graph-path ambition B stay in scope. No new fits. This takes precedence
+over the recommendations in older reviews and next-study proposals.
+
+**Evidence retrospective:** [September26 research reset and decision trajectory](research-reset-20260926/README.md)
 ([portable HTML](research-reset-20260926/review.html)). Reconciles the last three
 sessions, matched PCA completion, decoder/atlas/transfer results and four-worktree
 cleanup risks. Includes a proposed no-fit next milestone; no new research fits.
 
 **Consolidated [PR #11](https://github.com/Hong-yiii/neuro_science/pull/11), merged September27:**
 main (`e8f2308`) now includes PRs #8/#9/#10 and preserved local decoder,
-diagnosis and review work. GitHub marked #8/#9 merged; stacked #10 remains open
-although its commits are included. Current local working branch:
-`planning/project-direction-20260927`, for high-level project decisions still
-to be made. This changes workspace authority, not the scientific conclusions.
+diagnosis and review work. GitHub marked #8/#9 merged; stacked #10 was closed as
+already included. The direction follow-up records the now-agreed scope, not new
+scientific conclusions or an already frozen experiment.
 See the [integration receipt](review-integration-20260926.md). The PR #10
 [teaching lesson](../../learning/cebra-time-transfer-teach-max-20260925.html) is now
 available in this checkout alongside PR #9's experiment report.
@@ -52,7 +57,7 @@ Earlier cross-study context:
 
 Normative authority remains [research questions](../research-questions.md) and [analysis contract](../analysis-contract.md). Current H1 requires incremental path information beyond endpoints; successful endpoint decoding is not H1. Original holdout exposure remains part of the record.
 
-**Follow-up proposals, not new experiments:** the [path-study plan](path-generalization-next-steps-20260908.md) keeps source-safe pseudopopulations central for a complementary **condition-level** question under recording constraints. The synthesis's E1/E2 real-trial/history/temporal proposals are complementary arms, not a requirement that each cell be significant or that a simultaneous 195-cell recording exist before any progress. Exact same-trial population claims still require the stronger contract. Freeze the chosen estimand/arm and controls before another fit; do not silently substitute one lane for another.
+**Earlier proposals, scope superseded by September27 decisions:** the [path-study plan](path-generalization-next-steps-20260908.md) keeps source-safe pseudopopulations central for a complementary **condition-level** question under recording constraints. The synthesis's E1/E2 real-trial/history/temporal proposals are complementary arms, not a requirement that each cell be significant or that a simultaneous 195-cell recording exist before any progress. Exact same-trial population claims still require the stronger contract. Freeze the chosen estimand/arm and controls before another fit; do not silently substitute one lane for another.
 
 ## Completed studies — keep their evaluation objects separate
 

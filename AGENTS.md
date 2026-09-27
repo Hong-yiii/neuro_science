@@ -12,21 +12,24 @@ PR status, recovery records and safe verification commands. Do not recreate old
 sibling worktrees or restart experiments from historical pending-work flags.
 Keep new durable decisions in Git-backed notes, not only in a chat transcript.
 
-**September 26 review refresh:** read
-`docs/reports/research-reset-20260926/README.md` for the latest three-session
-synthesis and proposed decision/cleanup sequence. PR #7 is completed and merged;
-Three retained review worktrees exist under `work/`. Older single-worktree and
-PCA-pending statements are historical. Consolidated PR #11 merged into `main`
-on September27 at `e8f2308`; it includes PRs #8/#9/#10 and preserved local studies.
-GitHub also marked #8/#9 merged; stacked #10 remains open despite its included
-commits. See `docs/reports/review-integration-20260926.md`.
+**September27 agreed direction — start here next session:** read
+`docs/project-direction.md`, then `docs/research-questions.md` and
+`docs/analysis-contract.md`. H1 remains; H2/artificial-agent comparison is removed
+from active scope. Narrow future encoder comparisons to CEBRA-Time, cue-only
+versus joint cue/navigation training, two predefined checkpoints, deliberate
+source folds, and PCA/LDA baselines. Decoder choice remains open. Component-level
+graph decoding is the simpler assay; ordered graph-path prediction remains the
+desired capability. Pseudopopulation construction documentation/checks are the
+next methods artifact; phase-selectivity/rotation interpretation awaits mentor
+clarification. These are scope decisions, not a frozen run protocol or permission
+to fit. Do not substitute the September26 review's proposed pivot for this decision.
 
-**Current working branch:** `planning/project-direction-20260927`, created from
-that merged main in this canonical checkout at Hongyi's request. It is local-only
-for now and reserved for high-level decisions to steer the project. No scientific
-roadmap choice has been made by creating it; existing recommendations remain
-proposals. No new biological fits, artifact moves or worktree retirement are
-authorized by this branch setup.
+Consolidated PR #11 merged into `main` at `e8f2308`, including #8/#9/#10 and
+preserved local studies. GitHub marked #8/#9 merged; #10 was subsequently closed
+as already included, without deleting its branch/worktree. Three retained review
+worktrees and ignored artifacts remain. New sessions should use updated `main`
+after the direction follow-up merges, not resume historical branch task queues.
+See `docs/workspace.md` and `docs/reports/review-integration-20260926.md`.
 
 ## Workspace Role
 
@@ -65,9 +68,10 @@ Use **path** for the ordered movement through the maze. Reserve **trajectory
 class** for the previous analysis's `(start, goal)` category. A maze graph is a
 proposed path measurement method, not part of H1.
 
-A later comparison with an artificial navigation agent is H2 and a stretch aim.
-The intended comparison is not "RNN units are neurons" and does not claim shared
-mechanisms from similar geometry alone.
+H2, the artificial-navigation-agent comparison, was removed from active scope
+on September27. Do not plan agent training, brain–RNN matching or a replacement
+H2 from historical notes. Shared cue/navigation encoder parameters do not prove
+shared biological geometry or a rotation between phases.
 
 Place-like, view/visual-like, and conjunctive coding remain supporting pipeline
 checks, representation characterization, and confound controls. Position, view,
@@ -81,9 +85,10 @@ pseudopopulation cannot support exact trial-specific claims. It remains a centra
 valid candidate for **condition-level** prospective-path coding under source-safe
 splits and endpoint/nuisance controls; a large simultaneous195 recording is not
 a prerequisite for that work. Per-unit real-trial checks are complementary, not
-an individual-cell-significance gate. Follow the current proposed direction in
-`docs/reports/path-generalization-next-steps-20260908.md` and the evidence/status
-index in `docs/professor_updates/path_generalization_20260907/README.md`. Frozen
+an individual-cell-significance gate. Follow the agreed direction in
+`docs/project-direction.md`; the September8 plan is background, not the active
+run queue. The evidence/status index remains
+`docs/professor_updates/path_generalization_20260907/README.md`. Frozen
 protocols, failed attempts, historical reviews, and current recommendations must
 not be conflated; never pool superseded output directories with accepted runs.
 

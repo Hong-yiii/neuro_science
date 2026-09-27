@@ -1,5 +1,12 @@
 # First CEBRA Pilot
 
+**Historical pilot, not the current run queue.** The
+[September27 agreed direction](../project-direction.md) supersedes the scope,
+optional encoder/ANN ladder and active-looking status below. H1 remains; H2 is
+removed. The current condition-level lane does not require simultaneous195.
+Retain this pilot's original formalization, software and evidence without
+restarting its old pending phases.
+
 Status: **approved software framework and software-only preflights present**
 
 Scientific status: **blocked on cue-aligned, trial-linked simultaneous population data**
@@ -10,7 +17,8 @@ pilot. The approved first-run software framework now lives under
 
 ## Read Order
 
-0. `../prospective-path-research-flow-review.md` — pinned current-state review.
+0. `../project-direction.md` — current scope; the older
+   `../prospective-path-research-flow-review.md` is historical background.
 1. `AGENTS.md` — local rules and authority order.
 2. `formalization.md` — mathematical objects, estimands,
    nulls, and fixed/deferred decisions.
@@ -21,7 +29,7 @@ pilot. The approved first-run software framework now lives under
 
 Canonical workspace documents remain:
 
-- [`../research-questions.md`](../research-questions.md) for H1/H2;
+- [`../research-questions.md`](../research-questions.md) for retained H1 and retired H2;
 - [`../analysis-contract.md`](../analysis-contract.md) for required data; and
 - [`../dataset-card.md`](../dataset-card.md) for verified dataset facts.
 

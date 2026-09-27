@@ -4,13 +4,17 @@
 
 **Later workspace update (September27):** Hongyi authorized integration,
 publication and then merging [consolidated PR #11](https://github.com/Hong-yiii/neuro_science/pull/11).
-Main (`e8f2308`) now includes PRs #8/#9/#10 and preserved local studies. The
-canonical checkout is on the new local `planning/project-direction-20260927`
-branch for high-level decisions to steer the project. Those decisions are
-**not yet made**. See the [integration receipt](../review-integration-20260926.md).
-GitHub also marked #8/#9 merged; stacked #10 remains open despite its included
-commits. The inventory and cleanup discussion below describe the
-**pre-integration** review, not a fresh experiment or destructive-cleanup queue.
+Main (`e8f2308`) includes PRs #8/#9/#10 and preserved local studies; #10 was
+subsequently closed as already included. **Decisions are now recorded in
+[September27 project direction](../../project-direction.md):** retain H1, remove
+H2, narrow to CEBRA-Time cue-only/joint training with two checkpoints and
+source-safe folds, retain PCA/LDA, leave the decoder open, and keep full ordered
+graph-path prediction as the ambition beyond the simpler component assay.
+The construction artifact and phase-selectivity follow-up are described there.
+That update—not all recommendations below—is the next-session authority.
+See the [integration receipt](../review-integration-20260926.md). The inventory
+and cleanup discussion below remain **pre-integration history**, not a new
+experiment or destructive-cleanup queue.
 
 > **Bottom line:** we have learned more about the measurement pipeline than established new biology. Stop treating CEBRA as the question. Decide which prospective-path claim the available recordings can identify; then consolidate the software around that evaluation.
 

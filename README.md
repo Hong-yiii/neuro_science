@@ -1,16 +1,21 @@
 # Neuro Science Workspace
 
 Canonical neuroscience workspace: `~/neuro_science`.
-Current working branch: **`planning/project-direction-20260927`** — local branch
-for high-level project decisions, based on merged `main` (`e8f2308`).
-**[Consolidated PR #11](https://github.com/Hong-yiii/neuro_science/pull/11) is merged**, including PRs #8/#9/#10 and preserved local research.
-[Integration and recovery](docs/reports/review-integration-20260926.md).
-No scientific direction has been chosen merely by creating the planning branch.
-Start with the [September 26 research review and decision trajectory](docs/reports/research-reset-20260926/README.md)
-([offline HTML](docs/reports/research-reset-20260926/review.html)), then the
-[current workspace and recovery guide](docs/workspace.md).
-Three registered review worktrees remain under `work/`; they contain open PRs
-or unique ignored artifacts. Do not remove them based on older single-worktree guidance.
+**Start here next session: [agreed project direction — September27](docs/project-direction.md).**
+Keep H1; remove H2. Narrow encoder comparisons to CEBRA-Time, cue-only versus
+joint cue/navigation training and two checkpoints, with source-safe folds and
+PCA/LDA baselines. **Decoder choice is open.** Component-level graph decoding is
+the simpler assay; ordered graph-path prediction remains the desired capability.
+This is an agreed scope update, not authorization to launch model fits.
+
+Then read [research questions](docs/research-questions.md),
+[analysis contract](docs/analysis-contract.md), and [workspace/recovery](docs/workspace.md).
+[Consolidated PR #11](https://github.com/Hong-yiii/neuro_science/pull/11) merged the
+studies; stacked #10 was closed as already included. The
+[September26 review](docs/reports/research-reset-20260926/README.md)
+([offline HTML](docs/reports/research-reset-20260926/review.html)) is the evidence
+retrospective, not the new decision authority. Three review worktrees remain
+under `work/` with retained artifacts; merging is not permission to remove them.
 
 ## Layout
 
@@ -20,6 +25,7 @@ or unique ignored artifacts. Do not remove them based on older single-worktree g
 - `notes/data_inspection/`: durable findings from inspecting local datasets.
 - `notes/sessions/`: dated session summaries, diagrams, decisions, and next steps.
 - `papers/`: paper notes, reading queues, and references.
+- `docs/project-direction.md`: agreed scope, open decisions, and next-session entry point.
 - `docs/research-questions.md`: active prospective-path research framing.
 - `docs/analysis-contract.md`: cue-population and subsequent-path data contract.
 - `docs/getting-started-tasks.md`: individual onboarding and first-analysis tasks.
@@ -33,8 +39,8 @@ during the cue period contains information about the subsequently observed
 navigation path beyond start and goal.
 
 H1 has two linked components: incremental prospective path information and its
-possible low-dimensional organization. A later comparison with representations
-learned independently by an artificial navigation agent is H2, a stretch aim.
+possible low-dimensional organization. The artificial-agent comparison formerly
+called H2 is removed from active scope, not retained as a stretch aim.
 Place, view, and conjunctive analyses remain supporting validation and confound
 checks rather than the primary question.
 
@@ -51,7 +57,7 @@ holdout-exposure record remains in force.
 - [PCA and below-chance explanation with plots](learning/place195-pca-and-below-chance-20260908.md).
 - [Artifact preservation and verification](docs/reports/research-release-20260908.md): Git is not a backup of ignored data/models.
 - [Path-generalization package](docs/professor_updates/path_generalization_20260907/README.md): corrected self-contained report, code, evidence and historical status labels. The study ran 342 CEBRA fits; cross-assembly checks of 50 observed encoders transferred across mixtures of training sources, but did not establish reliable source-pool generalization. Corrected family p is **19/21**; the cause of the gap is not uniquely established.
-- [Current condition-level proposal](docs/reports/path-generalization-next-steps-20260908.md): source-safe pseudopopulations, independent-source replication and endpoint controls; per-unit checks are complementary, not individual-significance gates. Exact same-trial claims retain their stronger recording contract.
+- [Earlier condition-level proposal](docs/reports/path-generalization-next-steps-20260908.md) (scope superseded by the agreed direction): source-safe pseudopopulations, independent-source replication and endpoint controls; per-unit checks are complementary, not individual-significance gates. Exact same-trial claims retain their stronger recording contract.
 - [Path-study status/deprecation ledger](docs/professor_updates/path_generalization_20260907/STATUS.md) and [presentation corrections](docs/professor_updates/path_generalization_20260907/CORRECTIONS.md).
 
 The [V6–V9 teaching and audit report](docs/reports/place195-v6-v9-autoresearch-20260906.md)

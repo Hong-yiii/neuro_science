@@ -1,12 +1,12 @@
 # Reading Roadmap: Hippocampal Data to RNN Comparison
 
-> **Pre-pivot roadmap retained as supporting reading.** The active thesis core is
-> prospective cue-period path information (H1); brain–RNN comparison is now H2,
-> a stretch aim after H1 feasibility. Start with
-> [`docs/research-questions.md`](../docs/research-questions.md),
-> [`docs/analysis-contract.md`](../docs/analysis-contract.md), and
-> [`docs/getting-started-tasks.md`](../docs/getting-started-tasks.md). Treat the
-> RSA/CKA/RNN sections below as H2-stage reading, not immediate priorities.
+> **Historical roadmap retained as supporting reading.** The
+> [September27 direction](../docs/project-direction.md) retains H1 and removes
+> artificial-agent H2 entirely from active scope. Brain–RNN/RSA/CKA comparisons
+> below are background, not queued future work. Current hypotheses and data gates
+> are in [research questions](../docs/research-questions.md) and
+> [analysis contract](../docs/analysis-contract.md). The mentor's phase-selectivity
+> paper and intended rotation/validation claim remain to be clarified.
 
 Read for decisions, not completion. For each paper, answer:
 

@@ -13,7 +13,9 @@ Hongyi's background is strongest in ML, deep learning, and NLP. Explanations sho
 ## Working Principle
 
 Learn the neuroscience just in time for H1: cue-period path information beyond
-start and goal. Artificial-agent comparison belongs to the later H2 stretch aim.
+start and goal. Follow the [September27 agreed direction](../docs/project-direction.md):
+artificial-agent H2 is removed, CEBRA-Time comparisons are narrowed, decoder choice
+is open, and graph-path prediction remains in scope.
 
 The goal is not to become a general neuroscientist first. The goal is to
 understand enough measurement, preprocessing, and representational analysis to
@@ -21,16 +23,18 @@ make careful claims about prospective hippocampal path information.
 
 ## Start Here
 
-- `../docs/research-questions.md`: current H1/H2 and claim boundaries.
-- `../docs/getting-started-tasks.md`: current executable checklist.
+- `../docs/project-direction.md`: agreed scope and next-session decisions.
+- `../docs/research-questions.md`: retained H1 and claim boundaries; H2 removed.
+- `../docs/getting-started-tasks.md`: active planning checklist above historical tasks;
+  not a fitting authorization.
 - `neural-agent-action-plan.md`: pre-pivot curriculum retained for supporting
   measurement and validation lessons.
-- `../papers/reading-roadmap.md`: pre-pivot reading map, now labeled by relevance
-  to H1 versus H2.
+- `../papers/reading-roadmap.md`: supporting reading; its artificial-agent sections
+  are retired background, not a later project phase.
 
 ## Completed max-context lessons
 
-- **[CEBRA-Time transfer: what improved, what did not, and why the mechanism is unresolved](cebra-time-transfer-teach-max-20260925.html)** — requested September 25, 2026. Download/open the standalone HTML; inline figures, captions and collapsible explanations work offline. It teaches the [PR #9 experiment](https://github.com/Hong-yiii/neuro_science/pull/9), not a new model run. [Teaching PR #10](https://github.com/Hong-yiii/neuro_science/pull/10) is open, stacked on PR #9 because that experiment has not merged into `main`; neither PR was merged by this task.
+- **[CEBRA-Time transfer: what improved, what did not, and why the mechanism is unresolved](cebra-time-transfer-teach-max-20260925.html)** — requested September 25, 2026. Download/open the standalone HTML; inline figures, captions and collapsible explanations work offline. It teaches the [PR #9 experiment](https://github.com/Hong-yiii/neuro_science/pull/9), not a new model run. [Teaching PR #10](https://github.com/Hong-yiii/neuro_science/pull/10) was stacked on #9; all commits entered `main` through consolidated #11 on September27, and #10 was closed as already included. The lesson itself remains historical, with no new fits.
   - Starts from the scientific question, then traces source assembly → native-pair training → frozen encoder → cue-only readout → relative/absolute checks.
   - Distinguishes temporal pairing from temporal-context architecture, label-free objective from label-conditioned measurement, and improvement from biological evidence. Includes full seed/decoder context, source sensitivity, matched controls, a source map and one teach-back question.
   - Source links are pinned to `c19d07c`; actual fitting was at `e171328`. The teaching copy makes no scientific-code, protocol or result changes. New durable storage is explicitly requested through this PR, unlike the default disposable `/teach` artifact.
