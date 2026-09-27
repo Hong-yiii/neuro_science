@@ -8,7 +8,9 @@ main, PRs #8/#9/#10 and preserved local studies. See the
 [integration receipt](../review-integration-20260926.md). The inventory and
 cleanup authorization discussion below describe the **pre-integration** review;
 no scientific roadmap choice or destructive cleanup has been inferred from this
-branch change. GitHub main and PR status remain unchanged.
+branch change. On **September27**, Hongyi requested publication:
+[consolidated PR #11](https://github.com/Hong-yiii/neuro_science/pull/11) is now open.
+GitHub main and source PRs #8/#9/#10 remain unchanged.
 
 > **Bottom line:** we have learned more about the measurement pipeline than established new biology. Stop treating CEBRA as the question. Decide which prospective-path claim the available recordings can identify; then consolidate the software around that evaluation.
 

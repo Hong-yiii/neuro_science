@@ -1,4 +1,4 @@
-# One local research-review branch — September 26, 2026
+# One consolidated research-review branch — September 26–27, 2026
 
 **Working directory:** `/home/hongyi-home-lab/neuro_science`
 
@@ -16,7 +16,9 @@ Hongyi requested that all open PRs be combined into one review branch and that t
 | PR #10, teaching follow-up | `ea6a8fed62b886abfbcee20335245f771d606f73` | Local merge after its parent #9; no duplicate scientific execution. |
 | Formerly dirty local source/docs | `8baf68faabd0820577baa6b42a4d3e2c2278352f` | Safety snapshot merged, retaining decoder, diagnosis, professor/weekly reports and Sept26 review. |
 
-PRs #8/#9/#10 remain open on GitHub with their original bases. Remote `main` was not merged into, rewritten or pushed. This review branch is **local only**; there is no new aggregate PR or remote upstream. Publishing it later is a separate action.
+**Published September27 at Hongyi's request:** [consolidated PR #11](https://github.com/Hong-yiii/neuro_science/pull/11), base `main`, head `review/research-consolidated-20260926`. The branch now tracks its origin counterpart. PRs #8/#9/#10 remain open with their original bases. Remote `main` was not merged into, rewritten or pushed; no source PR was closed or retargeted.
+
+The September26 integration was local-only; September27 publication is a separate, subsequently authorized action. A newly observed local formatting-only change in `scripts/test_cebra_latent_atlas.py` was checked for identical Python AST, left untouched and **excluded** from the PR. The earlier clean-tree receipt describes its original checkpoint, not the later formatting edit.
 
 ## Conflict decisions
 
@@ -73,3 +75,7 @@ The software suite includes tiny **invented-data** CPU fits and synthetic state 
 Static check before testing: six Python files requested via primary LSP; two confirmed clean and four timed out. Zero returned diagnostics is **not** a claim that those four completed a type check. Existing PR receipts and executable software checks provide separate evidence; no claim of project-wide static cleanliness. Final session diagnostics reported **no blocking errors**. Marksman missing/ambiguous-document warnings were checked against **128 local links, all existing** (`outputs/review-integration-20260926/link-check.json`); retained duplicate worktree docs and the newly merged files explain the index warnings. Spelling warnings on BA/PN and an assertion-in-test warning do not warrant changing historical scientific terminology or tests.
 
 Local execution/provenance receipts and logs are under `outputs/review-integration-20260926/`. No service, listener, scheduled job or new Git worktree was created.
+
+## September27 cmux delivery
+
+Opened the consolidated review in a right-hand browser pane beside the active neuroscience session: `workspace:17`, `pane:38`, `surface:75`. The old `workspace:18` view no longer existed. The replacement displays the tracked portable HTML in a verified `about:blank` document, using the existing cmux relay, with seven review sections and no scripts or external resources. No HTTP server, new ingress or detached worker is needed. Reload clears the disposable view; the Markdown/HTML remain in Git. Close that browser pane to dismiss it, not the owning SSH workspace. Local receipt: `outputs/review-integration-20260926/cmux-preview-20260927.json`.

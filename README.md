@@ -3,7 +3,8 @@
 Canonical neuroscience workspace: `~/neuro_science`.
 Current working branch: **`review/research-consolidated-20260926`** — main +
 PRs #8/#9/#10 + preserved local research. [Integration and recovery](docs/reports/review-integration-20260926.md).
-GitHub main and the individual PRs are unchanged; this review branch is local.
+Published for review as **[consolidated PR #11](https://github.com/Hong-yiii/neuro_science/pull/11)**.
+GitHub main and the individual PRs #8/#9/#10 are unchanged.
 Start with the [September 26 research review and decision trajectory](docs/reports/research-reset-20260926/README.md)
 ([offline HTML](docs/reports/research-reset-20260926/review.html)), then the
 [current workspace and recovery guide](docs/workspace.md).
@@ -36,7 +37,7 @@ learned independently by an artificial navigation agent is H2, a stretch aim.
 Place, view, and conjunctive analyses remain supporting validation and confound
 checks rather than the primary question.
 
-**Use the [research handoff index](docs/reports/README.md)** (refreshed 2026-09-26):
+**Use the [research handoff index](docs/reports/README.md)** (refreshed 2026-09-27):
 current synthesis, completed endpoint and path studies, portable teaching reports,
 source-code preservation, verification, and explicit supersession labels.
 Endpoint-condition decoding improved in later settings; neither that success nor

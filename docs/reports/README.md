@@ -1,6 +1,6 @@
 # Research handoff: what to read, what is current, what is retained
 
-**Updated: 2026-09-26.** This index separates the scientific question, completed exploratory studies, teaching explanations and historical evidence. The earlier consolidation did not fit models; the bounded preprocessing and matched PCA studies below did. All preserve the selected195 scope.
+**Updated: 2026-09-27.** This index separates the scientific question, completed exploratory studies, teaching explanations and historical evidence. The earlier consolidation did not fit models; the bounded preprocessing and matched PCA studies below did. All preserve the selected195 scope.
 
 ## Start here
 
@@ -9,9 +9,10 @@
 sessions, matched PCA completion, decoder/atlas/transfer results and four-worktree
 cleanup risks. Includes a proposed no-fit next milestone; no new research fits.
 
-**Integrated local review branch:** `review/research-consolidated-20260926` combines
-current main (including PR #7), PRs #8/#9/#10 and preserved local decoder,
-diagnosis and review work. GitHub PRs remain open; this is not a merge into main.
+**Consolidated [PR #11](https://github.com/Hong-yiii/neuro_science/pull/11):**
+`review/research-consolidated-20260926` combines current main (including PR #7),
+PRs #8/#9/#10 and preserved local decoder, diagnosis and review work. Published
+September27; source PRs remain open. This is not a merge into main.
 See the [integration receipt](review-integration-20260926.md). The PR #10
 [teaching lesson](../../learning/cebra-time-transfer-teach-max-20260925.html) is now
 available in this checkout alongside PR #9's experiment report.

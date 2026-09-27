@@ -20,9 +20,10 @@ exist under `work/`. Older single-worktree/PCA-pending statements are historical
 Hongyi subsequently authorized local PR integration: work now on
 `review/research-consolidated-20260926` in this canonical checkout. It combines
 main, PRs #8/#9/#10 and preserved local studies; see
-`docs/reports/review-integration-20260926.md`. GitHub main/PR status and retained
-worktrees are unchanged. No new biological fits or worktree retirement are
-authorized by that integration.
+`docs/reports/review-integration-20260926.md`. At Hongyi's request it was published
+September27 as consolidated PR #11: <https://github.com/Hong-yiii/neuro_science/pull/11>.
+Main, source PRs #8/#9/#10 and retained worktrees are unchanged. No new biological
+fits or worktree retirement are authorized by integration or publication.
 
 ## Workspace Role
 

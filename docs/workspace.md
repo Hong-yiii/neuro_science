@@ -4,18 +4,19 @@
 2026 (Asia/Singapore).** The date `20260910` in consolidation paths identifies this
 session, not the date every operation completed.
 
-## Current navigation refresh — September 26, 2026
+## Current navigation refresh — September 27, 2026
 
 Start with the [research reset and decision trajectory](reports/research-reset-20260926/README.md)
 ([offline HTML](reports/research-reset-20260926/review.html)). This is the current
 cross-session review/cleanup map; proposals there are not authorization to fit.
 The original consolidation/recovery history below is retained, not rewritten.
 
-**Current local review branch:** `review/research-consolidated-20260926`, checked
+**Current review branch:** `review/research-consolidated-20260926`, checked
 out here at Hongyi's request. It combines refreshed `origin/main` (`8340631`,
 including merged PR #7), open PRs #8/#9/#10, and the preserved local Sept24
-studies/review. GitHub main and PR status are unchanged; this is local integration
-only. See the [integration/recovery receipt](reports/review-integration-20260926.md).
+studies/review. Published September27 as
+[consolidated PR #11](https://github.com/Hong-yiii/neuro_science/pull/11), with an
+origin upstream. GitHub main and the three source PRs remain unchanged. See the [integration/recovery receipt](reports/review-integration-20260926.md).
 The original dirty release checkout was captured in safety commit `8baf68f` and
 a verified local Git bundle before switching branches.
 
@@ -258,10 +259,10 @@ consolidation checkpoint; the September26 inventory above supersedes that count.
 
 ## Recreate the historical software checkout
 
-The clone below restores the published consolidation branch, not the local-only
-September26 review branch. To transfer that review elsewhere, first deliberately
-publish it to the private remote or use a newly verified Git bundle. Do not
-assume the remote has these local merge commits.
+The clone below restores the historical release branch. For the current
+consolidated review (PR #11, now published), substitute
+`--branch review/research-consolidated-20260926`. Both need the authorized
+private inputs/artifacts separately; cloning Git does not restore those.
 
 ```sh
 git clone --branch release/research-consolidation-20260908 \
