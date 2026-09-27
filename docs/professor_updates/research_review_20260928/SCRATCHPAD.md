@@ -80,6 +80,8 @@ The latest conversational proposal separates decoder selection (inner sources, b
 - Isolated worker source/generated drafts and its bytecode were removed after integration. Its `.pi` task logs and `.pi-subagents` execution transcripts/metadata remain under `work/professor-review-20260928/` as explicitly retained provenance; no worker process remains. Browser temporary profiles/downloads removed; QA screenshots/receipts and before-hashes retained under outputs.
 - Publication: stage only `docs/professor_updates/research_review_20260928/`, commit and create the requested PR to main. Record URL/head in local delivery receipt and the publication note below; no merge.
 
-## Remaining actions
+## Publication
 
-Publish the scoped PR and return HTML/viewing link. No new biological fitting, protocol decisions, changes to original scientific assets, or old-worktree cleanup.
+[PR #13](https://github.com/Hong-yiii/neuro_science/pull/13) opened against `main` from `docs/professor-review-20260928`; initial content commit `bc740d8`, followed by this publication-link update. Scope:18 presentation/source files in this folder only. No merge. Remote head and final preservation checks are recorded in `outputs/professor-review-20260928/delivery-validation.json`.
+
+Work is delivered; there is no new biological run queue. At the preview's03:42:55 SGT expiry, verify task completion, missing8768 listener and removed owned serving directory, then mark its lifecycle ended in README/host registry without signaling an old PID. The earlier8767 preview has an independent02:17 SGT expiry and runbook.
