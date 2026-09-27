@@ -3,6 +3,12 @@
 Last verified from local files: 2026-08-30
 Status: canonical for dataset facts and limitations only
 
+**September27 scope note:** [agreed project direction](project-direction.md)
+governs future work. H2/artificial-agent comparison is removed; its schemas and
+metadata requests below are historical, not active requirements. No dataset
+facts were re-audited by this scope update; dated statuses and old modeling ladders
+below must not override the current analysis contract or trigger new runs.
+
 For the active prospective-path question, use
 [`research-questions.md`](research-questions.md). For the cue-population and
 subsequent-path data required to test H1, use

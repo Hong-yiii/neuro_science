@@ -1,123 +1,59 @@
 # Prospective Path Representation Project
 
-Updated: 2026-08-25
+Updated: 2026-09-27. This historical filename is retained so existing links keep
+working; it does **not** mean an RNN/artificial-agent study is still active.
 
-The 2026-08-25 revision adds the shared-path-component feasibility screen and
-keeps it subordinate to canonical H1a/H1b. Pilot-specific formalization lives in
-[`docs/cebra_pilot/`](../docs/cebra_pilot/README.md).
+## Current Authority
 
-## One-Sentence Aim
+Start with [agreed project direction](../docs/project-direction.md), then
+[research questions](../docs/research-questions.md) and
+[analysis contract](../docs/analysis-contract.md). Older pilot documents and
+study protocols retain their historical settings, not authority to start runs.
 
-Test whether hippocampal cue-period population activity contains information
-about the subsequently observed navigation path beyond start and goal, then—if
-supported—compare that representation with one learned independently by an
-artificial navigation agent.
+## Aim And Hypotheses
 
-## Current Framing
+Test whether hippocampal cue-period activity contains information about the
+subsequently observed **path beyond start and goal**. H1a is incremental held-out
+information; H1b is reproducible low-dimensional organization. The artificial-
+agent comparison formerly called H2 is removed from active scope. There is no
+new phase-geometry central question or replacement H2.
 
-H1 is the thesis core. The artificial-agent comparison is H2, a stretch aim,
-not a requirement for H1 to succeed.
+A is the simpler component-level graph assay; B is the desired capability of
+predicting an ordered graph path. Do not substitute endpoint decoding for either,
+or call successful component classification full-path reconstruction. Use
+start/goal-only references for the same target and metric. Target/graph choices
+come from task meaning and source support, not whichever neural score was best.
 
-```text
-cue-period hippocampal activity
-        -> prospective path information beyond start + goal
-        -> possible low-dimensional organization
-        -> optional comparison with agent hidden states
-```
+## Narrowed Methods Direction
 
-This is a representational and predictive study. Decoding an observed future
-path does not establish causal planning or directly measure intention. An
-intended-path interpretation assumes that the maze-familiar animal generally
-executes its intention.
+- CEBRA-Time only: cue-only versus joint cue/navigation training, one configuration,
+  two predefined checkpoints and deliberate folds of real sources before assembly.
+- Retain PCA and supervised LDA baselines. Decoder choice and training policy
+  remain open; no automatic architecture/objective/hyperparameter/readout sweep.
+- Joint training shares parameters, not necessarily biological geometry. Readouts
+  use cue inputs only; navigation from evaluation sources cannot enter training.
+- Build a traceable pseudopopulation construction artifact with runnable checks,
+  not a new broad validation campaign. Mechanical checks do not prove simultaneity.
+- Mentor input/literature on phase selectivity and rotation is pending.
 
-The canonical hypothesis and controls are maintained in
-[`docs/research-questions.md`](../docs/research-questions.md).
+## Claim And Feasibility Boundaries
 
-## H1 Components
+Pseudopopulations can address reproducible **condition-level** response patterns;
+large simultaneous195 recordings are not required for that lane. Exact same-trial
+population/path claims require verified simultaneously recorded activity linked
+to that trial's behavior. Known-label assembly is a conditional benchmark, not an
+unknown-natural-trial predictor; component matching does not assign a unique full
+path to a synthetic row. B needs a defensible route-level construction and target.
 
-H1 remains one hypothesis with two components:
+Current sources include selected-cell cue-accessible native recordings, not only
+the old navigation-only export. Provenance, recording-group, cue/task/nuisance and
+exposure limits remain in the contract. Another split of inspected observations
+does not create an untouched confirmation set. Decoding does not directly measure
+intention or establish causal planning.
 
-- **H1a:** cue activity adds held-out information about the subsequent path
-  beyond start and goal.
-- **H1b:** that information has reproducible low-dimensional organization.
+## Next Session
 
-This distinction protects the biological information claim from depending on
-one representation-learning method.
-
-## Path Language
-
-Use **path** for an observed ordered movement through the maze. Reserve
-**trajectory class** for the previous student's `(start, goal)` category.
-
-The current proposed operationalization treats the maze as one graph and each
-trial path as a walk over it. Graph resolution, path clustering, distinct-route
-criteria, and path distance remain deferred design decisions.
-
-## Shared Path Components
-
-When trials with one start and goal show little route variation, paths from
-different conditions may still share reusable directed edges or ordered
-segments. For example, `A -> B` and `A -> C` may share an initial corridor before
-diverging. This motivates a complementary compositional analysis: ask whether
-cue-state similarity tracks shared future path components after controlling
-start, goal, cue identity, session, and available sensory or motor confounds.
-
-An obligatory segment from start `A` is confounded with start coding. Stronger
-evidence comes from matched high/low-overlap paths with the same start or goal,
-or from different-endpoint paths that share a middle segment. If path overlap is
-nearly determined by start and goal, the data cannot identify a distinct
-compositional representation.
-
-This analysis is a candidate test of H1b and a common behavioral ruler for H2.
-It does not replace H1a's incremental held-out prediction and does not imply that
-the hippocampus literally represents a graph.
-
-## CEBRA And Decoding
-
-CEBRA learns an encoder from neural activity to a latent representation. In
-CEBRA-Behaviour, a path-derived context shapes that representation during
-training; CEBRA does not by itself demonstrate held-out path prediction.
-
-The intended evaluation is:
-
-```text
-cue activity -> CEBRA latent -> simple held-out path decoder
-```
-
-Path representations or clusters are constructed from behavioral paths only.
-They must never be constructed jointly from neural activity. Clustering is
-optional; graded graph-path distances may be preferable if behavior does not
-show stable route families.
-
-Use CEBRA-Time as a companion analysis without path supervision, and compare all
-representations using the same simple decoder and trial-level splits. Test
-shared path-component geometry in raw or PCA cue activity before using graph- or
-path-conditioned CEBRA, which remains a secondary supervised probe.
-
-## Role Of Earlier Place/View Work
-
-Place-like, view/visual-like, and conjunctive coding no longer define the primary
-research question. They remain supporting analyses for pipeline validation,
-representation characterization, and control of spatial, sensory, and motor
-confounds.
-
-## Feasibility Gate
-
-Trial-specific H1 requires cue-period activity from a genuinely simultaneous
-population linked to that same trial's start, goal, and subsequent path.
-Cross-session pseudopopulations can support condition-level summaries, not exact
-trial-specific future-path claims.
-
-The current local export is navigation-period, selected single-cell place data.
-A new cue-aligned population export is required before H1 can be tested.
-
-## Deferred Decisions
-
-- maze-graph granularity;
-- what constitutes a meaningfully different path;
-- path representation and distance;
-- treatment of unsuccessful and timeout trials;
-- cue-window and spike-bin resolution;
-- success metrics and required effect size;
-- exact CEBRA configuration and sampler;
-- artificial-agent architecture and comparison metric.
+Prepare the construction artifact and a bounded protocol proposal; resolve folds,
+checkpoints, decoder, B feasibility, metrics, nulls and fit budget before requesting
+any new model run. No biological fitting, data expansion or artifact migration is
+authorized by this documentation update.

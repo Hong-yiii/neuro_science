@@ -178,13 +178,15 @@ Role:
   6. keep the spike if it maps to a valid sample and either `fixation_only=false` or the sample is a fixation;
   7. store the spike time in `events` and the behavioral sample index in `placeviewidx`.
 
-## Alignment Implication For H1 And H2
+## Alignment Implication For H1
 
-For H1, the required first object is cue-period activity shaped as
+For **exact trial-specific H1**, the required object is cue-period activity shaped as
 `trial x cue_time_bin x simultaneously_recorded_cell`, linked by
 `source_trial_id` to the same trial's subsequent path. The navigation-period
 flattening below remains useful for path construction and supporting controls.
-The matched RNN table belongs to the later H2 stretch aim.
+For current condition-level pseudopopulation and joint-training requirements,
+see the [September27 direction](../docs/project-direction.md) and
+[contract](../docs/analysis-contract.md). H2/artificial-agent comparison is removed.
 
 The biological navigation side can be flattened from:
 
@@ -198,11 +200,8 @@ into a table like:
 trial_id, time_bin, cell_id, spike_count, position, head_direction, gaze/view, fixated_object, fixation_mask
 ```
 
-The RNN side should expose the same trial-time variables plus hidden activations:
-
-```text
-trial_id, time_bin, hidden_unit_id, activation, position, head_direction, gaze/view, action, goal
-```
+The former RNN-export requirement is retired with H2. Do not implement a parallel
+artificial-agent pipeline from older notes.
 
 ## Open Questions
 

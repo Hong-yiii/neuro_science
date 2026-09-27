@@ -4,15 +4,22 @@
 
 ## Start here
 
-**Current cross-session review:** [September26 research reset and decision trajectory](research-reset-20260926/README.md)
+**Current decisions:** [September27 agreed project direction](../project-direction.md).
+Retain H1; remove H2; narrow to CEBRA-Time cue-only/joint training, two checkpoints,
+source folds and PCA/LDA baselines. Decoder remains open; component assay A and
+ordered graph-path ambition B stay in scope. No new fits. This takes precedence
+over the recommendations in older reviews and next-study proposals.
+
+**Evidence retrospective:** [September26 research reset and decision trajectory](research-reset-20260926/README.md)
 ([portable HTML](research-reset-20260926/review.html)). Reconciles the last three
 sessions, matched PCA completion, decoder/atlas/transfer results and four-worktree
 cleanup risks. Includes a proposed no-fit next milestone; no new research fits.
 
-**Consolidated [PR #11](https://github.com/Hong-yiii/neuro_science/pull/11):**
-`review/research-consolidated-20260926` combines current main (including PR #7),
-PRs #8/#9/#10 and preserved local decoder, diagnosis and review work. Published
-September27; source PRs remain open. This is not a merge into main.
+**Consolidated [PR #11](https://github.com/Hong-yiii/neuro_science/pull/11), merged September27:**
+main (`e8f2308`) now includes PRs #8/#9/#10 and preserved local decoder,
+diagnosis and review work. GitHub marked #8/#9 merged; stacked #10 was closed as
+already included. The direction follow-up records the now-agreed scope, not new
+scientific conclusions or an already frozen experiment.
 See the [integration receipt](review-integration-20260926.md). The PR #10
 [teaching lesson](../../learning/cebra-time-transfer-teach-max-20260925.html) is now
 available in this checkout alongside PR #9's experiment report.
@@ -35,7 +42,7 @@ study had already completed separately and merged as PR #7.
 
 **Concise retrospective:** [what worked, what did not, and what remains unknown](path-preprocessing-review-20260909.md) — three-angle review of the completed preprocessing study; no new fits.
 
-**Latest bounded experiment:** [Broader CEBRA training → cue-only decoding](cebra-full-trial-transfer/README.md), [offline illustrated report](cebra-full-trial-transfer/report.html), and [execution/review ledger](cebra-full-trial-transfer/execution.md). Fixed 29-unit / seven-session, 4→3 interior-component benchmark. Broader-training Time improved cue-only logistic loss **1.010464→0.710618** and mean BA **32.64%→61.81%**; Behavior loss worsened. The declared primary criterion failed because loss stayed worse than constant-.5; discrimination varied strongly by seed. This is conditional-pseudopopulation transfer, not established H1 or unknown-natural-trial prediction. All 1,071 fitted states forward-replayed with zero verification fits; independent numerical review passed. [PR #9](https://github.com/Hong-yiii/neuro_science/pull/9), not merged. Do not pool its scores with the different five-endpoint PCA study below.
+**Latest bounded experiment:** [Broader CEBRA training → cue-only decoding](cebra-full-trial-transfer/README.md), [offline illustrated report](cebra-full-trial-transfer/report.html), and [execution/review ledger](cebra-full-trial-transfer/execution.md). Fixed 29-unit / seven-session, 4→3 interior-component benchmark. Broader-training Time improved cue-only logistic loss **1.010464→0.710618** and mean BA **32.64%→61.81%**; Behavior loss worsened. The declared primary criterion failed because loss stayed worse than constant-.5; discrimination varied strongly by seed. This is conditional-pseudopopulation transfer, not established H1 or unknown-natural-trial prediction. All 1,071 fitted states forward-replayed with zero verification fits; independent numerical review passed. [PR #9](https://github.com/Hong-yiii/neuro_science/pull/9), merged through #11. Do not pool its scores with the different five-endpoint PCA study below.
 
 **Matched PCA comparison, completed September13–14 and merged September23 as PR #7:** [PCA versus raw verdict](path-pca-matched/README.md), [offline HTML](path-pca-matched/report.html), and [evidence index](path-pca-matched/evidence.md). Six recipes on identical first-second/source-safe inputs: PCA improved historical probability loss by **0.007023 nats**, with **55% balanced accuracy for both arms**. Source sensitivity spans both signs; only 2/5 endpoints beat baseline in either arm. All 26,266 fit instances forward-replayed without fitting. This answers the narrow missing comparison, not robust biological generalization or confirmatory H1. The [original PRD](path-pca-matched-prd-20260913.md) is planning history, not a pending task. Its ignored artifacts still live in `work/issue-6-pca`; preserve them before any retirement. Earlier Sept24 “unexecuted” statements are superseded.
 
@@ -50,7 +57,7 @@ Earlier cross-study context:
 
 Normative authority remains [research questions](../research-questions.md) and [analysis contract](../analysis-contract.md). Current H1 requires incremental path information beyond endpoints; successful endpoint decoding is not H1. Original holdout exposure remains part of the record.
 
-**Follow-up proposals, not new experiments:** the [path-study plan](path-generalization-next-steps-20260908.md) keeps source-safe pseudopopulations central for a complementary **condition-level** question under recording constraints. The synthesis's E1/E2 real-trial/history/temporal proposals are complementary arms, not a requirement that each cell be significant or that a simultaneous 195-cell recording exist before any progress. Exact same-trial population claims still require the stronger contract. Freeze the chosen estimand/arm and controls before another fit; do not silently substitute one lane for another.
+**Earlier proposals, scope superseded by September27 decisions:** the [path-study plan](path-generalization-next-steps-20260908.md) keeps source-safe pseudopopulations central for a complementary **condition-level** question under recording constraints. The synthesis's E1/E2 real-trial/history/temporal proposals are complementary arms, not a requirement that each cell be significant or that a simultaneous 195-cell recording exist before any progress. Exact same-trial population claims still require the stronger contract. Freeze the chosen estimand/arm and controls before another fit; do not silently substitute one lane for another.
 
 ## Completed studies — keep their evaluation objects separate
 

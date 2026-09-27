@@ -1,6 +1,9 @@
 # Papers
 
-This folder is for prospective path prediction, hippocampal navigation, neural coding, representation learning, and the later artificial-agent/RNN comparison.
+This folder is for prospective path prediction, hippocampal navigation, neural
+coding and representation learning. The [September27 direction](../docs/project-direction.md)
+removes artificial-agent/RNN H2 from active scope; related older notes are retained
+as background. The mentor's phase-selectivity/rotation paper is not yet identified.
 
 ## Start Here
 
@@ -24,5 +27,5 @@ link:
 why it matters:
 methods to borrow:
 limits / caveats:
-connection to H1/H2:
+connection to H1 / agreed project direction:
 ```

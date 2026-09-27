@@ -1,5 +1,9 @@
 # Research Questions
 
+**Scope updated September27, 2026:** [agreed project direction](project-direction.md)
+is the next-session decision record. H1 is retained; H2 is removed. Open protocol
+choices are not permission to launch a new study.
+
 ## Primary Question
 
 Does hippocampal population activity during the cue period contain prospective
@@ -32,8 +36,7 @@ states reflect reusable components shared by paths from different task
 conditions? For example, paths from `A` to `B` and from `A` to `C` may share a
 directed corridor segment before diverging.
 
-This is a candidate structural analysis within H1b and a bridge to H2, not a
-replacement for H1a. Its behavioral object is a shared future path component,
+This is a candidate structural analysis within H1b, not a replacement for H1a. Its behavioral object is a shared future path component,
 such as a directed edge, ordered segment, or branch decision. Initial, middle,
 and terminal overlap should be distinguished because an obligatory initial
 segment can be confounded with start location and an obligatory terminal segment
@@ -81,24 +84,35 @@ A maze graph is the current proposed measurement method, not part of H1:
 Graph granularity, the criterion for distinct paths, and the primary path
 similarity metric remain open decisions.
 
-## H2 — Artificial-Agent Comparison (Stretch Aim)
+## Graph Decoding: Component Assay And Full-Path Ambition
 
-If H1 is supported, test whether an artificial navigation agent trained on an
-analogous task independently develops hidden representations with similar
-information content, geometry, or temporal dynamics. Shared directed path
-components provide one common behavioral ruler even when biological units and
-artificial hidden dimensions do not correspond.
+**A:** predict an interior directed edge/component or route segment. This is the
+simpler path-information assay. **B:** predict the ordered path through the maze
+graph, the desired capability still in scope. Endpoints alone are not the target
+that replaces either task. A is not a statistical baseline for B; each task needs
+its own matched start/goal-only predictor, neural baselines and held-out metric.
+A success is not full-path reconstruction; failure on one component does not
+rule out information about other aspects of the path.
 
-This supports a claim of representational convergence only after the comparison
-metric is specified. Similar decodability or geometry does not establish the
-same biological mechanism, and RNN hidden units are not treated as neurons.
+B requires an unambiguous route-level target and source support. A pseudorow
+matched only on component presence can combine different full paths; do not
+assign one source's path to it arbitrarily. Distinguish condition-level route
+prediction from exact single-real-trial reconstruction. The latter retains the
+simultaneous-trial contract below. A canonical endpoint-derived path does not
+establish incremental neural information.
+
+## H2 — Removed From Active Scope
+
+Hongyi removed the artificial-navigation-agent comparison on September27, 2026.
+It is not a stretch aim, run queue or prerequisite. Historical H2 notes remain
+provenance; no replacement H2 or switch of the central question was adopted.
 
 ## Supporting Analyses
 
 Place, view/visual, heading, action, goal, and conjunctive coding are no longer
 the thesis-level primary question. They remain useful for:
 
-- validating the biological and model data pipelines;
+- validating biological data and analysis pipelines;
 - characterizing what the cue representation contains;
 - testing sensory, spatial, and motor confounds;
 - explaining apparent path information through correlated variables.
@@ -108,26 +122,30 @@ the thesis-level primary question. They remain useful for:
 CEBRA is a candidate measurement instrument, not the hypothesis and not, by
 itself, a path decoder.
 
-For a behavior-conditioned analysis:
+The next bounded encoder comparison is **CEBRA-Time**, cue-only versus joint
+cue/navigation training, with two predefined checkpoints and deliberate source
+folds. PCA and supervised LDA remain baselines. Architecture/configuration,
+checkpoint counts, decoder, metrics and complete budget must be frozen before
+fitting; no broad objective/architecture/hyperparameter sweep is authorized.
 
 ```text
-cue neural activity --CEBRA encoder--> latent representation --simple decoder--> path representation
-                              ^
-                    path-derived training context
+training sources: cue-only OR cue + navigation -> learn CEBRA-Time encoder
+prediction:       cue activity -> encoder -> chosen decoder -> graph/path target
 ```
 
-Path representations or clusters must be constructed from behavior only, never
-jointly from cue neural activity. CEBRA uses the path-derived context to learn a
-neural embedding; a separate held-out decoder such as k-nearest neighbors or
-ridge regression/classification tests whether the embedding predicts path.
+Joint training shares encoder parameters across phases. It does not establish
+shared biological geometry; the existing Time sampler has within-phase temporal
+positives, not explicit cross-phase alignment. This is not navigation-only
+pretraining followed by cue fine-tuning. Decoder type/training policy remain
+open; keep the eventual readout policy matched across encoder arms.
 
-Clustering is optional. A continuous path representation or path-distance-based
-sampler may preserve graded similarity better than premature discrete clusters.
-Any path preprocessing or clustering must be fitted within training folds.
-
-A trial-aware CEBRA-Time model, which receives no path labels during
-representation learning, is an important companion analysis because supervised
-CEBRA intentionally shapes its embedding with the supplied context.
+Path targets/representations must be derived from behavior, not neural outcomes;
+learned processing/clustering must be fitted within training folds. CEBRA-Time
+omits path labels from its temporal objective, but label-conditioned assembly
+can still use them. Do not describe the whole current pipeline as label-free.
+LDA uses target labels and is a supervised prediction baseline, not evidence
+for intrinsic low-dimensional structure. CEBRA-Behavior remains historical,
+not an optional extra arm in the new run queue.
 
 ## Core Nulls And Controls
 
@@ -138,10 +156,12 @@ CEBRA intentionally shapes its embedding with the supplied context.
 - shuffle path labels or neural features within start-goal condition;
 - fit path processing, clustering, dimensionality reduction, and decoders using
   training data only;
-- compare raw population and PCA baselines with CEBRA representations;
+- retain task-matched start/goal references and PCA/LDA comparisons; raw features
+  remain available as a simple reference, not a new tuning grid;
 - test shared path-component geometry first in raw, PCA, or other representations
   not trained with future-path labels;
-- use simple downstream decoders before expressive sequence models;
+- resolve the currently open decoder choice in a bounded protocol before fitting,
+  rather than silently launching another decoder sweep;
 - control available gaze, heading, cue identity, action, speed, trial time,
   session, previous goal/trial, and success-selection variables;
 - do not interpret pseudopopulation covariance as simultaneous population
@@ -183,9 +203,9 @@ proven remedy for the observed source-pool gap.
 
 The [completed study and status index](professor_updates/path_generalization_20260907/README.md)
 separates accepted results, corrected inference, failed attempts, and proposals.
-The [current next-study plan](reports/path-generalization-next-steps-20260908.md)
-replaces the earlier simultaneous-data-first milestone for this condition-level
-lane. Original test exposure remains permanent; development resplits do not
+The [September8 plan](reports/path-generalization-next-steps-20260908.md)
+replaced an earlier simultaneous-data-first milestone; its next-study scope is
+now superseded by the [September27 decisions](project-direction.md). Original test exposure remains permanent; development resplits do not
 restore confirmation.
 
 The legacy local place-bin export begins at cue offset and lacks the cue window,
@@ -205,25 +225,16 @@ An earlier bounded `20181105/session01` six-unit transfer is documented in
 `notes/data_inspection/lab_server_20181105_session01.md`, but that exact data
 root is not present in the current checkout.
 
-## Next Milestone — Proposed, Not Yet Executed
+## Next Milestone — Agreed Scope, Protocol Still Open
 
-V6–V9 and the path-generalization follow-up have already completed bounded
-exploratory raw/PCA/CEBRA experiments. Their nonpositive/unstable results do not
-confirm H1 or verify missing laboratory metadata. The next condition-level study
-should:
+Prepare the pseudopopulation construction/provenance artifact with runnable
+checks; resolve source folds and the bounded joint-training protocol in
+[project direction](project-direction.md). Do not turn this into another broad
+pseudopopulation/model-validation campaign. Necessary leakage checks, justified
+nulls and claim limits remain in force.
 
-1. freeze a meaningful route contrast, cue window, cohort and endpoint controls
-   using task meaning and training support rather than neural outcomes;
-2. audit source-trial support and recording provenance without requiring every
-   selected cell in a common195-column panel;
-3. measure independent-source population-pattern reproducibility and neural-only
-   positive controls, with simple regularized baselines;
-4. separate pseudorow sampling from source/session uncertainty and preserve
-   within-session cells/bins through construction and splits;
-5. compare CEBRA only in a bounded, matched evaluation family, and use reliability
-   or injected-signal checks to inform any additional trial collection;
-6. reserve genuinely unexposed observations before adapting to them if a new
-   confirmatory evaluation is intended.
-
-Exact trial-specific population/dynamics claims still require the verified
-simultaneous-trial contract; condition-level progress need not wait for that.
+Mentor guidance on cue/navigation place/view selectivity, rotation, validation
+and literature is pending. It does not yet define a new hypothesis or experiment.
+The completed studies do not establish H1, its absence, or missing laboratory
+metadata. New biological fitting requires a reviewed frozen protocol and explicit
+authorization; no run is launched by this scope update.

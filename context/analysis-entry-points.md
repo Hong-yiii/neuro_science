@@ -184,7 +184,10 @@ ViewAndPlaceRepresentationNew
 GLMFitH / conjunctions
 ```
 
-For RNN data, mirror the same structure:
+**Retired H2 background (September27):** the RNN mirror below is historical,
+not an active implementation task. Follow [project direction](../docs/project-direction.md).
+
+The former RNN proposal mirrored the same structure:
 
 ```text
 RNN hidden activations
@@ -195,9 +198,10 @@ RNN unit event/activity table
 GLMFitH-like model comparison / conjunctions-like conditioning
 ```
 
-## Open Questions
+## Supporting Biological Questions
 
-- Can `GLMFitH` be reused directly for RNN activations, or should we implement a parallel model-analysis layer that borrows only the concepts?
-- Are `JointOccupancy` and `JointMap` the right shared abstraction for both biological cells and RNN units?
+Artificial-agent reuse questions were retired with H2; no parallel RNN layer is
+currently required.
+
 - Does the first result need GLM model comparison, or is a simpler occupancy-normalized map plus null test a better first deliverable?
 - Which conjunctive definition should be reported first: interaction GLM, conditional field increase, or both?

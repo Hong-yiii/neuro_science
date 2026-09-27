@@ -1,7 +1,14 @@
 # Graph Path Formalization For Fixed-195 Pseudopopulations
 
 Date: 2026-09-01  
-Status: exploratory design spec; audit before PCA/CEBRA
+Status: **historical exploratory design spec**, not a current execution protocol.
+
+The [September27 agreed direction](project-direction.md) and
+[analysis contract](analysis-contract.md) supersede this file's active-looking
+choices, full-195/imputation history and model queue. Component-level assay A
+and ordered graph-path capability B remain in scope; B needs a defensible
+route-level target for each evaluation object. Retain the design/provenance below
+as background, not permission to reuse unsupported targets or launch old fits.
 
 ## Current decisions
 
