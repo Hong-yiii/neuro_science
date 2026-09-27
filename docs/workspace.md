@@ -14,7 +14,8 @@ component assay A supports the desired ordered graph-path capability B, not
 replacement by endpoints. Construction documentation/checks are the next methods
 artifact; phase-selectivity/rotation interpretation awaits mentor input.
 
-The direction update was authored on `planning/project-direction-20260927` from
+[Direction follow-up PR #12](https://github.com/Hong-yiii/neuro_science/pull/12)
+was authored on `planning/project-direction-20260927` from
 merged main (`e8f2308`). Hongyi authorized publishing and merging this follow-up;
 **after that merge, start from updated `main` in this canonical checkout**.
 Do not infer a model-run authorization from the Git operation. The

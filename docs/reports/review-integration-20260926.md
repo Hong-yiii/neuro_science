@@ -90,6 +90,8 @@ Opened the consolidated review in a right-hand browser pane beside the active ne
 
 ## September27 agreed-direction follow-up
 
+Published as [PR #12](https://github.com/Hong-yiii/neuro_science/pull/12), targeting
+main from `planning/project-direction-20260927`, with owner authorization to merge.
 The [decision record](../project-direction.md) is the next-session authority;
 active contracts/onboarding now agree, and old pilot/roadmap settings remain
 explicitly historical. This slice changes documentation and regenerated HTML
