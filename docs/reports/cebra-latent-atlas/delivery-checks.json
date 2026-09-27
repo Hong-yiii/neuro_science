@@ -1,0 +1,65 @@
+{
+  "scope": "Publication bundle checks; execution manifest and original receipts refer to the larger ignored archive. No new encoder/decoder/display PCA fits.",
+  "files": {
+    "atlas.html": "dba38d33c0f03ecd9a10a4246175280788312f6abfdadb4fc6727f1dafa445d5",
+    "review.html": "1ecb10904649469593122c1af1213745a11e45ac1adcbeb0b1c61ddefc6403ab",
+    "summary.json": "af80291a2815ce537082293db892dcab7bc6520c59efae84f69ece6ddb245e33",
+    "execution-manifest.json": "f4af9fc29a71f1d80789c8839b176c6f153c8ba0ddeea23257a368482fd53e7c",
+    "verification.json": "f986f7e79aae7312bbe3c2a4a348155686a6b67fec308f55b7cdb46f7eac4932",
+    "browser-validation.json": "990bd4eea4f57f4fce5aa15c62df4e040e58bc922ee9ba677683c78a182d10ef"
+  },
+  "accepted_atlas_bytes_preserved": true,
+  "accepted_summary_bytes_preserved": true,
+  "generator_python_ast_matches_execution_snapshot": true,
+  "review_changes": "Portable navigation; removed expired preview/deletion instructions; corrected neighboring matched-PCA status. Scientific explanation and embedded figures retained.",
+  "base_commit": "834063184085b8ff9eaa19264728a1bf79969d70",
+  "validation": {
+    "synthetic_and_package_tests": {
+      "count": 7,
+      "module_invocation": "passed",
+      "direct_invocation": "passed",
+      "private_inputs_required": false
+    },
+    "full_archive_replay": {
+      "status": "passed",
+      "disposable_copy": true,
+      "accepted_archive_unmodified": true,
+      "input_hashes": 125,
+      "output_hashes": 51,
+      "forward_projection_checks": 156,
+      "encoder_fits": 0,
+      "decoder_fits": 0,
+      "display_pca_refits": 0
+    },
+    "offline_browser": {
+      "status": "passed",
+      "offline_checks": [
+        {
+          "page": "atlas.html",
+          "viewport": "1500x1400",
+          "status": "passed"
+        },
+        {
+          "page": "atlas.html",
+          "viewport": "390x1300",
+          "status": "passed"
+        },
+        {
+          "page": "review.html",
+          "viewport": "756x1100",
+          "status": "passed"
+        },
+        {
+          "page": "review.html",
+          "viewport": "390x1000",
+          "status": "passed"
+        }
+      ],
+      "local_links": "passed",
+      "external_runtime_resources": 0
+    },
+    "primary_lsp_python": "passed",
+    "large_review_html_lsp": "timed out; validated by parser and browser instead",
+    "independent_package_review": "Two low documentation notes addressed: temporary transcripts made explicitly local-only; PR7 merge state verified against GitHub."
+  }
+}

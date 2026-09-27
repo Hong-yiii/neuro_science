@@ -9,12 +9,14 @@
 - [Research journal, including the adaptive follow-up declaration](start-goal-autoresearch-journal.md)
 - [All 1,618 metric rows](../../outputs/start-goal-autoresearch-20260907/all_metrics.csv)
 - [Artifact validation receipt](../../outputs/start-goal-autoresearch-20260907/validation.json)
-- [Current delivery hashes, model-source check, and identical report rebuild](../../outputs/start-goal-autoresearch-20260907/delivery-validation.json)
+- [Original delivery hashes, model-source check, and identical report rebuild](../../outputs/start-goal-autoresearch-20260907/delivery-validation.json)
 - [Historical pre-formatting finalization receipt](../../outputs/start-goal-autoresearch-20260907/finalization.json)
 - [Offline browser validation](../../outputs/start-goal-autoresearch-20260907/browser-check/browser-validation.json)
 - [21-page browser-print PDF](../../outputs/start-goal-autoresearch-20260907/browser-check/report.pdf)
 
-Consolidation update, 2026-09-08: a byte-identical HTML copy is now tracked at the link above, with figures and metric CSV embedded. Models, arrays and detailed receipts remain in ignored local outputs. Historical worktree/commit-state and temporary-browser descriptions below record the original delivery, not this PR's state. See the [research handoff](README.md) for current status.
+Consolidation update, 2026-09-08: a byte-identical HTML copy was tracked at the link above, with figures and metric CSV embedded. Models, arrays and detailed receipts remain in ignored local outputs. Historical worktree/commit-state and temporary-browser descriptions below record the original delivery, not this PR's state. See the [research handoff](./README.md) for current status.
+
+Teaching update, 2026-09-13: the tracked HTML and its existing port8765 served copy now include [plain-English learning notes under Data & design](../professor_updates/start_goal_20260907/endpoint-research-report.html#design-learning): source assembly, PCA8/bin →80, classifier C versus temperature/weight decay, CEBRA-Time versus time-matched Behavior, and the limits of layer probes. Two additional plots are embedded for offline reading, redrawn from saved metrics/losses with **zero new fits**. The unannotated output HTML, original nine figures, metric download, scientific artifacts and frozen renderer remain unchanged; historical validation receipts apply to that original delivery, not the added notes. Plot provenance, the reproducible plot script and [annotation validation](../../outputs/start-goal-autoresearch-20260907/teaching-cebra-time/page-validation.json) are retained under `outputs/start-goal-autoresearch-20260907/teaching-cebra-time/`. Re-running the original renderer intentionally produces the original report without this later teaching addendum.
 
 ## Main results
 

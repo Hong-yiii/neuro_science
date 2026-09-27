@@ -1,0 +1,7 @@
+{
+  "executed_code_sha256": "ad1dc989d65b43bf0bcdd55638f66d1918a6c61654f69eec3e98edabe2e1a4b4",
+  "shipping_code_sha256": "5e8065af5cb7f61683a3cc05a4d022f05c79f214afaea093682cafb94695ff5e",
+  "equal_after_removing_identity_typing_casts": true,
+  "other_changes": "typing import and comments only",
+  "new_biological_fits": 0
+}

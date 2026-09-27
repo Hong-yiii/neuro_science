@@ -1,0 +1,51 @@
+{
+  "created_utc": "2026-09-25T14:05:12.163160+00:00",
+  "status": "passed",
+  "scope": "teaching artifact only; no new model fitting, raw extraction, or scientific-code changes",
+  "lesson_sha256": "8ef382cc5216e2a2b67b02a5494cbc13463d45f7fc6644d61219e81964a86664",
+  "temporary_copy_byte_identical": true,
+  "source_revision": "c19d07cf734bd009bdbe02c6e49aad38bb78c7e1",
+  "executed_fit_revision": "e171328d4eb2ed095f3b2af08315e9088cfe77de",
+  "checker": {
+    "command": "python3 learning/check_cebra_time_transfer_teach.py",
+    "metric_cells_checked": 18,
+    "inline_accessible_diagrams": 4,
+    "anchor_and_offline_resource_checks": "passed",
+    "negative_controls": "altered metric and external script rejected",
+    "scoped_pyright": "0 errors, 0 warnings"
+  },
+  "browser": {
+    "desktop": [
+      1280,
+      1000
+    ],
+    "mobile": [
+      390,
+      844
+    ],
+    "native_cmux_surface": "surface:51",
+    "native_viewport_width": 445,
+    "page_horizontal_overflow": false,
+    "external_resources": 0,
+    "diagram_horizontal_scrolling": "verified without page overflow",
+    "screenshots": "canonical outputs/cebra-time-teach-20260925/lesson-{desktop,mobile}.png"
+  },
+  "independent_review": {
+    "run_id": "d1ffb008-8c8e-42e6-94c3-e10e2d9b3ebd",
+    "verdict": "approve; no findings",
+    "review": "No findings.\n\nApprove. Verified lesson is faithful to the protocol/results and keeps the key distinctions: relative gain vs absolute support, model-risk vs biological signal, Time objective vs architecture, label-free objective vs label-conditioned assembly, pseudopopulation limits, progress-pair vs real trajectory, fixed-budget bundled intervention, probability loss vs accuracy, training-gap non-causal interpretation, seed heterogeneity, and RBF as secondary.\n\nResidual risks: no fresh browser QA, no model fitting/raw extraction rerun; review was read-only against saved docs/results."
+  },
+  "source_map_fanout": "f3d69c86-0cdd-42a2-8c6d-99053c2e2a2b",
+  "preview": {
+    "url": "http://localhost:8766/20260925T134330Z-cebra-time-transfer-max.html",
+    "task": "be7695c35",
+    "expires_utc": "2026-09-25T15:54:15Z",
+    "no_boot_service": true,
+    "host_registry": "/home/hongyi-home-lab/AGENTS.md"
+  },
+  "limits": [
+    "Original model verification and 113-test receipts are historical, not reexecuted by this lesson task.",
+    "AI review and software QA do not resolve missing lab metadata or establish biological validity.",
+    "Lens session cache had no dispatched worktree files; scoped Pyright CLI is the static-check evidence."
+  ]
+}

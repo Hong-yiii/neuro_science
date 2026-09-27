@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "input_hashes": 125,
+  "output_hashes": 51,
+  "forward_projection_checks": 156,
+  "encoder_fits": 0,
+  "decoder_fits": 0,
+  "display_pca_refits": 0,
+  "scope": "Hashes and forward projection/retention; not an independent replay of every geometry statistic."
+}
