@@ -1,10 +1,11 @@
 # Neuro Science Workspace
 
 Canonical neuroscience workspace: `~/neuro_science`.
-Current working branch: **`review/research-consolidated-20260926`** — main +
-PRs #8/#9/#10 + preserved local research. [Integration and recovery](docs/reports/review-integration-20260926.md).
-Published for review as **[consolidated PR #11](https://github.com/Hong-yiii/neuro_science/pull/11)**.
-GitHub main and the individual PRs #8/#9/#10 are unchanged.
+Current working branch: **`planning/project-direction-20260927`** — local branch
+for high-level project decisions, based on merged `main` (`e8f2308`).
+**[Consolidated PR #11](https://github.com/Hong-yiii/neuro_science/pull/11) is merged**, including PRs #8/#9/#10 and preserved local research.
+[Integration and recovery](docs/reports/review-integration-20260926.md).
+No scientific direction has been chosen merely by creating the planning branch.
 Start with the [September 26 research review and decision trajectory](docs/reports/research-reset-20260926/README.md)
 ([offline HTML](docs/reports/research-reset-20260926/review.html)), then the
 [current workspace and recovery guide](docs/workspace.md).

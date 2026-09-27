@@ -15,15 +15,18 @@ Keep new durable decisions in Git-backed notes, not only in a chat transcript.
 **September 26 review refresh:** read
 `docs/reports/research-reset-20260926/README.md` for the latest three-session
 synthesis and proposed decision/cleanup sequence. PR #7 is completed and merged;
-PRs #8/#9/#10 remain open at inspection, and three retained review worktrees
-exist under `work/`. Older single-worktree/PCA-pending statements are historical.
-Hongyi subsequently authorized local PR integration: work now on
-`review/research-consolidated-20260926` in this canonical checkout. It combines
-main, PRs #8/#9/#10 and preserved local studies; see
-`docs/reports/review-integration-20260926.md`. At Hongyi's request it was published
-September27 as consolidated PR #11: <https://github.com/Hong-yiii/neuro_science/pull/11>.
-Main, source PRs #8/#9/#10 and retained worktrees are unchanged. No new biological
-fits or worktree retirement are authorized by integration or publication.
+Three retained review worktrees exist under `work/`. Older single-worktree and
+PCA-pending statements are historical. Consolidated PR #11 merged into `main`
+on September27 at `e8f2308`; it includes PRs #8/#9/#10 and preserved local studies.
+GitHub also marked #8/#9 merged; stacked #10 remains open despite its included
+commits. See `docs/reports/review-integration-20260926.md`.
+
+**Current working branch:** `planning/project-direction-20260927`, created from
+that merged main in this canonical checkout at Hongyi's request. It is local-only
+for now and reserved for high-level decisions to steer the project. No scientific
+roadmap choice has been made by creating it; existing recommendations remain
+proposals. No new biological fits, artifact moves or worktree retirement are
+authorized by this branch setup.
 
 ## Workspace Role
 

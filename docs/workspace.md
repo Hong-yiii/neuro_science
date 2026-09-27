@@ -11,12 +11,18 @@ Start with the [research reset and decision trajectory](reports/research-reset-2
 cross-session review/cleanup map; proposals there are not authorization to fit.
 The original consolidation/recovery history below is retained, not rewritten.
 
-**Current review branch:** `review/research-consolidated-20260926`, checked
-out here at Hongyi's request. It combines refreshed `origin/main` (`8340631`,
-including merged PR #7), open PRs #8/#9/#10, and the preserved local Sept24
-studies/review. Published September27 as
-[consolidated PR #11](https://github.com/Hong-yiii/neuro_science/pull/11), with an
-origin upstream. GitHub main and the three source PRs remain unchanged. See the [integration/recovery receipt](reports/review-integration-20260926.md).
+**Current working branch:** `planning/project-direction-20260927`, created and
+checked out here at Hongyi's request from merged `main` (`e8f2308`). This new
+branch is local-only, without an upstream or PR yet. Its purpose is to make
+high-level decisions to steer the project; no research direction, new experiment
+or cleanup beyond branch setup has been chosen.
+
+[Consolidated PR #11](https://github.com/Hong-yiii/neuro_science/pull/11) merged
+September27 at 09:09:51 UTC with its commit ancestry preserved. It includes
+PRs #8/#9/#10 and the local studies/review; GitHub automatically marked #8/#9
+merged. Stacked #10 remains open against its original base although its head
+is included in main. No source branch was deleted or manually retargeted.
+See the [integration/recovery receipt](reports/review-integration-20260926.md).
 The original dirty release checkout was captured in safety commit `8baf68f` and
 a verified local Git bundle before switching branches.
 
@@ -25,11 +31,12 @@ Statements below or in Sept24 reports calling it unexecuted are superseded. Its
 [matched result](reports/path-pca-matched/README.md) is now in this checkout.
 
 There are **four registered worktrees**, not one: this root plus
-`work/issue-6-pca`, `work/cebra-full-trial-transfer` (open PR #9), and
-`work/cebra-time-teach` (open PR #10 stacked on #9). Atlas PR #8 is also open.
+`work/issue-6-pca`, `work/cebra-full-trial-transfer` (merged PR #9), and
+`work/cebra-time-teach` (open PR #10, already included via #11). Atlas PR #8 is
+merged too; merge status does not authorize deleting any of these worktrees.
 PR7's unique ignored model/output files remain inside its worktree. Do not remove
 any worktree from merge status alone. Decoder, diagnosis and professor-review
-work is now preserved in Git on the review branch; ignored private artifacts
+work is now preserved in Git on main and the planning branch; ignored private artifacts
 remain in their original locations. Branch integration does not authorize new
 biological fits, artifact migration or worktree deletion.
 
@@ -259,10 +266,11 @@ consolidation checkpoint; the September26 inventory above supersedes that count.
 
 ## Recreate the historical software checkout
 
-The clone below restores the historical release branch. For the current
-consolidated review (PR #11, now published), substitute
-`--branch review/research-consolidated-20260926`. Both need the authorized
-private inputs/artifacts separately; cloning Git does not restore those.
+The clone below restores the historical release branch. For the consolidated
+software merged through PR #11, substitute `--branch main`. The new
+`planning/project-direction-20260927` branch is local-only until deliberately
+published. Every checkout needs authorized private inputs/artifacts separately;
+cloning Git does not restore those.
 
 ```sh
 git clone --branch release/research-consolidation-20260908 \

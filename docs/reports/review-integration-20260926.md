@@ -2,7 +2,9 @@
 
 **Working directory:** `/home/hongyi-home-lab/neuro_science`
 
-**Working branch:** `review/research-consolidated-20260926`
+**Consolidation branch (merged):** `review/research-consolidated-20260926`
+
+**Current working branch:** `planning/project-direction-20260927` (local-only).
 
 Hongyi requested that all open PRs be combined into one review branch and that this checkout switch to it. This is **software integration/smoke testing**, not a new scientific analysis, research-direction decision or biological fit authorization.
 
@@ -16,7 +18,11 @@ Hongyi requested that all open PRs be combined into one review branch and that t
 | PR #10, teaching follow-up | `ea6a8fed62b886abfbcee20335245f771d606f73` | Local merge after its parent #9; no duplicate scientific execution. |
 | Formerly dirty local source/docs | `8baf68faabd0820577baa6b42a4d3e2c2278352f` | Safety snapshot merged, retaining decoder, diagnosis, professor/weekly reports and Sept26 review. |
 
-**Published September27 at Hongyi's request:** [consolidated PR #11](https://github.com/Hong-yiii/neuro_science/pull/11), base `main`, head `review/research-consolidated-20260926`. The branch now tracks its origin counterpart. PRs #8/#9/#10 remain open with their original bases. Remote `main` was not merged into, rewritten or pushed; no source PR was closed or retargeted.
+**Published September27 at Hongyi's request:** [consolidated PR #11](https://github.com/Hong-yiii/neuro_science/pull/11), base `main`, head `review/research-consolidated-20260926`. At publication, source PRs and main were unchanged; the review branch gained its origin upstream.
+
+**Subsequently merged at Hongyi's request:** September27, **09:09:51 UTC**, merge commit `e8f2308a1204fd887ab062e0664c1cf4585bb89f`. Used a normal merge commit with expected-head guard `87e16af`, no admin bypass, squash or deletion. GitHub reported clean/mergeable with no status checks returned; the earlier 134-test/independent-review evidence still applies to the unchanged scientific code. GitHub automatically marked #8/#9 merged two seconds later. #10 remains open against its original stacked base, although its head is contained in main. No other PR was manually merged, closed or retargeted.
+
+Created and checked out **`planning/project-direction-20260927`** from that merged main, without an upstream or new PR. Hongyi will use it for high-level project decisions; none have been made yet. All other worktrees/artifacts remain in place. The uncommitted formatting-only atlas-test change was copied to `work/project-direction-20260927/atlas-test-before.py`, with a patch and hash receipt in `outputs/project-direction-20260927/before.json`, then carried across unchanged. No new fits or artifact migration.
 
 The September26 integration was local-only; September27 publication is a separate, subsequently authorized action. A newly observed local formatting-only change in `scripts/test_cebra_latent_atlas.py` was checked for identical Python AST, left untouched and **excluded** from the PR. The earlier clean-tree receipt describes its original checkpoint, not the later formatting edit.
 
