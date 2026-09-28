@@ -11,8 +11,10 @@
 
 This is the practical checklist for the prospective hippocampal path project.
 
-## Active Next Session — Agreed September27
+## Active Next Session — September27 direction + September28 follow-up
 
+- [ ] Follow the [agreed visual-evidence/temporal-validation plan](professor_updates/research_review_20260928/validation-plan.md): source/class support first, saved-result visualization second, bounded prefit protocol third. The review redraws historical data; new navigation and joint-model temporal decoding remain unexecuted.
+- [ ] Specify cue/navigation windows, target support and comparable features for per-window decoding and separately frozen temporal/cross-phase generalization. Improving held-out cue decoding remains primary. Include all temporal readout/null fits in the budget; do not reuse an80-feature whole-cue decoder on an8-feature bin.
 - [ ] Read [direction](project-direction.md), [hypotheses](research-questions.md)
   and [contract](analysis-contract.md). Retain H1, remove H2; no central-question pivot.
 - [ ] Prepare the pseudopopulation construction artifact: provenance, a worked

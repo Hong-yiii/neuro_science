@@ -24,6 +24,16 @@ next methods artifact; phase-selectivity/rotation interpretation awaits mentor
 clarification. These are scope decisions, not a frozen run protocol or permission
 to fit. Do not substitute the September26 review's proposed pivot for this decision.
 
+**September28 agreed follow-up:** read
+`docs/professor_updates/research_review_20260928/validation-plan.md` and its
+self-contained `review.html`. Prioritize source/class support → saved-result plots
+→ bounded prefit protocol. Add cue-time and navigation-time decoding and separate
+frozen temporal/cross-phase transfer validation; improving cue decoding remains
+the primary comparison. Freeze the full prediction pipeline across evaluation
+windows/phases within an encoder, not weights across independently fitted encoders.
+Window-specific decoding is not temporal generalization. Detailed settings remain
+open; shipping the plan/plots does not authorize new biological fits.
+
 Consolidated PR #11 merged into `main` at `e8f2308`, including #8/#9/#10 and
 preserved local studies. GitHub marked #8/#9 merged; #10 was subsequently closed
 as already included, without deleting its branch/worktree. Three retained review
@@ -144,6 +154,14 @@ In the current code, the default `trial_start` is `2`, so alignment begins at th
 Research code is not complete merely because it runs. Agents must preserve the
 chain from scientific question to data, analysis, evaluation, and claim.
 
+- **Report standard agreed September28:** scientific documents must stand on
+  their own with data-backed figures, not only prose/headline scores. Include
+  source/class distributions, performance with seed/fold detail, count and
+  normalized confusion matrices, time-resolved decoding and controls where
+  available. Each figure states target/cohort, source versus synthetic counts,
+  split, units/time reference, decoder, metric/baseline, uncertainty meaning,
+  provenance and claim limits. Mark unavailable analyses explicitly; do not fit
+  new models merely to fill a plotting gap. Schematic figures are not data.
 - Label work as a **software smoke test**, **exploratory analysis**, or
   **confirmatory analysis** before implementation. Do not promote smoke-test or
   exploratory output into scientific evidence.

@@ -4,6 +4,27 @@
 
 Read this, then [research questions](research-questions.md), [analysis contract](analysis-contract.md), and [workspace/recovery](workspace.md). The [September26 retrospective](reports/research-reset-20260926/README.md) explains the evidence available when these choices were made; its recommendations are not all adopted.
 
+## September28 follow-up — visualization and validation
+
+Hongyi agreed to **source-support audit → saved-result plots → bounded prefit
+protocol**, and authorized a new PR and merge carrying forward the professor
+review. [Detailed agreed follow-up](professor_updates/research_review_20260928/validation-plan.md)
+and [self-contained review](professor_updates/research_review_20260928/review.html).
+Make future scientific reports independently readable and data/graph-backed:
+real-source versus synthetic class distributions, performance, confusion matrices,
+cue-time and navigation-time decoding, and appropriate controls. Missing results
+must be labelled, not invented or silently obtained through new fits.
+
+The primary method comparison remains **joint versus cue-only encoder training,
+scored on held-out cue activity**. Separately validate time/phase transfer using
+frozen encoders, preprocessing and decoder weights within each representation.
+Window-specific decoders test accessible information, not a persistent shared
+code. Cross-phase readout transfer supports a common task readout, not identical
+biological geometry, rotation or H1 by itself. Navigation-time evaluation is an
+agreed extension to design, not a completed result or a new encoder arm. Resolve
+compatible windows/features, target semantics/support, folds and total fit budget
+before independent review and explicit run authorization. H1/H2 scope below is unchanged.
+
 ## 1. Decisions made
 
 | Area | Agreed direction |
@@ -43,6 +64,10 @@ both readouts: cue activity -> encoder -> chosen decoder -> path target
 ```
 
 No evaluation-source navigation activity enters encoder fitting, preprocessing or cue prediction. Keep preprocessing, sources, architecture, optimization budget and readout policy matched except for the declared intervention. A fixed update budget with a cue/navigation mixture also changes cue exposure; the phase weighting and exposure accounting must be specified, not described simply as "more training."
+
+The September28 supporting validation adds planned navigation-time and frozen
+cross-phase readout tests separately from this primary cue-only evaluation.
+It does not retrospectively change the completed assay.
 
 Joint training means **shared encoder parameters**, not an established shared biological latent representation. The existing Time sampler uses within-phase temporal positives; it does not explicitly align matched cue/navigation states across phases. Improved cue decoding could reflect useful shared features, regularization, sampling effects or nuisance structure. It is not proof of shared geometry, rotation, intention or planning.
 
