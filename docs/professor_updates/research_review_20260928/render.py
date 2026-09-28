@@ -17,7 +17,7 @@ from markdown_it import MarkdownIt
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[2]
 TARGET = HERE / "review.html"
-REVISION = "fac639b016ca2dd435eed689f9d5544d7c636e96"
+REVISION = "c106c3f9f7e3bba9b5b226a7ab3323d36e9b5e0e"
 SUMMARY = ROOT / "docs/reports/cebra-full-trial-transfer/summary.json"
 DOWNLOAD_JS = """
 (() => {
