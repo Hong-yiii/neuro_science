@@ -84,4 +84,37 @@ The latest conversational proposal separates decoder selection (inner sources, b
 
 [PR #13](https://github.com/Hong-yiii/neuro_science/pull/13) opened against `main` from `docs/professor-review-20260928`; initial content commit `bc740d8`, followed by this publication-link update. Scope:18 presentation/source files in this folder only. No merge. Remote head and final preservation checks are recorded in `outputs/professor-review-20260928/delivery-validation.json`.
 
-Work is delivered; there is no new biological run queue. At the preview's03:42:55 SGT expiry, verify task completion, missing8768 listener and removed owned serving directory, then mark its lifecycle ended in README/host registry without signaling an old PID. The earlier8767 preview has an independent02:17 SGT expiry and runbook.
+Original work is delivered; there is no new biological run queue. At the preview's03:42:55 SGT expiry, verify task completion, missing8768 listener and removed owned serving directory, then mark its lifecycle ended in README/host registry without signaling an old PID. The earlier8767 preview has an independent02:17 SGT expiry and runbook. Both previews subsequently expired normally; missing listeners/directories and retained HTML were verified, and runbooks/host registry marked ended.
+
+## Follow-up — 28 September, authorized new PR and merge
+
+Hongyi agreed to substantially more empirical figures, unique real-source class
+support (start, goal, pair and path/component), decoding throughout cue and
+navigation, and frozen temporal/cross-phase readout validation. Accepted order:
+source support → saved-result visualization → bounded prefit protocol. Improved
+cue decoding is primary; cross-phase transfer is supporting evidence, not proof
+of identical biological geometry. No silent choice of unresolved fit settings.
+
+Parent is sole writer. Read-only scouts map saved source/metric/prediction files.
+`validation-plan.md` records the agreement and remaining fit gates. Canonical
+AGENTS/direction/contract/task list are updated so the requirement survives this
+chat. Publication branch `docs/visual-evidence-validation-20260928` descends from
+PR#13 head7e9b1a1; new PR to main will carry that review forward without merging
+PR13 separately. Preserve unrelated changes in reports index, atlas test and
+untracked earlier overview. Baseline hashes/copies in ignored
+`outputs/professor-review-followup-20260928/before.json` and `before/`.
+Existing automatic formatting inside this report folder is retained, not reverted.
+No persistent preview is requested or started. Software/presentation checks and
+independent scientific review precede publication and the authorized merge.
+
+Follow-up results:49 empirical panels added from saved artifacts, including
+historical plain-LDA cue curves and within-cue goal generalization. Navigation-time
+and joint-model cross-phase decoding remain planned. Reviewer9592e99d flagged
+whole-derived-archive hashing; corrected to four metadata-only ZIP-member reads
+and hashes. Focused follow-up6c7cfdbf found no remaining issue in that correction.
+Final metadata-only replay, direct Pyright, deterministic rendering and20 Chrome
+views/download/reopen passed in taskbb3a19f7e. A subsequent small CLI/error-test
+cleanup preserves extraction semantics and is rechecked before publication.
+All14 unrelated baseline file hashes still match. No scientific fits, new
+persistent preview, installations or unrelated file staging. Keep local QA and
+before-copies as recovery evidence; temporary browser profiles were removed.

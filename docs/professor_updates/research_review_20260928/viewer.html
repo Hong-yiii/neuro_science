@@ -2,25 +2,35 @@
 <section id="w-viewer" aria-labelledby="w-title">
   <h4 id="w-title">Explore the saved whole-cue representations</h4>
   <p class="w-callout">
-    <strong>Read this first:</strong> each dot is one complete synthetic cue: all 80 whole-cue features projected to 3D by the previously <em>training-fitted</em> display PCA saved in the atlas. It is not a physical path, a matched decoder benchmark, or a test of H1b.
+    <strong>Read this first:</strong> each dot is one complete synthetic cue:
+    all 80 whole-cue features projected to 3D by the previously
+    <em>training-fitted</em> display PCA saved in the atlas. It is not a
+    physical path, a matched decoder benchmark, or a test of H1b.
   </p>
 
-  <div class="w-controls" role="group" aria-label="Saved latent viewer controls">
-    <label for="w-model">Model
+  <div
+    class="w-controls"
+    role="group"
+    aria-label="Saved latent viewer controls"
+  >
+    <label for="w-model"
+      >Model
       <select id="w-model">
         <option value="time250">CEBRA-Time · step 250</option>
         <option value="time1000">CEBRA-Time · step 1000</option>
         <option value="pca8">PCA8 saved baseline</option>
       </select>
     </label>
-    <label for="w-seed">Seed
+    <label for="w-seed"
+      >Seed
       <select id="w-seed">
         <option value="0">0</option>
         <option value="1">1</option>
         <option value="2">2</option>
       </select>
     </label>
-    <label for="w-color">Color by
+    <label for="w-color"
+      >Color by
       <select id="w-color">
         <option value="goal">Goal</option>
         <option value="start">Start</option>
@@ -35,15 +45,43 @@
   <div class="w-panels">
     <section class="w-panel" aria-labelledby="w-train-title">
       <h5 id="w-train-title">Training split</h5>
-      <canvas id="w-train-canvas" class="w-panel-canvas" tabindex="0" role="img" aria-label="Training split saved whole-cue 3D view. Drag to rotate; arrow keys rotate; plus and minus zoom; Home resets."></canvas>
+      <canvas
+        id="w-train-canvas"
+        class="w-panel-canvas"
+        tabindex="0"
+        role="img"
+        aria-label="Training split saved whole-cue 3D view. Drag to rotate; arrow keys rotate; plus and minus zoom; Home resets."
+      ></canvas>
     </section>
     <section class="w-panel" aria-labelledby="w-development-title">
       <h5 id="w-development-title">Development split</h5>
-      <canvas id="w-development-canvas" class="w-panel-canvas" tabindex="0" role="img" aria-label="Development split saved whole-cue 3D view. Drag to rotate; arrow keys rotate; plus and minus zoom; Home resets."></canvas>
+      <canvas
+        id="w-development-canvas"
+        class="w-panel-canvas"
+        tabindex="0"
+        role="img"
+        aria-label="Development split saved whole-cue 3D view. Drag to rotate; arrow keys rotate; plus and minus zoom; Home resets."
+      ></canvas>
     </section>
   </div>
 
-  <p id="w-hover" aria-live="polite">Hover or touch near a dot for the nearest saved point.</p>
-  <details><summary>Projection retention and source support</summary><div id="w-stats" aria-live="polite" tabindex="0" role="region" aria-label="Scrollable projection and support details"></div></details>
-  <p class="w-note">Axes are PC1, PC2 and PC3 from the saved whole-cue display view. Both panels use one shared orthographic camera and one global display extent; development points only affect this canvas extent so the panels fit without per-panel rescaling, not the training-fitted PCA basis.</p>
+  <p id="w-hover" aria-live="polite">
+    Hover or touch near a dot for the nearest saved point.
+  </p>
+  <details>
+    <summary>Projection retention and source support</summary>
+    <div
+      id="w-stats"
+      aria-live="polite"
+      tabindex="0"
+      role="region"
+      aria-label="Scrollable projection and support details"
+    ></div>
+  </details>
+  <p class="w-note">
+    Axes are PC1, PC2 and PC3 from the saved whole-cue display view. Both panels
+    use one shared orthographic camera and one global display extent;
+    development points only affect this canvas extent so the panels fit without
+    per-panel rescaling, not the training-fitted PCA basis.
+  </p>
 </section>

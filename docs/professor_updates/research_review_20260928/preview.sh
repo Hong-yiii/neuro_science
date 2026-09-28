@@ -12,9 +12,9 @@ with socket.socket() as sock:
 PY
 D=$(mktemp -d /tmp/professor-review-http-XXXXXX)
 cleanup() {
-  rm -f -- "$D/research-review.html"
-  rmdir -- "$D"
-  /usr/bin/python3 - <<'PY'
+	rm -f -- "$D/research-review.html"
+	rmdir -- "$D"
+	/usr/bin/python3 - <<'PY'
 from datetime import datetime, timezone
 from pathlib import Path
 import json
@@ -44,8 +44,8 @@ Path('outputs/professor-review-20260928/preview.json').write_text(json.dumps(dat
 print('Preview expires:', data['expires_singapore'], flush=True)
 PY
 if /usr/bin/timeout --foreground 7200 /usr/bin/python3 -u -m http.server 8768 --bind 127.0.0.1 --directory "$D"; then
-  echo 'Preview stopped normally.'
+	echo 'Preview stopped normally.'
 else
-  code=$?
-  if [ "$code" -eq 124 ]; then echo 'Preview expired after two hours.'; else exit "$code"; fi
+	code=$?
+	if [ "$code" -eq 124 ]; then echo 'Preview expired after two hours.'; else exit "$code"; fi
 fi

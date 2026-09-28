@@ -103,8 +103,17 @@ matched by whole-route identity.
 
 Both phases of one real source trial and all their derivatives share one fold.
 Assign folds before assembly or learned transformations. Only training-source
-navigation activity may enter joint encoder learning; decoder training and
-held-out predictions use cue inputs only. Preserve source/bin/phase lineage,
+navigation activity may enter joint encoder learning. For the **primary encoder
+comparison**, decoder training and held-out predictions use cue inputs only.
+The separately agreed September28 supporting validation adds window-specific
+navigation decoding and frozen within-/cross-phase transfer; see the
+[validation plan](professor_updates/research_review_20260928/validation-plan.md).
+In that assay, fit each decoder on the designated training-source phase/window,
+then freeze the encoder, scalers, decoder, thresholds and calibration across
+held-out evaluation windows/phases. Fit separate readouts for different encoder
+coordinate systems. Match feature dimensions/target semantics and report support
+at every window. No held-out navigation may enter fitting, alignment or selection.
+This is a design extension, not an executed analysis or a frozen new-run protocol. Preserve source/bin/phase lineage,
 clock units, boundary handling, masks and the chosen cross-session phase
 alignment; normalized progress is not a simultaneously observed trajectory.
 

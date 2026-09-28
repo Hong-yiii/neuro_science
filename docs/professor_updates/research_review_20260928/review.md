@@ -44,6 +44,12 @@ These are **two different cohorts and evaluation objects**, not successive sampl
 
 <div class="warning"><b>What this construction can support:</b> condition-level associations across disjoint real-source pools. <b>What it cannot recover:</b> cross-session noise correlations, a simultaneous population state, or the full path of one real trial. True labels also determine evaluation assembly: this is a <b>known-condition benchmark</b>, not deployment on an unknown natural trial. Reusing one source in 50 rows does not produce 50 independent observations. Same-session grouping alone does not verify simultaneity.</div>
 
+### What the real-source and synthetic class distributions show
+
+@@SOURCE_SUPPORT@@
+
+These counts describe **eligible analysis cohorts**, not every trial recorded by the lab. Near-balanced aggregate endpoint counts do not guarantee robust session-level support. The smaller fixed4→3 assay reverses the apparent class proportions between real validation sources (12 absent/10 present) and synthetic combinations (24/6). Balance the metric deliberately; do not mistake resampling or weighting for new biological evidence. Whole ordered-path distributions across endpoint pairs still require a defensible behavior-only route definition and support audit; component presence is not that distribution.
+
 **The essential split rule:** assign real sources before assembly or learning; keep their cue, navigation and all derivatives on the same side. Train normalization, encoders and readouts only on training sources. Existing development pools have been repeatedly inspected; resplitting them cannot create a pristine confirmation set. Fold count and serial/temporal handling for new work remain to be specified.
 
 ## 2. Model architecture: learn features, then learn a readout
@@ -80,7 +86,7 @@ There are **four outputs, grouped into two questions**. “Start/end” here mea
 @@TARGETS@@
 
 <div class="two-col">
-<div class="card"><h3>A · Endpoint conditions</h3><ul><li><b>Ordered pair:</b> 30 classes; balanced chance 3.33%.</li><li><b>Start alone:</b> six classes; chance 16.67%.</li><li><b>Goal alone:</b> six classes; chance 16.67%.</li></ul><p>In the original baseline, start/goal scores were <b>marginals of the predicted pair</b>, not separately trained heads. A later separate-goal LDA diagnostic exists; it is not a joint-training endpoint comparison.</p></div>
+<div class="card"><h3>A · Endpoint conditions</h3><ul><li><b>Ordered pair:</b> 30 classes; balanced chance 3.33%.</li><li><b>Start alone:</b> six classes; chance 16.67%.</li><li><b>Goal alone:</b> six classes; chance 16.67%.</li></ul><p>In the original baseline and endpoint follow-up, start/goal scores use the <b>endpoint components of the argmax predicted pair</b>, not separately trained heads or sums of pair probabilities. A later separate-goal LDA diagnostic exists; it is not a joint-training endpoint comparison.</p></div>
 <div class="card"><h3>B · One graph component</h3><p>Within fixed 4→3 endpoints, predict whether the later path contains <code>D_N_R_T__N_R_M</code> after boundary corridor runs are excluded. This binary assay asks about one interior directed component—not an entire ordered route.</p><p>Balanced accuracy chance 50%; AUROC chance 0.5; constant-.5 probability loss ln2 ≈ 0.693147.</p></div>
 </div>
 
@@ -130,6 +136,20 @@ The overlaid curves are **saved training InfoNCE traces for all three endpoint T
 
 These are three-seed means from the exploratory endpoint follow-up, not the original C=1 baseline. Training loss can decrease while development decoding worsens. That supports inspecting representation **and readout together**; it does not establish a universally optimal early stop, prove an information-free late representation, or show that a stronger decoder would rescue it. The historical sampler/objective investigations are preserved, but **CEBRA-Behavior is outside the next comparison's scope**. [S5](#s5)
 
+### Performance across the three selected endpoint representations
+
+@@ENDPOINT_PERFORMANCE@@
+
+Counts and row-normalized confusion matrices are both retained above. The complete30-class pair view is dense by necessity; the six-class endpoint views help locate start-versus-goal errors. All seeds are included in the performance plots. Pooling their confusion counts is descriptive only; it does not increase the biological sample size.
+
+### How decoding changes throughout the cue
+
+@@TEMPORAL_RESULTS@@
+
+**These are real saved results, but a different readout assay:** historical plain LDA on raw195-unit count bins, trained separately for pair, start and goal. The direct start/goal heads here are not the endpoint components of the whole-cue pair decoder above. Three-seed thin curves show computational variation, not biological confidence intervals. A changing curve may reflect changing target accessibility to this readout; it does not uniquely identify changing neural information or a mechanism.
+
+The goal heatmap freezes one decoder per training-time row across evaluation times. This already tests **within-cue temporal generalization**, not cue↔navigation transfer and not joint-trained CEBRA. Its diagonal matches the direct-goal cue curve. No window or bright cell is selected as a new confirmatory finding. **Time-arm per-window comparisons, navigation decoding and cross-phase generalization remain unmeasured in this delivery.**
+
 ### A small saved-model viewer
 
 @@VIEWER@@
@@ -176,6 +196,8 @@ These saved encoder curves are separate from the endpoint chart because their co
 | Balanced accuracy ↑ | 32.64% | 61.81% | 50% |
 | AUROC ↑ | 0.146 | 0.574 | 0.5 |
 
+@@JOINT_DETAIL@@
+
 **Loss improved in all three paired seeds; the average gain was 0.299846 nats.** The first three rule components passed, but joint loss remained worse than ln2: **the complete success rule failed**. Only seed 0 had joint AUROC above .5; seeds 1/2 were .361/.472. A favorable average should not hide this variability. [S7](#s7)
 
 <div class="warning"><b>Strongest defensible statement:</b> joint Time training improved this particular exploratory, conditional cue-readout comparison relative to cue-only training. It did not establish reliable absolute path discrimination, unknown-real-trial prediction, intention, H1a or H1b.</div>
@@ -206,6 +228,24 @@ For probabilities, logistic uses softmax for the pair task or sigmoid for a bina
 **Agreed direction:** keep H1, remove artificial-agent H2, focus on CEBRA-Time, cue-only versus joint training, two predefined checkpoints, deliberate source folds, and PCA/LDA references. Decoder and detailed run protocol remain open. Phase-selectivity/rotation awaits the mentor's clarification and literature, not an inference from shared weights. [S1](#s1)
 
 @@FUTURE@@
+
+### September28 agreement: support → plots → bounded validation protocol
+
+**Agreed, not merely suggested:** all future scientific documents should stand on their own with data and graphs. Each empirical figure states its question/target, cohort, source versus synthetic counts, split, time/units, model/readout, baseline, uncertainty meaning and provenance. Schematics and unavailable results must be labelled. Existing exposed data remain exploratory. The [full agreed validation plan](validation-plan.md) records this decision and the remaining prefit gates.
+
+1. **Source support first:** audit unique real-trial start, goal, pair and path/component distributions; within-pair path variation; session/fold support; and synthetic source reuse. Do not count neurons, bins or synthetic combinations as additional real trials.
+2. **Expose saved results:** show performance, paired arm differences, counts plus normalized confusion matrices, and all available temporal results—not just a favorable headline or latent picture. This delivery supplies the saved evidence above; it does not claim a complete new methods-validation program.
+3. **Primary future comparison:** evaluate whether cue+navigation encoder training improves held-out **cue** decoding relative to cue-only training. Use separately fitted decoders under the same selected policy for each encoder/seed/fold/checkpoint.
+4. **Separate supporting assay:** freeze encoder, input scaler, readout scaler, decoder weights/thresholds/calibration within each representation. Train a readout on training-source navigation and score both held-out navigation and cue; optionally test the reverse direction with a separately trained cue readout. No evaluation-phase refitting or learned alignment. A working within-phase reference is needed to interpret transfer failure.
+
+<div class="two-col">
+<div class="card"><span class="tag">Planned · per-window decoding</span><h3>When is a target accessible?</h3><p>Fit a separate decoder per cue/navigation window on training sources. Score the same window on held-out sources. Plot pair/start/goal/component performance and paired joint-minus-cue differences where estimable.</p></div>
+<div class="card"><span class="tag">Planned · frozen generalization</span><h3>Does the readout transfer?</h3><p>Fit once per training-window row; freeze across all held-out evaluation-window columns. Show cue→cue, navigation→navigation and cross-phase blocks separately. Never refit each matrix cell or transfer weights blindly across independently fitted encoders.</p></div>
+</div>
+
+**Feature/time gates:** a historical80-feature whole-cue decoder cannot be applied to an8-feature bin. Predefine compatible windows/aggregation. Cue axes need onset-relative time and boundary handling; navigation needs declared event-time or normalized-progress alignment and per-window support. Relative progress is not physical time, position or simultaneity. Historical navigation pair banks are training samples, not automatically valid time-resolved population evaluation tensors. Long trials and missing bins need explicit weighting/masks, not zero padding.
+
+**Interpretation:** successful frozen transfer supports task information accessible to a common readout, not identical biological manifolds, phase rotation, intention or H1 by itself. During navigation, decoding a component already traversed can concern current/past behavior, not prospective coding. Keep target semantics and endpoint/nuisance controls explicit. Source folds must keep both phases and every derivative together; every learned transform and inner selection step excludes evaluation sources. New target/windows/folds/checkpoints, decoder policy, calibration, controls, multiplicity and the complete fit budget still require a reviewed frozen protocol and run authorization.
 
 ### Proposed endpoint representation benchmark—not yet frozen or run
 

@@ -1,6 +1,60 @@
 # Review and verification record
 
-**28 September2026 · presentation/software QA only.** No new biological model fits, raw-data extraction, checkpoint loading, display-projection fitting, package installation, or protocol selection.
+**28 September2026 · exploratory saved-output aggregation and presentation/software QA.** No new biological model fits, raw recording extraction, checkpoint loading, display-projection fitting or package installation. Detailed fit settings remain open.
+
+## September28 visual-evidence follow-up
+
+User approved source support → saved plots → bounded prefit protocol, plus a **new
+PR and merge** carrying forward #13. The historical no-merge boundary below applies
+to the original delivery, not this later authorization. Current scope adds
+`evidence.py`, aggregate `evidence.json`, `validation-plan.md`, the expanded offline
+review and canonical reporting/direction/contract/task guidance.
+
+- 49 additional empirical figure panels (dense confusions/seed matrices collapsible).
+  Counts and row-normalized confusions are both retained; source cohorts, weights,
+  historical exposure and dependence are labelled. Start/goal endpoint-follow-up
+  scores are components of the argmax pair—not summed probability marginals.
+
+- Saved source ledger and session-pair support reconcile to15,553 unique sources;
+  component metadata reconcile to82/22. Source counts and pseudorows are separate.
+- All nine endpoint confusion/accuracy sets and six joint seed/arm BA, AUROC and
+  balanced losses are reconstructed from predictions. The three historical
+  cue→cue goal matrices have diagonals matching direct-goal cue-bin LDA curves.
+- Navigation-time and joint-CEBRA time/phase transfer remain explicitly unmeasured.
+  The existing within-cue matrix is plain LDA on raw195-unit bins, not CEBRA.
+- Parent's initial source-replay check caught integer histogram keys becoming
+  JSON strings; extraction now emits string keys directly and equality replay passes.
+- Independent focused reviewer `9592e99d` identified a medium scope issue: hashing
+  the complete derived NPZ read neural tensor bytes for provenance. Final extraction
+  reads/hashes only four named identity/split/label ZIP members, never the tensor
+  member or whole archive; a regression check forbids whole-archive provenance.
+  Earlier whole-file hashing was not fitting or raw recording extraction, and no
+  neural tensor values were interpreted, modified or committed. Focused follow-up
+  reviewer6c7cfdbf verified the correction and found no remaining findings within
+  that scope; it did not claim to rerun the parent's tests or broadly re-review.
+- Direct Pyright checks reported0 errors/warnings; render/source-replay checks and
+  20 desktop/mobile Chrome views passed, including49 figures, all18 viewer
+  selections, keyboard rotation/reset and actual offline HTML download/reopening.
+  No page errors or external HTTP(S) resource requests. Source/temporal/confusion
+  screenshots were inspected; intentional horizontal figure scrolling is retained
+  on narrow screens. Original interactive viewer remains intact.
+- Narrow lens diagnostics misidentified tuples inside comparisons/iteration as
+  truthy-tuple asserts and CLI-handled parse errors as unhandled. These were
+  documented as false positives, not hidden with source suppression. Assertion
+  checks are for an offline verification tool whose CLI rejects Python `-O`.
+  The final small cleanup also checks the expected rejection message, uses list
+  iterables for those guards and handles CLI parsing inside main. A later broad
+  scan retained obsolete original widget/extractor flags, had unconfirmed Python
+  LSP probes and a gitleaks timeout; direct Pyright and actual checks are the
+  recorded code evidence. No whole-project security/dependency audit is claimed.
+
+Follow-up QA/logs/before-hashes: ignored `outputs/professor-review-followup-20260928/`.
+Browser profiles/downloads are removed automatically; no HTTP preview or other
+persistent process is started. Discovery workers exhausted turn budgets; resumed
+read-only responses returned their existing findings, verified by the parent.
+Unrelated atlas test, old overview and reports-index edits remain outside the PR.
+
+The following sections preserve the **original review/verification history**.
 
 ## Independent review
 
