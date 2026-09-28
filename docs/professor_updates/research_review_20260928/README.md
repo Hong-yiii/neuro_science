@@ -2,7 +2,7 @@
 
 Open **[review.html](review.html)** in a browser. The temporary cmux HTTP preview has expired; the saved HTML remains fully usable offline. The HTML has a **Download HTML** button and remains interactive after download without network access. GitHub's normal HTML file view displays source; download/open it locally for the rendered document.
 
-Original [PR #13](https://github.com/Hong-yiii/neuro_science/pull/13), carried forward in the authorized follow-up · [Readable narrative](review.md) · [agreed temporal-validation plan](validation-plan.md) · [task scratchpad](SCRATCHPAD.md) · [review and verification](review-checks.md)
+**[Follow-up PR #14](https://github.com/Hong-yiii/neuro_science/pull/14)** carries forward original [PR #13](https://github.com/Hong-yiii/neuro_science/pull/13) plus the agreed visual evidence and validation plan · [Readable narrative](review.md) · [agreed temporal-validation plan](validation-plan.md) · [task scratchpad](SCRATCHPAD.md) · [review and verification](review-checks.md)
 
 ## What is included
 

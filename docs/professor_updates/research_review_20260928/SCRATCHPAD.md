@@ -113,8 +113,17 @@ and joint-model cross-phase decoding remain planned. Reviewer9592e99d flagged
 whole-derived-archive hashing; corrected to four metadata-only ZIP-member reads
 and hashes. Focused follow-up6c7cfdbf found no remaining issue in that correction.
 Final metadata-only replay, direct Pyright, deterministic rendering and20 Chrome
-views/download/reopen passed in taskbb3a19f7e. A subsequent small CLI/error-test
-cleanup preserves extraction semantics and is rechecked before publication.
+views/download/reopen passed in taskbb3a19f7e. Subsequent CLI/error-test cleanup
+and immutable citation pinning also passed in final taskb1e940832: source replay,
+Pyright, render checks,20 Chrome views and all23 pinned Git source paths.
 All14 unrelated baseline file hashes still match. No scientific fits, new
 persistent preview, installations or unrelated file staging. Keep local QA and
 before-copies as recovery evidence; temporary browser profiles were removed.
+
+Publication: [new PR#14](https://github.com/Hong-yiii/neuro_science/pull/14) targets
+main and preserves PR13 ancestry. Scientific source snapshotc106c3f is immutable
+and used by all HTML evidence links; citation/render commit4fd05b0 was remotely
+verified as mergeable with no configured check runs. Final publication-link commit
+and user-authorized merge are verified in ignored
+`outputs/professor-review-followup-20260928/publication.json`. Do not delete any
+source branches/worktrees or overwrite unrelated local modifications.

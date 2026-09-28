@@ -4,6 +4,26 @@
 2026 (Asia/Singapore).** The date `20260910` in consolidation paths identifies this
 session, not the date every operation completed.
 
+## September28 follow-up — visual evidence and temporal validation
+
+[PR#14](https://github.com/Hong-yiii/neuro_science/pull/14) carries forward the
+professor-ready review from PR13 plus49 additional empirical figure panels and
+the [agreed validation plan](professor_updates/research_review_20260928/validation-plan.md).
+Read the [offline review](professor_updates/research_review_20260928/review.html)
+for saved source/class distributions, performance/confusions, historical cue-bin
+LDA curves and within-cue goal generalization. Prioritize **source support → saved
+plots → bounded prefit protocol**. Improved cue decoding remains primary; frozen
+cue/navigation transfer is a separate supporting assay. New navigation-time and
+joint-model temporal decoding remain unexecuted; no model-run authorization is
+implied by shipping/merging this documentation. H1 retained, H2 removed.
+
+Hongyi explicitly authorized a new PR and merge. Verify updated main before the
+next session; local publication/merge receipts and preservation hashes live under
+`outputs/professor-review-followup-20260928/`. Both8767/8768 previews have expired;
+use the saved HTML offline. The unrelated atlas-test change, reports-index edit
+and earlier untracked overview are preserved outside PR14. No worktree cleanup,
+new service or experiment restart accompanies this delivery.
+
 ## Current navigation refresh — September 27, 2026
 
 **Start next session with [agreed project direction](project-direction.md), then
