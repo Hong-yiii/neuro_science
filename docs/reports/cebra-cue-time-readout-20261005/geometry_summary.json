@@ -1,0 +1,24 @@
+{
+  "arms": [
+    "cue_time",
+    "full_time"
+  ],
+  "checkpoint_steps": [
+    250,
+    500,
+    750,
+    1000
+  ],
+  "created_utc": "2026-10-05T13:52:27.347189Z",
+  "readout_selection_on_checkpoints": false,
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "source_reuse_caveat": "descriptive geometry over condition-level pseudorows; rows are synthetic and source-reusing, not biological independent trials",
+  "spectra_rows": 528,
+  "stability_rows": 528,
+  "two_centroid_rdm_correlation_used": false,
+  "world": "observed only"
+}

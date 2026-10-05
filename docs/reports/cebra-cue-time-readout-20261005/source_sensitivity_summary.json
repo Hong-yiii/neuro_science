@@ -1,0 +1,80 @@
+{
+  "bin00_logistic_loss_gain_quantiles_025_50_975": [
+    -0.07569761678862988,
+    0.018785894355681874,
+    0.1388109617243634
+  ],
+  "bin01_logistic_loss_gain_quantiles_025_50_975": [
+    0.027146404794058904,
+    0.14756353455813132,
+    0.33338615427689006
+  ],
+  "bin02_logistic_loss_gain_quantiles_025_50_975": [
+    0.09020731271451811,
+    0.27685484890601214,
+    0.48852524887192805
+  ],
+  "bin03_logistic_loss_gain_quantiles_025_50_975": [
+    -0.2471500524359637,
+    -0.06269300570455782,
+    0.12192255950678696
+  ],
+  "bin04_logistic_loss_gain_quantiles_025_50_975": [
+    0.04092087236029556,
+    0.1342267955689474,
+    0.22464898920384133
+  ],
+  "bin05_logistic_loss_gain_quantiles_025_50_975": [
+    0.07440769278753137,
+    0.11936081127849825,
+    0.17620531502197254
+  ],
+  "bin06_logistic_loss_gain_quantiles_025_50_975": [
+    0.10814098494308537,
+    0.29622963451936024,
+    0.49079282583171785
+  ],
+  "bin07_logistic_loss_gain_quantiles_025_50_975": [
+    0.029261801745268087,
+    0.15761549885035595,
+    0.30460733528051026
+  ],
+  "bin08_logistic_loss_gain_quantiles_025_50_975": [
+    -0.03146034006704231,
+    0.02597707630125415,
+    0.12819951556052392
+  ],
+  "bin09_logistic_loss_gain_quantiles_025_50_975": [
+    -0.3091693115242466,
+    -0.1522042606458146,
+    -0.00751550064417174
+  ],
+  "deletions": 22,
+  "inestimable_deletions": 8,
+  "pseudorow_bootstrap_used": false,
+  "resamples": 200,
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "sensitivity_not_biological_confidence_intervals": true,
+  "wholecue_logistic_loss_gain_quantiles_025_50_975": [
+    0.09855419509410988,
+    0.3169610142046527,
+    0.5233636011200575
+  ],
+  "windows": [
+    "bin00",
+    "bin01",
+    "bin02",
+    "bin03",
+    "bin04",
+    "bin05",
+    "bin06",
+    "bin07",
+    "bin08",
+    "bin09",
+    "wholecue"
+  ]
+}

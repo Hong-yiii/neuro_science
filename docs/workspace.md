@@ -4,6 +4,43 @@
 2026 (Asia/Singapore).** The date `20260910` in consolidation paths identifies this
 session, not the date every operation completed.
 
+## October5 follow-up — frozen cue-time readouts completed
+
+Hongyi explicitly authorized the bounded study after discussion of single-bin
+versus concatenated decoding. [Results and16 figures](reports/cebra-cue-time-readout-20261005/README.md)
+([offline HTML](reports/cebra-cue-time-readout-20261005/report.html)),
+[source construction/audit](reports/cebra-cue-time-readout-20261005/source-support.md),
+and [review/execution ledger](reports/cebra-cue-time-readout-20261005/execution.md).
+The latest decision separates **fixed1000-update performance** from descriptive
+saved-checkpoint geometry; training duration is not a performance factorial.
+Cue-only/joint CEBRA-Time × logistic/RBF-SVM were compared at each of ten cue
+bins and whole cue, alongside matched raw/PCA references. Historical LDA remains
+context, not a new baseline family in this decomposition.
+
+Exactly5040 new single-bin readouts and504 saved whole-cue replays completed;
+**zero encoder/PCA refits**. All20 saved source-null worlds and three seeds were
+retained; full fit-blocked replay and independent numerical review passed. The
+fixed4→3 assay has29 selected units/7session blocks,82train/22exposed-validation
+sources. Joint/logistic's descriptive100–200ms peak was88.89% BA versus61.81%
+whole cue; raw/logistic's200–300ms peak was94.44%. Those are **not validated best
+windows**: the predeclared bin-family gain tail was9/21 and absolute80-view BA
+family tail17/21. Sixteen of20null maxima matched/exceeded94.44%; do not promote
+the peaks to H1 confirmation or infer absence of neural information from the null
+comparison. Eight singleton-pool source deletions were inestimable.
+
+Accepted local outputs: `outputs/cebra-cue-time-readout-20261005/run-reviewed-20261005/`,
+its `-verify/` sibling, and `preparation/geometry-reviewed-20261005/` under that
+study root. Geometry uses saved250/500/750/1000checkpoints descriptively; no model
+selection or biological rotation claim. On October6, Hongyi requested a focused
+**draft PR into main, to remain unmerged while more work is added**. Publication
+uses branch `analysis/cue-time-readout-20261005`; only this study and its handoff
+are included. The publication commit author date is October5 (Singapore), at
+Hongyi's request; experiment timestamps remain unchanged. No new service or
+worktree is introduced, and existing unrelated local changes remain preserved.
+Goal/navigation/temporal-transfer, new source folds and ordered-path work remain
+unexecuted. Next priority is a source-support/fold and nuisance-control
+proposal, not an automatic model/tuning expansion; no further fitting is queued.
+
 ## September28 follow-up — visual evidence and temporal validation
 
 [PR#14](https://github.com/Hong-yiii/neuro_science/pull/14) carries forward the
