@@ -1,0 +1,2 @@
+# Normalize published metric tables without changing private fitted artifacts.
+*.csv text eol=lf

@@ -1,8 +1,10 @@
 # Research handoff: what to read, what is current, what is retained
 
-**Updated: 2026-09-27.** This index separates the scientific question, completed exploratory studies, teaching explanations and historical evidence. The earlier consolidation did not fit models; the bounded preprocessing and matched PCA studies below did. All preserve the selected195 scope.
+**Updated: 2026-10-07.** This index separates the scientific question, completed exploratory studies, teaching explanations and historical evidence. The earlier consolidation did not fit models; the bounded preprocessing and matched PCA studies below did. All preserve the selected195 scope.
 
 ## Start here
+
+**Completed endpoint comparison, October7:** [results and18figures](cebra-endpoint-time-readout-20261006/README.md), [offline HTML](cebra-endpoint-time-readout-20261006/report.html), [execution/review](cebra-endpoint-time-readout-20261006/execution.md). All126 encoders,63PCA fits and10,395 readouts completed; fit-blocked replay and independent scientific/artifact reviews passed. Wholecue cue-only→joint BA: pair63.75→75.56%, start71.81→72.64%, goal85.14→83.89%. Raw/PCA remain strong; wholecue joint-gain family tail8/21 does not establish robust superiority. Historically exposed195-unit/58-session endpoint pseudopopulations, not natural-trial prediction or path/H1 evidence. No further fits are queued. The separate [October5 path-window assay](cebra-cue-time-readout-20261005/README.md) is complete and must not be pooled with these endpoint results. PR15 remains draft/unmerged.
 
 **Current decisions:** [September27 agreed project direction](../project-direction.md).
 Retain H1; remove H2; narrow to CEBRA-Time cue-only/joint training, two checkpoints,

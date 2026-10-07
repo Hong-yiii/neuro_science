@@ -4,6 +4,35 @@
 2026 (Asia/Singapore).** The date `20260910` in consolidation paths identifies this
 session, not the date every operation completed.
 
+## October7 — separate endpoint comparison completed and replay-verified
+
+Hongyi authorized the bounded endpoint study and independent subagent approval.
+[Results and18figures](reports/cebra-endpoint-time-readout-20261006/README.md)
+([offline HTML](reports/cebra-endpoint-time-readout-20261006/report.html)),
+[execution ledger](reports/cebra-endpoint-time-readout-20261006/execution.md), and
+[run/recovery operations](reports/cebra-endpoint-time-readout-20261006/run-operations.md).
+All126 encoders,63PCA fits and10,395 readouts completed in32m10s, including all20null
+worlds/3seeds. Full fit-blocked native replay and independent numerical/scientific
+review passed. The reviewed verifier corrected scaler/PCA/backend reconstruction
+only; no fitted artifact, source split, tolerance or probability metric changed.
+
+Wholecue mean development balanced accuracy, cue-only→joint CEBRA: pair30
+63.75→75.56%, start6 71.81→72.64%, goal6 85.14→83.89%. PCA pair/start references
+(83.61/89.44%) and raw goal(90.83%) are stronger accuracy comparators. Wholecue
+joint-loss-gain family tail8/21 does not establish robust superiority; absolute/bin
+families have low-resolution1/21 tails. Historically exposed, label-conditioned
+195-unit/58-session pseudopopulations, not unknown-label natural-trial prediction,
+trial-specific dynamics or path/H1 evidence. The completed path assay is separate.
+
+Fit/replay scopes are inactive; no restart or new fitting is queued. No locked
+outer-test features, path-study rerun, new worktree, installation, daemon or PR15
+merge. Earlier pending/paused endpoint notes are superseded by these results.
+On October8 (Singapore), Hongyi requested a PR update for this completed study:
+use existing draft [PR15](https://github.com/Hong-yiii/neuro_science/pull/15),
+keep the October5 path assay separate, and preserve unrelated local changes.
+Only code/tests, aggregate figures/tables, provenance and documentation belong in
+the update; private models/data and full predictions remain local. Do not merge.
+
 ## October5 follow-up — frozen cue-time readouts completed
 
 Hongyi explicitly authorized the bounded study after discussion of single-bin
