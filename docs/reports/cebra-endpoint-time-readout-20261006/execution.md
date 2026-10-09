@@ -2,6 +2,17 @@
 
 **Classification: exploratory analysis.** This is the separate endpoint cohort, not a path-study rerun or confirmatory H1 test. Hongyi explicitly authorized execution with “please go ahead and run it.” PR #15 remains draft/unmerged; no publication/merge is requested by this authorization.
 
+## Integration update — October 9, 2026
+
+Hongyi subsequently authorized the final PR15 update and merge, superseding the
+earlier draft-only restrictions recorded below. Keep both studies and original
+commit ancestry; do not squash/rebase or delete branches/worktrees/data. The
+[observability/CEBRA handoff](../../observability-pivot-20261009.md) is indexed for
+the next session; no new analysis is executed by this integration. Post-review
+Markdown clarifications do not change numeric tables, figures, fitted artifacts,
+verified offline HTML or original execution hashes. Preservation/merge receipts:
+`outputs/pr15-merge-20261009/`.
+
 ## Completed execution — October 7, 2026
 
 Independent review `5938a5d2-516b-4bb9-b716-5efa2364ff23` cleared the final cache/audit and resource gate; follow-up `7e1ba226` approved executing the exact immutable reviewed runner despite later canonical formatting. The frozen approval-facts audit passed (`b3bbbd45a`), and `preparation-20261007/prefit-approval-3816068.json` binds the code, accepted inputs, navigation, configuration and budget. Approval SHA256: `25083bb13112369ed6c6b2063be30f89c46ca785cdde1cd0e72425a2bfb30725`.

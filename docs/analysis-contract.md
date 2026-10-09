@@ -1,9 +1,8 @@
 # Analysis Contract
 
-This document defines the data and evaluation contract for prospective-path
-analysis. The [September27 agreed direction](project-direction.md) retains H1,
-removes artificial-agent H2, narrows the encoder comparison and leaves decoder
-choice open. This is not a frozen new-run protocol.
+**October9 handoff:** the next session develops the [observability/CEBRA pivot](observability-pivot-20261009.md). Its definition, targets and protocol are not yet frozen. Source independence, training-only processing, provenance and biological claim limits in this contract still apply; any new target-specific contract must be explicit.
+
+The body below records the prior prospective-path contract and [September27 direction](project-direction.md), not the current next-work queue. H1 is not declared false and artificial-agent H2 stays removed. This update authorizes no new fits or data access.
 
 ## Unit Of Analysis
 

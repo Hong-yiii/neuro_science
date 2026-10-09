@@ -1,6 +1,8 @@
 # Project direction — agreed September 27, 2026
 
-**Start here next session.** This is Hongyi's agreed scope update after the September26 research review and consolidated PR #11. It supersedes older proposed roadmaps where they conflict. It is **a direction decision, not a frozen run protocol, new analysis, or authorization to fit models**. Historical study results, execution records and unsuccessful attempts remain evidence, not an automatic experiment queue.
+**Next-session priority updated October9:** start with the [observability/CEBRA handoff](observability-pivot-20261009.md). Hongyi requested developing that pivot in a new session after PR15 integration. Its operational definition and protocol remain open; no new fits or data access are authorized.
+
+**Historical September27/28 decision record:** the scope below was agreed after the September26 review and PR11. Its H1-led next-work priority is now superseded, not its source-safety, validation or claim limits. Preserve it as history; do not execute its old task queue or treat the pivot as a negative H1 result.
 
 Read this, then [research questions](research-questions.md), [analysis contract](analysis-contract.md), and [workspace/recovery](workspace.md). The [September26 retrospective](reports/research-reset-20260926/README.md) explains the evidence available when these choices were made; its recommendations are not all adopted.
 

@@ -1,8 +1,8 @@
 # Research Questions
 
-**Scope updated September27, 2026:** [agreed project direction](project-direction.md)
-is the next-session decision record. H1 is retained; H2 is removed. Open protocol
-choices are not permission to launch a new study.
+**Current next-session priority (October9):** develop the [observability/CEBRA pivot](observability-pivot-20261009.md), with its operational definition and protocol still open. The H1-led framing below is retained history, not the default next run queue. H1 is neither confirmed nor refuted; H2 remains removed. No new fitting or data access is authorized by this update.
+
+The [September27 direction](project-direction.md) records the previous scope. Its source/evaluation safeguards remain applicable.
 
 ## Primary Question
 

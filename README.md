@@ -1,15 +1,16 @@
 # Neuro Science Workspace
 
 Canonical neuroscience workspace: `~/neuro_science`.
-**Start here next session: [agreed project direction — September27](docs/project-direction.md).**
-Keep H1; remove H2. Narrow encoder comparisons to CEBRA-Time, cue-only versus
-joint cue/navigation training and two checkpoints, with source-safe folds and
-PCA/LDA baselines. **Decoder choice is open.** Component-level graph decoding is
-the simpler assay; ordered graph-path prediction remains the desired capability.
-This is an agreed scope update, not authorization to launch model fits.
+**Start here next session: [observability and CEBRA pivot — October9](docs/observability-pivot-20261009.md).**
+Hongyi requested completing/merging PR15 and taking up the observability direction
+in a new session. First clarify the lab's meaning of observability; candidate
+within-cue and cross-phase transfer analyses are proposals, not completed work or
+fit authorization. H1-led path work is no longer the default next task; H1 is not
+declared false, and artificial-agent H2 remains removed.
 
-Then read [research questions](docs/research-questions.md),
-[analysis contract](docs/analysis-contract.md), and [workspace/recovery](docs/workspace.md).
+Then read [workspace/recovery](docs/workspace.md) and the safeguards in the
+[analysis contract](docs/analysis-contract.md). The [September27 direction](docs/project-direction.md)
+and [research questions](docs/research-questions.md) retain the prior path framing.
 [Consolidated PR #11](https://github.com/Hong-yiii/neuro_science/pull/11) merged the
 studies; stacked #10 was closed as already included. The
 [September26 review](docs/reports/research-reset-20260926/README.md)
@@ -25,8 +26,9 @@ under `work/` with retained artifacts; merging is not permission to remove them.
 - `notes/data_inspection/`: durable findings from inspecting local datasets.
 - `notes/sessions/`: dated session summaries, diagrams, decisions, and next steps.
 - `papers/`: paper notes, reading queues, and references.
-- `docs/project-direction.md`: agreed scope, open decisions, and next-session entry point.
-- `docs/research-questions.md`: active prospective-path research framing.
+- `docs/observability-pivot-20261009.md`: current next-session entry point, open observability definition and proposed work.
+- `docs/project-direction.md`: prior September27/28 scope and scientific safeguards; links to the current handoff.
+- `docs/research-questions.md`: retained prospective-path research framing.
 - `docs/analysis-contract.md`: cue-population and subsequent-path data contract.
 - `docs/getting-started-tasks.md`: individual onboarding and first-analysis tasks.
 - `Hippocampus.jl/`: Julia analysis repo, tracked as a submodule on `updates6`.
@@ -34,17 +36,17 @@ under `work/` with retained artifacts; merging is not permission to remove them.
 
 ## Current Project
 
-The thesis-level direction is to test whether hippocampal population activity
-during the cue period contains information about the subsequently observed
-navigation path beyond start and goal.
+The next priority is to formulate an observability-centered question with CEBRA:
+what task information is recoverable and stable under recording/representation
+constraints? This is a direction to develop, not an adopted dynamical model or
+final thesis hypothesis. Raw/PCA references remain essential; CEBRA is not a
+required winner. The lab's operational definition and the next protocol are open.
 
-H1 has two linked components: incremental prospective path information and its
-possible low-dimensional organization. The artificial-agent comparison formerly
-called H2 is removed from active scope, not retained as a stretch aim.
-Place, view, and conjunctive analyses remain supporting validation and confound
-checks rather than the primary question.
+The completed path and endpoint studies remain separate historical evidence.
+H1a (incremental path information) and H1b (its low-dimensional organization)
+were not established, and the pivot is not evidence that they are absent.
 
-**Use the [research handoff index](docs/reports/README.md)** (refreshed 2026-09-27):
+**Use the [research handoff index](docs/reports/README.md)** (refreshed 2026-10-09):
 current synthesis, completed endpoint and path studies, portable teaching reports,
 source-code preservation, verification, and explicit supersession labels.
 Endpoint-condition decoding improved in later settings; neither that success nor
@@ -71,8 +73,9 @@ Raw data, detailed run artifacts, and runtime environments remain local/ignored;
 links into `outputs/` in the audit Markdown require the data-equipped checkout.
 
 For earlier context, see [`docs/prospective-path-research-flow-review.md`](docs/prospective-path-research-flow-review.md).
-See [`docs/research-questions.md`](docs/research-questions.md) for the canonical framing
-and [`docs/analysis-contract.md`](docs/analysis-contract.md) for the data required to test it.
+See [`docs/research-questions.md`](docs/research-questions.md) for the historical path framing
+and [`docs/analysis-contract.md`](docs/analysis-contract.md) for retained data/evaluation safeguards.
+The [October9 handoff](docs/observability-pivot-20261009.md) controls next-session priorities.
 
 ## Submodules
 

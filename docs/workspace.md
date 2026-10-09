@@ -4,6 +4,31 @@
 2026 (Asia/Singapore).** The date `20260910` in consolidation paths identifies this
 session, not the date every operation completed.
 
+## October9 — PR15 integration and observability next-session handoff
+
+Hongyi authorized updating and **merging [PR15](https://github.com/Hong-yiii/neuro_science/pull/15)**,
+then taking up the [observability/CEBRA pivot](observability-pivot-20261009.md) in a
+new session. This supersedes earlier draft/do-not-merge instructions below and
+in the dated reports; those are historical checkpoints, not current restrictions.
+Use a merge commit to preserve `712744c`'s October5 author date and endpoint
+commit `724108a`; retain the branch and all three review worktrees/artifacts.
+Verify the PR's merged state and start from updated `main` in this canonical repo.
+
+**First next-session task:** clarify the lab's meaning of observability, then
+formulate one bounded question/protocol. H1-led path work is not the default next
+queue; H1 is neither confirmed nor refuted and H2 remains removed. Temporal
+readout transfer is a candidate, not a completed analysis. No new model fit,
+locked-test access, navigation extraction, installation or server is authorized.
+
+This integration includes the completed studies, interpretation clarifications
+and indexed direction handoff. Raw data/models/approvals remain local. Preserve
+unrelated `evidence.py`, atlas-test changes, and the pre-existing
+`docs/reports/current-state-20260927/` plus its unstaged reports-index entry;
+they are excluded, not abandoned. Local preservation/merge receipts are under
+`outputs/pr15-merge-20261009/`. Offline report HTML remains the verified rendering;
+later Markdown clarifications and this direction note do not change its numerical
+results or claim that a new render/replay/experiment occurred.
+
 ## October7 — separate endpoint comparison completed and replay-verified
 
 Hongyi authorized the bounded endpoint study and independent subagent approval.
@@ -31,7 +56,8 @@ On October8 (Singapore), Hongyi requested a PR update for this completed study:
 use existing draft [PR15](https://github.com/Hong-yiii/neuro_science/pull/15),
 keep the October5 path assay separate, and preserve unrelated local changes.
 Only code/tests, aggregate figures/tables, provenance and documentation belong in
-the update; private models/data and full predictions remain local. Do not merge.
+the update; private models/data and full predictions remain local. The October8
+do-not-merge request is historical and superseded by the October9 authorization above.
 
 ## October5 follow-up — frozen cue-time readouts completed
 

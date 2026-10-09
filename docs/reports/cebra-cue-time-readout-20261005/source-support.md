@@ -119,7 +119,7 @@ Observed seed0 validation support by class/session:
 | present | 20180920_session01 | 1 |
 | present | 20181022_session01 | 1 |
 
-Several session×class pools are singletons. Delete-one-source sensitivity therefore has inestimable cases when a class loses support; those are retained and labelled, not dropped. Future independent folds are limited by these singleton cells and by reuse of the historically exposed validation source pool. More folds cannot be claimed without new source-support design and review.
+Several session×class pools are singletons. Delete-one-source sensitivity therefore has inestimable cases when a class loses support; those are retained and labelled, not dropped. Future independent folds are limited by these singleton cells and by reuse of the historically exposed validation source pool. For a future path-source generalization study, the recommended first step is a no-fit audit of behavior-defined target and source support by start, goal, session, class, and split—not another decoder/encoder sweep. A proposed conservative support gate avoids evaluation classes depending on singleton support or disappearing under delete-one-source; this is not an adopted universal threshold. The [October9 observability handoff](../../observability-pivot-20261009.md) supersedes this path-specific next-work priority. Passing a support gate is not fit authorization: any model run still needs a separately reviewed protocol/source split and explicit owner approval. More folds cannot be claimed without a new source-support design and review.
 
 ## Null worlds and source reuse
 

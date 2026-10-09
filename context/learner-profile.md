@@ -10,8 +10,8 @@ For this workspace, explanations should:
 - clearly separate what is directly measured from what is inferred;
 - emphasize observability limits of hippocampus and related brain areas;
 - explain preprocessing steps as transformations from raw signals into analysis-ready tensors/tables;
-- connect methods to cue-period path information beyond start and goal, graph-based targets, and the distinction between encoder training and decoder evaluation;
-- use the [September27 agreed direction](../docs/project-direction.md): the artificial-agent H2 is removed from active scope.
+- distinguish encoder training, decoder evaluation, task-information recoverability and formal dynamical-state observability;
+- use the [October9 observability/CEBRA handoff](../docs/observability-pivot-20261009.md) as the next-session priority; the lab's operational definition remains open. H1 is retained as prior work, not a required next target; artificial-agent H2 stays removed.
 
 Important teaching frame:
 
@@ -23,7 +23,12 @@ A successful readout is an association, not direct observation of intention.
 
 The user expects to receive higher-level formatted neural data from the professor, which may intentionally hide much of the preprocessing. Treat that as acceptable, but keep the analysis contract explicit so assumptions remain auditable.
 
-Current focus:
+Current next-session focus (October9): develop a hippocampal-observability question
+with CEBRA as a specific lab interest. Clarify task-variable recoverability versus
+formal dynamical-state reconstruction. Temporal/cross-phase transfer and sampling
+robustness are candidate analyses, not completed studies or run authorization.
+
+Previous H1-focused scope — historical context:
 
 - cue-period hippocampal information about the subsequently observed path beyond start and goal;
 - reproducible low-dimensional organization of that information;

@@ -4,7 +4,7 @@
 
 ## Bottom line
 
-Endpoint labels are decodable in this historically exposed, label-conditioned pseudopopulation pool. Joint cue/navigation CEBRA improves mean wholecue ordered-pair prediction relative to cue-only CEBRA, gives a small start-accuracy gain, and does not improve goal accuracy. Strong raw/PCA references matter: CEBRA is not uniformly best. The wholecue arm-gain null family does **not** establish robust joint superiority.
+Endpoint labels are decodable in this historically exposed, label-conditioned pseudopopulation pool. Treat these heads as an endpoint assay/control benchmark, not evidence for H1a: they do not test path information beyond start and goal. Joint cue/navigation CEBRA improves mean wholecue ordered-pair prediction relative to cue-only CEBRA, gives a small start-accuracy gain, and does not improve goal accuracy. Under this exposed development pool, the current CEBRA-Time configuration is not uniformly superior to simple raw/PCA references. These descriptive differences do not diagnose overfitting or information loss; no causal mechanism was tested. The wholecue arm-gain null family does **not** establish robust joint superiority.
 
 ## Cohort, construction, and scope
 
@@ -17,7 +17,7 @@ Direct pair30, start6, and goal6 heads use the same assemblies. Input scaler/PCA
 Three-seed means; full seed/window/train/development detail is in `tables/observed_metrics_by_seed.csv`. Accuracy equals BA in this pair-balanced construction. Lower loss/Brier is better; higher BA/F1 is better.
 
 | Target | Representation/readout | BA | Macro-F1 | Log loss | Brier |
-|---|---|---:|---:|---:|---:|
+| --- | --- | ---: | ---: | ---: | ---: |
 | pair30 | Raw + logistic | 70.3% | 0.6813 | 2.1701 | 0.8077 |
 | pair30 | PCA-8 + logistic | 83.6% | 0.8119 | 1.6736 | 0.6745 |
 | pair30 | Cue CEBRA + logistic | 63.8% | 0.6101 | 1.7795 | 0.7319 |
@@ -39,7 +39,7 @@ Three-seed means; full seed/window/train/development detail is in `tables/observ
 Identical development pseudorows within each seed. Positive differences favor joint. Values below are computational seed means, not biological confidence intervals.
 
 | Target | Joint − cue BA | Cue loss − joint loss |
-|---|---:|---:|
+| --- | ---: | ---: |
 | pair30 | +11.81 percentage points | +0.1422 |
 | start6 | +0.83 percentage points | +0.0811 |
 | goal6 | -1.25 percentage points | +0.0001 |
@@ -49,74 +49,92 @@ The wholecue joint-gain family tail is8/21(0.381). Absolute bin BA, absolute bin
 ## Full visual evidence
 
 ### source class counts
+
 ![source class counts](figures/source_class_counts.png)
 Eligible real sources by ordered endpoint pair; no decoder/uncertainty interval. These are not synthetic row counts. Endpoint cohort:195 units/58 sessions;12,288 train and3,265 historically exposed development real sources. Label-conditioned cross-session pseudopopulations,480 train/240 development rows per seed. Source: run-reviewed-20261007 saved artifacts (hashes in provenance.json). Not trial-specific or path/H1 evidence.
 
 ### source session support
+
 ![source session support](figures/source_session_support.png)
 Session-by-class support for the fixed inner split. No decoder, inference or confidence interval;58 session blocks are not58 outer-test folds. Endpoint cohort:195 units/58 sessions;12,288 train and3,265 historically exposed development real sources. Label-conditioned cross-session pseudopopulations,480 train/240 development rows per seed. Source: run-reviewed-20261007 saved artifacts (hashes in provenance.json). Not trial-specific or path/H1 evidence.
 
 ### time balanced accuracy
+
 ![time balanced accuracy](figures/time_balanced_accuracy.png)
 All ten predeclared100-ms cue windows, development balanced accuracy. Lines are three-seed means; shading is min–max computational-seed variation, NOT biological confidence intervals. No inspected peak is a validated chosen window. Endpoint cohort:195 units/58 sessions;12,288 train and3,265 historically exposed development real sources. Label-conditioned cross-session pseudopopulations,480 train/240 development rows per seed. Cue-only evaluation; frozen1,000-update encoders; train-only scaling/PCA/readouts. Logistic C=0.01 for raw/PCA/CEBRA; raw SVD-LDA is a supervised reference. Source: run-reviewed-20261007 saved artifacts (hashes in provenance.json). Not trial-specific or path/H1 evidence.
 
 ### wholecue balanced accuracy
+
 ![wholecue balanced accuracy](figures/wholecue_balanced_accuracy.png)
 Concatenated0–1s cue development balanced accuracy; bar=three-seed mean, black points=seeds0/1/2 from left to right. Uniform reference shown. Not an eleventh selectable bin; dots are not biological replicates. Endpoint cohort:195 units/58 sessions;12,288 train and3,265 historically exposed development real sources. Label-conditioned cross-session pseudopopulations,480 train/240 development rows per seed. Cue-only evaluation; frozen1,000-update encoders; train-only scaling/PCA/readouts. Logistic C=0.01 for raw/PCA/CEBRA; raw SVD-LDA is a supervised reference. Source: run-reviewed-20261007 saved artifacts (hashes in provenance.json). Not trial-specific or path/H1 evidence.
 
 ### time log loss
+
 ![time log loss](figures/time_log_loss.png)
 All ten predeclared100-ms cue windows, development multiclass log loss. Lines are three-seed means; shading is min–max computational-seed variation, NOT biological confidence intervals. No inspected peak is a validated chosen window. Endpoint cohort:195 units/58 sessions;12,288 train and3,265 historically exposed development real sources. Label-conditioned cross-session pseudopopulations,480 train/240 development rows per seed. Cue-only evaluation; frozen1,000-update encoders; train-only scaling/PCA/readouts. Logistic C=0.01 for raw/PCA/CEBRA; raw SVD-LDA is a supervised reference. Source: run-reviewed-20261007 saved artifacts (hashes in provenance.json). Not trial-specific or path/H1 evidence.
 
 ### wholecue log loss
+
 ![wholecue log loss](figures/wholecue_log_loss.png)
 Concatenated0–1s cue development multiclass log loss; bar=three-seed mean, black points=seeds0/1/2 from left to right. Uniform reference shown. Not an eleventh selectable bin; dots are not biological replicates. Endpoint cohort:195 units/58 sessions;12,288 train and3,265 historically exposed development real sources. Label-conditioned cross-session pseudopopulations,480 train/240 development rows per seed. Cue-only evaluation; frozen1,000-update encoders; train-only scaling/PCA/readouts. Logistic C=0.01 for raw/PCA/CEBRA; raw SVD-LDA is a supervised reference. Source: run-reviewed-20261007 saved artifacts (hashes in provenance.json). Not trial-specific or path/H1 evidence.
 
 ### training development gap
+
 ![training development gap](figures/training_development_gap.png)
 Train–development balanced-accuracy gaps for every cue bin(index0=0–100ms) and wholecue. Mean/min–max across three computational seeds; not confidence intervals. Same targets/representation readouts; large gaps indicate exposed-pool generalization limits. Endpoint cohort:195 units/58 sessions;12,288 train and3,265 historically exposed development real sources. Label-conditioned cross-session pseudopopulations,480 train/240 development rows per seed. Cue-only evaluation; frozen1,000-update encoders; train-only scaling/PCA/readouts. Logistic C=0.01 for raw/PCA/CEBRA; raw SVD-LDA is a supervised reference. Source: run-reviewed-20261007 saved artifacts (hashes in provenance.json). Not trial-specific or path/H1 evidence.
 
 ### null families
+
 ![null families](figures/null_families.png)
 All20 joint-pair-label shuffles within session×inner split, with complete reassembly/refitting. Seed means precede family maxima. BA normalized by uniform reference; loss skill/gain normalized by log(K). Bin families span targets/windows (absolute families also representations); wholecue gain spans three targets. Inclusive plus-one tails have minimum1/21 and are diagnostic, not pristine confirmatory p-values or universal superiority tests. Endpoint cohort:195 units/58 sessions;12,288 train and3,265 historically exposed development real sources. Label-conditioned cross-session pseudopopulations,480 train/240 development rows per seed. Cue-only evaluation; frozen1,000-update encoders; train-only scaling/PCA/readouts. Logistic C=0.01 for raw/PCA/CEBRA; raw SVD-LDA is a supervised reference. Source: run-reviewed-20261007 saved artifacts (hashes in provenance.json). Not trial-specific or path/H1 evidence.
 
 ### source deletion
+
 ![source deletion](figures/source_deletion.png)
 Wholecue paired joint advantage after deleting every pseudorow containing each used real development source, with predictions fixed. Line=min/max and dot=median of estimable deletions, NOT a confidence interval. Lost-class deletions are inestimable, not evidence of robustness; pair30 has571–579 per seed. No pseudorow bootstrap or refit. Endpoint cohort:195 units/58 sessions;12,288 train and3,265 historically exposed development real sources. Label-conditioned cross-session pseudopopulations,480 train/240 development rows per seed. Cue-only evaluation; frozen1,000-update encoders; train-only scaling/PCA/readouts. Logistic C=0.01 for raw/PCA/CEBRA; raw SVD-LDA is a supervised reference. Source: run-reviewed-20261007 saved artifacts (hashes in provenance.json). Not trial-specific or path/H1 evidence.
 
 ### confusions pair30 seed0
+
 ![confusions pair30 seed0](figures/confusions_pair30_seed0.png)
 pair30, observed seed0, wholecue0–1s development predictions. Top=count, bottom=row-normalized recall, all five representation/readout families;240 synthetic rows, not240 independent biological trials. No seed aggregation or uncertainty interval. Pair labels are ordered(start,goal); endpoint IDs are provisional marker-derived categories. Endpoint cohort:195 units/58 sessions;12,288 train and3,265 historically exposed development real sources. Label-conditioned cross-session pseudopopulations,480 train/240 development rows per seed. Cue-only evaluation; frozen1,000-update encoders; train-only scaling/PCA/readouts. Logistic C=0.01 for raw/PCA/CEBRA; raw SVD-LDA is a supervised reference. Source: run-reviewed-20261007 saved artifacts (hashes in provenance.json). Not trial-specific or path/H1 evidence.
 
 ### confusions start6 seed0
+
 ![confusions start6 seed0](figures/confusions_start6_seed0.png)
 start6, observed seed0, wholecue0–1s development predictions. Top=count, bottom=row-normalized recall, all five representation/readout families;240 synthetic rows, not240 independent biological trials. No seed aggregation or uncertainty interval. Pair labels are ordered(start,goal); endpoint IDs are provisional marker-derived categories. Endpoint cohort:195 units/58 sessions;12,288 train and3,265 historically exposed development real sources. Label-conditioned cross-session pseudopopulations,480 train/240 development rows per seed. Cue-only evaluation; frozen1,000-update encoders; train-only scaling/PCA/readouts. Logistic C=0.01 for raw/PCA/CEBRA; raw SVD-LDA is a supervised reference. Source: run-reviewed-20261007 saved artifacts (hashes in provenance.json). Not trial-specific or path/H1 evidence.
 
 ### confusions goal6 seed0
+
 ![confusions goal6 seed0](figures/confusions_goal6_seed0.png)
 goal6, observed seed0, wholecue0–1s development predictions. Top=count, bottom=row-normalized recall, all five representation/readout families;240 synthetic rows, not240 independent biological trials. No seed aggregation or uncertainty interval. Pair labels are ordered(start,goal); endpoint IDs are provisional marker-derived categories. Endpoint cohort:195 units/58 sessions;12,288 train and3,265 historically exposed development real sources. Label-conditioned cross-session pseudopopulations,480 train/240 development rows per seed. Cue-only evaluation; frozen1,000-update encoders; train-only scaling/PCA/readouts. Logistic C=0.01 for raw/PCA/CEBRA; raw SVD-LDA is a supervised reference. Source: run-reviewed-20261007 saved artifacts (hashes in provenance.json). Not trial-specific or path/H1 evidence.
 
 ### confusions pair30 seed1
+
 ![confusions pair30 seed1](figures/confusions_pair30_seed1.png)
 pair30, observed seed1, wholecue0–1s development predictions. Top=count, bottom=row-normalized recall, all five representation/readout families;240 synthetic rows, not240 independent biological trials. No seed aggregation or uncertainty interval. Pair labels are ordered(start,goal); endpoint IDs are provisional marker-derived categories. Endpoint cohort:195 units/58 sessions;12,288 train and3,265 historically exposed development real sources. Label-conditioned cross-session pseudopopulations,480 train/240 development rows per seed. Cue-only evaluation; frozen1,000-update encoders; train-only scaling/PCA/readouts. Logistic C=0.01 for raw/PCA/CEBRA; raw SVD-LDA is a supervised reference. Source: run-reviewed-20261007 saved artifacts (hashes in provenance.json). Not trial-specific or path/H1 evidence.
 
 ### confusions start6 seed1
+
 ![confusions start6 seed1](figures/confusions_start6_seed1.png)
 start6, observed seed1, wholecue0–1s development predictions. Top=count, bottom=row-normalized recall, all five representation/readout families;240 synthetic rows, not240 independent biological trials. No seed aggregation or uncertainty interval. Pair labels are ordered(start,goal); endpoint IDs are provisional marker-derived categories. Endpoint cohort:195 units/58 sessions;12,288 train and3,265 historically exposed development real sources. Label-conditioned cross-session pseudopopulations,480 train/240 development rows per seed. Cue-only evaluation; frozen1,000-update encoders; train-only scaling/PCA/readouts. Logistic C=0.01 for raw/PCA/CEBRA; raw SVD-LDA is a supervised reference. Source: run-reviewed-20261007 saved artifacts (hashes in provenance.json). Not trial-specific or path/H1 evidence.
 
 ### confusions goal6 seed1
+
 ![confusions goal6 seed1](figures/confusions_goal6_seed1.png)
 goal6, observed seed1, wholecue0–1s development predictions. Top=count, bottom=row-normalized recall, all five representation/readout families;240 synthetic rows, not240 independent biological trials. No seed aggregation or uncertainty interval. Pair labels are ordered(start,goal); endpoint IDs are provisional marker-derived categories. Endpoint cohort:195 units/58 sessions;12,288 train and3,265 historically exposed development real sources. Label-conditioned cross-session pseudopopulations,480 train/240 development rows per seed. Cue-only evaluation; frozen1,000-update encoders; train-only scaling/PCA/readouts. Logistic C=0.01 for raw/PCA/CEBRA; raw SVD-LDA is a supervised reference. Source: run-reviewed-20261007 saved artifacts (hashes in provenance.json). Not trial-specific or path/H1 evidence.
 
 ### confusions pair30 seed2
+
 ![confusions pair30 seed2](figures/confusions_pair30_seed2.png)
 pair30, observed seed2, wholecue0–1s development predictions. Top=count, bottom=row-normalized recall, all five representation/readout families;240 synthetic rows, not240 independent biological trials. No seed aggregation or uncertainty interval. Pair labels are ordered(start,goal); endpoint IDs are provisional marker-derived categories. Endpoint cohort:195 units/58 sessions;12,288 train and3,265 historically exposed development real sources. Label-conditioned cross-session pseudopopulations,480 train/240 development rows per seed. Cue-only evaluation; frozen1,000-update encoders; train-only scaling/PCA/readouts. Logistic C=0.01 for raw/PCA/CEBRA; raw SVD-LDA is a supervised reference. Source: run-reviewed-20261007 saved artifacts (hashes in provenance.json). Not trial-specific or path/H1 evidence.
 
 ### confusions start6 seed2
+
 ![confusions start6 seed2](figures/confusions_start6_seed2.png)
 start6, observed seed2, wholecue0–1s development predictions. Top=count, bottom=row-normalized recall, all five representation/readout families;240 synthetic rows, not240 independent biological trials. No seed aggregation or uncertainty interval. Pair labels are ordered(start,goal); endpoint IDs are provisional marker-derived categories. Endpoint cohort:195 units/58 sessions;12,288 train and3,265 historically exposed development real sources. Label-conditioned cross-session pseudopopulations,480 train/240 development rows per seed. Cue-only evaluation; frozen1,000-update encoders; train-only scaling/PCA/readouts. Logistic C=0.01 for raw/PCA/CEBRA; raw SVD-LDA is a supervised reference. Source: run-reviewed-20261007 saved artifacts (hashes in provenance.json). Not trial-specific or path/H1 evidence.
 
 ### confusions goal6 seed2
+
 ![confusions goal6 seed2](figures/confusions_goal6_seed2.png)
 goal6, observed seed2, wholecue0–1s development predictions. Top=count, bottom=row-normalized recall, all five representation/readout families;240 synthetic rows, not240 independent biological trials. No seed aggregation or uncertainty interval. Pair labels are ordered(start,goal); endpoint IDs are provisional marker-derived categories. Endpoint cohort:195 units/58 sessions;12,288 train and3,265 historically exposed development real sources. Label-conditioned cross-session pseudopopulations,480 train/240 development rows per seed. Cue-only evaluation; frozen1,000-update encoders; train-only scaling/PCA/readouts. Logistic C=0.01 for raw/PCA/CEBRA; raw SVD-LDA is a supervised reference. Source: run-reviewed-20261007 saved artifacts (hashes in provenance.json). Not trial-specific or path/H1 evidence.
 
