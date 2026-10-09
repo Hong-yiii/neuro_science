@@ -1,0 +1,187 @@
+{
+  "counts": {
+    "bin_windows": [
+      "bin00",
+      "bin01",
+      "bin02",
+      "bin03",
+      "bin04",
+      "bin05",
+      "bin06",
+      "bin07",
+      "bin08",
+      "bin09"
+    ],
+    "metric_groups_train_plus_validation": 11088,
+    "new_single_bin_readouts": 5040,
+    "null_worlds": 20,
+    "readouts": [
+      "logistic",
+      "svc"
+    ],
+    "representations": [
+      "raw290",
+      "pca8",
+      "cue_time",
+      "full_time"
+    ],
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "wholecue_saved_replays": 504,
+    "worlds": 21
+  },
+  "created_utc": "2026-10-05T14:00:13.549177Z",
+  "primary_null_family": {
+    "inclusive_plus_one_tail": 0.42857142857142855,
+    "null": [
+      0.22610106804655206,
+      0.09099133779431633,
+      0.1256216668301847,
+      0.4129809848266606,
+      0.2934404553852367,
+      0.1900522753751593,
+      0.3863030592750736,
+      0.307916975210292,
+      0.31401257352158374,
+      0.16342543583114658,
+      0.20980757837721728,
+      0.5218358624641248,
+      0.051096717492525943,
+      0.2058240629015792,
+      0.3053537753515156,
+      0.21755476674069166,
+      0.28269243983635883,
+      0.3635625331656686,
+      0.13309918675858612,
+      0.3408467963887632
+    ],
+    "observed": 0.2949294797023627,
+    "statistic": "max over 10 bins of three-seed mean paired logistic balanced-loss gain cue_time-minus-full_time",
+    "wholecue_is_fixed_comparator_not_11th_bin": true
+  },
+  "secondary_absolute_ba_family": {
+    "inclusive_plus_one_tail": 0.8095238095238095,
+    "null": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      0.8611111111111112,
+      1.0,
+      0.9166666666666666,
+      0.9166666666666666,
+      0.9652777777777777,
+      0.9722222222222222,
+      0.9444444444444443,
+      0.9930555555555557,
+      1.0,
+      0.8819444444444443,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "observed": 0.9444444444444443,
+    "observed_argmax_descriptor_not_selection_rule": {
+      "readout": "logistic",
+      "representation": "raw290",
+      "window": "bin02"
+    },
+    "statistic": "max over 10 bins x 4 representations x 2 readouts of three-seed mean validation balanced accuracy"
+  },
+  "secondary_absolute_logistic_loss_family": {
+    "inclusive_plus_one_tail": 0.38095238095238093,
+    "null": [
+      0.23633722628045745,
+      0.36917886574698683,
+      0.23819582923759192,
+      0.35126307171648585,
+      0.17627885774302743,
+      0.14583915278886317,
+      0.28534736420578427,
+      0.3605125628352593,
+      0.3321397866763197,
+      0.22327703258971981,
+      0.23793830289088352,
+      0.2870527887827197,
+      0.14608811680361478,
+      0.2672942140027607,
+      0.2135525539175332,
+      0.13146428080996342,
+      0.3782019399604191,
+      0.37417834949859646,
+      0.27077726746363423,
+      0.3576560176335074
+    ],
+    "observed": 0.3066130525156908,
+    "observed_argmax_descriptor_not_selection_rule": {
+      "readout": "logistic",
+      "representation": "raw290",
+      "window": "bin02"
+    },
+    "statistic": "max over 10 bins x 4 representations of log(2)-three-seed-mean balanced log loss"
+  },
+  "wholecue_fixed_reference": [
+    {
+      "auroc_mean": 0.548611111111111,
+      "balanced_accuracy_mean": 0.46527777777777773,
+      "balanced_log_loss_mean": 0.7428859358016079,
+      "readout": "logistic",
+      "representation": "raw290"
+    },
+    {
+      "auroc_mean": 0.0,
+      "balanced_accuracy_mean": 0.3055555555555556,
+      "balanced_log_loss_mean": "",
+      "readout": "svc",
+      "representation": "raw290"
+    },
+    {
+      "auroc_mean": 0.07175925925925923,
+      "balanced_accuracy_mean": 0.22222222222222224,
+      "balanced_log_loss_mean": 0.8924012777066607,
+      "readout": "logistic",
+      "representation": "pca8"
+    },
+    {
+      "auroc_mean": 0.5254629629629629,
+      "balanced_accuracy_mean": 0.5555555555555555,
+      "balanced_log_loss_mean": "",
+      "readout": "svc",
+      "representation": "pca8"
+    },
+    {
+      "auroc_mean": 0.1458333333333333,
+      "balanced_accuracy_mean": 0.3263888888888889,
+      "balanced_log_loss_mean": 1.0104639258683916,
+      "readout": "logistic",
+      "representation": "cue_time"
+    },
+    {
+      "auroc_mean": 0.002314814814814813,
+      "balanced_accuracy_mean": 0.40277777777777773,
+      "balanced_log_loss_mean": "",
+      "readout": "svc",
+      "representation": "cue_time"
+    },
+    {
+      "auroc_mean": 0.5740740740740741,
+      "balanced_accuracy_mean": 0.6180555555555555,
+      "balanced_log_loss_mean": 0.7106179792550145,
+      "readout": "logistic",
+      "representation": "full_time"
+    },
+    {
+      "auroc_mean": 0.6342592592592592,
+      "balanced_accuracy_mean": 0.5069444444444445,
+      "balanced_log_loss_mean": "",
+      "readout": "svc",
+      "representation": "full_time"
+    }
+  ]
+}

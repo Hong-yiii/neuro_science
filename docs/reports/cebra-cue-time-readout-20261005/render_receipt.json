@@ -1,0 +1,10 @@
+{
+  "created_utc": "2026-10-06T02:49:44.813633Z",
+  "figures": 16,
+  "fit_calls": 0,
+  "geometry_dir": "/home/hongyi-home-lab/neuro_science/outputs/cebra-cue-time-readout-20261005/preparation/geometry-reviewed-20261005",
+  "html_sha256": "654c419628fe86e44471ff097ba60918c173cb304e6ba0f5dc15ae838961e6f4",
+  "renderer_sha256": "dfa455b7fffdcbc78ea5c245e0a674c768c829d4b11b776ddad1ccf1025b1580",
+  "run_dir": "/home/hongyi-home-lab/neuro_science/outputs/cebra-cue-time-readout-20261005/run-reviewed-20261005",
+  "verification_dir": "/home/hongyi-home-lab/neuro_science/outputs/cebra-cue-time-readout-20261005/run-reviewed-20261005-verify"
+}

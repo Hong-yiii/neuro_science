@@ -4,6 +4,98 @@
 2026 (Asia/Singapore).** The date `20260910` in consolidation paths identifies this
 session, not the date every operation completed.
 
+## October9 — PR15 integration and observability next-session handoff
+
+Hongyi authorized updating and **merging [PR15](https://github.com/Hong-yiii/neuro_science/pull/15)**,
+then taking up the [observability/CEBRA pivot](observability-pivot-20261009.md) in a
+new session. This supersedes earlier draft/do-not-merge instructions below and
+in the dated reports; those are historical checkpoints, not current restrictions.
+Use a merge commit to preserve `712744c`'s October5 author date and endpoint
+commit `724108a`; retain the branch and all three review worktrees/artifacts.
+Verify the PR's merged state and start from updated `main` in this canonical repo.
+
+**First next-session task:** clarify the lab's meaning of observability, then
+formulate one bounded question/protocol. H1-led path work is not the default next
+queue; H1 is neither confirmed nor refuted and H2 remains removed. Temporal
+readout transfer is a candidate, not a completed analysis. No new model fit,
+locked-test access, navigation extraction, installation or server is authorized.
+
+This integration includes the completed studies, interpretation clarifications
+and indexed direction handoff. Raw data/models/approvals remain local. Preserve
+unrelated `evidence.py`, atlas-test changes, and the pre-existing
+`docs/reports/current-state-20260927/` plus its unstaged reports-index entry;
+they are excluded, not abandoned. Local preservation/merge receipts are under
+`outputs/pr15-merge-20261009/`. Offline report HTML remains the verified rendering;
+later Markdown clarifications and this direction note do not change its numerical
+results or claim that a new render/replay/experiment occurred.
+
+## October7 — separate endpoint comparison completed and replay-verified
+
+Hongyi authorized the bounded endpoint study and independent subagent approval.
+[Results and18figures](reports/cebra-endpoint-time-readout-20261006/README.md)
+([offline HTML](reports/cebra-endpoint-time-readout-20261006/report.html)),
+[execution ledger](reports/cebra-endpoint-time-readout-20261006/execution.md), and
+[run/recovery operations](reports/cebra-endpoint-time-readout-20261006/run-operations.md).
+All126 encoders,63PCA fits and10,395 readouts completed in32m10s, including all20null
+worlds/3seeds. Full fit-blocked native replay and independent numerical/scientific
+review passed. The reviewed verifier corrected scaler/PCA/backend reconstruction
+only; no fitted artifact, source split, tolerance or probability metric changed.
+
+Wholecue mean development balanced accuracy, cue-only→joint CEBRA: pair30
+63.75→75.56%, start6 71.81→72.64%, goal6 85.14→83.89%. PCA pair/start references
+(83.61/89.44%) and raw goal(90.83%) are stronger accuracy comparators. Wholecue
+joint-loss-gain family tail8/21 does not establish robust superiority; absolute/bin
+families have low-resolution1/21 tails. Historically exposed, label-conditioned
+195-unit/58-session pseudopopulations, not unknown-label natural-trial prediction,
+trial-specific dynamics or path/H1 evidence. The completed path assay is separate.
+
+Fit/replay scopes are inactive; no restart or new fitting is queued. No locked
+outer-test features, path-study rerun, new worktree, installation, daemon or PR15
+merge. Earlier pending/paused endpoint notes are superseded by these results.
+On October8 (Singapore), Hongyi requested a PR update for this completed study:
+use existing draft [PR15](https://github.com/Hong-yiii/neuro_science/pull/15),
+keep the October5 path assay separate, and preserve unrelated local changes.
+Only code/tests, aggregate figures/tables, provenance and documentation belong in
+the update; private models/data and full predictions remain local. The October8
+do-not-merge request is historical and superseded by the October9 authorization above.
+
+## October5 follow-up — frozen cue-time readouts completed
+
+Hongyi explicitly authorized the bounded study after discussion of single-bin
+versus concatenated decoding. [Results and16 figures](reports/cebra-cue-time-readout-20261005/README.md)
+([offline HTML](reports/cebra-cue-time-readout-20261005/report.html)),
+[source construction/audit](reports/cebra-cue-time-readout-20261005/source-support.md),
+and [review/execution ledger](reports/cebra-cue-time-readout-20261005/execution.md).
+The latest decision separates **fixed1000-update performance** from descriptive
+saved-checkpoint geometry; training duration is not a performance factorial.
+Cue-only/joint CEBRA-Time × logistic/RBF-SVM were compared at each of ten cue
+bins and whole cue, alongside matched raw/PCA references. Historical LDA remains
+context, not a new baseline family in this decomposition.
+
+Exactly5040 new single-bin readouts and504 saved whole-cue replays completed;
+**zero encoder/PCA refits**. All20 saved source-null worlds and three seeds were
+retained; full fit-blocked replay and independent numerical review passed. The
+fixed4→3 assay has29 selected units/7session blocks,82train/22exposed-validation
+sources. Joint/logistic's descriptive100–200ms peak was88.89% BA versus61.81%
+whole cue; raw/logistic's200–300ms peak was94.44%. Those are **not validated best
+windows**: the predeclared bin-family gain tail was9/21 and absolute80-view BA
+family tail17/21. Sixteen of20null maxima matched/exceeded94.44%; do not promote
+the peaks to H1 confirmation or infer absence of neural information from the null
+comparison. Eight singleton-pool source deletions were inestimable.
+
+Accepted local outputs: `outputs/cebra-cue-time-readout-20261005/run-reviewed-20261005/`,
+its `-verify/` sibling, and `preparation/geometry-reviewed-20261005/` under that
+study root. Geometry uses saved250/500/750/1000checkpoints descriptively; no model
+selection or biological rotation claim. On October6, Hongyi requested a focused
+**draft PR into main, to remain unmerged while more work is added**. Publication
+uses branch `analysis/cue-time-readout-20261005`; only this study and its handoff
+are included. The publication commit author date is October5 (Singapore), at
+Hongyi's request; experiment timestamps remain unchanged. No new service or
+worktree is introduced, and existing unrelated local changes remain preserved.
+Goal/navigation/temporal-transfer, new source folds and ordered-path work remain
+unexecuted. Next priority is a source-support/fold and nuisance-control
+proposal, not an automatic model/tuning expansion; no further fitting is queued.
+
 ## September28 follow-up — visual evidence and temporal validation
 
 [PR#14](https://github.com/Hong-yiii/neuro_science/pull/14) carries forward the

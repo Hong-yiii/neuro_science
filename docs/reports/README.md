@@ -1,14 +1,17 @@
 # Research handoff: what to read, what is current, what is retained
 
-**Updated: 2026-09-27.** This index separates the scientific question, completed exploratory studies, teaching explanations and historical evidence. The earlier consolidation did not fit models; the bounded preprocessing and matched PCA studies below did. All preserve the selected195 scope.
+**Updated: 2026-10-09.** This index separates the scientific question, completed exploratory studies, teaching explanations and historical evidence. The earlier consolidation did not fit models; the bounded preprocessing and matched PCA studies below did. All preserve the selected195 scope.
 
 ## Start here
 
-**Current decisions:** [September27 agreed project direction](../project-direction.md).
-Retain H1; remove H2; narrow to CEBRA-Time cue-only/joint training, two checkpoints,
-source folds and PCA/LDA baselines. Decoder remains open; component assay A and
-ordered graph-path ambition B stay in scope. No new fits. This takes precedence
-over the recommendations in older reviews and next-study proposals.
+**Next session — observability and CEBRA:** [October9 direction/handoff](../observability-pivot-20261009.md). Hongyi requested integrating PR15 and developing this pivot in a new session. First clarify task-information recoverability versus formal dynamical-state observability. Candidate temporal/phase-transfer work remains unexecuted; no new fits or raw-data access are authorized. H1 is historical, not refuted or the default next task; H2 remains removed. [Workspace and integration status](../workspace.md).
+
+**Completed endpoint comparison, October7:** [results and18figures](cebra-endpoint-time-readout-20261006/README.md), [offline HTML](cebra-endpoint-time-readout-20261006/report.html), [execution/review](cebra-endpoint-time-readout-20261006/execution.md). All126 encoders,63PCA fits and10,395 readouts completed; fit-blocked replay and independent scientific/artifact reviews passed. Wholecue cue-only→joint BA: pair63.75→75.56%, start71.81→72.64%, goal85.14→83.89%. Raw/PCA remain strong; wholecue joint-gain family tail8/21 does not establish robust superiority. Historically exposed195-unit/58-session endpoint pseudopopulations, not natural-trial prediction or path/H1 evidence. No further fits are queued. The separate [October5 path-window assay](cebra-cue-time-readout-20261005/README.md) is complete and must not be pooled with these endpoint results. [PR15](https://github.com/Hong-yiii/neuro_science/pull/15) carries both studies; merge was authorized October9. Earlier draft restrictions in dated artifacts are historical.
+
+**Prior path-focused decisions:** [September27/28 record](../project-direction.md).
+Keep this as scope history and retain its source-safety/claim limits; the
+[October9 handoff](../observability-pivot-20261009.md) now controls next-work
+priorities. It does not freeze a replacement hypothesis or authorize analysis.
 
 **Evidence retrospective:** [September26 research reset and decision trajectory](research-reset-20260926/README.md)
 ([portable HTML](research-reset-20260926/review.html)). Reconciles the last three
@@ -55,7 +58,7 @@ Earlier cross-study context:
 3. **[PCA and below-chance explainer](../../learning/place195-pca-and-below-chance-20260908.md)** — 3/8 components per bin → 30/80 linear-classifier inputs; training versus validation; class bias versus reversed predictions; portable figure.
 4. **[Preservation and verification ledger](research-release-20260908.md)** — what Git contains, what remains local, how checks were run, and known gaps.
 
-Normative authority remains [research questions](../research-questions.md) and [analysis contract](../analysis-contract.md). Current H1 requires incremental path information beyond endpoints; successful endpoint decoding is not H1. Original holdout exposure remains part of the record.
+Next-work authority is the [October9 observability handoff](../observability-pivot-20261009.md); retain the safeguards in the [analysis contract](../analysis-contract.md). The [prior research questions](../research-questions.md) define H1 as incremental path information beyond endpoints; successful endpoint decoding is not H1. Original holdout exposure remains part of the record.
 
 **Earlier proposals, scope superseded by September27 decisions:** the [path-study plan](path-generalization-next-steps-20260908.md) keeps source-safe pseudopopulations central for a complementary **condition-level** question under recording constraints. The synthesis's E1/E2 real-trial/history/temporal proposals are complementary arms, not a requirement that each cell be significant or that a simultaneous 195-cell recording exist before any progress. Exact same-trial population claims still require the stronger contract. Freeze the chosen estimand/arm and controls before another fit; do not silently substitute one lane for another.
 

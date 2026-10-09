@@ -1,0 +1,2 @@
+# Keep generated report tables diff-friendly without altering private run artifacts.
+*.csv text eol=lf
