@@ -12,15 +12,38 @@ PR status, recovery records and safe verification commands. Do not recreate old
 sibling worktrees or restart experiments from historical pending-work flags.
 Keep new durable decisions in Git-backed notes, not only in a chat transcript.
 
-**October9 next-session priority — observability and CEBRA:** read
-`docs/observability-pivot-20261009.md` first. Hongyi requested updating and merging
-PR15, then developing the observability-centered pivot in a new session. Clarify
-with the lab whether observability means task-variable recoverability or formal
-dynamical-state reconstruction; no definition/protocol is frozen yet. Do not
-resume H1-led path tuning by default or require CEBRA to beat PCA. H1 is retained
-as history, not declared false; H2 remains removed. This authorizes the Git
-integration and handoff, not new fits, raw-data access or temporal-transfer runs.
-Start from updated `main` after checking PR15's merged state; preserve local work.
+**October12 report-first filing:** Hongyi wants the current retrospective and
+its actually used evidence to be the main working flow. Start with
+`docs/reports/cebra-retrospective-20261012/README.md` and `docs/reports/README.md`.
+The exact frozen reading HTML is versioned alongside the manuscript package;
+its original local copy remains under `outputs/cebra-retrospective-20261012/`.
+**Next sequence:** sharpen the report, then create an interpretable high-observability
+Jupyter notebook. Read the package's next-work contract; clarify whether “pair”
+means pair decoding or two notebooks before implementation. Computational
+transparency is distinct from formal neural-state observability; no new fits or
+private-data access are authorized by this publishing/handoff request.
+Retired onboarding/RNN/V4–V5 checklists are filed under
+`docs/reports/archive/early-work-20261012/`, with old-path pointers. Initial-trial
+records are historical, not a run queue. Pilot helpers and mixed contract/smoke
+tests still support later analyses: preserve their executable paths and coverage.
+Use `scripts/README.md` to distinguish publishing from scientific execution.
+This filing does not authorize private-artifact moves, worktree removal or new fits;
+the future agenda below remains a separate proposal.
+
+**October11 steering — retrospective closure and reusable latent models:** read
+`docs/reports/cebra-research-synthesis-20261011.md` (Document1: proposed rigorous
+retrospective, evidence/ablation/figure coverage) and
+`docs/cebra-observability-agenda-20261011.md` (Document2: proposed future direction).
+Hongyi wants these narrowed separately, then a condensed future-work section folded
+into Document1. Stop pursuing the previous path goal as the default objective;
+record its bounded conclusions without declaring H1 false. H2 remains removed.
+The new ambition is an estimable, reusable hippocampal task-state representation
+with CEBRA central but not a required winner. Task recovery, readout transfer,
+predictive-state estimation and formal model-relative observability are distinct.
+Candidate hypotheses/data routes/protocols remain proposals, not authorization for
+fits, saved-model reanalysis, raw access or downloads. Local main contains PR15
+merge `4862267`; preserve unrelated local work and retained artifacts/worktrees.
+The October9 handoff remains history, not a competing run queue.
 
 **September27 prior direction — historical, superseded for next-work priority:** read
 `docs/project-direction.md`, then `docs/research-questions.md` and
@@ -75,12 +98,13 @@ Hongyi is experienced in ML, deep learning, and mostly NLP, but is newer to neur
 
 ## Current Research Direction
 
-The next session develops an observability-centered question with CEBRA as a
-specific methodological interest of the lab. Use
-`docs/observability-pivot-20261009.md` for the distinction between task-information
-recoverability, temporal/cross-phase readout transfer, and formal observability.
-Candidate analyses remain proposals; source-safe evaluation and biological claim
-limits below still apply. No new experiment is queued by this handoff.
+Use the October11 two-document plan above. Document1 closes and synthesizes the
+completed endpoint/path/ablation work; Document2 develops a reusable latent-model
+research question with explicit observability/measurement limits. Narrow the
+question and admissible data before choosing another model. Historical raw-LDA
+goal temporal generalization exists; matched October CEBRA temporal/cross-phase
+transfer is still unexecuted. All source-safe evaluation and biological claim
+limits below remain in force. No new experiment is queued.
 
 ### Previous prospective-path framing — retained history
 
@@ -159,7 +183,7 @@ In the current code, the default `trial_start` is `2`, so alignment begins at th
 
 - Read local context before changing code: `README.md`, this file, and `context/*.md`.
 - Read `context/learner-profile.md` before teaching or explaining neuroscience methods.
-- For the next session, read `docs/observability-pivot-20261009.md` and the source/evaluation safeguards in `docs/analysis-contract.md`. `docs/research-questions.md` and `docs/getting-started-tasks.md` retain prior path/onboarding context, not an automatic run queue.
+- For the next session, start with the manuscript package and report-focused index named in the October12 filing note, plus `docs/analysis-contract.md`. Consult `docs/cebra-observability-agenda-20261011.md` for separately proposed future research. `docs/research-questions.md` retains prior framing; `docs/getting-started-tasks.md` is now an archive pointer, not a run queue.
 - Prefer adding dated notes under `context/` when learning something durable.
 - Use `learning/` for neuroscience learning scaffolds, glossaries, and method explainers.
 - Use `papers/` for paper notes and reading queues; do not commit copyrighted PDFs by default.

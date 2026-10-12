@@ -4,6 +4,64 @@
 2026 (Asia/Singapore).** The date `20260910` in consolidation paths identifies this
 session, not the date every operation completed.
 
+## October12 — PR preparation and next-work sequence
+
+Hongyi authorized a PR targeting `main` for the retrospective, separate research
+agenda and report-first archival work. The exact frozen reading HTML is now
+included alongside its source package, with a checksum regression check, so
+reading it does not depend on ignored outputs. Opening the PR does not imply
+merging it or completing the pending scientific/editorial work. The unrelated
+untracked `reports/current-state-20260927/` stays outside the PR.
+
+Next: **sharpen the report, then create an interpretable high-observability
+Jupyter notebook**. The [package's next-work contract](reports/cebra-retrospective-20261012/README.md#next-work-report-first-then-notebook)
+records pending report revisions, the unresolved meaning of “pair,” and a proposed
+aggregate-only notebook before any separately authorized scientific execution.
+Preserve all private artifacts, runtimes, submodules and retained worktrees.
+
+## October12 — report-first workflow and bounded archival cleanup
+
+Hongyi asked to retain the report as one whole file, then file away stale plans
+and initial trials so current work centers on evidence used in the manuscript.
+Start with the [manuscript package](reports/cebra-retrospective-20261012/README.md)
+and [report-focused evidence index](reports/README.md). The frozen standalone
+reading copy has SHA-256 `86497662096908f5fa92f1d00747377b2046e07a37ea225ae8fdbedcc9dfbde6`;
+the frozen and original portable HTML bytes remain unchanged, and pending
+feedback is preserved. Packaging the current editable source has only a
+whitespace-formatting difference, verified by normalized HTML element/attribute/text
+comparison; no scientific content or frozen export was replaced.
+
+Four obsolete planning documents are archived byte-for-byte with old-path
+pointers; [archive index and manifest](reports/archive/early-work-20261012/README.md)
+record scope and recovery. Initial pilot/V5/session records are a historical
+reading lane, retained in place because some carry source and exposure provenance.
+The [script/test map](../scripts/README.md) records why shared pilot code and tests
+were not moved. No executable code/test, raw data, model, prediction, runtime,
+submodule or review worktree was moved or deleted. No fits or scientific replay.
+Pre-edit navigation copies, including existing local modifications, are retained
+under `outputs/repo-cleanup-20261012/before/`; no commit or staging occurred
+during that filing pass. The subsequent PR preparation is recorded above.
+The untracked `reports/current-state-20260927/` remains untouched.
+The October11 research agenda remains proposed, not an automatically queued run.
+
+## October11 — two-document synthesis and future-direction planning
+
+Hongyi requested an overall structure and iterative research review for two
+separate documents: [completed-work synthesis](reports/cebra-research-synthesis-20261011.md)
+and [CEBRA/observable reusable latent-model agenda](cebra-observability-agenda-20261011.md).
+Narrow both next, then condense the agreed future direction into the retrospective.
+The old prospective-path objective is no longer the default target; summarize its
+conclusions without declaring H1 false. H2 stays removed. Candidate hypotheses,
+state-model examples, data routes and protocols remain proposals, not approved runs.
+
+Read-only report/aggregate audit and public-methods research informed these drafts.
+No raw data/checkpoints, fits, saved-model reanalysis, new data download or service
+were introduced. At task start local `main` and cached `origin/main` were `4862267`,
+containing PR15's merge and both original study commits; no GitHub refresh or new
+merge was performed. The pre-existing untracked `docs/reports/current-state-20260927/`
+remains untouched. Preserve all retained worktrees/private artifacts. The historical
+handoffs below are evidence, not automatic task queues.
+
 ## October9 — PR15 integration and observability next-session handoff
 
 Hongyi authorized updating and **merging [PR15](https://github.com/Hong-yiii/neuro_science/pull/15)**,

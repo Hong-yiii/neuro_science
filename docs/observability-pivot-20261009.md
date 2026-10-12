@@ -2,6 +2,15 @@
 
 **Recorded October 9, 2026 (Singapore). Status: owner-requested next-session direction; operational question and protocol still open.** Hongyi asked to update and merge [PR #15](https://github.com/Hong-yiii/neuro_science/pull/15), keep the observability pivot indexed, and take it up in a new session. This note preserves that handoff; it does not start an experiment.
 
+**October11 continuation:** Hongyi requested two separately narrowed documents:
+[retrospective structure/evidence audit](reports/cebra-research-synthesis-20261011.md)
+and [observable reusable latent-model research agenda](cebra-observability-agenda-20261011.md).
+Those are now the planning entry points. The direction change is requested;
+their hypotheses/data routes/protocols remain proposals. Local main contains PR15
+merge `4862267`. This October9 note is retained as the prior handoff, not a competing
+experiment queue. Historical raw-LDA within-cue goal generalization already exists;
+the proposed matched CEBRA time/phase tests below remain unexecuted.
+
 ## Decision and authority
 
 The lab is interested in **observability of the hippocampus**, with **CEBRA a specific methodological interest**. The next session should develop this direction rather than automatically extend the H1-led prospective-path programme or search until CEBRA wins.

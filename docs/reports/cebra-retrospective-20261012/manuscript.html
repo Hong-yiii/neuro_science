@@ -1,0 +1,3289 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; img-src 'self' data:; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'"
+    />
+    <title>CEBRA-Time and hippocampal navigation · manuscript draft 03</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #222;
+        --muted: #626262;
+        --line: #d8d8d8;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-padding-top: 24px;
+      }
+      body {
+        margin: 0;
+        background: #eee;
+        color: var(--ink);
+        font:
+          18px/1.7 Georgia,
+          "Times New Roman",
+          serif;
+      }
+      main {
+        max-width: 1060px;
+        margin: 32px auto;
+        padding: 56px 64px 64px;
+        background: white;
+      }
+      header {
+        border-bottom: 1px solid var(--line);
+        padding-bottom: 22px;
+      }
+      .manuscript-label,
+      nav,
+      .draft-note,
+      footer,
+      table {
+        font-family: system-ui, sans-serif;
+      }
+      .manuscript-label {
+        font-size: 0.74rem;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      h1 {
+        font-weight: 500;
+        font-size: clamp(2rem, 4.3vw, 2.9rem);
+        line-height: 1.18;
+        letter-spacing: -0.025em;
+        margin: 20px 0;
+      }
+      .subtitle {
+        font-size: 1.12rem;
+        color: #4b4b4b;
+        margin-bottom: 20px;
+      }
+      .draft-note {
+        font-size: 0.8rem;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+      nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 20px;
+        font-size: 0.8rem;
+        margin: 22px 0 0;
+      }
+      a {
+        color: #245370;
+        text-underline-offset: 3px;
+      }
+      a:hover {
+        text-decoration-thickness: 2px;
+      }
+      a:focus-visible,
+      [tabindex]:focus-visible {
+        outline: 3px solid #976413;
+        outline-offset: 4px;
+      }
+      .skip {
+        position: absolute;
+        top: -100px;
+        left: 12px;
+        background: white;
+        padding: 10px;
+      }
+      .skip:focus {
+        top: 10px;
+      }
+      section {
+        margin-top: 42px;
+      }
+      h2 {
+        font-size: 1.55rem;
+        font-weight: 600;
+        line-height: 1.35;
+        margin: 0 0 18px;
+      }
+      h3 {
+        font-size: 1.15rem;
+        font-weight: 600;
+        line-height: 1.4;
+        margin: 28px 0 12px;
+      }
+      h4 {
+        font-size: 1rem;
+        line-height: 1.45;
+        margin: 23px 0 10px;
+      }
+      p {
+        margin: 0 0 17px;
+      }
+      .abstract {
+        padding-bottom: 22px;
+        border-bottom: 1px solid var(--line);
+      }
+      .abstract p {
+        font-size: 1rem;
+        line-height: 1.7;
+      }
+      .keywords {
+        font-size: 0.88rem !important;
+        color: var(--muted);
+      }
+      figure {
+        margin: 30px 0 36px;
+      }
+      .figure-scroll,
+      .table-wrap {
+        overflow-x: auto;
+      }
+      .figure-scroll img,
+      .figure-scroll svg {
+        display: block;
+        width: 100%;
+        min-width: 700px;
+        height: auto;
+      }
+      .figure-scroll .square {
+        max-width: 740px;
+        margin: auto;
+      }
+      .panel-label {
+        font:
+          600 0.85rem system-ui,
+          sans-serif;
+        margin: 16px 0 8px;
+      }
+      figcaption {
+        font-size: 0.85rem;
+        line-height: 1.6;
+        margin-top: 14px;
+      }
+      figcaption strong {
+        font-weight: 700;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 0.78rem;
+        line-height: 1.55;
+      }
+      caption {
+        text-align: left;
+        padding-bottom: 12px;
+        font-family: Georgia, serif;
+        font-size: 0.94rem;
+      }
+      th,
+      td {
+        text-align: left;
+        vertical-align: top;
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--line);
+      }
+      th {
+        border-top: 2px solid #555;
+        border-bottom: 1px solid #777;
+        font-weight: 650;
+      }
+      tbody tr:last-child td {
+        border-bottom: 2px solid #555;
+      }
+      .table-note {
+        font-size: 0.85rem;
+        line-height: 1.6;
+        margin-top: 12px;
+      }
+      .equation {
+        text-align: center;
+        font-style: italic;
+        margin: 22px 0;
+      }
+      .supporting {
+        border-top: 1px solid var(--line);
+        padding-top: 28px;
+      }
+      .supporting ol {
+        padding-left: 24px;
+        font-size: 0.91rem;
+      }
+      .supporting li {
+        padding-left: 6px;
+        margin: 12px 0;
+      }
+      code {
+        font-size: 0.83em;
+        overflow-wrap: anywhere;
+      }
+      .references {
+        font-size: 0.9rem;
+      }
+      .references li {
+        margin-bottom: 16px;
+      }
+      footer {
+        border-top: 1px solid var(--line);
+        margin-top: 40px;
+        padding-top: 18px;
+        color: var(--muted);
+        font-size: 0.76rem;
+      }
+      @media (max-width: 720px) {
+        body {
+          background: white;
+          font-size: 17px;
+        }
+        main {
+          margin: 0;
+          padding: 30px 22px 42px;
+        }
+        h1 {
+          font-size: 2.1rem;
+        }
+        h2 {
+          font-size: 1.4rem;
+        }
+        section {
+          margin-top: 32px;
+        }
+        nav {
+          gap: 7px 16px;
+        }
+        th,
+        td {
+          padding: 9px;
+        }
+      }
+      @media print {
+        body {
+          background: white;
+          font-size: 11pt;
+        }
+        main {
+          max-width: none;
+          margin: 0;
+          padding: 0;
+        }
+        nav,
+        .skip {
+          display: none;
+        }
+        h2,
+        h3,
+        h4 {
+          break-after: avoid;
+        }
+        figure {
+          break-inside: avoid;
+        }
+        .figure-scroll img,
+        .figure-scroll svg {
+          min-width: 0;
+        }
+        .figure-scroll,
+        .table-wrap {
+          overflow: visible;
+        }
+        a {
+          color: inherit;
+        }
+      }
+    </style>
+  </head>
+  <body id="top">
+    <a class="skip" href="#abstract">Skip to manuscript</a>
+    <main>
+      <header>
+        <p class="manuscript-label">
+          Research manuscript · working draft 03 · 12 October 2026
+        </p>
+        <h1>
+          Decoding navigation-related information from hippocampal activity with
+          CEBRA-Time
+        </h1>
+        <p class="subtitle">
+          Endpoint recovery, path-component decoding, and comparison with
+          simpler representations
+        </p>
+        <p class="draft-note">
+          CEBRA-Time-focused working manuscript based on completed exploratory
+          studies, with raw/PCA/LDA references. Experimental metadata requiring
+          laboratory confirmation are identified explicitly.
+        </p>
+        <nav aria-label="Manuscript contents">
+          <a href="#abstract">Abstract</a
+          ><a href="#introduction">Introduction</a><a href="#methods">Methods</a
+          ><a href="#results">Results</a><a href="#discussion">Discussion</a
+          ><a href="#conclusions">Conclusion</a
+          ><a href="#supporting">Supporting information</a
+          ><a href="#references">References</a>
+        </nav>
+      </header>
+
+      <section id="abstract" class="abstract">
+        <h2>Abstract</h2>
+        <p>
+          Low-dimensional representations of neural activity may make
+          behaviorally relevant information accessible to simple readouts. We
+          evaluated CEBRA-Time representations of hippocampal cue-period
+          activity in a series of exploratory navigation analyses, comparing
+          them with raw spike-count features and principal component analysis
+          (PCA). Label-conditioned pseudopopulations supported decoding of
+          start, goal and ordered start–goal conditions. In the latest matched
+          endpoint comparison, whole-cue pair balanced accuracy was 83.61% for
+          PCA, 75.56% for jointly trained cue/navigation CEBRA, 70.28% for raw
+          features and 63.75% for cue-only CEBRA. Joint CEBRA had slightly lower
+          pair probability loss than PCA, demonstrating a metric-dependent
+          ranking. Separate path-component studies exposed a large gap between
+          transfer to new mixtures of familiar source trials and transfer to
+          different sources. Nonlinear readouts and broader regularization
+          searches did not rescue the tested frozen CEBRA path representations.
+          Broader encoder training and individual cue windows produced
+          descriptive improvements, but absolute-performance and shuffled-label
+          controls did not establish robust path information beyond endpoints.
+          Projection and checkpoint diagnostics further separated display
+          geometry from predictive utility. These findings support conditional
+          task-information recovery in the constructed populations, rather than
+          general CEBRA superiority, validated full-route prediction or recovery
+          of trial-specific hippocampal states.
+        </p>
+        <p class="keywords">
+          <strong>Keywords:</strong> hippocampus; navigation; CEBRA; neural
+          representation; pseudopopulation; decoding
+        </p>
+      </section>
+
+      <section id="introduction">
+        <h2>1. Introduction</h2>
+        <p>
+          Spatially selective hippocampal firing has long motivated the study of
+          neural representations of navigation <a href="#ref-place">[1]</a>.
+          However, identifying a location or destination is not equivalent to
+          identifying the movement required to reach it. Multiple paths may
+          connect the same start and goal. A decoder that distinguishes endpoint
+          conditions therefore need not contain information about which of those
+          paths will subsequently be taken.
+        </p>
+        <p>
+          The original question motivating these analyses was whether
+          hippocampal activity during a pre-navigation cue period contains path
+          information beyond start and goal, and whether that information has
+          reproducible low-dimensional organization. These are distinct
+          requirements. Reliable decoding can establish predictive utility under
+          a specified evaluation distribution without identifying a unique
+          latent geometry. Conversely, a structured low-dimensional projection
+          need not contain information useful for the prediction of interest.
+          Dimensionality reduction provides a description of recorded population
+          variation; its biological interpretation depends on the measurements,
+          task and validation <a href="#ref-dimensions">[2]</a>.
+        </p>
+        <p>
+          This manuscript focuses on CEBRA-Time, which learns neural embeddings
+          through temporally defined contrastive relationships
+          <a href="#ref-cebra">[3]</a>. Cue-only and joint cue/navigation
+          training denote different input coverage under that same objective. A
+          simple downstream classifier separates representation learning from
+          readout complexity. Unless otherwise specified, CEBRA below refers to
+          this Time objective. A low output dimension does not itself guarantee
+          useful decoding; raw features, PCA and LDA remain important
+          references.
+        </p>
+        <p>
+          The available recordings posed an additional constraint. The selected
+          units were distributed across sessions rather than supplied as a
+          verified simultaneous population. We therefore used condition-matched
+          pseudopopulations: artificial feature vectors assembled from
+          source-trial blocks with known task labels. This construction can
+          support a condition-level information assay under explicit
+          assumptions, but it changes the prediction problem. It does not
+          reproduce the missing joint activity of all units on a single natural
+          trial.
+        </p>
+        <p>
+          Here, we synthesize the completed endpoint and path-component analyses
+          around three questions. First, what task information was recoverable
+          from cue-period activity? Second, which performance differences could
+          be observed across source constructions, temporal resolution, training
+          coverage and readout choices within the tested comparisons? Third,
+          what additional information did latent-space diagnostics provide? The
+          studies form a sequence of bounded exploratory experiments with
+          different targets and source populations. Their results are
+          interpreted within those designs, not as a pooled model leaderboard or
+          independent replications.
+        </p>
+      </section>
+
+      <section id="methods">
+        <h2>2. Materials and methods</h2>
+        <h3 id="recordings">
+          2.1. Recordings, task labels and behavioral targets
+        </h3>
+        <p>
+          The source archive contains 195 place-selected sorted units across 58
+          sessions, with spike timestamps, Ripple task markers, Eyelink records
+          and native Unity behavioral logs. The processing code describes a
+          first-person virtual maze with four internal pillars and six visual
+          landmarks. A prior analysis write-up describes six start/goal posters,
+          a nominal one-second cue and navigation following cue offset;
+          successive trials begin at the preceding trial's goal. These task
+          descriptions are documented context rather than newly verified
+          experimental metadata.
+        </p>
+        <p>
+          Operational endpoint labels were assigned from marker transitions: the
+          preceding successful trial's minor marker digit supplied “start,” and
+          the current trial's digit supplied “goal.” The marker families
+          distinguish trial start/cue (<code>1x</code>), cue offset/navigation
+          onset (<code>2x</code>), successful completion (<code>3x</code>) and
+          timeout (<code>4x</code>). Unequal endpoint categories give 30 ordered
+          pairs. The precise mapping between these categories and laboratory
+          task instructions remains provisional. Species, animal count and
+          demographics, electrode specifications, detailed sorting/selection
+          criteria, anatomical localization and ethics-protocol information were
+          not established by the documentation available for this synthesis;
+          they cannot be inferred from session counts or directory names.
+          <a href="../../dataset-card.md">Dataset documentation</a> and the
+          <a href="../../../context/previous-student-analysis.md"
+            >prior-write-up summary</a
+          >
+          distinguish these evidence levels.
+        </p>
+        <p>
+          Path measurement was defined independently of neural decoding. The
+          accepted geometry divides the broad floor into nine node/plaza regions
+          and twelve corridors, giving 24 directed corridor components (Figure
+          1). The first primary neural contrast concerned traversal from the
+          upper-right to middle-right node, <code>D_N_R_T__N_R_M</code>, within
+          endpoint pair 4→3. “Present” means that the directed component occurs
+          among interior corridor runs after excluding the first and last runs.
+          “Absent” does not mean absent everywhere along the route: a traversal
+          confined to an excluded run does not make the interior target
+          positive. A separate five-endpoint study used the supported
+          central-middle→central-bottom component, <code>D_N_C_M__N_C_B</code>.
+          Neither target is a reconstruction of the complete ordered path.
+        </p>
+        <figure id="fig-task">
+          <div
+            class="figure-scroll"
+            tabindex="0"
+            role="region"
+            aria-label="Figure 1, spatial measurement map"
+          >
+            <img
+              class="square"
+              src="../../professor_updates/place195_v6_v9_20260906/place195-v6-v9-professor-methods-results-validity-20260906.html#image-0"
+              alt="Accepted static map of nine plaza regions and twelve corridors surrounding four pillar footprints in Unity coordinates."
+            />
+          </div>
+          <figcaption>
+            <strong
+              >Figure 1. Operational spatial measurement of the navigation
+              environment.</strong
+            >
+            The static mapping distinguishes plaza/node regions, corridor
+            regions and four pillar footprints. Axes are Unity-coordinate units,
+            not assumed meters. Directional traversal through a corridor defines
+            a component; region names are analysis labels, not identified neural
+            states or cognitive decision nodes. The accepted behavioral mapping
+            covered 19,162 eligible train/development paths, whereas the primary
+            neural component assay retained only 82/22 real sources from 29
+            units/seven sessions. No decoder, synthetic sample count or
+            uncertainty interval applies to this geometry panel. Existing
+            raw-path overlays are reproduced in Figure S1. Source:
+            <a href="../place195-v6-v9-autoresearch-20260906.md">V6–V9 report</a
+            >; image unchanged.
+          </figcaption>
+        </figure>
+
+        <h3 id="sampling">
+          2.2. From recorded trials to sampled pseudopopulations
+        </h3>
+        <p>
+          Figure 2 follows the construction from real recordings to
+          <strong>four prediction targets using two constructions</strong>.
+          Neurons are feature channels, not examples. The measurements are real;
+          their cross-session combination is synthetic. Source counts,
+          constructed rows and reuse therefore require separate accounting.
+        </p>
+        <figure id="fig-pipeline">
+          <p class="panel-label">
+            A · One trial from each session supplies all its selected neurons
+          </p>
+          <div
+            class="figure-scroll"
+            tabindex="0"
+            role="region"
+            aria-label="Figure 2A, real trials and synthetic row construction"
+          >
+            <svg
+              viewBox="0 0 900 365"
+              role="img"
+              aria-labelledby="assembly-title assembly-desc"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <title id="assembly-title">
+                All selected neurons, supplied by one trial from each session
+              </title>
+              <desc id="assembly-desc">
+                Within one split and one ordered pair, choose a trial from each
+                session. Keep every selected neuron and all ten bins in that
+                session block. Concatenate 58 blocks into one 195-neuron by
+                ten-bin synthetic example; no new real trial is created.
+              </desc>
+              <defs>
+                <marker
+                  id="assembly-arrow"
+                  markerWidth="8"
+                  markerHeight="8"
+                  refX="7"
+                  refY="4"
+                  orient="auto"
+                >
+                  <path d="M0 0 L8 4 L0 8 Z" fill="#555" />
+                </marker>
+              </defs>
+              <g
+                font-family="Arial,sans-serif"
+                font-size="16"
+                fill="#222"
+                text-anchor="middle"
+              >
+                <text x="450" y="24" font-weight="bold">
+                  Use one split and one known pair, e.g. 4→3, throughout this
+                  row
+                </text>
+                <rect
+                  x="10"
+                  y="45"
+                  width="205"
+                  height="70"
+                  fill="#f5f5f5"
+                  stroke="#777"
+                />
+                <text x="112" y="72">Session 1</text>
+                <text x="112" y="98">Eligible real trials</text>
+                <rect
+                  x="275"
+                  y="45"
+                  width="245"
+                  height="70"
+                  fill="#edf4f7"
+                  stroke="#777"
+                />
+                <text x="397" y="72">Choose one trial</text>
+                <text x="397" y="98">n₁ neurons × ten bins</text>
+                <rect
+                  x="10"
+                  y="135"
+                  width="205"
+                  height="70"
+                  fill="#f5f5f5"
+                  stroke="#777"
+                />
+                <text x="112" y="162">Session 2</text>
+                <text x="112" y="188">Eligible real trials</text>
+                <rect
+                  x="275"
+                  y="135"
+                  width="245"
+                  height="70"
+                  fill="#edf4f7"
+                  stroke="#777"
+                />
+                <text x="397" y="162">Choose one trial</text>
+                <text x="397" y="188">n₂ neurons × ten bins</text>
+                <text x="265" y="232">
+                  … same procedure for sessions 3–57 …
+                </text>
+                <rect
+                  x="10"
+                  y="252"
+                  width="205"
+                  height="70"
+                  fill="#f5f5f5"
+                  stroke="#777"
+                />
+                <text x="112" y="279">Session 58</text>
+                <text x="112" y="305">Eligible real trials</text>
+                <rect
+                  x="275"
+                  y="252"
+                  width="245"
+                  height="70"
+                  fill="#edf4f7"
+                  stroke="#777"
+                />
+                <text x="397" y="279">Choose one trial</text>
+                <text x="397" y="305">n₅₈ neurons × ten bins</text>
+                <rect
+                  x="610"
+                  y="91"
+                  width="280"
+                  height="175"
+                  fill="#f5f5f5"
+                  stroke="#777"
+                />
+                <text x="750" y="121">Concatenate neuron blocks</text>
+                <text x="750" y="158" font-weight="bold">
+                  195 neurons × ten bins
+                </text>
+                <text x="750" y="193">One synthetic example</text>
+                <text x="750" y="235">n₁ + … + n₅₈ = 195</text>
+                <text x="450" y="352">
+                  Repeat within each split: 480 training rows / 240 development
+                  rows per seed
+                </text>
+              </g>
+              <g
+                fill="none"
+                stroke="#555"
+                stroke-width="2"
+                marker-end="url(#assembly-arrow)"
+              >
+                <path d="M215 80 L275 80" />
+                <path d="M215 170 L275 170" />
+                <path d="M215 287 L275 287" />
+                <path d="M520 80 L560 80 L560 131 L610 131" />
+                <path d="M520 170 L610 170" />
+                <path d="M520 287 L560 287 L560 215 L610 215" />
+              </g>
+            </svg>
+          </div>
+          <p class="panel-label">
+            B · Four prediction tasks from two constructions
+          </p>
+          <div
+            class="figure-scroll"
+            tabindex="0"
+            role="region"
+            aria-label="Figure 2B, pair, start, goal and path-component readouts"
+          >
+            <svg
+              viewBox="0 0 900 470"
+              role="img"
+              aria-labelledby="targets-title targets-desc"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <title id="targets-title">
+                Shared endpoint examples branch into three readouts; path uses a
+                separate construction
+              </title>
+              <desc id="targets-desc">
+                The same 480 training and 240 development endpoint examples
+                support pair30, start6 and goal6 classifiers with different
+                labels. A separate 29-neuron fixed-endpoint construction
+                supports a binary interior-component classifier. These are four
+                tasks, not four independently assembled datasets.
+              </desc>
+              <defs>
+                <marker
+                  id="targets-arrow"
+                  markerWidth="8"
+                  markerHeight="8"
+                  refX="7"
+                  refY="4"
+                  orient="auto"
+                >
+                  <path d="M0 0 L8 4 L0 8 Z" fill="#555" />
+                </marker>
+              </defs>
+              <g
+                font-family="Arial,sans-serif"
+                font-size="16"
+                fill="#222"
+                text-anchor="middle"
+              >
+                <text x="450" y="20" font-weight="bold">
+                  Separate target readouts within each representation family
+                </text>
+                <rect
+                  x="10"
+                  y="65"
+                  width="365"
+                  height="178"
+                  fill="#edf4f7"
+                  stroke="#777"
+                />
+                <text x="192" y="96" font-weight="bold">
+                  Shared endpoint construction
+                </text>
+                <text x="192" y="127">195 neurons / 58 sessions</text>
+                <text x="192" y="158">
+                  Same 480 training / 240 development rows
+                </text>
+                <text x="192" y="189">Per seed; always pair-conditioned</text>
+                <text x="192" y="220">Raw / PCA / CEBRA representations</text>
+                <rect
+                  x="530"
+                  y="35"
+                  width="360"
+                  height="65"
+                  fill="#f5f5f5"
+                  stroke="#777"
+                />
+                <text x="710" y="60" font-weight="bold">
+                  Start–goal pair: 30 classes
+                </text>
+                <text x="710" y="84">
+                  16 training / 8 development per class
+                </text>
+                <rect
+                  x="530"
+                  y="122"
+                  width="360"
+                  height="65"
+                  fill="#f5f5f5"
+                  stroke="#777"
+                />
+                <text x="710" y="147" font-weight="bold">
+                  Start: six classes
+                </text>
+                <text x="710" y="171">
+                  80 training / 40 development per class
+                </text>
+                <rect
+                  x="530"
+                  y="209"
+                  width="360"
+                  height="65"
+                  fill="#f5f5f5"
+                  stroke="#777"
+                />
+                <text x="710" y="234" font-weight="bold">
+                  Goal: six classes
+                </text>
+                <text x="710" y="258">
+                  80 training / 40 development per class
+                </text>
+                <rect
+                  x="10"
+                  y="316"
+                  width="365"
+                  height="127"
+                  fill="#f5f5f5"
+                  stroke="#777"
+                />
+                <text x="192" y="342" font-weight="bold">
+                  Separate path-component construction
+                </text>
+                <text x="192" y="371">
+                  29 neurons / seven sessions; fixed 4→3
+                </text>
+                <text x="192" y="400">128 training / 30 development rows</text>
+                <text x="192" y="429">Raw / PCA / CEBRA representations</text>
+                <rect
+                  x="530"
+                  y="316"
+                  width="360"
+                  height="127"
+                  fill="#f5f5f5"
+                  stroke="#777"
+                />
+                <text x="710" y="342" font-weight="bold">
+                  Interior component: absent / present
+                </text>
+                <text x="710" y="371">
+                  Training: 64 / 64; development: 24 / 6
+                </text>
+                <text x="710" y="400">
+                  Equal total scoring weight per class
+                </text>
+                <text x="710" y="429">Not a full ordered-path prediction</text>
+                <text x="450" y="463">
+                  Split real sources before assembly; fit transforms/readouts on
+                  training data only
+                </text>
+              </g>
+              <g
+                fill="none"
+                stroke="#555"
+                stroke-width="2"
+                marker-end="url(#targets-arrow)"
+              >
+                <path d="M375 154 L455 154 L455 67 L530 67" />
+                <path d="M375 154 L530 154" />
+                <path d="M375 154 L455 154 L455 241 L530 241" />
+                <path d="M375 379 L530 379" />
+              </g>
+            </svg>
+          </div>
+          <figcaption>
+            <strong
+              >Figure 2A–B. From real trials to prediction targets.</strong
+            >
+            Schematics, not new measurements. A: each selected trial supplies
+            all of its session's included neurons and ten cue bins; nₛ may
+            differ between sessions. B: three endpoint readouts share rows,
+            whereas the fixed-component assay has its own construction within
+            the overlapping recording archive. Counts are per seed, not
+            biological replication. Both constructions require known labels and
+            do not restore simultaneity or cross-session covariance.
+            Raw/PCA/CEBRA feature views continue in Figure 2C.
+          </figcaption>
+        </figure>
+        <h4>Real recordings and source eligibility</h4>
+        <p>
+          In the endpoint study, current and immediately preceding trials had to
+          be successful, sequential, in the same session and original training
+          partition, and free of importer QC flags. The current Ripple cue
+          duration had to lie in [1.0, 1.5] s. Of 16,859 original-training
+          trials, 15,553 met eligibility: 12,288 were assigned to inner training
+          and 3,265 to development using a frozen
+          session-and-condition-stratified split. The preceding trial supplied a
+          label but no neural input. Endpoint sources therefore supported ten
+          fully observed, half-open 100-ms intervals covering [0, 1) s from
+          current cue onset.
+        </p>
+        <div
+          class="table-wrap"
+          tabindex="0"
+          role="region"
+          aria-label="Table 1, study cohorts"
+        >
+          <table>
+            <caption>
+              <strong>Table 1.</strong>
+              Principal neural evaluation populations.
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Assay</th>
+                <th scope="col">Units / sessions</th>
+                <th scope="col">Real sources: training / development</th>
+                <th scope="col">Constructed evaluation object</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Endpoint condition</td>
+                <td>195 / 58</td>
+                <td>12,288 / 3,265</td>
+                <td>
+                  480 training / 240 development rows per seed; 30 pair-balanced
+                  classes
+                </td>
+              </tr>
+              <tr>
+                <td>Fixed 4→3 interior component</td>
+                <td>29 / 7</td>
+                <td>82 / 22</td>
+                <td>
+                  Later exact evaluation: 24 absent + six present combinations,
+                  half the weight per class
+                </td>
+              </tr>
+              <tr>
+                <td>Five-endpoint component panels</td>
+                <td>49 / 13</td>
+                <td>147 / 41</td>
+                <td>
+                  Endpoint-specific panels and exact products; 17/28 development
+                  session×class pools are singletons
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-note">
+          The populations overlap within the selected-unit archive and are not
+          independent biological replications. Earlier fixed-endpoint studies
+          sampled development rows rather than enumerating the later exact
+          product. Panel eligibility in the path programme included historical
+          development support; it was not pristine training-only cohort
+          discovery. Per-unit analyses used separate target-specific source
+          sets. Source/class distributions are shown in Figures S2 and S3.
+        </p>
+        <p>
+          Assembly retains intact observed session blocks (Figure 2A); missing
+          neurons are never filled with zero. Same-session membership alone does
+          not verify acquisition simultaneity. The earlier five-endpoint panel
+          assay in Table 1 is historical context, not another construction for
+          the four latest targets.
+        </p>
+        <h4>Class balance and the four prediction targets</h4>
+        <p>
+          Endpoint trials are sampled with replacement within session, split and
+          ordered-pair pools. Sixteen rows for each of 30 unequal ordered pairs
+          give 480 training examples; eight per pair give 240 development
+          examples. The start and goal classifiers use these <em>same</em>
+          examples with different labels, not separately resampled populations
+          (Table 1a). Each start occurs with five goals, so 5 × 16 = 80 training
+          rows and 5 × 8 = 40 development rows have that start. The same
+          argument applies to each goal. Thus all three constructed endpoint
+          targets are exactly class-balanced, even though the underlying
+          real-source pools need not be.
+        </p>
+        <div
+          class="table-wrap"
+          tabindex="0"
+          role="region"
+          aria-label="Table 1a, constructed class counts"
+        >
+          <table>
+            <caption>
+              <strong>Table 1a.</strong>
+              Constructed examples per class, for one computational seed.
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Prediction target</th>
+                <th scope="col">Classes</th>
+                <th scope="col">Training rows per class</th>
+                <th scope="col">Development rows per class</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Ordered start–goal pair</td>
+                <td>30 unequal ordered pairs</td>
+                <td>16</td>
+                <td>8</td>
+              </tr>
+              <tr>
+                <td>Start alone</td>
+                <td>Six starts</td>
+                <td>80</td>
+                <td>40</td>
+              </tr>
+              <tr>
+                <td>Goal alone</td>
+                <td>Six goals</td>
+                <td>80</td>
+                <td>40</td>
+              </tr>
+              <tr>
+                <td>Interior component within fixed 4→3</td>
+                <td>Absent / present</td>
+                <td>64 / 64</td>
+                <td>24 / 6</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-note">
+          The first three rows describe one shared 480/240 construction, not
+          three independent datasets. The latest endpoint study trains separate
+          readouts; earlier pair-marginal scores are different. Sources:
+          <a href="../cebra-endpoint-time-readout-20261006/protocol.md"
+            >endpoint assembly protocol</a
+          >
+          and
+          <a href="../cebra-cue-time-readout-20261005/source-support.md"
+            >path source audit</a
+          >.
+        </p>
+        <p>
+          Path training uses 64 sampled rows per class. Development instead
+          enumerates every within-class combination of the seven session pools:
+          24 absent combinations and six present combinations. These rows have a
+          4:1 count ratio, but balanced scoring gives each class half the total
+          weight. An always-absent predictor would have 80% unweighted accuracy
+          and only 50% balanced accuracy. The real-source counts are different
+          again: 30 absent/52 present training trials and 12 absent/ten present
+          development trials. Equal synthetic class counts or scoring weights do
+          not imply equally rich source support.
+        </p>
+        <p>
+          Endpoint start/goal recovery therefore cannot be attributed simply to
+          giving one constructed class more examples. Start and goal each have
+          six classes with identical marginal counts; any accuracy difference
+          requires another explanation. Both have more examples per class than
+          the 30-way pair problem, and six-way chance accuracy is 1/6 rather
+          than 1/30. Task difficulty, neural discriminability and uneven
+          session×condition source support may also matter, but their separate
+          contributions were not identified here. Existing real-source
+          distributions appear in Figures S2–S3; separate real-source start and
+          goal marginal plots remain to be added, rather than assuming those
+          source distributions are uniform.
+        </p>
+        <h4>Computational repeats and underlying trial reuse</h4>
+        <p>
+          A seed controls the random choices in one computational repeat, such
+          as which eligible trials are selected and the model initialization.
+          Each endpoint repeat has 480 training and 240 development examples,
+          drawn from the same fixed real-source split. The three seeds do not
+          represent three newly recorded populations. Consequently, their
+          example counts are not added when describing biological sample size.
+          The synthetic training:development ratio is 2:1; the eligible
+          real-source ratio is 12,288:3,265 (approximately 3.76:1).
+        </p>
+        <p>
+          One source selection means choosing one real trial to supply one
+          session block in one synthetic row. It is not one neuron or one bin.
+          Thus 480 endpoint training rows require 480 × 58 = 27,840 selections,
+          but those selections reuse only 10,875–10,906 distinct training trials
+          across the three saved assemblies. Table 1b separates available
+          sources, actual use and repeated selection.
+        </p>
+        <div
+          class="table-wrap"
+          tabindex="0"
+          role="region"
+          aria-label="Table 1b, source selections and reuse"
+        >
+          <table>
+            <caption>
+              <strong>Table 1b.</strong>
+              Real-source reuse within a constructed dataset.
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Quantity</th>
+                <th scope="col">Endpoint study</th>
+                <th scope="col">Fixed-component study</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Real trials supplying one synthetic row</td>
+                <td>58: one per session</td>
+                <td>Seven: one per session</td>
+              </tr>
+              <tr>
+                <td>Eligible real sources, training / development</td>
+                <td>12,288 / 3,265</td>
+                <td>82 / 22</td>
+              </tr>
+              <tr>
+                <td>Synthetic rows, training / development</td>
+                <td>480 / 240</td>
+                <td>128 / 30</td>
+              </tr>
+              <tr>
+                <td>Training source selections</td>
+                <td>480 × 58 = 27,840</td>
+                <td>128 × 7 = 896</td>
+              </tr>
+              <tr>
+                <td>Distinct training sources actually used</td>
+                <td>10,875–10,906</td>
+                <td>82</td>
+              </tr>
+              <tr>
+                <td>Selections per used training source</td>
+                <td>2.55–2.56 on average</td>
+                <td>10.93 on average</td>
+              </tr>
+              <tr>
+                <td>Development source selections</td>
+                <td>240 × 58 = 13,920</td>
+                <td>30 × 7 = 210</td>
+              </tr>
+              <tr>
+                <td>Distinct development sources actually used</td>
+                <td>3,208–3,223</td>
+                <td>22</td>
+              </tr>
+              <tr>
+                <td>Selections per used development source</td>
+                <td>4.32–4.34 on average</td>
+                <td>9.55 on average</td>
+              </tr>
+              <tr>
+                <td>Raw cue measurements in each synthetic row</td>
+                <td>195 neurons × ten bins</td>
+                <td>29 neurons × ten bins</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-note">
+          Endpoint distinct-use ranges describe the three saved assemblies
+          documented in the
+          <a href="../start-goal-cebra-baseline.md">endpoint source audit</a>
+          and reused by the latest endpoint study. Path distinct-use counts are
+          documented for observed seed zero in the
+          <a href="../cebra-cue-time-readout-20261005/source-support.md"
+            >path lineage audit</a
+          >. Average reuse is selections divided by distinct sources used, not
+          divided by all eligible sources. These averages hide unequal reuse;
+          they are not confidence intervals or effective sample sizes.
+        </p>
+        <p>
+          All derivatives of a source remain in its original split, preventing
+          that source from contributing to both fitting and evaluation. Within a
+          split, however, synthetic rows can share trials. Repeating their
+          assembly does not create independent recordings or recover the missing
+          cross-session covariance. Because the true condition selects source
+          blocks, the assay measures separability in a known-label construction,
+          not end-to-end prediction of one unknown-label natural trial. The
+          recorded source trials and sessions, not neuron channels, synthetic
+          rows or seeds, constrain the independent evidence.
+        </p>
+        <h3 id="feature-views">
+          2.3. Representations, encoder training and readouts
+        </h3>
+        <p>
+          Figure 2C contrasts selecting one time bin with concatenating the
+          whole cue, before or after dimensionality reduction. Each route
+          preserves the example count; Table 1c gives the complete matrix sizes.
+        </p>
+        <figure id="fig-feature-shapes">
+          <p class="panel-label">
+            C · Change the feature view, not the number of examples
+          </p>
+          <div
+            class="figure-scroll"
+            tabindex="0"
+            role="region"
+            aria-label="Figure 2C, neural matrices and decoder feature shapes"
+          >
+            <svg
+              viewBox="0 0 900 670"
+              role="img"
+              aria-labelledby="features-title features-desc"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <title id="features-title">
+                One neural matrix gives raw or eight-coordinate, single-bin or
+                whole-cue features
+              </title>
+              <desc id="features-desc">
+                One synthetic row contains N neurons and ten 100-ms bins, where
+                N is 195 for endpoints or 29 for path. Selecting a column yields
+                N raw features; flattening gives 10N. Mapping each column
+                through training-fitted PCA8 or CEBRA8 yields eight coordinates
+                per bin: eight features for one bin or eighty for all ten. The
+                example count stays fixed. Grids are schematic, not neural
+                values.
+              </desc>
+              <defs>
+                <pattern
+                  id="feature-grid"
+                  width="20"
+                  height="18"
+                  patternUnits="userSpaceOnUse"
+                  patternTransform="translate(105 90)"
+                >
+                  <path
+                    d="M20 0 H0 V18"
+                    fill="none"
+                    stroke="#9ba9ad"
+                    stroke-width="1"
+                  />
+                </pattern>
+                <pattern
+                  id="feature-strip"
+                  width="20"
+                  height="24"
+                  patternUnits="userSpaceOnUse"
+                >
+                  <path
+                    d="M0 0 V24"
+                    fill="none"
+                    stroke="#9ba9ad"
+                    stroke-width="1"
+                  />
+                </pattern>
+                <marker
+                  id="features-arrow"
+                  markerWidth="8"
+                  markerHeight="8"
+                  refX="7"
+                  refY="4"
+                  orient="auto"
+                >
+                  <path d="M0 0 L8 4 L0 8 Z" fill="#555" />
+                </marker>
+              </defs>
+              <g
+                font-family="Arial,sans-serif"
+                font-size="17"
+                fill="#222"
+                text-anchor="middle"
+              >
+                <text x="450" y="26" font-weight="bold">
+                  One synthetic row: N = 195 endpoint neurons or 29 path neurons
+                </text>
+                <text x="205" y="63">Ten bins → time</text>
+                <rect
+                  x="105"
+                  y="90"
+                  width="200"
+                  height="144"
+                  fill="#f5f5f5"
+                  stroke="#555"
+                />
+                <rect x="185" y="90" width="20" height="144" fill="#b7d9ec" />
+                <rect
+                  x="105"
+                  y="90"
+                  width="200"
+                  height="144"
+                  fill="url(#feature-grid)"
+                />
+                <text x="205" y="256">N neurons × ten bins</text>
+                <text x="69" y="164">N</text>
+                <text x="195" y="84" font-size="14">b</text>
+                <text x="450" y="102">Select bin b</text>
+                <rect
+                  x="600"
+                  y="79"
+                  width="240"
+                  height="24"
+                  fill="#b7d9ec"
+                  stroke="#555"
+                />
+                <rect
+                  x="600"
+                  y="79"
+                  width="240"
+                  height="24"
+                  fill="url(#feature-strip)"
+                />
+                <text x="720" y="132" font-weight="bold">N raw features</text>
+                <text x="720" y="156">195 endpoint / 29 path</text>
+                <text x="450" y="199">Flatten all bins</text>
+                <rect
+                  x="560"
+                  y="180"
+                  width="320"
+                  height="24"
+                  fill="#f5f5f5"
+                  stroke="#555"
+                />
+                <rect
+                  x="560"
+                  y="180"
+                  width="320"
+                  height="24"
+                  fill="url(#feature-strip)"
+                />
+                <text x="720" y="233" font-weight="bold">
+                  10 × N raw features
+                </text>
+                <text x="720" y="257">1,950 endpoint / 290 path</text>
+                <rect
+                  x="65"
+                  y="294"
+                  width="280"
+                  height="64"
+                  fill="#edf4f7"
+                  stroke="#555"
+                />
+                <text x="205" y="319" font-weight="bold">PCA8 or CEBRA8</text>
+                <text x="205" y="344">Same mapping at every bin</text>
+                <text x="570" y="324">Fit on training data only;</text>
+                <text x="570" y="348">apply unchanged to development</text>
+                <rect
+                  x="105"
+                  y="396"
+                  width="200"
+                  height="144"
+                  fill="#f5f5f5"
+                  stroke="#555"
+                />
+                <rect x="185" y="396" width="20" height="144" fill="#b7d9ec" />
+                <rect
+                  x="105"
+                  y="396"
+                  width="200"
+                  height="144"
+                  fill="url(#feature-grid)"
+                />
+                <text x="69" y="470">8</text>
+                <text x="195" y="390" font-size="14">b</text>
+                <text x="205" y="566">Eight coordinates × ten bins</text>
+                <text x="450" y="412">Select bin b</text>
+                <rect
+                  x="640"
+                  y="391"
+                  width="160"
+                  height="24"
+                  fill="#b7d9ec"
+                  stroke="#555"
+                />
+                <rect
+                  x="640"
+                  y="391"
+                  width="160"
+                  height="24"
+                  fill="url(#feature-strip)"
+                />
+                <text x="720" y="444" font-weight="bold">
+                  8 latent/PCA features
+                </text>
+                <text x="450" y="509">Concatenate bins</text>
+                <rect
+                  x="560"
+                  y="490"
+                  width="320"
+                  height="24"
+                  fill="#f5f5f5"
+                  stroke="#555"
+                />
+                <rect
+                  x="560"
+                  y="490"
+                  width="320"
+                  height="24"
+                  fill="url(#feature-strip)"
+                />
+                <text x="720" y="543" font-weight="bold">
+                  10 × 8 = 80 features
+                </text>
+                <text x="720" y="567">Not averaging across time</text>
+                <text x="450" y="615" font-weight="bold">
+                  Every route: one input row → one decoder example
+                </text>
+                <text x="450" y="646">
+                  Rows per seed stay 480 / 240 (endpoint) or 128 / 30 (path),
+                  training / development
+                </text>
+              </g>
+              <g
+                fill="none"
+                stroke="#555"
+                stroke-width="2"
+                marker-end="url(#features-arrow)"
+              >
+                <path d="M305 115 H575 V91 H595" />
+                <path d="M305 212 H535 V192 H555" />
+                <path d="M205 266 V284" />
+                <path d="M205 359 V380" />
+                <path d="M305 425 H615 V403 H635" />
+                <path d="M305 522 H535 V502 H555" />
+              </g>
+            </svg>
+          </div>
+          <figcaption>
+            <strong
+              >Figure 2C. Population matrices become decoder features.</strong
+            >
+            Shape schematic, not spike values or a scale drawing. Columns are
+            ten 100-ms cue bins; the highlighted column b is one chosen bin. N
+            denotes neuron channels; the lower matrix contains eight coordinates
+            per bin. Each output strip represents one feature vector, with
+            dimensionality given by its label rather than the drawn cell count.
+            Training-only PCA/CEBRA transforms change features, not source
+            support. Single-bin decoders select the same bin across rows; ten
+            such decoders are not ten independent datasets.
+          </figcaption>
+        </figure>
+        <div
+          class="table-wrap"
+          tabindex="0"
+          role="region"
+          aria-label="Table 1c, decoder matrix shapes"
+        >
+          <table>
+            <caption>
+              <strong>Table 1c.</strong>
+              Decoder input shapes per seed: examples × features.
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Feature view</th>
+                <th scope="col">Endpoint: training / development</th>
+                <th scope="col">Fixed component: training / development</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Raw, one selected 100-ms bin</td>
+                <td>480 × 195 / 240 × 195</td>
+                <td>128 × 29 / 30 × 29</td>
+              </tr>
+              <tr>
+                <td>Raw, ten-bin whole cue</td>
+                <td>480 × 1,950 / 240 × 1,950</td>
+                <td>128 × 290 / 30 × 290</td>
+              </tr>
+              <tr>
+                <td>PCA8 or CEBRA8, one selected bin</td>
+                <td>480 × 8 / 240 × 8</td>
+                <td>128 × 8 / 30 × 8</td>
+              </tr>
+              <tr>
+                <td>PCA8 or CEBRA8, ten-bin whole cue</td>
+                <td>480 × 80 / 240 × 80</td>
+                <td>128 × 80 / 30 × 80</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-note">
+          Before the feature view, raw synthetic arrays are row × neuron × bin:
+          endpoint training/development shapes are 480 × 195 × 10 and 240 × 195
+          × 10; path shapes are 128 × 29 × 10 and 30 × 29 × 10. These are
+          assembled populations, not simultaneous measurements from 480 or 128
+          natural trials. In the path implementation, raw whole-cue flattening
+          is cell-major, while PCA/CEBRA flattening is bin-major; preserving the
+          declared order is necessary to select the intended bin. Sources:
+          <a href="../cebra-cue-time-readout-20261005/source-support.md"
+            >path feature-order contract</a
+          >
+          and
+          <a href="../cebra-endpoint-time-readout-20261006/protocol.md"
+            >endpoint readout protocol</a
+          >.
+        </p>
+        <h4>Representation fitting</h4>
+        <p>
+          Raw inputs were spike-count features or study-specific rate summaries.
+          PCA fitted one shared basis to pooled training-bin vectors, not a
+          separate basis at each time bin. Pooling bins for representation
+          fitting changes the computational input arrangement, not the number of
+          independent recorded trials.
+        </p>
+        <p>
+          The reused CEBRA encoders were pointwise
+          <code>offset1</code> networks: one bin's population vector entered a
+          nonlinear mapping with hidden widths 32, 32 and 16, followed by eight
+          unit-normalized outputs. The path architecture was 29→32→32→16→8; the
+          historical endpoint adaptation used 195 input channels. There was no
+          recurrent hidden state. Temporal structure entered through the
+          contrastive sampling policy. CEBRA-Time positives were adjacent bins
+          from the same synthetic trial or the declared native-bin pair
+          construction. Temporal pairing did not make the entire procedure
+          target-free: the input assembly still used known task conditions, and
+          downstream readouts were supervised.
+        </p>
+        <p>
+          Historical recipes differed in temperature, learning rate, duration
+          and sampling policy; these are not silently equated. The initial
+          endpoint baseline used 1,000 updates, temperature 1, batch size 256
+          and learning rate 0.001. The retained crossed-seed path family used
+          temperature 1, batch 256, learning rate 3×10<sup>−4</sup> and 1,000
+          updates. The later cue-versus-broader path experiment paired
+          initialization and held architecture and total updates fixed, with
+          cue-only and broader CEBRA-Time arms considered here. Broader training
+          sampled cue and training-source navigation equally. Complete native
+          100-ms navigation bins were used; partial tails were excluded.
+          Relative-duration matching across session blocks did not create a
+          physical continuous pseudotrajectory or align identical maze
+          positions.
+        </p>
+        <p>
+          The October endpoint follow-up compared cue-only with 50/50
+          cue/navigation CEBRA-Time at a fixed 1,000 updates. Only the 12,288
+          inner-training sources supplied navigation. The intervention
+          reallocates a fixed contrastive budget: it changes navigation exposure
+          and the number of cue samples, so it does not isolate navigation
+          content from cue-exposure changes. Input scaling was fitted on
+          training cue data, and all downstream fits and predictions used cue
+          activity only. Joint training is not navigation-time decoding or
+          frozen cross-phase transfer.
+        </p>
+        <p>
+          The latest endpoint comparison used separate pair30, start6 and goal6
+          logistic heads with training-only scaling, <i>C</i> = 0.01 and at most
+          2,000 solver iterations. Raw SVD-LDA was a supervised,
+          non-dimension-matched reference. Earlier start/goal scores sometimes
+          came from marginals of a predicted pair rather than independent heads.
+          Path readout comparisons included scaled/unscaled logistic regression,
+          cosine k-nearest neighbors and radial-basis-function SVMs. The
+          regularization diagnosis varied logistic <i>C</i> from 0.001 to 100
+          and SVM <i>C</i> and bandwidth independently. SVM margins were not
+          converted into fabricated probabilities.
+        </p>
+        <p>
+          In the separate five-endpoint study, a training-source
+          cross-validation procedure selected among rate transformations,
+          temporal pooling, scaling and bounded L2 settings. The matched PCA
+          extension compared raw rates with training-only PCA at the same tuning
+          budget and 90% training-variance retention rule. Its dimensions,
+          cohorts and regularization objective differ from the fixed 4→3
+          PCA8/SVM comparisons. Equality of latent dimension or of a numerical
+          regularization parameter does not make the study families
+          capacity-matched.
+        </p>
+
+        <h3>2.4. Evaluation, controls and reproducibility</h3>
+        <p>
+          Balanced accuracy (BA) averages class recall; logarithmic loss
+          measures probability quality and penalizes confident errors.
+          Chance-reference BA is 1/30 for ordered pair, 1/6 for start or goal,
+          and 1/2 for binary components. Uniform-prediction losses are log(30),
+          log(6) and log(2), respectively. Loss improvement is reported with its
+          reference stated explicitly; a positive gain over a poor model does
+          not necessarily beat constant prediction. AUROC measures ranking
+          rather than a particular classification threshold. No
+          development-selected threshold inversion was used to turn below-chance
+          results into successful predictions.
+        </p>
+        <p>
+          Constructed rows, neighboring bins and computational seeds are
+          dependent observations. The original source trial nested within
+          session constrains the evidence. Three-seed means and ranges describe
+          construction/optimization sensitivity, not biological confidence
+          intervals. The frozen decoder study used five assembly seeds crossed
+          with five optimizer seeds for CEBRA-Time, whereas its raw/PCA controls
+          had only the five assemblies. The five optimizer fits were averaged
+          within assembly for paired comparisons; they were not treated as
+          additional recorded populations.
+        </p>
+        <p>
+          Source-coherent nulls permuted labels before conditional assembly and
+          repeated the specified fitting procedure. October comparisons retained
+          20 null worlds, giving a minimum inclusive plus-one tail fraction of
+          1/21. Seed averaging preceded the predefined maxima across targets,
+          windows or methods. The five-endpoint study instead used 100 ordinary
+          and 100 temporal-half worlds, repeating selection within each null.
+          These references ask whether a declared statistic is unusual under a
+          specific no-association construction; they are not interchangeable
+          tests of method superiority. Historical exposure, serial
+          exchangeability and nuisance structure remain unresolved. Small sample
+          support cannot be repaired merely by reporting variability across
+          repeated fitting runs <a href="#ref-validation">[4]</a>.
+        </p>
+        <p>
+          Fixed-model source reweighting or deletion traced every real source
+          through all constructed rows using it. A deletion that eliminated
+          class support was recorded as inestimable rather than a robust
+          success. These ranges are finite-pool sensitivities, not animal-level
+          intervals. Accepted studies retained source/configuration hashes,
+          failed attempts, model and preprocessing states, metric tables and
+          forward-replay receipts. Computational replay established
+          reproducibility of the stored pipeline; it did not independently
+          verify laboratory metadata or biological generalization. This
+          manuscript reuses published-within-repository aggregates and rendered
+          figures without recomputing models or accessing raw recordings.
+        </p>
+      </section>
+
+      <section id="results">
+        <h2>3. Results</h2>
+        <h3 id="endpoints">
+          3.1. Endpoint conditions were recoverable, with target- and
+          metric-dependent method rankings
+        </h3>
+        <p>
+          The initial endpoint baseline established recoverable condition
+          information but did not favor its fixed CEBRA configuration. With the
+          original logistic <i>C</i> = 1 readout, pair accuracy was 54.86% for
+          one-second raw totals, 71.39% for ten-bin raw counts and 82.50% for
+          PCA8/bin, compared with 42.78% for CEBRA-Time. These methods exceeded
+          their corresponding 20 source-shuffle means, but those low-resolution
+          references did not make the exposed development pool confirmatory.
+          Readout regularization changed the frozen Time score (§3.3).
+        </p>
+        <p>
+          The latest matched endpoint comparison used the same source assemblies
+          for all three direct heads. PCA achieved the highest whole-cue pair
+          and start BA, while raw features achieved the highest goal BA (Table
+          2; Figure 3). Joint cue/navigation CEBRA increased pair BA by 11.81
+          percentage points relative to cue-only training, but the start and
+          goal changes were +0.83 and −1.25 points. Across seeds, pair BA was
+          57.92/71.25/62.08% for cue-only CEBRA and 70.42/77.92/78.33% for joint
+          CEBRA. These paired changes were not uniform across targets.
+        </p>
+        <div
+          class="table-wrap"
+          tabindex="0"
+          role="region"
+          aria-label="Table 2, matched endpoint scores"
+        >
+          <table>
+            <caption>
+              <strong>Table 2.</strong>
+              Latest whole-cue endpoint comparison: three computational-seed
+              means.
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Representation/readout</th>
+                <th scope="col">Pair BA</th>
+                <th scope="col">Start BA</th>
+                <th scope="col">Goal BA</th>
+                <th scope="col">Pair log loss ↓</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Raw + logistic</td>
+                <td>70.28%</td>
+                <td>78.75%</td>
+                <td>90.83%</td>
+                <td>2.1701</td>
+              </tr>
+              <tr>
+                <td>PCA8/bin + logistic</td>
+                <td>83.61%</td>
+                <td>89.44%</td>
+                <td>86.81%</td>
+                <td>1.6736</td>
+              </tr>
+              <tr>
+                <td>Cue-only CEBRA-Time + logistic</td>
+                <td>63.75%</td>
+                <td>71.81%</td>
+                <td>85.14%</td>
+                <td>1.7795</td>
+              </tr>
+              <tr>
+                <td>Joint CEBRA-Time + logistic</td>
+                <td>75.56%</td>
+                <td>72.64%</td>
+                <td>83.89%</td>
+                <td>1.6373</td>
+              </tr>
+              <tr>
+                <td>Raw SVD-LDA</td>
+                <td>48.47%</td>
+                <td>57.22%</td>
+                <td>80.97%</td>
+                <td>3.7206</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-note">
+          195 units/58 sessions; source and row counts in Table 1. Logistic
+          <i>C</i> = 0.01, first-second concatenation; PCA/CEBRA provide 80
+          features. Direct heads are not earlier pair-derived marginals. Source:
+          <a
+            href="../cebra-endpoint-time-readout-20261006/tables/observed_metrics_by_seed.csv"
+            >October seed-level aggregate</a
+          >.
+        </p>
+        <figure id="fig-endpoints">
+          <p class="panel-label">A · Balanced accuracy</p>
+          <div
+            class="figure-scroll"
+            tabindex="0"
+            role="region"
+            aria-label="Figure 3A, endpoint accuracy"
+          >
+            <img
+              src="../cebra-endpoint-time-readout-20261006/figures/wholecue_balanced_accuracy.png"
+              alt="Whole-cue balanced accuracy for ordered pair, start and goal across raw, PCA, cue CEBRA, joint CEBRA and LDA."
+            />
+          </div>
+          <p class="panel-label">B · Logarithmic loss</p>
+          <div
+            class="figure-scroll"
+            tabindex="0"
+            role="region"
+            aria-label="Figure 3B, endpoint loss"
+          >
+            <img
+              src="../cebra-endpoint-time-readout-20261006/figures/wholecue_log_loss.png"
+              alt="Probability losses for the same whole-cue endpoint comparison."
+            />
+          </div>
+          <figcaption>
+            <strong
+              >Figure 3. Endpoint performance depends on target and
+              metric.</strong
+            >
+            October 7 endpoint population: 195 selected units/58 sessions,
+            12,288 training/3,265 exposed-development sources, 480/240
+            pair-conditioned rows per seed. Inputs concatenate 0–1 s cue
+            activity; raw/PCA/CEBRA use training-only transforms and logistic
+            <i>C</i> = 0.01, with separate SVD-LDA. Cue/joint encoders use 1,000
+            updates. Bars are three-seed means and points computational seeds,
+            not biological intervals. Dotted lines show uniform BA/loss
+            references. “Pair30,” “start6” and “goal6” are separately trained
+            heads. Endpoint recovery does not establish path information.
+            <a href="../cebra-endpoint-time-readout-20261006/README.md"
+              >Original figures and protocol context</a
+            >.
+          </figcaption>
+        </figure>
+        <p>
+          Accuracy and probability loss did not select the same method. Joint
+          CEBRA had slightly lower pair loss than PCA (1.6373 versus 1.6736),
+          despite lower pair BA (75.56% versus 83.61%). The whole-cue
+          joint-loss-gain family tail was 8/21. The bin-wise absolute-accuracy,
+          loss-skill and joint-gain families reached 1/21, the finest possible
+          resolution with 20 worlds, but these findings neither validate a
+          chosen time window nor establish general joint-training superiority.
+          All-bin curves are shown in Figure 4, and family controls in Figure
+          S5.
+        </p>
+        <figure id="fig-endpoint-time">
+          <div
+            class="figure-scroll"
+            tabindex="0"
+            role="region"
+            aria-label="Figure 4, endpoint cue-time decoding"
+          >
+            <img
+              src="../cebra-endpoint-time-readout-20261006/figures/time_balanced_accuracy.png"
+              alt="All ten cue-window balanced accuracies for direct pair, start and goal heads and all representation families."
+            />
+          </div>
+          <figcaption>
+            <strong>Figure 4. Endpoint decoding across the cue.</strong> Same
+            October endpoint sources, rows and readout families as Figure 3.
+            Each point evaluates an independently fitted readout for that 100-ms
+            cue window; time is relative to cue onset. Lines are means and
+            shading min–max across three computational seeds, not confidence
+            intervals. This is same-window decoding, not a train-time ×
+            test-time generalization matrix. No inspected peak is an
+            independently validated window. Source:
+            <a href="../cebra-endpoint-time-readout-20261006/README.md"
+              >endpoint report</a
+            >.
+          </figcaption>
+        </figure>
+        <p>
+          Count and row-normalized confusion matrices show class-specific errors
+          rather than only headline means (Figure S4). Source deletion also
+          exposed finite support: for the pair target, 571–579 deletions per
+          seed were inestimable because removing all rows using a source
+          eliminated a class. These failures remain part of the evidence rather
+          than being omitted from a robustness summary.
+        </p>
+
+        <h3 id="paths">
+          3.2. Path-component decoding was sensitive to source population and
+          cue window
+        </h3>
+        <h4 id="path-performance">
+          Whole-cue performance measured one component, not an ordered route
+        </h4>
+        <p>
+          The latest matched path comparison asked a binary question: within
+          fixed start 4 and goal 3, did the observed navigation path contain
+          directed component <code>D_N_R_T__N_R_M</code> among its interior
+          corridor runs, after removing the first and last runs? The model
+          received cue activity, not the later navigation activity at prediction
+          time.
+          <strong>No complete ordered route was predicted or scored.</strong>
+          Table 3 gives all whole-cue results for this comparison; these are
+          development scores on condition-built pseudopopulations, not accuracy
+          on previously unknown natural trials.
+        </p>
+        <div
+          class="table-wrap"
+          tabindex="0"
+          role="region"
+          aria-label="Table 3, matched whole-cue path-component scores"
+        >
+          <table id="table-path-performance">
+            <caption>
+              <strong>Table 3.</strong>
+              Binary interior-component balanced accuracy, whole cue.
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Representation</th>
+                <th scope="col">Logistic</th>
+                <th scope="col">RBF-SVM</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr data-path-score="raw290">
+                <td>Raw neural</td>
+                <td data-readout="logistic">46.53%</td>
+                <td data-readout="svc">30.56%</td>
+              </tr>
+              <tr data-path-score="pca8">
+                <td>PCA8</td>
+                <td data-readout="logistic">22.22%</td>
+                <td data-readout="svc">55.56%</td>
+              </tr>
+              <tr data-path-score="cue_time">
+                <td>Cue-only CEBRA-Time</td>
+                <td data-readout="logistic">32.64%</td>
+                <td data-readout="svc">40.28%</td>
+              </tr>
+              <tr data-path-score="full_time">
+                <td>Joint cue/navigation CEBRA-Time</td>
+                <td data-readout="logistic">61.81%</td>
+                <td data-readout="svc">50.69%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-note">
+          Means over three paired computational seeds, not biological replicates
+          or confidence intervals. Same 29-unit/seven-session cohort, 82
+          training and 22 exposed-development real sources; 128 training rows
+          (64/class) and 30 exact development combinations (24 absent, six
+          present), with equal total evaluation weight per class. Ten cue bins
+          supply 290 raw or 80 PCA/CEBRA features. Fixed logistic C=.01; RBF-SVM
+          C=1, gamma=scale; frozen 1,000-update encoders. Navigation contributes
+          only to joint encoder training. October whole-cue results replay the
+          prior experiment; they are not new replication. Source:
+          <a href="../cebra-cue-time-readout-20261005/observed_means.csv"
+            >all saved mean/seed scores</a
+          >.
+        </p>
+        <h4 id="path-failure">
+          Missed positives and false positives explain the low balanced accuracy
+        </h4>
+        <p>
+          The cue-only Time/logistic readout predicted “absent” for 19/30, 30/30
+          and 16/30 combinations in seeds 0, 1 and 2, respectively. It detected
+          <strong>zero of six present examples in every seed</strong>. Seeds 0
+          and 2 additionally called 11 and 14 absent examples “present” (Figure
+          5A). Thus “mostly absent” is accurate but incomplete: the false
+          positives, together with zero positive recall, pushed mean balanced
+          accuracy below 50%.
+        </p>
+        <figure id="fig-path-failure">
+          <div
+            class="figure-scroll"
+            tabindex="0"
+            role="region"
+            aria-label="Figure 5A, per-seed whole-cue path-component confusion matrices"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 900 590"
+              role="img"
+              aria-labelledby="path-errors-title path-errors-desc"
+            >
+              <title id="path-errors-title">
+                A. Whole-cue logistic confusion matrices, cue-only and joint
+                CEBRA-Time
+              </title>
+              <desc id="path-errors-desc">
+                Rows are observed absent or present; columns are predicted
+                absent or present. Each panel contains 24 absent and six present
+                synthetic combinations. Cue-only misses all six present examples
+                in each seed. Joint detects six, zero and two. Counts and
+                within-class percentages are printed in every cell; teal marks
+                correct predictions and peach marks errors.
+              </desc>
+              <g font-family="system-ui, sans-serif" font-size="14" fill="#222">
+                <text x="16" y="25" font-size="18" font-weight="600">
+                  A. Saved errors, separated by seed and training regime
+                </text>
+                <text x="16" y="49">
+                  Rows = observed; columns = predicted. Count + row %; teal =
+                  correct, peach = error.
+                </text>
+                <g
+                  transform="translate(16 73)"
+                  data-confusion-model="cue_time"
+                  data-seed="0"
+                >
+                  <text x="0" y="14" font-size="17" font-weight="600">
+                    Cue-only · seed 0
+                  </text>
+                  <text x="0" y="46">Observed ↓</text>
+                  <text x="133" y="46" text-anchor="middle">Absent</text>
+                  <text x="219" y="46" text-anchor="middle">Present</text>
+                  <rect x="90" y="58" width="86" height="58" fill="#dcefeb" />
+                  <rect x="176" y="58" width="86" height="58" fill="#fbe7e2" />
+                  <rect x="90" y="116" width="86" height="58" fill="#fbe7e2" />
+                  <rect x="176" y="116" width="86" height="58" fill="#dcefeb" />
+                  <text x="0" y="94">Absent (24)</text>
+                  <text x="0" y="152">Present (6)</text>
+                  <g text-anchor="middle">
+                    <text
+                      x="133"
+                      y="83"
+                      font-size="22"
+                      data-cell="absent,absent"
+                    >
+                      13
+                    </text>
+                    <text x="133" y="104" data-recall="absent,absent">
+                      54.2%
+                    </text>
+                    <text
+                      x="219"
+                      y="83"
+                      font-size="22"
+                      data-cell="absent,present"
+                    >
+                      11
+                    </text>
+                    <text x="219" y="104" data-recall="absent,present">
+                      45.8%
+                    </text>
+                    <text
+                      x="133"
+                      y="141"
+                      font-size="22"
+                      data-cell="present,absent"
+                    >
+                      6
+                    </text>
+                    <text x="133" y="162" data-recall="present,absent">
+                      100.0%
+                    </text>
+                    <text
+                      x="219"
+                      y="141"
+                      font-size="22"
+                      data-cell="present,present"
+                    >
+                      0
+                    </text>
+                    <text x="219" y="162" data-recall="present,present">
+                      0.0%
+                    </text>
+                  </g>
+                  <text x="0" y="200" data-stat="predicted-absent">
+                    Predicted absent: 19/30
+                  </text>
+                  <text x="0" y="224" font-weight="600" data-stat="ba">
+                    BA: 27.08%
+                  </text>
+                </g>
+                <g
+                  transform="translate(314 73)"
+                  data-confusion-model="cue_time"
+                  data-seed="1"
+                >
+                  <text x="0" y="14" font-size="17" font-weight="600">
+                    Cue-only · seed 1
+                  </text>
+                  <text x="0" y="46">Observed ↓</text>
+                  <text x="133" y="46" text-anchor="middle">Absent</text>
+                  <text x="219" y="46" text-anchor="middle">Present</text>
+                  <rect x="90" y="58" width="86" height="58" fill="#dcefeb" />
+                  <rect x="176" y="58" width="86" height="58" fill="#fbe7e2" />
+                  <rect x="90" y="116" width="86" height="58" fill="#fbe7e2" />
+                  <rect x="176" y="116" width="86" height="58" fill="#dcefeb" />
+                  <text x="0" y="94">Absent (24)</text>
+                  <text x="0" y="152">Present (6)</text>
+                  <g text-anchor="middle">
+                    <text
+                      x="133"
+                      y="83"
+                      font-size="22"
+                      data-cell="absent,absent"
+                    >
+                      24
+                    </text>
+                    <text x="133" y="104" data-recall="absent,absent">
+                      100.0%
+                    </text>
+                    <text
+                      x="219"
+                      y="83"
+                      font-size="22"
+                      data-cell="absent,present"
+                    >
+                      0
+                    </text>
+                    <text x="219" y="104" data-recall="absent,present">
+                      0.0%
+                    </text>
+                    <text
+                      x="133"
+                      y="141"
+                      font-size="22"
+                      data-cell="present,absent"
+                    >
+                      6
+                    </text>
+                    <text x="133" y="162" data-recall="present,absent">
+                      100.0%
+                    </text>
+                    <text
+                      x="219"
+                      y="141"
+                      font-size="22"
+                      data-cell="present,present"
+                    >
+                      0
+                    </text>
+                    <text x="219" y="162" data-recall="present,present">
+                      0.0%
+                    </text>
+                  </g>
+                  <text x="0" y="200" data-stat="predicted-absent">
+                    Predicted absent: 30/30
+                  </text>
+                  <text x="0" y="224" font-weight="600" data-stat="ba">
+                    BA: 50.00%
+                  </text>
+                </g>
+                <g
+                  transform="translate(612 73)"
+                  data-confusion-model="cue_time"
+                  data-seed="2"
+                >
+                  <text x="0" y="14" font-size="17" font-weight="600">
+                    Cue-only · seed 2
+                  </text>
+                  <text x="0" y="46">Observed ↓</text>
+                  <text x="133" y="46" text-anchor="middle">Absent</text>
+                  <text x="219" y="46" text-anchor="middle">Present</text>
+                  <rect x="90" y="58" width="86" height="58" fill="#dcefeb" />
+                  <rect x="176" y="58" width="86" height="58" fill="#fbe7e2" />
+                  <rect x="90" y="116" width="86" height="58" fill="#fbe7e2" />
+                  <rect x="176" y="116" width="86" height="58" fill="#dcefeb" />
+                  <text x="0" y="94">Absent (24)</text>
+                  <text x="0" y="152">Present (6)</text>
+                  <g text-anchor="middle">
+                    <text
+                      x="133"
+                      y="83"
+                      font-size="22"
+                      data-cell="absent,absent"
+                    >
+                      10
+                    </text>
+                    <text x="133" y="104" data-recall="absent,absent">
+                      41.7%
+                    </text>
+                    <text
+                      x="219"
+                      y="83"
+                      font-size="22"
+                      data-cell="absent,present"
+                    >
+                      14
+                    </text>
+                    <text x="219" y="104" data-recall="absent,present">
+                      58.3%
+                    </text>
+                    <text
+                      x="133"
+                      y="141"
+                      font-size="22"
+                      data-cell="present,absent"
+                    >
+                      6
+                    </text>
+                    <text x="133" y="162" data-recall="present,absent">
+                      100.0%
+                    </text>
+                    <text
+                      x="219"
+                      y="141"
+                      font-size="22"
+                      data-cell="present,present"
+                    >
+                      0
+                    </text>
+                    <text x="219" y="162" data-recall="present,present">
+                      0.0%
+                    </text>
+                  </g>
+                  <text x="0" y="200" data-stat="predicted-absent">
+                    Predicted absent: 16/30
+                  </text>
+                  <text x="0" y="224" font-weight="600" data-stat="ba">
+                    BA: 20.83%
+                  </text>
+                </g>
+                <g
+                  transform="translate(16 330)"
+                  data-confusion-model="full_time"
+                  data-seed="0"
+                >
+                  <text x="0" y="14" font-size="17" font-weight="600">
+                    Joint · seed 0
+                  </text>
+                  <text x="0" y="46">Observed ↓</text>
+                  <text x="133" y="46" text-anchor="middle">Absent</text>
+                  <text x="219" y="46" text-anchor="middle">Present</text>
+                  <rect x="90" y="58" width="86" height="58" fill="#dcefeb" />
+                  <rect x="176" y="58" width="86" height="58" fill="#fbe7e2" />
+                  <rect x="90" y="116" width="86" height="58" fill="#fbe7e2" />
+                  <rect x="176" y="116" width="86" height="58" fill="#dcefeb" />
+                  <text x="0" y="94">Absent (24)</text>
+                  <text x="0" y="152">Present (6)</text>
+                  <g text-anchor="middle">
+                    <text
+                      x="133"
+                      y="83"
+                      font-size="22"
+                      data-cell="absent,absent"
+                    >
+                      14
+                    </text>
+                    <text x="133" y="104" data-recall="absent,absent">
+                      58.3%
+                    </text>
+                    <text
+                      x="219"
+                      y="83"
+                      font-size="22"
+                      data-cell="absent,present"
+                    >
+                      10
+                    </text>
+                    <text x="219" y="104" data-recall="absent,present">
+                      41.7%
+                    </text>
+                    <text
+                      x="133"
+                      y="141"
+                      font-size="22"
+                      data-cell="present,absent"
+                    >
+                      0
+                    </text>
+                    <text x="133" y="162" data-recall="present,absent">
+                      0.0%
+                    </text>
+                    <text
+                      x="219"
+                      y="141"
+                      font-size="22"
+                      data-cell="present,present"
+                    >
+                      6
+                    </text>
+                    <text x="219" y="162" data-recall="present,present">
+                      100.0%
+                    </text>
+                  </g>
+                  <text x="0" y="200" data-stat="predicted-absent">
+                    Predicted absent: 14/30
+                  </text>
+                  <text x="0" y="224" font-weight="600" data-stat="ba">
+                    BA: 79.17%
+                  </text>
+                </g>
+                <g
+                  transform="translate(314 330)"
+                  data-confusion-model="full_time"
+                  data-seed="1"
+                >
+                  <text x="0" y="14" font-size="17" font-weight="600">
+                    Joint · seed 1
+                  </text>
+                  <text x="0" y="46">Observed ↓</text>
+                  <text x="133" y="46" text-anchor="middle">Absent</text>
+                  <text x="219" y="46" text-anchor="middle">Present</text>
+                  <rect x="90" y="58" width="86" height="58" fill="#dcefeb" />
+                  <rect x="176" y="58" width="86" height="58" fill="#fbe7e2" />
+                  <rect x="90" y="116" width="86" height="58" fill="#fbe7e2" />
+                  <rect x="176" y="116" width="86" height="58" fill="#dcefeb" />
+                  <text x="0" y="94">Absent (24)</text>
+                  <text x="0" y="152">Present (6)</text>
+                  <g text-anchor="middle">
+                    <text
+                      x="133"
+                      y="83"
+                      font-size="22"
+                      data-cell="absent,absent"
+                    >
+                      21
+                    </text>
+                    <text x="133" y="104" data-recall="absent,absent">
+                      87.5%
+                    </text>
+                    <text
+                      x="219"
+                      y="83"
+                      font-size="22"
+                      data-cell="absent,present"
+                    >
+                      3
+                    </text>
+                    <text x="219" y="104" data-recall="absent,present">
+                      12.5%
+                    </text>
+                    <text
+                      x="133"
+                      y="141"
+                      font-size="22"
+                      data-cell="present,absent"
+                    >
+                      6
+                    </text>
+                    <text x="133" y="162" data-recall="present,absent">
+                      100.0%
+                    </text>
+                    <text
+                      x="219"
+                      y="141"
+                      font-size="22"
+                      data-cell="present,present"
+                    >
+                      0
+                    </text>
+                    <text x="219" y="162" data-recall="present,present">
+                      0.0%
+                    </text>
+                  </g>
+                  <text x="0" y="200" data-stat="predicted-absent">
+                    Predicted absent: 27/30
+                  </text>
+                  <text x="0" y="224" font-weight="600" data-stat="ba">
+                    BA: 43.75%
+                  </text>
+                </g>
+                <g
+                  transform="translate(612 330)"
+                  data-confusion-model="full_time"
+                  data-seed="2"
+                >
+                  <text x="0" y="14" font-size="17" font-weight="600">
+                    Joint · seed 2
+                  </text>
+                  <text x="0" y="46">Observed ↓</text>
+                  <text x="133" y="46" text-anchor="middle">Absent</text>
+                  <text x="219" y="46" text-anchor="middle">Present</text>
+                  <rect x="90" y="58" width="86" height="58" fill="#dcefeb" />
+                  <rect x="176" y="58" width="86" height="58" fill="#fbe7e2" />
+                  <rect x="90" y="116" width="86" height="58" fill="#fbe7e2" />
+                  <rect x="176" y="116" width="86" height="58" fill="#dcefeb" />
+                  <text x="0" y="94">Absent (24)</text>
+                  <text x="0" y="152">Present (6)</text>
+                  <g text-anchor="middle">
+                    <text
+                      x="133"
+                      y="83"
+                      font-size="22"
+                      data-cell="absent,absent"
+                    >
+                      22
+                    </text>
+                    <text x="133" y="104" data-recall="absent,absent">
+                      91.7%
+                    </text>
+                    <text
+                      x="219"
+                      y="83"
+                      font-size="22"
+                      data-cell="absent,present"
+                    >
+                      2
+                    </text>
+                    <text x="219" y="104" data-recall="absent,present">
+                      8.3%
+                    </text>
+                    <text
+                      x="133"
+                      y="141"
+                      font-size="22"
+                      data-cell="present,absent"
+                    >
+                      4
+                    </text>
+                    <text x="133" y="162" data-recall="present,absent">
+                      66.7%
+                    </text>
+                    <text
+                      x="219"
+                      y="141"
+                      font-size="22"
+                      data-cell="present,present"
+                    >
+                      2
+                    </text>
+                    <text x="219" y="162" data-recall="present,present">
+                      33.3%
+                    </text>
+                  </g>
+                  <text x="0" y="200" data-stat="predicted-absent">
+                    Predicted absent: 26/30
+                  </text>
+                  <text x="0" y="224" font-weight="600" data-stat="ba">
+                    BA: 62.50%
+                  </text>
+                </g>
+                <text x="16" y="581">
+                  Each panel reuses a finite source pool; do not pool seeds into
+                  90 independent observations.
+                </text>
+              </g>
+            </svg>
+          </div>
+          <div
+            class="figure-scroll"
+            tabindex="0"
+            role="region"
+            aria-label="Figure 5B, mean class recalls and balanced accuracy"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 900 354"
+              role="img"
+              aria-labelledby="path-recall-title path-recall-desc"
+            >
+              <title id="path-recall-title">
+                B. Why mostly saying absent can still score below 50 percent
+                balanced accuracy
+              </title>
+              <desc id="path-recall-desc">
+                Balanced accuracy gives equal weight to the two class recalls.
+                Cue-only logistic has mean absent recall 65.28 percent and
+                present recall zero, giving 32.64 percent balanced accuracy.
+                Always absent is a reference rule, not a fitted model: it has
+                100 and zero percent recalls, giving 50 percent balanced
+                accuracy. Joint logistic has mean recalls 79.17 and 44.44
+                percent, giving 61.81 percent balanced accuracy.
+              </desc>
+              <g font-family="system-ui, sans-serif" font-size="14" fill="#222">
+                <text x="16" y="27" font-size="18" font-weight="600">
+                  B. Balanced accuracy = (absent recall + present recall) / 2
+                </text>
+                <text x="302" y="64">0%</text>
+                <text x="467" y="64" text-anchor="middle">50%</text>
+                <text x="632" y="64" text-anchor="end">100%</text>
+                <text x="760" y="64">Mean BA</text>
+                <g transform="translate(0 84)" data-mean-model="cue_time">
+                  <text x="16" y="16" font-weight="600">
+                    Cue-only + logistic
+                  </text>
+                  <text x="16" y="40">Saved results</text>
+                  <text x="230" y="14">Absent</text>
+                  <text x="230" y="42">Present</text>
+                  <rect x="302" y="0" width="330" height="18" fill="#eeeeee" />
+                  <rect x="302" y="28" width="330" height="18" fill="#eeeeee" />
+                  <rect
+                    x="302"
+                    y="0"
+                    width="215.416667"
+                    height="18"
+                    fill="#326879"
+                    data-bar="absent"
+                  />
+                  <rect
+                    x="302"
+                    y="28"
+                    width="0"
+                    height="18"
+                    fill="#ad6022"
+                    data-bar="present"
+                  />
+                  <text x="644" y="14" data-mean="absent">65.28%</text>
+                  <text x="644" y="42" data-mean="present">0.00%</text>
+                  <text
+                    x="760"
+                    y="29"
+                    font-size="20"
+                    font-weight="600"
+                    data-mean="ba"
+                  >
+                    32.64%
+                  </text>
+                </g>
+                <g transform="translate(0 172)" data-mean-model="always_absent">
+                  <text x="16" y="16" font-weight="600">
+                    Always predict absent
+                  </text>
+                  <text x="16" y="40">Reference rule, not a fit</text>
+                  <text x="230" y="14">Absent</text>
+                  <text x="230" y="42">Present</text>
+                  <rect x="302" y="0" width="330" height="18" fill="#eeeeee" />
+                  <rect x="302" y="28" width="330" height="18" fill="#eeeeee" />
+                  <rect
+                    x="302"
+                    y="0"
+                    width="330"
+                    height="18"
+                    fill="#326879"
+                    data-bar="absent"
+                  />
+                  <rect
+                    x="302"
+                    y="28"
+                    width="0"
+                    height="18"
+                    fill="#ad6022"
+                    data-bar="present"
+                  />
+                  <text x="644" y="14" data-mean="absent">100.00%</text>
+                  <text x="644" y="42" data-mean="present">0.00%</text>
+                  <text
+                    x="760"
+                    y="29"
+                    font-size="20"
+                    font-weight="600"
+                    data-mean="ba"
+                  >
+                    50.00%
+                  </text>
+                </g>
+                <g transform="translate(0 260)" data-mean-model="full_time">
+                  <text x="16" y="16" font-weight="600">Joint + logistic</text>
+                  <text x="16" y="40">Saved results</text>
+                  <text x="230" y="14">Absent</text>
+                  <text x="230" y="42">Present</text>
+                  <rect x="302" y="0" width="330" height="18" fill="#eeeeee" />
+                  <rect x="302" y="28" width="330" height="18" fill="#eeeeee" />
+                  <rect
+                    x="302"
+                    y="0"
+                    width="261.25"
+                    height="18"
+                    fill="#326879"
+                    data-bar="absent"
+                  />
+                  <rect
+                    x="302"
+                    y="28"
+                    width="146.666667"
+                    height="18"
+                    fill="#ad6022"
+                    data-bar="present"
+                  />
+                  <text x="644" y="14" data-mean="absent">79.17%</text>
+                  <text x="644" y="42" data-mean="present">44.44%</text>
+                  <text
+                    x="760"
+                    y="29"
+                    font-size="20"
+                    font-weight="600"
+                    data-mean="ba"
+                  >
+                    61.81%
+                  </text>
+                </g>
+                <text x="16" y="342">
+                  Always absent gets 24/30 = 80% ordinary accuracy, but only 50%
+                  balanced accuracy.
+                </text>
+              </g>
+            </svg>
+          </div>
+          <figcaption>
+            <strong
+              >Figure 5. Error structure of whole-cue path-component
+              decoding.</strong
+            >
+            A: saved aggregate confusion counts and true-class-normalized
+            percentages for every cue-only/joint Time/logistic seed; cells are
+            synthetic combinations, not independent natural trials. Cell color
+            marks correctness, not magnitude. B: arithmetic of the equal-class
+            metric, with a clearly labeled always-absent reference. Cohort,
+            feature dimensions, split and readout match Table 3. Means average
+            the three computational seeds; no biological interval is inferred.
+            Values are rounded for display; bar lengths and BA use unrounded
+            recalls. These are empirical count/recall diagrams from
+            <a href="../cebra-cue-time-readout-20261005/observed_confusions.csv"
+              >archived whole-cue confusions</a
+            >
+            and
+            <a href="../cebra-cue-time-readout-20261005/observed_means.csv"
+              >mean/seed metrics</a
+            >, not new fits or reconstructed private predictions. Error patterns
+            describe what failed, not its unique cause.
+          </figcaption>
+        </figure>
+        <p>
+          The development combinations are imbalanced, but balanced accuracy
+          gives absent and present equal weight; training rows were already
+          balanced at 64 per class. Always saying “absent” would score 50% BA,
+          not 32.64% (Figure 5B). Joint training partly restored detection, with
+          six, zero and two of six positives detected across the three seeds.
+          Its 61.81% mean therefore hides substantial computational variation,
+          and does not establish reliable transfer.
+        </p>
+        <p>
+          These observations do not uniquely diagnose why the mapping failed.
+          Limited real-source support and source reuse are documented
+          constraints; a mismatch between learned features and the target,
+          source-distribution differences and readout behavior remain possible
+          contributors. The earlier source-transfer and decoder studies below
+          probe parts of that problem, but are not the same fitted comparison as
+          Table 3. Neither the confusion matrices nor a below-50% score
+          establish absence of hippocampal path information. Reversing
+          predictions after inspecting development labels would be a new
+          selected rule, not a validated rescue.
+        </p>
+        <h4>Behavioral measurement did not determine neural sample size</h4>
+        <p>
+          The initial mapping covered 19,162 eligible behavioral trials, but the
+          primary common neural panel contained only 29 units across seven
+          sessions. Its sources comprised 52 component-present and 30 absent
+          training trials, and ten present and twelve absent development trials.
+          Requiring at least two development sources per label reduced the panel
+          to six units in one session; a stronger 5-training/2-development
+          requirement was infeasible. The large behavioral inventory therefore
+          did not imply large independent neural support.
+        </p>
+        <p>
+          In the early sampled whole-cue comparison, raw total and ten-bin
+          features achieved mean BA of 45.3% and 47.4%; PCA3 and PCA8 achieved
+          52.1% and 45.3%. PCA3 ranged from 25.8% to 78.9% across assembly
+          seeds. A subsequently inspected 200–300-ms raw bin reached 100% BA,
+          but its maximum-over-ten-bin reference was 22/101. V9 CEBRA-Time8
+          whole-cue mean BA was 44.27%. These observations motivated source and
+          temporal diagnostics rather than establishing a successful whole-path
+          predictor.
+        </p>
+        <h4>Synthetic recombination was not source generalization</h4>
+        <p>
+          Exact enumeration separated assembly randomness from finite-source
+          support. Track A evaluated all 24 absent and six present development
+          combinations with equal mass per class. Increasing synthetic training
+          rows reduced assembly variation, while the moment-based ridge
+          reference stabilized around 47.9% BA. The 290-feature development
+          matrix had rank nine under that construction; this was a property of
+          the empirical source product, not a measurement of brain-intrinsic
+          dimension.
+        </p>
+        <p>
+          Track B found a much larger contrast between source pools. CEBRA-Time
+          transferred to new mixtures of the same training sources at 99.25% BA,
+          but achieved only 24.92% on the other source pool. Synthetic
+          recombination success therefore did not establish source transfer, and
+          the gap did not identify its unique biological or algorithmic cause.
+          The archived broader search and its correction ledger are retained as
+          provenance, not reinterpreted here as a new Time-only statistical
+          test.
+          <a href="../path-generalization-completed-state-20260907.md"
+            >Corrected inference authority</a
+          >.
+        </p>
+        <p>
+          Track C tested actual per-unit trial inputs with endpoint, trial-index
+          and cue-duration controls. It considered the original interior
+          component, its anywhere-in-route counterpart and a more supported
+          interior target. Ordinary and temporal three-target family references
+          were approximately 0.475 and 0.436; the analyses did not establish
+          incremental cue-rate evidence. This was a complementary lane, not a
+          test of simultaneous population dynamics or a requirement that every
+          informative population contain individually significant cells.
+        </p>
+        <h4>
+          Preprocessing and matched PCA provided small, heterogeneous
+          probability gains
+        </h4>
+        <p>
+          The separate five-endpoint study compared 20 recipes varying time
+          pooling, rate transformation, feature scaling and regularization.
+          Training-source cross-validation favored first-second raw rates with a
+          variance floor and stronger regularization. The selected historical
+          diagnostic had mean baseline-relative loss improvement +0.02858 nats
+          and 55% BA, but only two of five endpoint panels improved over
+          constant prediction. Removing 6→1 reversed the mean improvement to
+          −0.03787 nats. The four declared ordinary/temporal selection-null
+          comparisons ranged from 0.139 to 0.356.
+        </p>
+        <p>
+          A subsequent matched PCA/raw comparison held the source panels, inputs
+          and tuning budget fixed. PCA reduced mean loss from 0.664564 to
+          0.657541 nats, a paired gain of 0.007023, while both methods remained
+          at 55% BA. The fixed-selection source-resampling range extended from
+          −0.011444 to +0.023426 nats. These are sensitivity percentiles, not a
+          superiority interval. The largest PCA-over-raw improvement occurred at
+          5→1, where both methods still lost to constant prediction; the
+          aggregate baseline-relative success remained driven by 6→1. This study
+          is not a validation of the separate fixed-4→3 PCA/SVM result.
+        </p>
+        <h4>
+          Broader encoder training improved a relative score but failed the
+          primary absolute criterion
+        </h4>
+        <p>
+          At a matched 1,000-update budget, broader cue/navigation training
+          improved Time's cue-only logistic loss from 1.010464 to 0.710618 nats
+          and BA from 32.64% to 61.81%. Time's loss gain was positive in all
+          three seeds, but broader-Time BA was 79.17%, 43.75% and 62.50%, and
+          only one seed had AUROC above 0.5. The primary criterion failed
+          because mean loss remained above constant prediction, log(2) =
+          0.693147.
+        </p>
+        <p>
+          The distinction between relative and absolute performance was also
+          present in the controls. The Time paired-gain tail was 1/21, but its
+          absolute broader-training loss tail was 12/21. Improvement over a poor
+          cue-only model was therefore not equivalent to established path
+          association. Eight of 22 source deletions were inestimable. Navigation
+          entered encoder training only; no navigation-time prediction or frozen
+          cue↔navigation transfer was demonstrated.
+          <a href="../cebra-full-trial-transfer/README.md"
+            >Matched Time-arm results</a
+          >.
+        </p>
+        <h4>
+          Single-window peaks did not identify a validated prediction time
+        </h4>
+        <p>
+          The October window assay reused these encoders and PCA transforms,
+          fitted single-bin readouts and replayed the prior whole-cue results.
+          Joint-Time/logistic reached a descriptive 88.89% BA at 100–200 ms,
+          compared with 61.81% for whole cue; raw/logistic reached 94.44% at
+          200–300 ms (Figure 6). The whole-cue replay is not a new replication.
+          Window-specific fitting also does not test whether one fixed readout
+          transfers between times.
+        </p>
+        <figure id="fig-path-time">
+          <div
+            class="figure-scroll"
+            tabindex="0"
+            role="region"
+            aria-label="Figure 6, path cue-time readouts"
+          >
+            <img
+              src="../cebra-cue-time-readout-20261005/figures/balanced_accuracy.png"
+              alt="Path-component balanced accuracy in all ten cue windows across raw, PCA, cue-only and joint CEBRA, with logistic and RBF-SVM readouts."
+            />
+          </div>
+          <figcaption>
+            <strong
+              >Figure 6. Cue-time dependence of path-component decoding.</strong
+            >
+            Fixed 4→3 component: 29 units/seven sessions, 82 training/22 exposed
+            development sources, 128 training rows and 30 weighted development
+            combinations. Horizontal axes show bin centers in milliseconds from
+            cue onset; final-bin clipping is retained. Frozen 1,000-update
+            representations support separately fitted logistic/RBF readouts.
+            Thin lines are computational seeds, black their mean, red dashed
+            lines the separately fitted whole-cue readouts, and gray the 0.5 BA
+            reference. No biological interval or selected best bin is implied.
+            Source:
+            <a href="../cebra-cue-time-readout-20261005/README.md"
+              >October 5 frozen-model study</a
+            >.
+          </figcaption>
+        </figure>
+        <p>
+          Sixteen of 20 source-label-shuffled worlds had a maximum across the
+          same 80 views at least as high as the observed 94.44%, giving an
+          inclusive tail of 17/21. The predeclared maximum joint-training
+          logistic gain had tail 9/21 (Figure 7). These controls prevent the
+          inspected peaks from establishing robust path information or a
+          reliable optimal cue window.
+        </p>
+        <figure id="fig-path-nulls">
+          <div
+            class="figure-scroll"
+            tabindex="0"
+            role="region"
+            aria-label="Figure 7, path window-family nulls"
+          >
+            <img
+              src="../cebra-cue-time-readout-20261005/figures/null_families.png"
+              alt="Observed path-decoding family statistics relative to twenty source-coherent shuffled worlds."
+            />
+          </div>
+          <figcaption>
+            <strong
+              >Figure 7. Family-level controls for the cue-window peaks.</strong
+            >
+            Same target, real sources, weighted combinations and readouts as
+            Figure 6. Histograms contain 20 source-coherent shuffled worlds; red
+            lines indicate observed statistics. Three-seed averaging precedes
+            maxima: paired logistic gain across ten bins, BA across 80 views,
+            and loss improvement over constant prediction across 40 views.
+            Inclusive plus-one tails are 9/21, 17/21 and 8/21. Whole cue is
+            excluded from these families. The references do not test universal
+            method superiority or correct the project's entire adaptive history.
+            No uncertainty interval is implied. Source:
+            <a href="../cebra-cue-time-readout-20261005/README.md"
+              >window-study controls</a
+            >.
+          </figcaption>
+        </figure>
+
+        <h3 id="ablations">
+          3.3. Readout and regularization diagnostics constrained explanations
+          for performance differences
+        </h3>
+        <p>
+          Holding the endpoint Time representation fixed, changing the logistic
+          readout from <i>C</i> = 1 to 0.01 increased pair accuracy from 42.78%
+          to 51.67%. Separately, the historical Time checkpoint study with a
+          common <i>C</i> = 0.01 readout found 69.72%, 51.67% and 38.06%
+          development accuracy at 250, 1,000 and 3,000 encoder updates. This
+          inspected trajectory did not validate an early-stopping rule and is
+          not the latest fixed-1,000-update cue/joint comparison.
+          <a href="../start-goal-cebra-diagnosis.md">Frozen-readout diagnosis</a
+          >;
+          <a
+            href="../../professor_updates/start_goal_20260907/endpoint-research-report.html"
+            >historical Time checkpoints</a
+          >.
+        </p>
+        <div
+          class="table-wrap"
+          tabindex="0"
+          role="region"
+          aria-label="Table 4, earlier Time and PCA readout contrasts"
+        >
+          <table>
+            <caption>
+              <strong>Table 4.</strong>
+              Earlier within-study readout contrasts on fixed representations;
+              not the matched cue-only/joint experiment in Table 3.
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Population / representation</th>
+                <th scope="col">Readout change</th>
+                <th scope="col">Development accuracy / BA</th>
+                <th scope="col">Scope</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Endpoint / Time</td>
+                <td>Logistic C: 1 → 0.01</td>
+                <td>42.78 → 51.67%</td>
+                <td>Three seeds; pair-balanced accuracy equals BA</td>
+              </tr>
+              <tr>
+                <td>Fixed 4→3 / Time</td>
+                <td>Scaled logistic C=1 → scaled RBF-SVM</td>
+                <td>24.92 → 37.33%</td>
+                <td>Five assemblies × five optimizer seeds</td>
+              </tr>
+              <tr>
+                <td>Fixed 4→3 / PCA</td>
+                <td>Matched logistic → scaled RBF-SVM</td>
+                <td>42.92 → 77.50%</td>
+                <td>Five assemblies; not a CEBRA rescue</td>
+              </tr>
+              <tr>
+                <td>Fixed 4→3 / Time</td>
+                <td>Logistic C: 0.001 → 100</td>
+                <td>30.92 → 24.25%</td>
+                <td>Weaker penalty did not restore transfer</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-note">
+          Endpoint and path populations remain separate (Table 1). Path means
+          use the 29-unit/seven-session population, 82/22 real sources, 128
+          training rows and 24 absent/six present development combinations with
+          equal class weight. Whole-cue Time/PCA readouts have 80 features.
+          Computational repeats are not biological replication. Sources:
+          <a href="../start-goal-cebra-diagnosis.md">endpoint diagnosis</a>,
+          <a href="../cebra-decoder-autoresearch-20260924.md"
+            >fixed readout study</a
+          >,
+          <a href="../cebra-hyperparameter-diagnosis-20260924.md"
+            >penalty diagnosis</a
+          >.
+        </p>
+        <h4>
+          Nonlinear path readouts did not rescue the retained Time
+          representation
+        </h4>
+        <p>
+          Eight fixed readouts were evaluated on the retained Time path
+          representations. Scaled RBF-SVM reached 37.33% mean BA and 0.141
+          AUROC, compared with 24.92% and 0.111 for archived scaled logistic
+          regression. No tested Time recipe met the declared
+          BA/AUROC/five-point-gain follow-up criterion. Training classes were
+          nearly perfectly separable; the failure concerned transfer, not
+          training-label fit.
+        </p>
+        <p>
+          PCA with scaled RBF-SVM reached 77.50% BA and 0.829 AUROC, versus
+          42.92% BA for its matched logistic readout. This was a lead for a
+          different representation, not established robust path signal: that
+          experiment lacked a matched PCA null. Later raw/PCA controls had
+          family tail 15/21 and fixed center-SVM tail 7/21 at assembly zero;
+          they do not directly test the earlier five-assembly mean.
+        </p>
+        <h4>
+          Weaker regularization and broader kernels did not restore source
+          transfer
+        </h4>
+        <p>
+          Weakening Time's logistic penalty from <i>C</i> = 0.001 to 100
+          increased training BA from 97.63% to 100% while development BA fell
+          from 30.92% to 24.25%. The expanded nine-setting RBF grid reached at
+          most 50.00% mean Time BA, with AUROC approximately 0.286. These
+          observations weaken the tested readout-under-capacity explanation,
+          without establishing that every nonlinear decoder or another encoder
+          must fail. No threshold inversion or development-selected predictor
+          was deployed.
+        </p>
+
+        <h3 id="geometry">
+          3.4. Low-dimensional displays did not determine predictive utility
+        </h3>
+        <p>
+          In the historical Time atlas, a cue-bin point represents one assembled
+          population vector at one time bin; a whole-cue point concatenates ten
+          such vectors. Display bases were fitted on training features and
+          applied unchanged to development, without aligning axes across
+          independent fits. These are descriptive views, not tests of biological
+          manifold topology.
+        </p>
+        <p>
+          Endpoint Time at 250 updates had 69.72% mean development accuracy and
+          retained 95.2–98.9% of development energy in its training-fitted 3D
+          bin-space view. At 1,000 updates the corresponding values were 51.67%
+          and 84.3–91.6%; participation ratio increased from 2.87–3.19 to
+          3.46–3.78. Scores use the historical common logistic
+          <i>C</i> = 0.01 readout; ranges are across three computational seeds,
+          not biological intervals. Greater dimensional spread did not imply
+          better decoding in this inspected checkpoint comparison.
+        </p>
+        <p>
+          Historical V9 Time8 retained 90.7–95.4% of development energy in its
+          3D view while whole-cue BA was 44.27%. A readily compressed cloud
+          therefore did not establish source generalization. No biological ring,
+          torus or attractor was demonstrated.
+          <a href="../cebra-latent-atlas-results-20260924.md"
+            >Archived Time geometry rows and definitions</a
+          >.
+        </p>
+        <p>
+          Saved checkpoints from the later path experiment further separated
+          training and development geometry (Figure 8). Between 250 and 1,000
+          updates, whole-cue development participation ratio changed from 3.50
+          to 3.99 for cue-only Time and from 2.92 to 2.79 for joint Time.
+          Training values instead changed from 7.73 to 5.20 and 10.05 to 9.71.
+          These describe the spectra of finite constructed 80-feature
+          populations. They do not establish a brain-intrinsic dimension,
+          biological stabilization or a rotation between cue and navigation.
+          Checkpoints were not selected by these diagnostics, and equivalent
+          geometry for the latest endpoint cue/joint models remains unavailable.
+        </p>
+        <figure id="fig-geometry-checkpoints">
+          <div
+            class="figure-scroll"
+            tabindex="0"
+            role="region"
+            aria-label="Figure 8, saved checkpoint geometry"
+          >
+            <img
+              src="../cebra-cue-time-readout-20261005/figures/geometry_evolution.png"
+              alt="Training and development participation ratio, full-space distance stability and neighborhood overlap at saved path-model checkpoints."
+            />
+          </div>
+          <figcaption>
+            <strong
+              >Figure 8. Geometry across saved path-model checkpoints.</strong
+            >
+            Fixed 4→3 component population: 29 units/seven sessions, 82/22 real
+            sources, 128 training rows/30 weighted development combinations; ten
+            cue bins concatenate to 80 latent features. Participation ratio is
+            (Σλ)²/Σλ². Stability compares the same rows with their 1,000-update
+            representation using full-space distance-rank correlation and
+            ten-neighbor overlap. Thin traces are computational seeds; training
+            and development are separate. Final self-comparison equals one by
+            construction. There is no decoder, biological interval or
+            checkpoint-selection test in this descriptive panel. Source:
+            <a href="../cebra-cue-time-readout-20261005/README.md"
+              >saved-checkpoint diagnostics</a
+            >.
+          </figcaption>
+        </figure>
+      </section>
+
+      <section id="discussion">
+        <h2>4. Discussion</h2>
+        <h3>
+          4.1. Endpoint information is distinct from prospective path
+          information
+        </h3>
+        <p>
+          The clearest positive result was recovery of endpoint-condition
+          information in the constructed development populations. The endpoint
+          and path assays nevertheless address different questions. Holding
+          endpoints fixed removes their identity as a between-class explanation
+          for the component contrast, but does not match every visual, motor or
+          history variable. Conversely, strong goal or ordered-pair decoding
+          does not imply any ability to distinguish alternative movements
+          between those endpoints.
+        </p>
+        <p>
+          Across sampled, exact-product and endpoint-panel path assays, the
+          evidence did not establish robust incremental path information. Some
+          interventions improved particular metrics, but none converts the
+          entire sequence into one successful confirmatory test. The original
+          information component of the hypothesis remains unresolved, and
+          reproducible low-dimensional organization of incremental path
+          information was not demonstrated. Full ordered-route prediction was
+          not completed. These bounded conclusions close a stage of research
+          without implying that hippocampal path coding is absent or requiring
+          another round of tuning to obtain a positive result.
+        </p>
+        <h3>4.2. Interpretation is limited by the evaluation object</h3>
+        <p>
+          Source-safe fitting is necessary but not sufficient for biological
+          generalization. Known-label assembly defines a conditional product
+          distribution; it cannot be used unchanged to assemble an unknown-label
+          natural trial. Finite session×class support and repeated source reuse
+          constrain the available independent evidence. Exact enumeration
+          removes Monte Carlo noise from a small empirical product but does not
+          enlarge that product's underlying source population. More
+          computational seeds and more synthetic rows therefore answer different
+          questions from additional recordings.
+        </p>
+        <p>
+          Development outcomes were inspected repeatedly, and some source-panel
+          decisions used existing development support. The earlier path
+          programme also recorded a rejected initial probe that exposed
+          locked-test endpoint aggregates. Restarting the accepted mapping under
+          guarded access did not erase that exposure. Subsequent source
+          separation, null controls and replays improve traceability within the
+          declared analyses, but do not restore a pristine test set.
+          Source-resampling ranges are informative sensitivities, not a
+          substitute for uncertainty from genuinely new observations
+          <a href="#ref-validation">[4]</a>.
+        </p>
+        <p>
+          Potential covariation with visual cue, position, view, heading,
+          action, trial history and session remains incompletely controlled.
+          Place-responsive selection also limits extrapolation to the entire
+          hippocampal population. Same-session membership does not, without
+          recording metadata, verify simultaneity; cross-session assembly
+          certainly does not create it. Thus these results cannot establish
+          trial-specific population dynamics, intention, causal planning or the
+          complete hippocampal state.
+        </p>
+        <h3>
+          4.3. CEBRA performance reflects a pipeline, not one isolated modeling
+          choice
+        </h3>
+        <p>
+          CEBRA-Time's measured performance depended on training coverage,
+          source construction, checkpoint and readout. Endpoint regularization
+          and cue/navigation training changed the observed scores, while the
+          path decoder and penalty studies showed that a simple
+          readout-under-capacity explanation was insufficient for the retained
+          Time features. Neither observation makes CEBRA-Time a universal winner
+          or establishes that another path representation must fail.
+        </p>
+        <p>
+          The strongest defensible comparisons are local: matched source arrays,
+          declared transforms and readouts, and clearly identified
+          interventions. A change from whole-cue to single-bin readout changes
+          feature count and effective regularization; joint training reallocates
+          cue samples while adding navigation. Results from these compound
+          interventions should not be retrospectively presented as isolated
+          causal effects.
+        </p>
+        <h3>4.4. Implications for reusable neural representations</h3>
+        <p>
+          A useful next question may be whether a frozen representation can
+          support new readouts or predict future observations under explicit
+          measurement constraints. That ambition is not already achieved by
+          endpoint decoding, a consistent embedding or a favorable geometric
+          display. Task recovery, readout transfer, predictive-state estimation
+          and formal model-relative observability remain distinct claims.
+        </p>
+        <p>
+          Historical raw-feature LDA goal temporal generalization is available
+          (Figure S6), whereas matched CEBRA cue/joint train-time × test-time
+          and cross-phase readout transfer remain unexecuted. Latest endpoint
+          nonlinear frozen-latent readout comparisons and geometry also remain
+          gaps, not results concealed by this manuscript. None is required
+          merely to report the completed work. The separate future-research
+          agenda has not fixed a data route or protocol; no particular
+          additional experiment follows automatically from the retrospective.
+        </p>
+      </section>
+
+      <section id="conclusions">
+        <h2>5. Conclusion</h2>
+        <p>
+          Across the completed exploratory studies, endpoint-condition recovery
+          was more strongly supported than robust path-component generalization.
+          CEBRA's utility depended on target, sampling and training
+          construction, readout and metric, with raw features and PCA remaining
+          important comparators. Decoder, regularization, source-transfer and
+          geometry analyses narrowed several explanations without establishing a
+          uniquely correct hippocampal representation. The resulting distinction
+          between conditional task-information recovery and reusable
+          trial-specific state estimation provides the basis for a new research
+          question, not evidence that the latter has already been solved.
+        </p>
+      </section>
+
+      <section id="supporting" class="supporting">
+        <h2>Supporting information</h2>
+        <h3>S1. Behavioral examples and source support</h3>
+        <figure id="fig-s1">
+          <div
+            class="figure-scroll"
+            tabindex="0"
+            role="region"
+            aria-label="Figure S1, existing raw-path overlays"
+          >
+            <img
+              src="../../professor_updates/place195_v6_v9_20260906/place195-v6-v9-professor-methods-results-validity-20260906.html#image-1"
+              alt="Previously rendered real train/development navigation paths overlaid on the accepted static spatial map."
+            />
+          </div>
+          <figcaption>
+            <strong
+              >Figure S1. Existing path overlays used to inspect the spatial
+              measurement.</strong
+            >
+            Real continuous movements from the accepted development mapping are
+            shown over the static regions of Figure 1. These are selected
+            behavioral illustrations within the 19,162-path mapping cohort, not
+            the full 29-unit neural comparison, predicted paths or examples
+            selected to establish decoder success. The map uses Unity
+            coordinates, and the curves follow recorded navigation order; no
+            synthetic population count, readout, metric or uncertainty interval
+            applies. No absent/present interpretation is assigned here beyond
+            the original mapping rules. Source:
+            <a href="../place195-v6-v9-autoresearch-20260906.md"
+              >V6 behavior report</a
+            >; unchanged archived image.
+          </figcaption>
+        </figure>
+        <figure id="fig-s2">
+          <p class="panel-label">A · Counts by endpoint condition</p>
+          <div
+            class="figure-scroll"
+            tabindex="0"
+            role="region"
+            aria-label="Figure S2A, endpoint source counts"
+          >
+            <img
+              src="../cebra-endpoint-time-readout-20261006/figures/source_class_counts.png"
+              alt="Real training and development sources by ordered endpoint condition."
+            />
+          </div>
+          <p class="panel-label">B · Session-by-class support</p>
+          <div
+            class="figure-scroll"
+            tabindex="0"
+            role="region"
+            aria-label="Figure S2B, endpoint session support"
+          >
+            <img
+              src="../cebra-endpoint-time-readout-20261006/figures/source_session_support.png"
+              alt="Endpoint condition support across fifty-eight session blocks in the fixed inner split."
+            />
+          </div>
+          <figcaption>
+            <strong>Figure S2. Endpoint source support.</strong> 195 selected
+            units/58 sessions; 12,288 inner-training and 3,265 historically
+            exposed development sources. These are real-source counts and
+            support cells, not the 480/240 constructed examples per seed.
+            Session blocks are not independent outer-test folds. No decoder,
+            time-course metric or uncertainty interval applies. Source:
+            <a href="../cebra-endpoint-time-readout-20261006/README.md"
+              >October endpoint report</a
+            >.
+          </figcaption>
+        </figure>
+        <figure id="fig-s3">
+          <div
+            class="figure-scroll"
+            tabindex="0"
+            role="region"
+            aria-label="Figure S3, path-component source support"
+          >
+            <img
+              src="../cebra-cue-time-readout-20261005/figures/source_support.png"
+              alt="Real source counts by session and binary component label for the fixed four-to-three path assay."
+            />
+          </div>
+          <figcaption>
+            <strong>Figure S3. Fixed-endpoint path support.</strong> 29 selected
+            units/seven session blocks; 82 training sources (30 absent/52
+            present) and 22 exposed-development sources (12 absent/ten present).
+            The later evaluation product has 24 absent/six present combinations,
+            weighted to half the mass per class; these are not additional real
+            trials. Eight development session×class pools are singletons,
+            yielding inestimable source deletions. This is a support count, not
+            a decoding or uncertainty result. Source:
+            <a href="../cebra-cue-time-readout-20261005/source-support.md"
+              >source-construction audit</a
+            >.
+          </figcaption>
+        </figure>
+        <h3>S2. Endpoint errors and null controls</h3>
+        <figure id="fig-s4">
+          <div
+            class="figure-scroll"
+            tabindex="0"
+            role="region"
+            aria-label="Figure S4, pair confusion matrices"
+          >
+            <img
+              src="../cebra-endpoint-time-readout-20261006/figures/confusions_pair30_seed0.png"
+              alt="Count and row-normalized confusion matrices for all five whole-cue pair classifiers at computational seed zero."
+            />
+          </div>
+          <figcaption>
+            <strong
+              >Figure S4. Pair-target error structure at seed zero.</strong
+            >
+            October endpoint population and first-second pipeline of Figure 3.
+            Each matrix covers 240 pair-balanced development pseudorows from the
+            exposed source pool; rows/columns are true/predicted ordered-pair
+            classes. Top panels show counts and bottom panels row-normalized
+            recalls for all five representation/readout families. Seed zero is
+            shown explicitly, not selected as the best seed; the source report
+            retains the corresponding matrices for seeds one and two and both
+            six-class heads. Counts must not be summed across seeds as
+            biological replication. No uncertainty interval. Source:
+            <a href="../cebra-endpoint-time-readout-20261006/README.md"
+              >all endpoint confusions</a
+            >.
+          </figcaption>
+        </figure>
+        <figure id="fig-s5">
+          <div
+            class="figure-scroll"
+            tabindex="0"
+            role="region"
+            aria-label="Figure S5, endpoint null families"
+          >
+            <img
+              src="../cebra-endpoint-time-readout-20261006/figures/null_families.png"
+              alt="Twenty source-label-shuffled endpoint worlds compared with observed absolute and joint-training-gain family statistics."
+            />
+          </div>
+          <figcaption>
+            <strong
+              >Figure S5. Endpoint association and training-gain
+              controls.</strong
+            >
+            Same October source population, label-conditioned rows, cue windows
+            and models as Figures 3–4. Each of 20 session×split pair-label
+            shuffles repeats assembly, transforms, encoders and readouts,
+            preserving paired arms. Seed means precede family maxima. Absolute
+            bin BA/loss-skill and bin joint-gain tails are 1/21; whole-cue
+            joint-gain tail is 8/21. Chance/loss normalization follows the
+            target's class count. These are low-resolution no-association
+            references, not general superiority tests or biological intervals.
+            Source:
+            <a href="../cebra-endpoint-time-readout-20261006/README.md"
+              >endpoint null definitions</a
+            >.
+          </figcaption>
+        </figure>
+        <h3>S3. Historical temporal generalization</h3>
+        <figure id="fig-s6">
+          <div
+            class="figure-scroll"
+            tabindex="0"
+            role="region"
+            aria-label="Figure S6, historical raw-LDA temporal generalization"
+          >
+            <img
+              src="../../professor_updates/start_goal_20260907/endpoint-research-report.html#image-8"
+              alt="Historical six-class goal LDA trained at each cue bin and evaluated at every development cue bin."
+            />
+          </div>
+          <figcaption>
+            <strong
+              >Figure S6. Existing raw-feature goal temporal
+              generalization.</strong
+            >
+            Historical endpoint population, 195 units/58 sessions, 12,288/3,265
+            real sources and 480/240 conditional pseudorows per seed. A
+            training-fitted raw-feature goal LDA and its preprocessing are
+            applied across evaluation cue bins; both axes index 100-ms windows
+            from cue onset. This differs from fitting a new decoder for every
+            same-time prediction. Goal chance accuracy is 1/6.
+            Computational-seed aggregation does not provide biological
+            uncertainty. The figure is an existing raw-LDA result, not CEBRA
+            temporal transfer, navigation decoding or simultaneous neural
+            dynamics. Source:
+            <a
+              href="../../professor_updates/start_goal_20260907/endpoint-research-report.html"
+              >historical endpoint follow-up</a
+            >.
+          </figcaption>
+        </figure>
+        <h3>S4. Study-specific records</h3>
+        <p>
+          Complete configurations, all-seed metrics, additional confusions,
+          source sensitivity, failed attempts and numerical replay records
+          remain in the owning reports. Those archives retain additional model
+          variants outside this manuscript's Time-only encoder scope. Different
+          studies reused recordings and, in some cases, exact models; their
+          numerical verification is not independent biological replication.
+        </p>
+        <ol>
+          <li>
+            <a href="../start-goal-cebra-baseline.md"
+              >Initial endpoint baseline</a
+            >;
+            <a href="../start-goal-cebra-diagnosis.md"
+              >frozen-readout diagnosis</a
+            >;
+            <a href="../start-goal-autoresearch.md"
+              >historical Time checkpoints and LDA follow-up</a
+            >;
+            <a href="../cebra-endpoint-time-readout-20261006/report.html"
+              >latest matched endpoint study</a
+            >.
+          </li>
+          <li>
+            <a href="../place195-v6-v9-autoresearch-20260906.md"
+              >Path measurement and V6–V9 comparisons</a
+            >;
+            <a
+              href="../../professor_updates/path_generalization_20260907/path-generalization-teaching-audit-20260907.html"
+              >exact-product/source-transfer/per-unit analyses</a
+            >;
+            <a
+              href="../../professor_updates/path_generalization_20260907/CORRECTIONS.md"
+              >historical correction ledger</a
+            >.
+          </li>
+          <li>
+            <a href="../path-preprocessing-autoresearch-20260908.html"
+              >Five-endpoint preprocessing</a
+            >;
+            <a href="../path-pca-matched/report.html"
+              >matched raw/PCA extension</a
+            >;
+            <a href="../cebra-decoder-autoresearch-20260924.html"
+              >frozen decoder family</a
+            >;
+            <a href="../cebra-hyperparameter-diagnosis-20260924.html"
+              >regularization, confidence and kernel diagnosis</a
+            >.
+          </li>
+          <li>
+            <a href="../cebra-full-trial-transfer/report.html"
+              >Cue-only versus broader training</a
+            >;
+            <a href="../cebra-cue-time-readout-20261005/report.html"
+              >frozen cue-window readouts and checkpoint geometry</a
+            >. The latter replays the former's whole-cue results rather than
+            supplying an independent whole-cue replication.
+          </li>
+          <li>
+            <a href="../cebra-latent-atlas/atlas.html"
+              >Historical interactive latent atlas</a
+            >;
+            <a href="../cebra-latent-atlas-results-20260924.md"
+              >point definitions, display-fidelity metrics and interpretation</a
+            >.
+          </li>
+        </ol>
+      </section>
+
+      <section id="references" class="supporting references">
+        <h2>References</h2>
+        <ol>
+          <li id="ref-place">
+            O'Keefe, J. &amp; Dostrovsky, J. (1971). The hippocampus as a
+            spatial map. Preliminary evidence from unit activity in the
+            freely-moving rat. <i>Brain Research</i> <strong>34</strong>,
+            171–175.
+            <a href="https://doi.org/10.1016/0006-8993(71)90358-1"
+              >doi:10.1016/0006-8993(71)90358-1</a
+            >.
+          </li>
+          <li id="ref-dimensions">
+            Cunningham, J. P. &amp; Yu, B. M. (2014). Dimensionality reduction
+            for large-scale neural recordings. <i>Nature Neuroscience</i>
+            <strong>17</strong>, 1500–1509.
+            <a href="https://doi.org/10.1038/nn.3776">doi:10.1038/nn.3776</a>.
+          </li>
+          <li id="ref-cebra">
+            Schneider, S., Lee, J. H. &amp; Mathis, M. W. (2023). Learnable
+            latent embeddings for joint behavioural and neural analysis.
+            <i>Nature</i> <strong>617</strong>, 360–368.
+            <a href="https://doi.org/10.1038/s41586-023-06031-6"
+              >doi:10.1038/s41586-023-06031-6</a
+            >.
+          </li>
+          <li id="ref-validation">
+            Varoquaux, G. (2018). Cross-validation failure: Small sample sizes
+            lead to large error bars. <i>NeuroImage</i> <strong>180</strong>,
+            68–77.
+            <a href="https://doi.org/10.1016/j.neuroimage.2017.06.061"
+              >doi:10.1016/j.neuroimage.2017.06.061</a
+            >. This methodological reference does not provide uncertainty
+            estimates for the present source-dependent datasets.
+          </li>
+        </ol>
+      </section>
+      <footer>
+        <p>
+          Private working manuscript · Revision 03. Main figures and
+          supplementary images are unchanged bytes from accepted repository
+          reports; Figure 2 is a labeled method schematic. No new model fitting,
+          saved-model reanalysis or raw-data access was performed for this
+          manuscript. The portable copy embeds all images; optional source and
+          literature links require network access, and private source reports
+          may require sign-in.
+        </p>
+        <a href="#top">Back to title</a>
+      </footer>
+    </main>
+  </body>
+</html>
