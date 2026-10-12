@@ -1,52 +1,45 @@
-# Neuroscience: CEBRA retrospective and evidence
+# Neuroscience: CEBRA retrospective
 
-## Start with the report
+A report-led research workspace: current interpretation up front, historical evidence
+organized by week, and scientific implementation moving into `src/neuro/`.
 
-- **[Current report](report/README.md)** — manuscript, feedback and publishing commands.
-- **[Standalone reading milestone](report/retrospective-frozen-20261012.html)** —
-  download raw HTML and open locally. A pre-existing local checksum difference is
-  preserved and remains flagged; see the report README.
-- **[Research history by week](history/README.md)** — what happened, conclusions,
-  offline reports and links to each study's protocol/evidence.
+## Start here
 
-The notebook will be one companion to the report, using the same maintained
-scientific implementation. It has not been built; no new fitting is queued.
+| Goal | Entry point |
+| --- | --- |
+| Read or edit the manuscript | **[Current report](report/README.md)** |
+| Review the codebase design | **[Visual HTML overview](docs/codebase-design.html)** — download raw and open locally |
+| Follow the research chronology | **[Weekly history](history/README.md)** |
+| Find methods, evidence or recovery | [Documentation map](docs/README.md) |
 
-## Code and working structure
+## Structure
 
 ```text
-report/                 current manuscript and presentation checks
-history/week-.../       weekly overview → studies → reading artifacts
-src/neuro/              scientific implementation and genuine shared objects
-scripts/                launch/compatibility layer; legacy bodies still being migrated
-docs/                   living methods, dataset, direction and recovery
+report/                 current manuscript, feedback and publishing tools
+history/week-.../       weekly overview → studies → historical reading files
+src/neuro/              scientific implementation and genuinely shared objects
+scripts/                launch/compatibility layer; legacy scientific bodies remain
+docs/                   living methods, evidence catalog and workspace recovery
 ```
 
-The [first shared extraction](src/neuro/README.md) is the place195 split-access
-guard: validation, filtered readers and audit objects, shared by existing studies.
-It is not a generic utilities framework. Remaining scientific bodies in `scripts/`
-are explicitly migration debt, not the intended architecture.
+**Implemented:** report promotion, seven weekly overviews, eleven byte-preserved HTML
+moves and one shared split-access extraction. **Still pending:** the remaining
+scientific-code/evidence-package migration and one companion Jupyter notebook.
+See [migration status and checks](docs/reorganization.md); this is not a completed
+pipeline rewrite. Shared code is factored by scientific meaning, not put into a
+catch-all `utils.py`.
 
-[Migration scope and checks](docs/reorganization.md) distinguish completed physical
-moves from remaining full-package/code work. Eleven historical reading files have
-moved byte-for-byte; old paths are compatibility symlinks. Source packages and
-hash-bound protocols remain in place in this slice. [Script map](scripts/README.md)
-explains which commands need private artifacts or scientific execution approval.
+## Limits worth knowing
 
-## Scientific safeguards and next direction
+- The frozen reading file has a preserved pre-existing checksum difference. Its
+  integrity test still fails; see [report status](report/README.md#frozen-whole-file-reading-milestone--october-12).
+- Source-safe pseudopopulations are not simultaneous trial-specific recordings.
+  Endpoint, binary-component and full ordered-route prediction are distinct;
+  full ordered routes were not evaluated. H1 is unresolved; H2 is removed.
+- No new fit is queued. [Scientific safeguards](docs/analysis-contract.md) and
+  [future research proposals](docs/cebra-observability-agenda-20261011.md) stay separate.
 
-- [Analysis contract](docs/analysis-contract.md) and [dataset card](docs/dataset-card.md)
-- [Future latent-model agenda](docs/cebra-observability-agenda-20261011.md) — proposal only
-- [Workspace/recovery](docs/workspace.md) and [agent instructions](AGENTS.md)
-
-Endpoint decoding, binary path-component decoding and full ordered-route prediction
-are different questions; full ordered-route prediction was not evaluated. H1 remains
-unresolved; H2 is removed. Cross-session pseudopopulations are not simultaneous
-trial-specific populations. Historical source exposure and selection limits remain.
-
-## Protected local material
-
-`data/`, `outputs/`, `scratch/`, `work/`, local PDFs and session history are not
-cleanup targets. Git cannot recover ignored private inputs/models. Preserve the
-three retained review worktrees. `Hippocampus.jl/` and `PyHipp/` remain unchanged
-submodules; do not upgrade or remove them as part of filing.
+Private `data/`, `outputs/`, `scratch/`, `work/`, PDFs, sessions and retained worktrees
+are protected. Git cannot recover ignored models/data. `Hippocampus.jl/` and `PyHipp/`
+remain unchanged submodules. See [workspace/recovery](docs/workspace.md) and
+[agent instructions](AGENTS.md) before changing them.

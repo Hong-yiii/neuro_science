@@ -12,6 +12,12 @@ PR status, recovery records and safe verification commands. Do not recreate old
 sibling worktrees or restart experiments from historical pending-work flags.
 Keep new durable decisions in Git-backed notes, not only in a chat transcript.
 
+**Publication update:** PR19 is merged at `a169edf`. Reorganization checkpoint
+`ebe8256` is on `refactor/report-first-weekly-layout`, targeting a separate draft
+PR into main. Do not merge it without authorization. See `docs/README.md` and
+`docs/codebase-design.html` for the current documentation/design map; long workspace
+and publishing logs are preserved under `history/operations/`.
+
 **October12 implementation checkpoint:** approved hierarchy and scientific-code
 separation are being built. Start at `report/README.md`, `history/README.md` and
 `docs/reorganization.md`. Seven weekly overviews and eleven byte-preserved HTML
@@ -28,11 +34,10 @@ its actually used evidence to be the main working flow. Start with
 `docs/reports/cebra-retrospective-20261012/README.md` and `docs/reports/README.md`.
 The exact frozen reading HTML is versioned alongside the manuscript package;
 its original local copy remains under `outputs/cebra-retrospective-20261012/`.
-**Next sequence:** sharpen the report, then create an interpretable high-observability
-Jupyter notebook. Read the package's next-work contract; clarify whether “pair”
-means pair decoding or two notebooks before implementation. Computational
-transparency is distinct from formal neural-state observability; no new fits or
-private-data access are authorized by this publishing/handoff request.
+**Next sequence:** sharpen the report, then create one interpretable companion
+Jupyter notebook. Its target/cohort and approved input contract remain open.
+Computational transparency is distinct from formal neural-state observability;
+no new fits or private-data access are authorized by publishing.
 Retired onboarding/RNN/V4–V5 checklists are filed under
 `docs/reports/archive/early-work-20261012/`, with old-path pointers. Initial-trial
 records are historical, not a run queue. Pilot helpers and mixed contract/smoke

@@ -2,6 +2,14 @@
 
 2026-10-12. **First slice implemented; full migration is not complete.**
 
+Checkpoint **`ebe8256`** preserves the implemented state on
+`refactor/report-first-weekly-layout`, based on merged PR19 (`a169edf`). The owner
+subsequently authorized a draft PR and high-level documentation cleanup.
+[Visual design review](codebase-design.html) distinguishes current and target layouts;
+[documentation map](README.md) replaces competing entry points. Long-form workspace
+and publishing records are preserved verbatim in the
+[operations archive](../history/operations/README.md).
+
 ## Implemented
 
 - Current eight-file manuscript package moved physically to [`report/`](../report/README.md).
@@ -44,7 +52,8 @@ Old-path symlinks are deliberate transitional compatibility, not the final desir
 layout. Read weekly links to the real files on GitHub; GitHub may show a symlink's text
 instead of rendering its target. Source report templates are built before offline
 reading. No notebook, biological fit, private-data access, replay, environment change,
-server, worktree cleanup, commit, push or PR merge is included.
+server, worktree cleanup or PR merge is included. Checkpoint commits and draft-PR
+publication are explicitly authorized separately from scientific execution.
 
 ## Preservation
 
@@ -109,3 +118,20 @@ project-wide type-check claim**. Auxiliary scanning also flags existing fail-fas
 numeric conversions in historical runners; this filing pass does not change their
 scientific error behavior merely to satisfy a blanket try/except rule. Syntax/lint
 and final whitespace checks are separate from historical runtime certification.
+
+### Publication/documentation follow-up
+
+The offline design HTML passed primary HTML diagnostics and Chrome checks at 1200px
+and 390px: no horizontal overflow, duplicate IDs, broken internal anchors or remote
+resources. Screenshots were inspected; no server/listening port was started. Sixty
+local documentation links/anchors passed, and both archived long documents match
+checkpoint `ebe8256` exactly. Independent documentation review reported no findings.
+Receipts/screenshots/review remain in `work/reorganization-weekly-audit/`.
+
+Task `b75b2f2a5` reran the four split checks, layout, report arithmetic and builder
+checks successfully, then confirmed the **expected frozen-integrity failure**.
+The earlier publication harness `bf266490d` had omitted the report import path;
+correcting that harness required no production change. Chrome task `bede6cce2`
+completed and its temporary profile was removed. Full scientific diagnostics and
+private replay remain outside this publication claim; cached historical fail-fast
+conversion warnings are not silently suppressed.
