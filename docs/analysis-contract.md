@@ -1,6 +1,6 @@
 # Analysis Contract
 
-**October9 handoff:** the next session develops the [observability/CEBRA pivot](observability-pivot-20261009.md). Its definition, targets and protocol are not yet frozen. Source independence, training-only processing, provenance and biological claim limits in this contract still apply; any new target-specific contract must be explicit.
+**October11 steering:** use the [two-document retrospective](reports/cebra-research-synthesis-20261011.md) and [observable reusable latent-model agenda](cebra-observability-agenda-20261011.md). The prior path goal is no longer the default objective; the new hypotheses, definition, targets and protocol are not yet frozen. Source independence, training-only processing, provenance and biological claim limits in this contract still apply; any new target-specific contract must be explicit.
 
 The body below records the prior prospective-path contract and [September27 direction](project-direction.md), not the current next-work queue. H1 is not declared false and artificial-agent H2 stays removed. This update authorizes no new fits or data access.
 

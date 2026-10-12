@@ -1,0 +1,46 @@
+{
+  "date": "2026-10-12",
+  "auditRun": "ff26d0e9-66d0-4793-89ce-0241e75a4fd4",
+  "scope": "Four obsolete planning documents physically archived verbatim; original paths retained as navigation stubs. One former reports index copied verbatim before rewrite.",
+  "baseRevision": "4862267",
+  "preEditCopies": "outputs/repo-cleanup-20261012/before/",
+  "archiveDirectory": "docs/reports/archive/early-work-20261012/",
+  "entries": [
+    {
+      "original": "docs/getting-started-tasks.md",
+      "archive": "getting-started-tasks.md.txt",
+      "action": "archive-with-pointer",
+      "sha256": "1dc090059478fe72b3a19ee7338641e41a35f6eb3cf5bd17704049e5c3cd92bc"
+    },
+    {
+      "original": "docs/supervisor-meeting-prep.md",
+      "archive": "supervisor-meeting-prep.md.txt",
+      "action": "archive-with-pointer",
+      "sha256": "1d76687c8f0cb6858317e91deda44e9b58ef04f39b8f1cafbdbe40af3594351b"
+    },
+    {
+      "original": "learning/neural-agent-action-plan.md",
+      "archive": "neural-agent-action-plan.md.txt",
+      "action": "archive-with-pointer",
+      "sha256": "494378ec5551b2c1d575ccc52e4a3ce678f5316fa70c21ad8ba9a24cd85e50bb"
+    },
+    {
+      "original": "todo/graph-path-pseudopopulation.md",
+      "archive": "graph-path-pseudopopulation.md.txt",
+      "action": "archive-with-pointer",
+      "sha256": "2f874f80b3fa2c4a19dde7e6d1f8bb73a1cf89c5f579b842d016f7c5f6cd1bd7"
+    },
+    {
+      "original": "docs/reports/README.md",
+      "archive": "reports-index-before-cleanup.md.txt",
+      "action": "snapshot-before-navigation-rewrite",
+      "sha256": "da47b65d77c25c64af30819138502b87127b81ebf9556e019beafa20c9248532"
+    }
+  ],
+  "initialTrialRecords": "Cataloged as historical in place, not physically migrated",
+  "codeOrTestMoves": false,
+  "privateArtifactMoves": false,
+  "scientificRuns": false,
+  "offHostBackupVerified": false,
+  "frozenReportSha256": "86497662096908f5fa92f1d00747377b2046e07a37ea225ae8fdbedcc9dfbde6"
+}

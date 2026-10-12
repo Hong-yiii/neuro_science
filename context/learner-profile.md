@@ -11,7 +11,7 @@ For this workspace, explanations should:
 - emphasize observability limits of hippocampus and related brain areas;
 - explain preprocessing steps as transformations from raw signals into analysis-ready tensors/tables;
 - distinguish encoder training, decoder evaluation, task-information recoverability and formal dynamical-state observability;
-- use the [October9 observability/CEBRA handoff](../docs/observability-pivot-20261009.md) as the next-session priority; the lab's operational definition remains open. H1 is retained as prior work, not a required next target; artificial-agent H2 stays removed.
+- use the [October11 latent-model/observability agenda](../docs/cebra-observability-agenda-20261011.md) and [companion retrospective](../docs/reports/cebra-research-synthesis-20261011.md) as the current planning entry points. The new direction is requested, but its operational hypotheses/protocol remain proposals. H1 is retained as prior work, not a required next target; artificial-agent H2 stays removed.
 
 Important teaching frame:
 
@@ -23,10 +23,12 @@ A successful readout is an association, not direct observation of intention.
 
 The user expects to receive higher-level formatted neural data from the professor, which may intentionally hide much of the preprocessing. Treat that as acceptable, but keep the analysis contract explicit so assumptions remain auditable.
 
-Current next-session focus (October9): develop a hippocampal-observability question
-with CEBRA as a specific lab interest. Clarify task-variable recoverability versus
-formal dynamical-state reconstruction. Temporal/cross-phase transfer and sampling
-robustness are candidate analyses, not completed studies or run authorization.
+Current focus (October11): narrow two documents—a rigorous completed-work synthesis
+and a new CEBRA-centered agenda for estimable/reusable hippocampal task-state models.
+Later fold a condensed future-work section into the synthesis. Distinguish task
+recovery, frozen readout transfer, predictive-state estimation and model-relative
+observability. The proposed neural forecasting/spatial-readout strawman needs
+verified simultaneous data and a separately approved protocol; it is not a queued run.
 
 Previous H1-focused scope — historical context:
 

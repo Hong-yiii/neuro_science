@@ -1,0 +1,898 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; img-src 'self' data:; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'"
+    />
+    <title>CEBRA and hippocampal navigation · manuscript draft 02</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #222;
+        --muted: #626262;
+        --line: #d8d8d8;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-padding-top: 24px;
+      }
+      body {
+        margin: 0;
+        background: #eee;
+        color: var(--ink);
+        font:
+          18px/1.7 Georgia,
+          "Times New Roman",
+          serif;
+      }
+      main {
+        max-width: 1060px;
+        margin: 32px auto;
+        padding: 56px 64px 64px;
+        background: white;
+      }
+      header {
+        border-bottom: 1px solid var(--line);
+        padding-bottom: 22px;
+      }
+      .manuscript-label,
+      nav,
+      .draft-note,
+      footer,
+      table {
+        font-family: system-ui, sans-serif;
+      }
+      .manuscript-label {
+        font-size: 0.74rem;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      h1 {
+        font-weight: 500;
+        font-size: clamp(2rem, 4.3vw, 2.9rem);
+        line-height: 1.18;
+        letter-spacing: -0.025em;
+        margin: 20px 0;
+      }
+      .subtitle {
+        font-size: 1.12rem;
+        color: #4b4b4b;
+        margin-bottom: 20px;
+      }
+      .draft-note {
+        font-size: 0.8rem;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+      nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 20px;
+        font-size: 0.8rem;
+        margin: 22px 0 0;
+      }
+      a {
+        color: #245370;
+        text-underline-offset: 3px;
+      }
+      a:hover {
+        text-decoration-thickness: 2px;
+      }
+      a:focus-visible,
+      [tabindex]:focus-visible {
+        outline: 3px solid #976413;
+        outline-offset: 4px;
+      }
+      .skip {
+        position: absolute;
+        top: -100px;
+        left: 12px;
+        background: white;
+        padding: 10px;
+      }
+      .skip:focus {
+        top: 10px;
+      }
+      section {
+        margin-top: 42px;
+      }
+      h2 {
+        font-size: 1.55rem;
+        font-weight: 600;
+        line-height: 1.35;
+        margin: 0 0 18px;
+      }
+      h3 {
+        font-size: 1.15rem;
+        font-weight: 600;
+        line-height: 1.4;
+        margin: 28px 0 12px;
+      }
+      p {
+        margin: 0 0 17px;
+      }
+      .abstract {
+        padding-bottom: 22px;
+        border-bottom: 1px solid var(--line);
+      }
+      .abstract p {
+        font-size: 1rem;
+        line-height: 1.7;
+      }
+      .keywords {
+        font-size: 0.88rem !important;
+        color: var(--muted);
+      }
+      .editorial {
+        font-size: 0.9rem;
+        color: var(--muted);
+        font-style: italic;
+      }
+      figure {
+        margin: 30px 0 36px;
+      }
+      .figure-scroll,
+      .table-wrap {
+        overflow-x: auto;
+      }
+      .figure-scroll img {
+        display: block;
+        width: 100%;
+        min-width: 700px;
+        height: auto;
+      }
+      figcaption {
+        font-size: 0.85rem;
+        line-height: 1.6;
+        margin-top: 14px;
+      }
+      figcaption strong {
+        font-weight: 700;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 0.78rem;
+        line-height: 1.55;
+      }
+      caption {
+        text-align: left;
+        padding-bottom: 12px;
+        font-family: Georgia, serif;
+        font-size: 0.94rem;
+      }
+      th,
+      td {
+        text-align: left;
+        vertical-align: top;
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--line);
+      }
+      th {
+        border-top: 2px solid #555;
+        border-bottom: 1px solid #777;
+        font-weight: 650;
+      }
+      tbody tr:last-child td {
+        border-bottom: 2px solid #555;
+      }
+      .table-note {
+        font-size: 0.85rem;
+        line-height: 1.6;
+        margin-top: 12px;
+      }
+      .supporting {
+        border-top: 1px solid var(--line);
+        padding-top: 28px;
+      }
+      .supporting ol {
+        padding-left: 24px;
+        font-size: 0.91rem;
+      }
+      .supporting li {
+        padding-left: 6px;
+        margin: 12px 0;
+      }
+      footer {
+        border-top: 1px solid var(--line);
+        margin-top: 40px;
+        padding-top: 18px;
+        color: var(--muted);
+        font-size: 0.76rem;
+      }
+      @media (max-width: 720px) {
+        body {
+          background: white;
+          font-size: 17px;
+        }
+        main {
+          margin: 0;
+          padding: 30px 22px 42px;
+        }
+        h1 {
+          font-size: 2.1rem;
+        }
+        h2 {
+          font-size: 1.4rem;
+        }
+        section {
+          margin-top: 32px;
+        }
+        nav {
+          gap: 7px 16px;
+        }
+        th,
+        td {
+          padding: 9px;
+        }
+      }
+      @media print {
+        body {
+          background: white;
+          font-size: 11pt;
+        }
+        main {
+          max-width: none;
+          margin: 0;
+          padding: 0;
+        }
+        nav,
+        .skip {
+          display: none;
+        }
+        h2,
+        h3 {
+          break-after: avoid;
+        }
+        figure {
+          break-inside: avoid;
+        }
+        .figure-scroll img {
+          min-width: 0;
+        }
+        .figure-scroll,
+        .table-wrap {
+          overflow: visible;
+        }
+        a {
+          color: inherit;
+        }
+      }
+    </style>
+  </head>
+  <body id="top">
+    <a class="skip" href="#abstract">Skip to manuscript</a>
+    <main>
+      <header>
+        <p class="manuscript-label">
+          Research manuscript · working draft 02 · 12 October 2026
+        </p>
+        <h1>
+          Decoding navigation-related information from hippocampal activity with
+          CEBRA
+        </h1>
+        <p class="subtitle">
+          Endpoint recovery, path-component decoding, and comparison with
+          simpler representations
+        </p>
+        <p class="draft-note">
+          Abbreviated manuscript draft. Methods, literature references and
+          supplementary panels remain to be expanded. Results are drawn from
+          completed exploratory studies.
+        </p>
+        <nav aria-label="Manuscript contents">
+          <a href="#abstract">Abstract</a>
+          <a href="#introduction">Introduction</a>
+          <a href="#methods">Methods</a>
+          <a href="#results">Results</a>
+          <a href="#discussion">Discussion</a>
+          <a href="#conclusions">Conclusion</a>
+          <a href="#supporting">Supporting information</a>
+        </nav>
+      </header>
+
+      <section id="abstract" class="abstract">
+        <h2>Abstract</h2>
+        <p>
+          Low-dimensional representations of neural activity may make
+          behaviorally relevant information accessible to simple readouts. We
+          evaluated CEBRA representations of hippocampal cue-period activity in
+          a series of exploratory navigation analyses, comparing them with raw
+          spike-count features and principal component analysis (PCA).
+          Label-conditioned pseudopopulations supported decoding of start, goal
+          and ordered start–goal conditions. In the latest matched endpoint
+          comparison, whole-cue pair balanced accuracy was 83.61% for PCA,
+          75.56% for jointly trained cue/navigation CEBRA, 70.28% for raw
+          features and 63.75% for cue-only CEBRA. The ranking differed for
+          probability loss. Separate path-component studies showed descriptive
+          gains from broader encoder training and individual cue windows, but
+          source-transfer and shuffled-label controls did not establish robust
+          path information beyond endpoints. These findings support conditional
+          task-information recovery in the constructed populations, rather than
+          general CEBRA superiority or recovery of trial-specific hippocampal
+          states.
+        </p>
+        <p class="keywords">
+          <strong>Keywords:</strong> hippocampus; navigation; CEBRA; neural
+          representation; pseudopopulation; decoding
+        </p>
+      </section>
+
+      <section id="introduction">
+        <h2>1. Introduction</h2>
+        <p>
+          Predicting where a navigation trial begins and ends is a different
+          problem from predicting the movement between those locations. Multiple
+          paths may connect the same start and goal. Evidence that neural
+          activity distinguishes endpoint conditions therefore does not, by
+          itself, establish that it contains information about the subsequent
+          path beyond those endpoints.
+        </p>
+        <p>
+          The original question motivating these analyses was whether
+          hippocampal activity during the cue period, before navigation,
+          contains such additional path information and whether that information
+          has a reproducible low-dimensional organization. CEBRA was
+          investigated as a method for learning compact neural representations.
+          Its utility was assessed through downstream prediction and comparisons
+          with simpler representations, rather than the appearance of an
+          embedding alone.
+        </p>
+        <p>
+          Here, we bring together the completed endpoint and path-component
+          analyses. We distinguish information recovery within constructed task
+          conditions from generalization to different source trials, and examine
+          how encoder training, readout choice and temporal resolution affect
+          the observed results. The studies differ in their targets and source
+          populations; they are treated as related experiments, not pooled into
+          a single performance ranking.
+        </p>
+        <p class="editorial">
+          [Task schematic and verified example paths to be inserted.
+          Navigation-task and CEBRA literature citations remain to be
+          integrated.]
+        </p>
+      </section>
+
+      <section id="methods">
+        <h2>2. Materials and methods</h2>
+        <h3 id="recordings">
+          2.1. Recordings, task labels and study populations
+        </h3>
+        <p>
+          The analyses used hippocampal units selected for place responsiveness.
+          Spike timestamps were converted to counts in short cue-period windows.
+          Endpoint targets comprised six start categories, six goal categories
+          and 30 ordered start–goal pairs. The endpoint IDs are marker-derived
+          categories whose exact task semantics still require laboratory
+          confirmation.
+        </p>
+        <p>
+          Three principal study populations were used (Table 1). The
+          fixed-endpoint path assay predicted the presence of one directed
+          component among interior corridor runs for start–goal pair 4→3,
+          excluding the first and last runs. It did not predict the complete
+          ordered route. A separate preprocessing/PCA study examined supported
+          component targets across five endpoint groups.
+        </p>
+        <div
+          class="table-wrap"
+          tabindex="0"
+          role="region"
+          aria-label="Table 1, study populations"
+        >
+          <table>
+            <caption>
+              <strong>Table 1.</strong>
+              Principal source populations and evaluation targets.
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Study</th>
+                <th scope="col">Units / sessions</th>
+                <th scope="col">Training / development real sources</th>
+                <th scope="col">Prediction target</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Endpoint comparison</td>
+                <td>195 / 58</td>
+                <td>12,288 / 3,265</td>
+                <td>Start, goal and ordered pair</td>
+              </tr>
+              <tr>
+                <td>Fixed-endpoint path assay</td>
+                <td>29 / 7</td>
+                <td>82 / 22</td>
+                <td>Interior directed component within 4→3</td>
+              </tr>
+              <tr>
+                <td>Preprocessing / matched PCA</td>
+                <td>49 / 13</td>
+                <td>147 / 41</td>
+                <td>Component assays across five endpoint groups</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-note">
+          Counts refer to real source records, not synthetic examples.
+          Development sources had been inspected during earlier exploratory
+          work; they do not constitute fresh confirmatory samples. The
+          populations are overlapping study constructions, not three independent
+          biological replications.
+        </p>
+
+        <h3>2.2. Pseudopopulation construction and source separation</h3>
+        <p>
+          Real source trials were separated before learned preprocessing and
+          pseudopopulation assembly. Within each split, session blocks were
+          combined conditional on known task labels, retaining the cells and
+          time bins belonging to each selected source block. This construction
+          combines observations across sessions; it does not recover unmeasured
+          cross-session covariance or establish simultaneous population activity
+          on a natural trial.
+        </p>
+        <p>
+          The latest endpoint comparison assembled 480 training and 240
+          development examples per computational seed. The later fixed-endpoint
+          path studies used 128 training examples and 30 development
+          combinations, comprising 24 component-absent and six component-present
+          combinations with equal total evaluation weight per class. Constructed
+          rows share real sources and are consequently not independent
+          biological observations. Because assembly uses known labels, endpoint
+          performance is a conditional information assay rather than a
+          deployable predictor for an unknown-label trial.
+        </p>
+        <figure id="fig-sources">
+          <div
+            class="figure-scroll"
+            tabindex="0"
+            role="region"
+            aria-label="Figure 1, scrollable source-count plot"
+          >
+            <img
+              src="../cebra-endpoint-time-readout-20261006/figures/source_class_counts.png"
+              alt="Real training and development source counts across thirty ordered start–goal conditions."
+            />
+          </div>
+          <figcaption>
+            <strong
+              >Figure 1. Real-source support for endpoint decoding.</strong
+            >
+            Counts by ordered start–goal condition for the 195-unit, 58-session
+            endpoint population: 12,288 training and 3,265 historically exposed
+            development sources. These are not the 480/240 constructed examples
+            per seed. This descriptive count plot has no decoder, uncertainty
+            interval or simultaneous-population interpretation. Reproduced
+            unchanged from the
+            <a href="../cebra-endpoint-time-readout-20261006/README.md"
+              >October 7 endpoint study</a
+            >.
+          </figcaption>
+        </figure>
+
+        <h3>2.3. Representations and readouts</h3>
+        <p>
+          Raw spike-count features were compared with PCA and CEBRA
+          representations. CEBRA-Time uses temporally related examples in
+          contrastive learning; behavior-guided CEBRA variants use auxiliary
+          labels to determine sampling relationships. These training objectives
+          are distinct from the downstream classifier. In the latest endpoint
+          study, a shared encoder was trained either on cue activity alone or on
+          a 50/50 mixture of cue and navigation activity from training sources.
+          Both conditions were evaluated using cue activity only.
+        </p>
+        <p>
+          The endpoint comparison used ten 100-ms cue bins. PCA and CEBRA
+          produced eight coordinates per bin; concatenating the first second
+          yielded 80 features, compared with 1,950 raw features. Whole-cue
+          concatenation was not temporal averaging or an eight-dimensional
+          whole-trial state. Scaling, dimensionality reduction and readouts used
+          training data only. Raw/PCA/CEBRA features were evaluated with
+          logistic regression (<i>C</i> = 0.01); raw-feature linear discriminant
+          analysis (LDA) provided a separate supervised reference. The path
+          studies additionally examined nearest-neighbor and nonlinear
+          radial-basis-function support-vector-machine readouts.
+        </p>
+
+        <h3>2.4. Evaluation and statistical interpretation</h3>
+        <p>
+          Balanced accuracy (BA) averages recall across classes; logarithmic
+          loss evaluates predicted probabilities and penalizes confident errors.
+          Chance-reference BA is 1/30 for the ordered pair, 1/6 for start or
+          goal, and 1/2 for the binary path component. Three computational seeds
+          describe variation in construction and fitting, not biological
+          replication or confidence intervals.
+        </p>
+        <p>
+          Source-coherent label shuffles and source-sensitivity analyses were
+          used where specified by each study. The October comparisons retained
+          20 shuffled worlds, with seed averaging performed before taking maxima
+          across predefined comparison families. Inclusive plus-one tail
+          fractions therefore have a minimum resolution of 1/21. These are
+          no-association diagnostics, not universal method-superiority tests,
+          and do not remove historical evaluation exposure or unresolved
+          nuisance confounds. Full configurations and source ledgers remain in
+          the linked supporting reports.
+        </p>
+      </section>
+
+      <section id="results">
+        <h2>3. Results</h2>
+        <h3 id="endpoints">
+          3.1. Endpoint conditions were recoverable, with target- and
+          metric-dependent method rankings
+        </h3>
+        <p>
+          In the latest matched comparison, cue-period features distinguished
+          endpoint conditions in the constructed development population (Figure
+          2). PCA achieved the highest whole-cue pair and start BA among the
+          tested methods, whereas raw features achieved the highest goal BA.
+          Joint cue/navigation CEBRA increased pair BA from 63.75% to 75.56%
+          relative to cue-only CEBRA, but the corresponding changes for start
+          and goal were +0.83 and −1.25 percentage points. The gain was
+          therefore not uniform across targets.
+        </p>
+        <figure id="fig-endpoints">
+          <div
+            class="figure-scroll"
+            tabindex="0"
+            role="region"
+            aria-label="Figure 2, scrollable endpoint accuracy plot"
+          >
+            <img
+              src="../cebra-endpoint-time-readout-20261006/figures/wholecue_balanced_accuracy.png"
+              alt="Whole-cue balanced accuracy for ordered pair, start and goal, comparing raw features, PCA, cue-only CEBRA, jointly trained CEBRA and LDA."
+            />
+          </div>
+          <figcaption>
+            <strong>Figure 2. Whole-cue endpoint balanced accuracy.</strong>
+            Ordered pair (30 classes), start (six classes) and goal (six
+            classes) in the October 7 population: 195 selected units / 58
+            sessions, 12,288 training / 3,265 exposed-development sources, and
+            480/240 label-conditioned examples per seed. Readouts use
+            concatenated 0–1 s cue activity. Raw/PCA/CEBRA use logistic
+            regression, <i>C</i> = 0.01; SVD-LDA is a separate supervised
+            reference. “Cue” and “Joint” denote cue-only and cue/navigation
+            encoder training at 1,000 updates. Bars are three-seed means; points
+            are computational seeds, not biological replicates or confidence
+            intervals. Dotted lines mark uniform chance references. Endpoint
+            recovery does not test path information beyond endpoints.
+            <a
+              href="../cebra-endpoint-time-readout-20261006/tables/observed_metrics_by_seed.csv"
+              >Seed-level results</a
+            >.
+          </figcaption>
+        </figure>
+        <p>
+          Accuracy and probability quality did not produce the same ordering
+          (Figure 3). Joint CEBRA had lower mean pair log loss than PCA (1.6373
+          versus 1.6736), despite lower pair BA (75.56% versus 83.61%). The
+          whole-cue joint-gain null-family tail was 8/21. These results describe
+          a conditional improvement over cue-only CEBRA, not robust general
+          superiority over the comparison methods.
+        </p>
+        <figure id="fig-loss">
+          <div
+            class="figure-scroll"
+            tabindex="0"
+            role="region"
+            aria-label="Figure 3, scrollable endpoint loss plot"
+          >
+            <img
+              src="../cebra-endpoint-time-readout-20261006/figures/wholecue_log_loss.png"
+              alt="Whole-cue logarithmic loss for the same endpoint targets and representation families; lower values indicate better predicted probabilities."
+            />
+          </div>
+          <figcaption>
+            <strong>Figure 3. Endpoint probability loss.</strong> The same
+            October 7 sources, constructed examples, 0–1 s inputs, training-only
+            transforms and readouts as Figure 2. Lower log loss is better;
+            dotted lines indicate uniform-prediction references, log(30) or
+            log(6). Bars and points summarize three computational seeds, not
+            biological uncertainty. The metric-dependent ranking does not
+            identify a uniquely superior representation. Reproduced unchanged
+            from the
+            <a href="../cebra-endpoint-time-readout-20261006/README.md"
+              >endpoint report</a
+            >.
+          </figcaption>
+        </figure>
+
+        <h3 id="paths">
+          3.2. Path-component decoding was sensitive to source population and
+          cue window
+        </h3>
+        <p>
+          Strong endpoint decoding did not translate into robust path-component
+          evidence. Earlier fixed-endpoint studies found that CEBRA readouts
+          transferred well across new mixtures of training sources but poorly to
+          a different source pool. In the separate five-endpoint
+          preprocessing/PCA study, stronger regularization improved probability
+          loss, but improvements were not broadly supported across endpoint
+          groups; matched raw and PCA readouts both achieved 55% BA.
+        </p>
+        <p>
+          The later fixed 4→3 cue-time assay revealed pronounced window
+          dependence (Figure 4). Joint CEBRA with a logistic readout reached a
+          descriptive mean BA of 88.89% at 100–200 ms, compared with 61.81% for
+          its separately trained whole-cue readout. Raw-feature logistic
+          regression reached 94.44% at 200–300 ms. These maxima were identified
+          by inspecting all ten windows and are not validated optimal prediction
+          times.
+        </p>
+        <figure id="fig-path-time">
+          <div
+            class="figure-scroll"
+            tabindex="0"
+            role="region"
+            aria-label="Figure 4, scrollable path-decoding time courses"
+          >
+            <img
+              src="../cebra-cue-time-readout-20261005/figures/balanced_accuracy.png"
+              alt="Path-component balanced accuracy through ten cue windows for raw, PCA, cue-only CEBRA and joint CEBRA with logistic and nonlinear SVM readouts."
+            />
+          </div>
+          <figcaption>
+            <strong
+              >Figure 4. Cue-time dependence of path-component decoding.</strong
+            >
+            October 5 fixed 4→3 interior-component assay: 29 selected units /
+            seven sessions, 82 training / 22 exposed-development sources, 128
+            training examples and 30 class-weighted development combinations.
+            Horizontal axes show 100-ms bin centers relative to cue onset; the
+            final bin retains recorded clipping. Logistic and RBF-SVM readouts
+            use raw/PCA or frozen 1,000-update CEBRA features. Thin lines are
+            three computational seeds, black lines their mean, red dashed lines
+            separate whole-cue readouts, and gray lines binary chance BA = 0.5.
+            No biological uncertainty interval or selected best window is
+            implied. The target is a component, not a complete route.
+            <a href="../cebra-cue-time-readout-20261005/README.md"
+              >Original report and source construction</a
+            >.
+          </figcaption>
+        </figure>
+        <p>
+          The shuffled-label controls substantially limited interpretation of
+          these peaks (Figure 5). Sixteen of 20 shuffled worlds had a maximum
+          across the 80 bin/representation/readout views at least as large as
+          the observed maximum, giving an inclusive tail fraction of 17/21. The
+          predeclared maximum joint-training logistic gain had a tail fraction
+          of 9/21. Thus, the observed peaks did not establish robust path
+          information or a reliable advantage of joint training within this
+          assay.
+        </p>
+        <figure id="fig-path-nulls">
+          <div
+            class="figure-scroll"
+            tabindex="0"
+            role="region"
+            aria-label="Figure 5, scrollable shuffled-label comparisons"
+          >
+            <img
+              src="../cebra-cue-time-readout-20261005/figures/null_families.png"
+              alt="Observed path-decoding family statistics against twenty source-label-shuffled worlds, including joint-training gain, maximum balanced accuracy and probability-loss improvement."
+            />
+          </div>
+          <figcaption>
+            <strong
+              >Figure 5. Family-level shuffled-label comparisons for path
+              decoding.</strong
+            >
+            Same October 5 target, real sources, weighted combinations and
+            cue-window readouts as Figure 4. Distributions contain 20
+            source-coherent shuffled worlds; red lines mark observed statistics.
+            Each world uses the same seed average and predefined family maximum,
+            excluding whole cue. Inclusive plus-one tails are 9/21 for maximum
+            joint-training logistic gain and 17/21 for maximum BA across 80
+            views. The loss-improvement reference is constant prediction. These
+            no-association diagnostics are not method-superiority tests,
+            biological confidence intervals or a correction for the project's
+            complete adaptive history.
+            <a href="../cebra-cue-time-readout-20261005/README.md"
+              >Provenance and statistical definitions</a
+            >.
+          </figcaption>
+        </figure>
+
+        <h3 id="ablations">
+          3.3. Sampling and readout ablations constrained explanations for
+          performance differences
+        </h3>
+        <p>
+          Historical endpoint experiments showed that contrastive sampling,
+          training duration and source coverage could materially change
+          performance. In contrast, nonlinear readouts and broader
+          regularization/kernel searches did not rescue the tested frozen CEBRA
+          path representations. These findings weaken a simple
+          readout-under-capacity explanation for that path benchmark, but do not
+          establish the cause of its source-transfer failure. The path decoder
+          experiments also do not substitute for a matched nonlinear readout
+          comparison on the latest endpoint representations.
+        </p>
+        <p class="editorial">
+          [Abbreviated results subsection. Sampler contrasts and
+          decoder/regularization panels will be integrated from the completed
+          studies listed in Supporting information.]
+        </p>
+
+        <h3 id="geometry">
+          3.4. Low-dimensional displays did not determine predictive utility
+        </h3>
+        <p>
+          The existing latent atlas showed that three-dimensional views can omit
+          substantial structure from an eight-coordinate representation. For one
+          historical endpoint CEBRA-Behavior model, the training-fitted
+          three-dimensional bin display retained only 56.3–64.2% of development
+          energy across seeds. Conversely, structured-looking path embeddings
+          coexisted with weak source transfer. These diagnostics characterize
+          the learned representations and their projections; they do not
+          establish a biological manifold dimension or a shared cue/navigation
+          geometry.
+        </p>
+        <p class="editorial">
+          [Latent-view and projection-fidelity panels remain to be selected from
+          the existing atlas. Geometry for the latest endpoint cue/joint models
+          has not been analyzed.]
+        </p>
+      </section>
+
+      <section id="discussion">
+        <h2>4. Discussion</h2>
+        <h3>
+          4.1. Endpoint information is distinct from prospective path
+          information
+        </h3>
+        <p>
+          The clearest positive result is recovery of endpoint-condition
+          information within the constructed development populations. This does
+          not resolve the original path question: the endpoints may be
+          discriminable even when activity does not distinguish alternative
+          movements between them. The path studies tested narrower
+          component-level formulations and did not establish robust additional
+          path information. They neither demonstrate the absence of hippocampal
+          path coding nor constitute a completed test of full ordered-route
+          prediction.
+        </p>
+        <h3>4.2. Interpretation is limited by the evaluation object</h3>
+        <p>
+          Label-conditioned pseudopopulations allow information to be studied
+          across recordings that do not provide a verified simultaneous
+          population. Their interpretation is correspondingly condition-level.
+          Dependence between constructed examples, limited session-by-class
+          support and historical development-set exposure constrain
+          generalization claims. Unresolved task metadata and possible
+          covariation with position, view, heading, action or session further
+          prevent a unique biological interpretation. Computational seeds, model
+          replay and attractive projections cannot supply the missing biological
+          replication.
+        </p>
+        <h3>4.3. Implications for reusable neural representations</h3>
+        <p>
+          CEBRA remains a candidate representation-learning method rather than a
+          required winner over raw features or PCA. A subsequent research
+          direction could ask whether a frozen representation supports new
+          readouts or predicts future observations under explicit measurement
+          constraints. That question differs from recovering current task labels
+          and from formal observability of a specified state model. The present
+          results do not establish such reuse or state recovery. Matched CEBRA
+          temporal and cross-phase transfer remain untested, although historical
+          raw-feature LDA goal temporal generalization is available. A separate
+          agenda is being developed; its data route and protocol are not yet
+          adopted.
+        </p>
+      </section>
+
+      <section id="conclusions">
+        <h2>5. Conclusion</h2>
+        <p>
+          Across the completed exploratory studies, endpoint-condition decoding
+          was more strongly supported than robust path-component generalization.
+          CEBRA's utility depended on the target, training construction and
+          evaluation metric, with raw and PCA representations remaining
+          important comparators. The results motivate careful separation of
+          task-information recovery, source generalization and representation
+          reuse, without implying that a complete hippocampal state has been
+          identified.
+        </p>
+      </section>
+
+      <section id="supporting" class="supporting">
+        <h2>Supporting information</h2>
+        <p>
+          Study-specific configurations, additional figures and verification
+          records are retained in the following reports. The sources are not
+          independent replications; several analyses reuse the same recordings
+          or fitted models.
+        </p>
+        <ol>
+          <li>
+            <strong>Endpoint analyses.</strong>
+            <a href="../cebra-endpoint-time-readout-20261006/report.html"
+              >Matched cue-time and joint-training study</a
+            >, including source counts, all-seed metrics and count/normalized
+            confusion matrices;
+            <a
+              href="../../professor_updates/start_goal_20260907/endpoint-research-report.html"
+              >historical sampler, readout and coverage comparisons</a
+            >.
+          </li>
+          <li>
+            <strong>Path measurement and source generalization.</strong>
+            <a
+              href="../../professor_updates/place195_v6_v9_20260906/place195-v6-v9-professor-methods-results-validity-20260906.html"
+              >Initial component construction and representation studies</a
+            >;
+            <a
+              href="../../professor_updates/path_generalization_20260907/path-generalization-teaching-audit-20260907.html"
+              >source-transfer and per-unit analyses</a
+            >.
+          </li>
+          <li>
+            <strong>Preprocessing and readout ablations.</strong>
+            <a href="../path-preprocessing-autoresearch-20260908.html"
+              >Five-endpoint preprocessing study</a
+            >;
+            <a href="../path-pca-matched/report.html"
+              >matched PCA/raw comparison</a
+            >;
+            <a href="../cebra-decoder-autoresearch-20260924.html"
+              >frozen-representation decoder comparison</a
+            >;
+            <a href="../cebra-hyperparameter-diagnosis-20260924.html"
+              >regularization and kernel diagnosis</a
+            >.
+          </li>
+          <li>
+            <strong>Encoder training and temporal resolution.</strong>
+            <a href="../cebra-full-trial-transfer/report.html"
+              >Cue-only versus broader encoder training</a
+            >;
+            <a href="../cebra-cue-time-readout-20261005/report.html"
+              >path cue-time curves, confusions, nulls and checkpoint
+              diagnostics</a
+            >. The latter reuses whole-cue models from the former; it is not a
+            new whole-cue replication.
+          </li>
+          <li>
+            <strong>Geometry and temporal-generalization context.</strong>
+            <a href="../cebra-latent-atlas/atlas.html"
+              >Historical latent atlas</a
+            >;
+            <a href="../cebra-latent-atlas-results-20260924.md"
+              >projection-fidelity results</a
+            >;
+            <a
+              href="../../professor_updates/research_review_20260928/review.html"
+              >construction diagrams and historical raw-LDA goal temporal
+              generalization</a
+            >.
+          </li>
+        </ol>
+        <p class="editorial">
+          [Formal literature bibliography and consolidated supplementary figure
+          numbering remain incomplete.]
+        </p>
+      </section>
+
+      <footer>
+        <p>
+          Private working manuscript · Revision 02. Figures are reproduced
+          unchanged from completed studies; this revision introduces no new
+          scientific analysis. All figure images are embedded in the portable
+          copy. Supporting links point to the private repository at the accepted
+          evidence revision and may require sign-in.
+        </p>
+        <a href="#top">Back to title</a>
+      </footer>
+    </main>
+  </body>
+</html>
