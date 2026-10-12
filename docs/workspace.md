@@ -11,13 +11,16 @@ Read [agent instructions](../AGENTS.md) before changing scientific code or artif
   at `a169edf` (verified October12). PR15's studies remain in ancestry.
 - Reorganization checkpoint: **`ebe8256`**, branch
   `refactor/report-first-weekly-layout`, based on that merged main. This branch is
-  being published as a separate **draft**, not merged by this task.
+  published in open **draft PR20**, not merged by this task.
 - [Implementation status](reorganization.md): report promoted, seven weekly overviews,
   eleven byte-preserved HTML relocations, shared split access and the full-trial/
   endpoint-time/cue-time [`neuro.studies` package](../src/neuro/README.md). Older helper
   families stay behind an audited legacy adapter; other evidence migrations remain open.
-- The package consolidation starts from `cc0527e` on this branch and remains unstaged
-  for independent review; draft PR20 already exists. It makes no commit/publication.
+- Package consolidation from `cc0527e` is committed at **`8c98b52`** and pushed to
+  [draft PR20](https://github.com/Hong-yiii/neuro_science/pull/20), open and unmerged.
+  Earlier local validation/review receipts describe the historical pre-commit state.
+  [Software design](software-design.md) is the maintained engineering reference;
+  the preserved HTML preview may lag the package.
 - Whether/how the intended companion notebook uses this package remains open,
   depending on its scope and complexity. No notebook, fit, private replay, installation
   or service is added.

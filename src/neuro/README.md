@@ -3,6 +3,10 @@
 The maintained full-trial, endpoint and cue-time readout family now lives here.
 These are **explicit exploratory workflows**, not a universal experiment runner.
 Packaging does not authorize execution or turn their results into confirmatory evidence.
+Package checkpoint **`8c98b52`** is committed and pushed in
+[draft PR20](https://github.com/Hong-yiii/neuro_science/pull/20), open and unmerged.
+See the maintained [software design and Mermaid diagrams](../../docs/software-design.md)
+for as-built object boundaries, lifecycle ordering, filesystem contracts and engineering gaps.
 
 ## Architecture and scientific boundaries
 

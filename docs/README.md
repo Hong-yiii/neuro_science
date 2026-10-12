@@ -3,7 +3,8 @@
 | Need | Start here |
 | --- | --- |
 | Read or edit the current retrospective | [Report](../report/README.md) |
-| Review the codebase organization visually | [Standalone HTML design overview](codebase-design.html) |
+| Understand current package engineering and diagrams | [Maintained software design](software-design.md) — canonical as-built reference |
+| Review the earlier codebase organization preview | [Historical HTML design overview](codebase-design.html) — may lag the package |
 | Follow completed work by week | [Research history](../history/README.md) |
 | Find original study methods and evidence | [Evidence catalog](reports/README.md) |
 | See implemented versus remaining migration | [Reorganization checkpoint](reorganization.md) |

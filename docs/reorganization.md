@@ -5,13 +5,15 @@
 Checkpoint **`ebe8256`** preserves the implemented state on
 `refactor/report-first-weekly-layout`, based on merged PR19 (`a169edf`). The owner
 subsequently authorized a draft PR and high-level documentation cleanup.
-[Visual design review](codebase-design.html) distinguishes current and target layouts;
-[documentation map](README.md) replaces competing entry points. Long-form workspace
+[Maintained software design](software-design.md) records the current package and diagrams;
+the preserved [historical HTML preview](codebase-design.html) may lag this reference.
+[Documentation map](README.md) replaces competing entry points. Long-form workspace
 and publishing records are preserved verbatim in the
 [operations archive](../history/operations/README.md).
 
-The subsequent package consolidation starts from **`cc0527e`** on the same branch
-(draft PR20), without staging/committing/publishing. It packages the full-trial,
+The subsequent package consolidation from **`cc0527e`** is committed at **`8c98b52`**
+and pushed on the same branch in open, unmerged
+[draft PR20](https://github.com/Hong-yiii/neuro_science/pull/20). It packages the full-trial,
 endpoint-time and cue-time readout family; the pre-existing dirty design HTML is
 explicitly excluded and unchanged. Whether/how the future companion notebook uses
 this package remains open, depending on its needs and complexity; no notebook is
@@ -72,8 +74,9 @@ layout. Read weekly links to the real files on GitHub; GitHub may show a symlink
 instead of rendering its target. Source report templates are built before offline
 reading. Notebook integration remains open. No fit (including fitting smoke tests),
 private-data access/replay, environment change, server, worktree cleanup or PR merge
-is included in package consolidation. Its changes remain unstaged for independent
-review; earlier checkpoint/draft publication authority is not current commit authority.
+is included in package consolidation. The package is committed/pushed at `8c98b52`;
+this engineering-documentation follow-up remains for parent review/publication. Draft
+publication does not authorize merging or scientific execution.
 
 ## Preservation
 
@@ -185,11 +188,37 @@ and independently reran six stdlib source/split checks in task `b34528b0d` succe
 Independent read-only review found no findings; retained report:
 `work/package-consolidation/review.md`. Primary diagnostics were clean for the three
 study modules and seven supporting modules/wrappers/tests. Seventy-seven documentation
-links/anchors passed and all 14 protected baseline file hashes matched. No files were
-staged, committed or pushed. The audit baseline, guarded validation harness, review and
+links/anchors passed and all 14 protected baseline file hashes matched. At that earlier
+local validation checkpoint no files were staged, committed or pushed; the package was
+subsequently committed/pushed at `8c98b52` to open draft PR20. The audit baseline,
+guarded validation harness, review and
 small matplotlib cache remain under ignored `work/package-consolidation/` intentionally.
 
 CUDA availability probes in the existing runtime emitted error-804 initialization
 warnings. These passing import/source/synthetic checks do **not** establish GPU readiness,
 private replay compatibility or standalone-wheel support. No GPU fit or runtime/driver
 repair was attempted. Package use by the future notebook remains an open design choice.
+
+### Software-engineering reference — October13
+
+[`software-design.md`](software-design.md) is the maintained as-built reference for
+package `8c98b52`: module ownership, explicit object/data contracts, import compatibility,
+three workflow sequences, approvals, source/artifact provenance, partial failures,
+retry limitations, resource bounds and testing layers. Six Mermaid diagrams accompany
+it; no generic Runner or wheel/deployment certification is implied. Full per-function
+API documentation and comprehensive legacy-family coverage remain gaps.
+
+Independent source review found no findings in its targeted coverage; receipt:
+`work/package-consolidation/engineering-review.md`. All six final diagram sources were
+parsed and rendered locally with temporary Mermaid 11.4.1 and existing headless Chrome.
+An initial sequence-label semicolon parse error (`bbc074711`) was corrected; rerender
+`b8ff37937` and visual capture `b16a73253` completed successfully. Dependency, UML and
+cue lifecycle images were inspected. Sixty-nine local links/anchors and all 14 protected
+baseline hashes passed. No scientific code changed or scientific checks were rerun in
+this documentation follow-up. The known frozen-integrity and GPU caveats remain.
+
+Render receipts, source hashes, SVG/PNG and a script-free offline diagram gallery are
+retained under ignored `work/package-consolidation/engineering-diagrams/`. Temporary
+renderer assets/profiles were removed after verification; no installation, serving port,
+retained process or private-data transfer was introduced. The Git-backed Markdown uses
+GitHub's native Mermaid rendering, not a repository renderer dependency.

@@ -8,7 +8,8 @@ organized by week, and a reusable [scientific readout package](src/neuro/README.
 | Goal | Entry point |
 | --- | --- |
 | Read or edit the manuscript | **[Current report](report/README.md)** |
-| Review the codebase design | **[Visual HTML overview](docs/codebase-design.html)** — download raw and open locally |
+| Understand package engineering | **[Software design and Mermaid diagrams](docs/software-design.md)** — maintained as-built reference |
+| Read the historical design preview | [Visual HTML overview](docs/codebase-design.html) — may lag current package; open locally |
 | Follow the research chronology | **[Weekly history](history/README.md)** |
 | Find methods, evidence or recovery | [Documentation map](docs/README.md) |
 
