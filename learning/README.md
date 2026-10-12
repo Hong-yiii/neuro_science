@@ -10,27 +10,22 @@ Hongyi's background is strongest in ML, deep learning, and NLP. Explanations sho
 - how place/view/conjunctive coding can expose correlated-variable confounds;
 - how binning, representation learning, controls, and null models affect claims.
 
-## Working Principle
+## Historical learning material
 
-Learn the neuroscience just in time for H1: cue-period path information beyond
-start and goal. Follow the [September27 agreed direction](../docs/project-direction.md):
-artificial-agent H2 is removed, CEBRA-Time comparisons are narrowed, decoder choice
-is open, and graph-path prediction remains in scope.
-
-The goal is not to become a general neuroscientist first. The goal is to
-understand enough measurement, preprocessing, and representational analysis to
-make careful claims about prospective hippocampal path information.
+Current work starts with the [report](../report/README.md) and
+[weekly history](../history/README.md), not the former path/RNN reading curriculum.
+Retain measurement/validation lessons and original QA while their remaining assets
+are filed with their owning studies. H2 is removed; H1 is not declared false.
 
 ## Start Here
 
 - `../docs/project-direction.md`: agreed scope and next-session decisions.
 - `../docs/research-questions.md`: retained H1 and claim boundaries; H2 removed.
-- `../docs/getting-started-tasks.md`: active planning checklist above historical tasks;
-  not a fitting authorization.
+- `../docs/getting-started-tasks.md`: retired checklist pointer, not active work.
 - `neural-agent-action-plan.md`: pre-pivot curriculum retained for supporting
   measurement and validation lessons.
-- `../papers/reading-roadmap.md`: supporting reading; its artificial-agent sections
-  are retired background, not a later project phase.
+- Literature references now live with the report; the obsolete paper queue was
+  removed from the working tree (recoverable at Git revision `b55b10f`).
 
 ## Completed max-context lessons
 

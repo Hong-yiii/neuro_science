@@ -42,7 +42,8 @@ from sklearn.metrics import (
 )
 from sklearn.preprocessing import StandardScaler
 
-from scripts.place195_split_filtered_access import SplitFilteredAccess
+import scripts  # noqa: F401 — bootstrap src for legacy direct/PYTHONPATH callers
+from neuro.place195_split_access import SplitFilteredAccess
 from scripts.place195_v7_v8_neural_experiments import (
     INT_TO_LABEL,
     LABEL_TO_INT,
@@ -304,6 +305,9 @@ def freeze_config(
                 "place195_split_filtered_access.py",
             )
         },
+        "src/neuro/place195_split_access.py": sha256_file(
+            Path(str(sys.modules[SplitFilteredAccess.__module__].__file__))
+        ),
     }
     protocol = Path("docs/reports/path-generalization-prefit-20260907.md")
     if not protocol.is_file():

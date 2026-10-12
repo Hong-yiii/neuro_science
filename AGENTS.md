@@ -12,7 +12,18 @@ PR status, recovery records and safe verification commands. Do not recreate old
 sibling worktrees or restart experiments from historical pending-work flags.
 Keep new durable decisions in Git-backed notes, not only in a chat transcript.
 
-**October12 report-first filing:** Hongyi wants the current retrospective and
+**October12 implementation checkpoint:** approved hierarchy and scientific-code
+separation are being built. Start at `report/README.md`, `history/README.md` and
+`docs/reorganization.md`. Seven weekly overviews and eleven byte-preserved HTML
+moves are implemented; legacy paths are compatibility symlinks. The shared
+split-access guard is now in `src/neuro/`; remaining scientific bodies in `scripts/`
+are migration work, not the target architecture. Keep launchers thin and share
+objects only when semantics match. Historical approvals are not automatically
+valid for relocated/current source. The frozen HTML's pre-existing local checksum
+mismatch is preserved, not fixed. One future companion notebook is intended;
+its scientific target/input scope remains open. No new fits/private replay.
+
+**October12 report-first filing (earlier checkpoint):** Hongyi wants the current retrospective and
 its actually used evidence to be the main working flow. Start with
 `docs/reports/cebra-retrospective-20261012/README.md` and `docs/reports/README.md`.
 The exact frozen reading HTML is versioned alongside the manuscript package;
@@ -186,7 +197,7 @@ In the current code, the default `trial_start` is `2`, so alignment begins at th
 - For the next session, start with the manuscript package and report-focused index named in the October12 filing note, plus `docs/analysis-contract.md`. Consult `docs/cebra-observability-agenda-20261011.md` for separately proposed future research. `docs/research-questions.md` retains prior framing; `docs/getting-started-tasks.md` is now an archive pointer, not a run queue.
 - Prefer adding dated notes under `context/` when learning something durable.
 - Use `learning/` for neuroscience learning scaffolds, glossaries, and method explainers.
-- Use `papers/` for paper notes and reading queues; do not commit copyrighted PDFs by default.
+- Keep relevant citations with the report or methods note, not a second paper-reading queue. Local `papers/*.pdf` remain protected and ignored; do not commit or delete copyrighted/lab PDFs as filing cleanup.
 - Do not commit raw lab data, credentials, private links, tokens, large `.mat`/`.jld2` outputs, or generated figure/video dumps by default.
 - If analyzing data from Hongyi, ask where it should live if unclear. Default to `data/` for ignored local data and `outputs/` for ignored generated results.
 - For code changes inside submodules, work within that submodule's own git history. Do not make parent-repo commits that silently depend on uncommitted submodule changes.

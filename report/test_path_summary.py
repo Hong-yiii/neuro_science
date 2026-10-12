@@ -1,6 +1,6 @@
 """Check manuscript tables/diagrams against tracked aggregate CSVs; no model access.
 
-Run: /usr/bin/python3 docs/reports/cebra-retrospective-20261012/test_path_summary.py
+Run: /usr/bin/python3 report/test_path_summary.py
 """
 
 import csv
@@ -12,7 +12,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-EVIDENCE = HERE.parent / "cebra-cue-time-readout-20261005"
+EVIDENCE = HERE.parent / "docs/reports/cebra-cue-time-readout-20261005"
 
 
 class ScoreCells(HTMLParser):

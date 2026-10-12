@@ -39,7 +39,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import (
     balanced_accuracy_score,
     log_loss,
-    recall_score,
+    recall_score,  # noqa: F401 — preserve the historical module export
     roc_auc_score,
 )
 from sklearn.preprocessing import StandardScaler
@@ -52,7 +52,7 @@ from scripts.import_place195_sessions import (
     read_spiketrain,
     spikes_in_window,
 )
-from scripts.place195_split_filtered_access import SplitFilteredAccess
+from neuro.place195_split_access import SplitFilteredAccess
 from scripts.place195_v7_v8_neural_experiments import bin_events, session_from_cell
 from scripts.place195_v8b_v9_cebra import make_solver
 
@@ -2135,11 +2135,19 @@ def approval_facts(
     }
 
 
-def helper_hashes() -> dict[str, str]:
-    return {name: sha256_file(WORKTREE_ROOT / "scripts" / name) for name in (
+def helper_paths() -> dict[str, Path]:
+    paths = {name: WORKTREE_ROOT / "scripts" / name for name in (
         "import_place195_sessions.py", "place195_split_filtered_access.py",
         "place195_v7_v8_neural_experiments.py", "place195_v8b_v9_cebra.py",
     )}
+    paths["src/neuro/place195_split_access.py"] = Path(
+        str(sys.modules[SplitFilteredAccess.__module__].__file__)
+    )
+    return paths
+
+
+def helper_hashes() -> dict[str, str]:
+    return {name: sha256_file(path) for name, path in helper_paths().items()}
 
 
 def input_manifest_hashes() -> dict[str, str]:
@@ -2660,9 +2668,10 @@ def cmd_run(args: argparse.Namespace) -> None:
     )
     shutil.copy2(Path(__file__), outdir / "code_snapshot_cebra_full_trial_transfer.py")
     shutil.copy2(PROTOCOL_PATH, outdir / "protocol_snapshot.md")
-    for name in helper_hashes():
-        (outdir / "helper_snapshots").mkdir(exist_ok=True)
-        shutil.copy2(WORKTREE_ROOT / "scripts" / name, outdir / "helper_snapshots" / name)
+    for name, source in helper_paths().items():
+        snapshot = outdir / "helper_snapshots" / name
+        snapshot.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source, snapshot)
     write_json(outdir / "input_manifest_hashes.json", input_manifest_hashes())
     journal_path = outdir / "journal.jsonl"
     journal(journal_path, "run_started", config=config)

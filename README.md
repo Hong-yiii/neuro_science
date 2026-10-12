@@ -1,56 +1,52 @@
-# Neuro Science Workspace
+# Neuroscience: CEBRA retrospective and evidence
 
-Canonical working copy: `~/neuro_science`. **Current focus: the retrospective and
-its supporting evidence.** Early trial plans are archived, not an active queue.
+## Start with the report
 
-## Read the report
+- **[Current report](report/README.md)** — manuscript, feedback and publishing commands.
+- **[Standalone reading milestone](report/retrospective-frozen-20261012.html)** —
+  download raw HTML and open locally. A pre-existing local checksum difference is
+  preserved and remains flagged; see the report README.
+- **[Research history by week](history/README.md)** — what happened, conclusions,
+  offline reports and links to each study's protocol/evidence.
 
-- **[Current manuscript package](docs/reports/cebra-retrospective-20261012/README.md)** — source, presentation checks, feedback and download instructions.
-- **[Frozen whole-file reading copy](docs/reports/cebra-retrospective-20261012/retrospective-frozen-20261012.html)** — all figures embedded and versioned. Download the raw HTML from GitHub and open it locally; no build or server required.
-- **[Evidence actually used by the report](docs/reports/README.md)** — endpoint, path-component, decoder and geometry studies, with their original protocols and limitations.
-- **[Remaining editorial feedback](docs/reports/cebra-retrospective-20261012/feedback-20261012.md)** — freezing the reading copy did not mark every request complete.
+The notebook will be one companion to the report, using the same maintained
+scientific implementation. It has not been built; no new fitting is queued.
 
-The manuscript concerns CEBRA-Time and relevant baselines. Endpoint decoding,
-binary interior-component decoding and full ordered-route prediction are different
-questions; the last was not evaluated. Historical source studies remain unchanged,
-including variants excluded from this manuscript. H1 remains unresolved; H2 is removed.
+## Code and working structure
 
-## Work on the report without running experiments
+```text
+report/                 current manuscript and presentation checks
+history/week-.../       weekly overview → studies → reading artifacts
+src/neuro/              scientific implementation and genuine shared objects
+scripts/                launch/compatibility layer; legacy bodies still being migrated
+docs/                   living methods, dataset, direction and recovery
+```
 
-The [publishing workflow](docs/reports/cebra-retrospective-20261012/README.md#edit-and-build)
-uses existing figures/aggregates and produces one standalone HTML. It does not
-fit models, replay private predictions or fill missing analyses automatically.
-See the [script and test map](scripts/README.md) before executing other tools.
+The [first shared extraction](src/neuro/README.md) is the place195 split-access
+guard: validation, filtered readers and audit objects, shared by existing studies.
+It is not a generic utilities framework. Remaining scientific bodies in `scripts/`
+are explicitly migration debt, not the intended architecture.
 
-**Next:** sharpen the report, then create an interpretable, high-observability
-Jupyter notebook. The [next-work contract](docs/reports/cebra-retrospective-20261012/README.md#next-work-report-first-then-notebook)
-records the remaining decisions and scope; no new fitting is queued.
+[Migration scope and checks](docs/reorganization.md) distinguish completed physical
+moves from remaining full-package/code work. Eleven historical reading files have
+moved byte-for-byte; old paths are compatibility symlinks. Source packages and
+hash-bound protocols remain in place in this slice. [Script map](scripts/README.md)
+explains which commands need private artifacts or scientific execution approval.
 
-## Planning and safeguards
+## Scientific safeguards and next direction
 
-- [Future latent-model / observability agenda](docs/cebra-observability-agenda-20261011.md): proposed direction, not an approved experiment.
-- [Retrospective evidence/coverage blueprint](docs/reports/cebra-research-synthesis-20261011.md): supporting audit, not a competing reading version.
-- [Workspace and recovery](docs/workspace.md), [agent instructions](AGENTS.md), [analysis contract](docs/analysis-contract.md) and [dataset card](docs/dataset-card.md).
+- [Analysis contract](docs/analysis-contract.md) and [dataset card](docs/dataset-card.md)
+- [Future latent-model agenda](docs/cebra-observability-agenda-20261011.md) — proposal only
+- [Workspace/recovery](docs/workspace.md) and [agent instructions](AGENTS.md)
 
-The prior prospective-path goal is not the default next run. CEBRA is central but
-not a required winner; new data access, fitting and reanalysis need separate approval.
+Endpoint decoding, binary path-component decoding and full ordered-route prediction
+are different questions; full ordered-route prediction was not evaluated. H1 remains
+unresolved; H2 is removed. Cross-session pseudopopulations are not simultaneous
+trial-specific populations. Historical source exposure and selection limits remain.
 
-## Background and archive
+## Protected local material
 
-- [Filed early plans and initial-trial records](docs/reports/archive/early-work-20261012/README.md).
-- [Learning](learning/README.md), [papers](papers/README.md), `context/` and [dated notes](notes/sessions/README.md).
-- [Reorganization proposal and applied scope](docs/repo-reorganization-plan-20261012.md).
-
-Initial-trial code is not automatically dead code: some pilot helpers and tests
-are still dependencies of the report-backed pipeline. Keep them at their existing
-paths unless a reviewed migration preserves imports, coverage and provenance.
-
-## Local data and external repositories
-
-`data/`, `outputs/`, `scratch/` and `work/` contain protected local data, scientific
-artifacts, runtimes and three retained review worktrees. Ignored does not mean
-expendable. Git is not an off-host backup of these contents. Do not prune them.
-
-`Hippocampus.jl/` and `PyHipp/` remain submodules with their own histories. For a
-fresh clone only, initialize them with `git submodule update --init --recursive`.
-Do not update their revisions as part of documentation cleanup.
+`data/`, `outputs/`, `scratch/`, `work/`, local PDFs and session history are not
+cleanup targets. Git cannot recover ignored private inputs/models. Preserve the
+three retained review worktrees. `Hippocampus.jl/` and `PyHipp/` remain unchanged
+submodules; do not upgrade or remove them as part of filing.

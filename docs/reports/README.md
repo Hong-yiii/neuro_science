@@ -1,15 +1,17 @@
 # Report and supporting evidence
 
-Updated 2026-10-12. This is the report-focused reading index, not an experiment queue.
+Updated 2026-10-12. This is the evidence catalog, not an experiment queue.
+Use [weekly history](../../history/README.md) for the main historical reading flow;
+source packages below stay in place during the first physical migration slice.
 
 ## Start here
 
-1. **[Current retrospective — revision 03](cebra-retrospective-20261012/README.md)**:
+1. **[Current retrospective — revision 03](../../report/README.md)**:
    whole manuscript, source/build instructions and pending feedback.
-2. **[Frozen offline reading file](cebra-retrospective-20261012/retrospective-frozen-20261012.html)**:
+2. **[Frozen offline reading file](../../report/retrospective-frozen-20261012.html)**:
    complete versioned HTML with all figures embedded. Download the raw file from
    GitHub and open locally; source view is not the rendered report.
-3. **[Editable source](cebra-retrospective-20261012/manuscript.html)**:
+3. **[Editable source](../../report/manuscript.html)**:
    revision 03; `outline.html` is the older frozen revision 02, not the current draft.
 
 ## Evidence used in the manuscript

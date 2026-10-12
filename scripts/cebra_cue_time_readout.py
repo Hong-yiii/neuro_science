@@ -1090,27 +1090,20 @@ def observed_source_sensitivity(
     return summary
 
 
+def helper_paths() -> dict[str, Path]:
+    paths = {name: CANONICAL_ROOT / "scripts" / name for name in (
+        "cebra_full_trial_transfer.py", "import_place195_sessions.py",
+        "place195_split_filtered_access.py", "place195_v7_v8_neural_experiments.py",
+        "place195_v8b_v9_cebra.py", "cebra_latent_atlas.py",
+    )}
+    paths["src/neuro/place195_split_access.py"] = Path(
+        str(sys.modules[ft.SplitFilteredAccess.__module__].__file__)
+    )
+    return paths
+
+
 def helper_hashes() -> dict[str, str]:
-    return {
-        "cebra_full_trial_transfer.py": sha256_file(
-            CANONICAL_ROOT / "scripts/cebra_full_trial_transfer.py"
-        ),
-        "import_place195_sessions.py": sha256_file(
-            CANONICAL_ROOT / "scripts/import_place195_sessions.py"
-        ),
-        "place195_split_filtered_access.py": sha256_file(
-            CANONICAL_ROOT / "scripts/place195_split_filtered_access.py"
-        ),
-        "place195_v7_v8_neural_experiments.py": sha256_file(
-            CANONICAL_ROOT / "scripts/place195_v7_v8_neural_experiments.py"
-        ),
-        "place195_v8b_v9_cebra.py": sha256_file(
-            CANONICAL_ROOT / "scripts/place195_v8b_v9_cebra.py"
-        ),
-        "cebra_latent_atlas.py": sha256_file(
-            CANONICAL_ROOT / "scripts/cebra_latent_atlas.py"
-        ),
-    }
+    return {name: sha256_file(path) for name, path in helper_paths().items()}
 
 
 def approval_facts() -> dict[str, Any]:
@@ -1556,9 +1549,10 @@ def cmd_run(args: argparse.Namespace) -> None:
             "use_saved_embeddings": args.use_saved_embeddings,
         },
     )
-    for name in helper_hashes():
-        (out / "helper_snapshots").mkdir(exist_ok=True)
-        shutil.copy2(CANONICAL_ROOT / "scripts" / name, out / "helper_snapshots" / name)
+    for name, source in helper_paths().items():
+        snapshot = out / "helper_snapshots" / name
+        snapshot.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source, snapshot)
     journal_path = out / "journal.jsonl"
     metrics_rows: list[dict[str, Any]] = []
     prediction_rows_all: list[dict[str, Any]] = []

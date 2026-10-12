@@ -11,6 +11,68 @@ from scripts.place195_split_filtered_access import SplitAccessError, SplitFilter
 
 
 class SplitFilteredAccessTest(unittest.TestCase):
+    def test_source_relocation_preserves_identity_and_provenance(self) -> None:
+        """Software migration check: source and invented fixtures only, no models."""
+        import ast
+        import hashlib
+        import os
+        import subprocess
+        import sys
+        from types import SimpleNamespace
+
+        from neuro import place195_split_access as implementation
+        from scripts import place195_split_filtered_access as legacy
+
+        root = Path(__file__).resolve().parents[1]
+        source = root / "src/neuro/place195_split_access.py"
+        original_sha256 = "2cd7e7a14f6a045078c59d2489e6d06a615f033dc0f6c0cbea14533561608c0d"
+        self.assertIs(legacy, implementation)
+        self.assertIs(SplitFilteredAccess, implementation.SplitFilteredAccess)
+        self.assertEqual(SplitFilteredAccess.__module__, "neuro.place195_split_access")
+        self.assertEqual(Path(implementation.__file__).resolve(), source)
+        self.assertEqual(hashlib.sha256(source.read_bytes()).hexdigest(), original_sha256)
+
+        # Compile only provenance helpers, not runners' imports or private inputs.
+        for name in ("cebra_full_trial_transfer", "cebra_cue_time_readout", "cebra_endpoint_time_readout"):
+            script = root / "scripts" / f"{name}.py"
+            nodes: list[ast.stmt] = [
+                node for node in ast.parse(script.read_text()).body
+                if isinstance(node, ast.FunctionDef)
+                and node.name in ("helper_paths", "helper_hashes")
+            ]
+            namespace = {
+                "Path": Path, "sys": sys, "WORKTREE_ROOT": root, "CANONICAL_ROOT": root,
+                "SCRIPT_PATH": script, "PROTOCOL_PATH": root / "scripts/README.md",
+                "SplitFilteredAccess": SplitFilteredAccess,
+                "ft": SimpleNamespace(SplitFilteredAccess=SplitFilteredAccess),
+                "sha256_file": lambda path: hashlib.sha256(path.read_bytes()).hexdigest(),
+            }
+            exec(compile(ast.Module(body=nodes, type_ignores=[]), str(script), "exec"), namespace)
+            paths = namespace["helper_paths"]()
+            hashes = namespace["helper_hashes"]()
+            self.assertEqual(paths["src/neuro/place195_split_access.py"].resolve(), source)
+            self.assertEqual(hashes["src/neuro/place195_split_access.py"], original_sha256)
+            old_key = next(key for key in hashes if key.endswith("place195_split_filtered_access.py"))
+            self.assertNotEqual(hashes[old_key], original_sha256)  # old approvals are stale
+
+        with tempfile.TemporaryDirectory() as tmp:
+            env = {**os.environ, "PYTHONPATH": str(root), "PYTHONDONTWRITEBYTECODE": "1"}
+            for first in ("scripts.place195_split_filtered_access", "place195_split_filtered_access", "neuro.place195_split_access"):
+                code = (
+                    "import importlib, sys\n"
+                    f"sys.path[:0] = [{str(root / 'scripts')!r}, {str(root / 'src')!r}]\n"
+                    f"first = importlib.import_module({first!r})\n"
+                    "new = importlib.import_module('neuro.place195_split_access')\n"
+                    "old = importlib.import_module('scripts.place195_split_filtered_access')\n"
+                    "bare = importlib.import_module('place195_split_filtered_access')\n"
+                    "assert first is new is old is bare\n"
+                    "assert not {'numpy', 'torch', 'cebra', 'h5py'} & sys.modules.keys()\n"
+                )
+                subprocess.run([sys.executable, "-S", "-B", "-c", code], cwd=tmp, env=env, check=True)
+            for args in ((str(root / "scripts/place195_split_filtered_access.py"),), ("-m", "scripts.place195_split_filtered_access")):
+                subprocess.run([sys.executable, "-S", "-B", *args], cwd=tmp, env=env, check=True)
+            self.assertEqual(list(Path(tmp).iterdir()), [])
+
     def test_sentinel_test_values_do_not_reach_downstream_aggregates(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

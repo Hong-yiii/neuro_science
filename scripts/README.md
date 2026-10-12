@@ -4,20 +4,28 @@ Updated 2026-10-12. Current focus is the
 [retrospective and its evidence](../docs/reports/README.md), not restarting runs.
 This map classifies existing entry points; it is not execution authorization.
 
+**Migration underway:** scientific logic belongs in `src/neuro/`; `scripts/` is
+the launch/compatibility layer. The [shared split-access gate](../src/neuro/README.md)
+is the first extraction; the other scientific bodies listed below are explicitly
+remaining migration work. Historical executed-source identities remain separate
+from updated current imports/approvals. See [migration status](../docs/reorganization.md).
+
 ## 1. Current manuscript publishing — no scientific execution
 
 The tools live beside the manuscript, not in this directory:
 
 ```sh
-/usr/bin/python3 docs/reports/cebra-retrospective-20261012/test_build.py
-/usr/bin/python3 docs/reports/cebra-retrospective-20261012/test_path_summary.py
-/usr/bin/python3 docs/reports/cebra-retrospective-20261012/build.py manuscript.html
+/usr/bin/python3 report/test_build.py
+/usr/bin/python3 report/test_path_summary.py
+/usr/bin/python3 report/test_layout.py
+/usr/bin/python3 report/build.py
 ```
 
 They check presentation/archived aggregate arithmetic and package existing PNGs
 plus inline SVGs. They do not access raw data, fit or replay scientific models.
-Always specify `manuscript.html`; the older default builds revision 02.
-See [publishing and frozen-copy policy](../docs/reports/cebra-retrospective-20261012/README.md).
+The default now builds `manuscript.html`; revision02 requires explicit `outline.html`.
+The frozen checksum check still flags the preserved pre-existing local mismatch.
+See [publishing and frozen-copy policy](../report/README.md).
 
 ## 2. Retained scientific families behind the report
 
@@ -41,8 +49,9 @@ separate approval for that work. No new fit is queued.
 
 ## 3. Shared dependencies, not disposable initial-trial code
 
-- `import_place195_sessions.py`, `place195_split_filtered_access.py`, V7/V8
-  helpers and V8b/V9 solver helpers are imported across retained studies.
+- `import_place195_sessions.py`, V7/V8 helpers and V8b/V9 solver helpers are
+  imported across retained studies. `place195_split_filtered_access.py` now only
+  aliases `src/neuro/place195_split_access.py`, the shared scientific implementation.
 - `place195_graph_path_baseline.py` and `place195_split_and_behavior_audit.py`
   carry graph/source-split infrastructure despite their early names.
 - `docs/cebra_pilot/implementation/{contracts,paths,splits}.py` are imported by
@@ -64,9 +73,10 @@ not the main workflow, while retaining their executable paths:
 - Early data feasibility, V4/V5 notes and initial-trial outputs: historical
   software/selection evidence, not current neural prediction results.
 
-No scientific source, script, test or private initial-trial output was relocated
-or deleted in this filing pass. Full code archival needs a separate dependency
-and compatibility change; no whole test was established as safely obsolete.
+The first extraction relocated the shared split guard without algorithm changes;
+no scientific test or private initial-trial output was removed. Further code
+migration needs the same dependency/provenance care; no whole test was established
+as safely obsolete.
 
 ## 5. Tests are not all clone-only or private-input-free
 

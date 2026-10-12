@@ -446,8 +446,13 @@
           criteria, anatomical localization and ethics-protocol information were
           not established by the documentation available for this synthesis;
           they cannot be inferred from session counts or directory names.
-          <a href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/dataset-card.md">Dataset documentation</a> and the
-          <a href="https://github.com/Hong-yiii/neuro_science/blob/4862267/context/previous-student-analysis.md"
+          <a
+            href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/dataset-card.md"
+            >Dataset documentation</a
+          >
+          and the
+          <a
+            href="https://github.com/Hong-yiii/neuro_science/blob/4862267/context/previous-student-analysis.md"
             >prior-write-up summary</a
           >
           distinguish these evidence levels.
@@ -494,7 +499,9 @@
             units/seven sessions. No decoder, synthetic sample count or
             uncertainty interval applies to this geometry panel. Existing
             raw-path overlays are reproduced in Figure S1. Source:
-            <a href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/place195-v6-v9-autoresearch-20260906.md">V6–V9 report</a
+            <a
+              href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/place195-v6-v9-autoresearch-20260906.md"
+              >V6–V9 report</a
             >; image unchanged.
           </figcaption>
         </figure>
@@ -968,11 +975,13 @@
           The first three rows describe one shared 480/240 construction, not
           three independent datasets. The latest endpoint study trains separate
           readouts; earlier pair-marginal scores are different. Sources:
-          <a href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-endpoint-time-readout-20261006/protocol.md"
+          <a
+            href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-endpoint-time-readout-20261006/protocol.md"
             >endpoint assembly protocol</a
           >
           and
-          <a href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-cue-time-readout-20261005/source-support.md"
+          <a
+            href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-cue-time-readout-20261005/source-support.md"
             >path source audit</a
           >.
         </p>
@@ -1094,10 +1103,14 @@
         <p class="table-note">
           Endpoint distinct-use ranges describe the three saved assemblies
           documented in the
-          <a href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/start-goal-cebra-baseline.md">endpoint source audit</a>
+          <a
+            href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/start-goal-cebra-baseline.md"
+            >endpoint source audit</a
+          >
           and reused by the latest endpoint study. Path distinct-use counts are
           documented for observed seed zero in the
-          <a href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-cue-time-readout-20261005/source-support.md"
+          <a
+            href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-cue-time-readout-20261005/source-support.md"
             >path lineage audit</a
           >. Average reuse is selections divided by distinct sources used, not
           divided by all eligible sources. These averages hide unequal reuse;
@@ -1414,11 +1427,13 @@
           natural trials. In the path implementation, raw whole-cue flattening
           is cell-major, while PCA/CEBRA flattening is bin-major; preserving the
           declared order is necessary to select the intended bin. Sources:
-          <a href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-cue-time-readout-20261005/source-support.md"
+          <a
+            href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-cue-time-readout-20261005/source-support.md"
             >path feature-order contract</a
           >
           and
-          <a href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-endpoint-time-readout-20261006/protocol.md"
+          <a
+            href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-endpoint-time-readout-20261006/protocol.md"
             >endpoint readout protocol</a
           >.
         </p>
@@ -1680,7 +1695,8 @@
             not biological intervals. Dotted lines show uniform BA/loss
             references. “Pair30,” “start6” and “goal6” are separately trained
             heads. Endpoint recovery does not establish path information.
-            <a href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-endpoint-time-readout-20261006/README.md"
+            <a
+              href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-endpoint-time-readout-20261006/README.md"
               >Original figures and protocol context</a
             >.
           </figcaption>
@@ -1717,7 +1733,8 @@
             intervals. This is same-window decoding, not a train-time ×
             test-time generalization matrix. No inspected peak is an
             independently validated window. Source:
-            <a href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-endpoint-time-readout-20261006/README.md"
+            <a
+              href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-endpoint-time-readout-20261006/README.md"
               >endpoint report</a
             >.
           </figcaption>
@@ -1735,194 +1752,722 @@
           3.2. Path-component decoding was sensitive to source population and
           cue window
         </h3>
-        <h4 id="path-performance">Whole-cue performance measured one component, not an ordered route</h4>
+        <h4 id="path-performance">
+          Whole-cue performance measured one component, not an ordered route
+        </h4>
         <p>
           The latest matched path comparison asked a binary question: within
           fixed start 4 and goal 3, did the observed navigation path contain
           directed component <code>D_N_R_T__N_R_M</code> among its interior
           corridor runs, after removing the first and last runs? The model
           received cue activity, not the later navigation activity at prediction
-          time. <strong>No complete ordered route was predicted or scored.</strong>
+          time.
+          <strong>No complete ordered route was predicted or scored.</strong>
           Table 3 gives all whole-cue results for this comparison; these are
           development scores on condition-built pseudopopulations, not accuracy
           on previously unknown natural trials.
         </p>
-        <div class="table-wrap" tabindex="0" role="region" aria-label="Table 3, matched whole-cue path-component scores">
+        <div
+          class="table-wrap"
+          tabindex="0"
+          role="region"
+          aria-label="Table 3, matched whole-cue path-component scores"
+        >
           <table id="table-path-performance">
-            <caption><strong>Table 3.</strong> Binary interior-component balanced accuracy, whole cue.</caption>
-            <thead><tr><th scope="col">Representation</th><th scope="col">Logistic</th><th scope="col">RBF-SVM</th></tr></thead>
+            <caption>
+              <strong>Table 3.</strong>
+              Binary interior-component balanced accuracy, whole cue.
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Representation</th>
+                <th scope="col">Logistic</th>
+                <th scope="col">RBF-SVM</th>
+              </tr>
+            </thead>
             <tbody>
-              <tr data-path-score="raw290"><td>Raw neural</td><td data-readout="logistic">46.53%</td><td data-readout="svc">30.56%</td></tr>
-              <tr data-path-score="pca8"><td>PCA8</td><td data-readout="logistic">22.22%</td><td data-readout="svc">55.56%</td></tr>
-              <tr data-path-score="cue_time"><td>Cue-only CEBRA-Time</td><td data-readout="logistic">32.64%</td><td data-readout="svc">40.28%</td></tr>
-              <tr data-path-score="full_time"><td>Joint cue/navigation CEBRA-Time</td><td data-readout="logistic">61.81%</td><td data-readout="svc">50.69%</td></tr>
+              <tr data-path-score="raw290">
+                <td>Raw neural</td>
+                <td data-readout="logistic">46.53%</td>
+                <td data-readout="svc">30.56%</td>
+              </tr>
+              <tr data-path-score="pca8">
+                <td>PCA8</td>
+                <td data-readout="logistic">22.22%</td>
+                <td data-readout="svc">55.56%</td>
+              </tr>
+              <tr data-path-score="cue_time">
+                <td>Cue-only CEBRA-Time</td>
+                <td data-readout="logistic">32.64%</td>
+                <td data-readout="svc">40.28%</td>
+              </tr>
+              <tr data-path-score="full_time">
+                <td>Joint cue/navigation CEBRA-Time</td>
+                <td data-readout="logistic">61.81%</td>
+                <td data-readout="svc">50.69%</td>
+              </tr>
             </tbody>
           </table>
         </div>
         <p class="table-note">
           Means over three paired computational seeds, not biological replicates
-          or confidence intervals. Same 29-unit/seven-session cohort, 82 training
-          and 22 exposed-development real sources; 128 training rows (64/class)
-          and 30 exact development combinations (24 absent, six present), with
-          equal total evaluation weight per class. Ten cue bins supply 290 raw
-          or 80 PCA/CEBRA features. Fixed logistic C=.01; RBF-SVM C=1,
-          gamma=scale; frozen 1,000-update encoders. Navigation contributes only
-          to joint encoder training. October whole-cue results replay the prior
-          experiment; they are not new replication. Source:
-          <a href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-cue-time-readout-20261005/observed_means.csv">all saved mean/seed scores</a>.
+          or confidence intervals. Same 29-unit/seven-session cohort, 82
+          training and 22 exposed-development real sources; 128 training rows
+          (64/class) and 30 exact development combinations (24 absent, six
+          present), with equal total evaluation weight per class. Ten cue bins
+          supply 290 raw or 80 PCA/CEBRA features. Fixed logistic C=.01; RBF-SVM
+          C=1, gamma=scale; frozen 1,000-update encoders. Navigation contributes
+          only to joint encoder training. October whole-cue results replay the
+          prior experiment; they are not new replication. Source:
+          <a
+            href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-cue-time-readout-20261005/observed_means.csv"
+            >all saved mean/seed scores</a
+          >.
         </p>
-        <h4 id="path-failure">Missed positives and false positives explain the low balanced accuracy</h4>
+        <h4 id="path-failure">
+          Missed positives and false positives explain the low balanced accuracy
+        </h4>
         <p>
-          The cue-only Time/logistic readout predicted “absent” for 19/30,
-          30/30 and 16/30 combinations in seeds 0, 1 and 2, respectively.
-          It detected <strong>zero of six present examples in every seed</strong>.
-          Seeds 0 and 2 additionally called 11 and 14 absent examples “present”
-          (Figure 5A). Thus “mostly absent” is accurate but incomplete: the
-          false positives, together with zero positive recall, pushed mean
-          balanced accuracy below 50%.
+          The cue-only Time/logistic readout predicted “absent” for 19/30, 30/30
+          and 16/30 combinations in seeds 0, 1 and 2, respectively. It detected
+          <strong>zero of six present examples in every seed</strong>. Seeds 0
+          and 2 additionally called 11 and 14 absent examples “present” (Figure
+          5A). Thus “mostly absent” is accurate but incomplete: the false
+          positives, together with zero positive recall, pushed mean balanced
+          accuracy below 50%.
         </p>
         <figure id="fig-path-failure">
-          <div class="figure-scroll" tabindex="0" role="region" aria-label="Figure 5A, per-seed whole-cue path-component confusion matrices">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 590" role="img" aria-labelledby="path-errors-title path-errors-desc">
-              <title id="path-errors-title">A. Whole-cue logistic confusion matrices, cue-only and joint CEBRA-Time</title>
-              <desc id="path-errors-desc">Rows are observed absent or present; columns are predicted absent or present. Each panel contains 24 absent and six present synthetic combinations. Cue-only misses all six present examples in each seed. Joint detects six, zero and two. Counts and within-class percentages are printed in every cell; teal marks correct predictions and peach marks errors.</desc>
+          <div
+            class="figure-scroll"
+            tabindex="0"
+            role="region"
+            aria-label="Figure 5A, per-seed whole-cue path-component confusion matrices"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 900 590"
+              role="img"
+              aria-labelledby="path-errors-title path-errors-desc"
+            >
+              <title id="path-errors-title">
+                A. Whole-cue logistic confusion matrices, cue-only and joint
+                CEBRA-Time
+              </title>
+              <desc id="path-errors-desc">
+                Rows are observed absent or present; columns are predicted
+                absent or present. Each panel contains 24 absent and six present
+                synthetic combinations. Cue-only misses all six present examples
+                in each seed. Joint detects six, zero and two. Counts and
+                within-class percentages are printed in every cell; teal marks
+                correct predictions and peach marks errors.
+              </desc>
               <g font-family="system-ui, sans-serif" font-size="14" fill="#222">
-                <text x="16" y="25" font-size="18" font-weight="600">A. Saved errors, separated by seed and training regime</text>
-                <text x="16" y="49">Rows = observed; columns = predicted. Count + row %; teal = correct, peach = error.</text>
-                <g transform="translate(16 73)" data-confusion-model="cue_time" data-seed="0">
-                  <text x="0" y="14" font-size="17" font-weight="600">Cue-only · seed 0</text>
-                  <text x="0" y="46">Observed ↓</text><text x="133" y="46" text-anchor="middle">Absent</text><text x="219" y="46" text-anchor="middle">Present</text>
-                  <rect x="90" y="58" width="86" height="58" fill="#dcefeb"/><rect x="176" y="58" width="86" height="58" fill="#fbe7e2"/>
-                  <rect x="90" y="116" width="86" height="58" fill="#fbe7e2"/><rect x="176" y="116" width="86" height="58" fill="#dcefeb"/>
-                  <text x="0" y="94">Absent (24)</text><text x="0" y="152">Present (6)</text>
+                <text x="16" y="25" font-size="18" font-weight="600">
+                  A. Saved errors, separated by seed and training regime
+                </text>
+                <text x="16" y="49">
+                  Rows = observed; columns = predicted. Count + row %; teal =
+                  correct, peach = error.
+                </text>
+                <g
+                  transform="translate(16 73)"
+                  data-confusion-model="cue_time"
+                  data-seed="0"
+                >
+                  <text x="0" y="14" font-size="17" font-weight="600">
+                    Cue-only · seed 0
+                  </text>
+                  <text x="0" y="46">Observed ↓</text>
+                  <text x="133" y="46" text-anchor="middle">Absent</text>
+                  <text x="219" y="46" text-anchor="middle">Present</text>
+                  <rect x="90" y="58" width="86" height="58" fill="#dcefeb" />
+                  <rect x="176" y="58" width="86" height="58" fill="#fbe7e2" />
+                  <rect x="90" y="116" width="86" height="58" fill="#fbe7e2" />
+                  <rect x="176" y="116" width="86" height="58" fill="#dcefeb" />
+                  <text x="0" y="94">Absent (24)</text>
+                  <text x="0" y="152">Present (6)</text>
                   <g text-anchor="middle">
-                    <text x="133" y="83" font-size="22" data-cell="absent,absent">13</text><text x="133" y="104" data-recall="absent,absent">54.2%</text>
-                    <text x="219" y="83" font-size="22" data-cell="absent,present">11</text><text x="219" y="104" data-recall="absent,present">45.8%</text>
-                    <text x="133" y="141" font-size="22" data-cell="present,absent">6</text><text x="133" y="162" data-recall="present,absent">100.0%</text>
-                    <text x="219" y="141" font-size="22" data-cell="present,present">0</text><text x="219" y="162" data-recall="present,present">0.0%</text>
+                    <text
+                      x="133"
+                      y="83"
+                      font-size="22"
+                      data-cell="absent,absent"
+                    >
+                      13
+                    </text>
+                    <text x="133" y="104" data-recall="absent,absent">
+                      54.2%
+                    </text>
+                    <text
+                      x="219"
+                      y="83"
+                      font-size="22"
+                      data-cell="absent,present"
+                    >
+                      11
+                    </text>
+                    <text x="219" y="104" data-recall="absent,present">
+                      45.8%
+                    </text>
+                    <text
+                      x="133"
+                      y="141"
+                      font-size="22"
+                      data-cell="present,absent"
+                    >
+                      6
+                    </text>
+                    <text x="133" y="162" data-recall="present,absent">
+                      100.0%
+                    </text>
+                    <text
+                      x="219"
+                      y="141"
+                      font-size="22"
+                      data-cell="present,present"
+                    >
+                      0
+                    </text>
+                    <text x="219" y="162" data-recall="present,present">
+                      0.0%
+                    </text>
                   </g>
-                  <text x="0" y="200" data-stat="predicted-absent">Predicted absent: 19/30</text><text x="0" y="224" font-weight="600" data-stat="ba">BA: 27.08%</text>
+                  <text x="0" y="200" data-stat="predicted-absent">
+                    Predicted absent: 19/30
+                  </text>
+                  <text x="0" y="224" font-weight="600" data-stat="ba">
+                    BA: 27.08%
+                  </text>
                 </g>
-                <g transform="translate(314 73)" data-confusion-model="cue_time" data-seed="1">
-                  <text x="0" y="14" font-size="17" font-weight="600">Cue-only · seed 1</text>
-                  <text x="0" y="46">Observed ↓</text><text x="133" y="46" text-anchor="middle">Absent</text><text x="219" y="46" text-anchor="middle">Present</text>
-                  <rect x="90" y="58" width="86" height="58" fill="#dcefeb"/><rect x="176" y="58" width="86" height="58" fill="#fbe7e2"/>
-                  <rect x="90" y="116" width="86" height="58" fill="#fbe7e2"/><rect x="176" y="116" width="86" height="58" fill="#dcefeb"/>
-                  <text x="0" y="94">Absent (24)</text><text x="0" y="152">Present (6)</text>
+                <g
+                  transform="translate(314 73)"
+                  data-confusion-model="cue_time"
+                  data-seed="1"
+                >
+                  <text x="0" y="14" font-size="17" font-weight="600">
+                    Cue-only · seed 1
+                  </text>
+                  <text x="0" y="46">Observed ↓</text>
+                  <text x="133" y="46" text-anchor="middle">Absent</text>
+                  <text x="219" y="46" text-anchor="middle">Present</text>
+                  <rect x="90" y="58" width="86" height="58" fill="#dcefeb" />
+                  <rect x="176" y="58" width="86" height="58" fill="#fbe7e2" />
+                  <rect x="90" y="116" width="86" height="58" fill="#fbe7e2" />
+                  <rect x="176" y="116" width="86" height="58" fill="#dcefeb" />
+                  <text x="0" y="94">Absent (24)</text>
+                  <text x="0" y="152">Present (6)</text>
                   <g text-anchor="middle">
-                    <text x="133" y="83" font-size="22" data-cell="absent,absent">24</text><text x="133" y="104" data-recall="absent,absent">100.0%</text>
-                    <text x="219" y="83" font-size="22" data-cell="absent,present">0</text><text x="219" y="104" data-recall="absent,present">0.0%</text>
-                    <text x="133" y="141" font-size="22" data-cell="present,absent">6</text><text x="133" y="162" data-recall="present,absent">100.0%</text>
-                    <text x="219" y="141" font-size="22" data-cell="present,present">0</text><text x="219" y="162" data-recall="present,present">0.0%</text>
+                    <text
+                      x="133"
+                      y="83"
+                      font-size="22"
+                      data-cell="absent,absent"
+                    >
+                      24
+                    </text>
+                    <text x="133" y="104" data-recall="absent,absent">
+                      100.0%
+                    </text>
+                    <text
+                      x="219"
+                      y="83"
+                      font-size="22"
+                      data-cell="absent,present"
+                    >
+                      0
+                    </text>
+                    <text x="219" y="104" data-recall="absent,present">
+                      0.0%
+                    </text>
+                    <text
+                      x="133"
+                      y="141"
+                      font-size="22"
+                      data-cell="present,absent"
+                    >
+                      6
+                    </text>
+                    <text x="133" y="162" data-recall="present,absent">
+                      100.0%
+                    </text>
+                    <text
+                      x="219"
+                      y="141"
+                      font-size="22"
+                      data-cell="present,present"
+                    >
+                      0
+                    </text>
+                    <text x="219" y="162" data-recall="present,present">
+                      0.0%
+                    </text>
                   </g>
-                  <text x="0" y="200" data-stat="predicted-absent">Predicted absent: 30/30</text><text x="0" y="224" font-weight="600" data-stat="ba">BA: 50.00%</text>
+                  <text x="0" y="200" data-stat="predicted-absent">
+                    Predicted absent: 30/30
+                  </text>
+                  <text x="0" y="224" font-weight="600" data-stat="ba">
+                    BA: 50.00%
+                  </text>
                 </g>
-                <g transform="translate(612 73)" data-confusion-model="cue_time" data-seed="2">
-                  <text x="0" y="14" font-size="17" font-weight="600">Cue-only · seed 2</text>
-                  <text x="0" y="46">Observed ↓</text><text x="133" y="46" text-anchor="middle">Absent</text><text x="219" y="46" text-anchor="middle">Present</text>
-                  <rect x="90" y="58" width="86" height="58" fill="#dcefeb"/><rect x="176" y="58" width="86" height="58" fill="#fbe7e2"/>
-                  <rect x="90" y="116" width="86" height="58" fill="#fbe7e2"/><rect x="176" y="116" width="86" height="58" fill="#dcefeb"/>
-                  <text x="0" y="94">Absent (24)</text><text x="0" y="152">Present (6)</text>
+                <g
+                  transform="translate(612 73)"
+                  data-confusion-model="cue_time"
+                  data-seed="2"
+                >
+                  <text x="0" y="14" font-size="17" font-weight="600">
+                    Cue-only · seed 2
+                  </text>
+                  <text x="0" y="46">Observed ↓</text>
+                  <text x="133" y="46" text-anchor="middle">Absent</text>
+                  <text x="219" y="46" text-anchor="middle">Present</text>
+                  <rect x="90" y="58" width="86" height="58" fill="#dcefeb" />
+                  <rect x="176" y="58" width="86" height="58" fill="#fbe7e2" />
+                  <rect x="90" y="116" width="86" height="58" fill="#fbe7e2" />
+                  <rect x="176" y="116" width="86" height="58" fill="#dcefeb" />
+                  <text x="0" y="94">Absent (24)</text>
+                  <text x="0" y="152">Present (6)</text>
                   <g text-anchor="middle">
-                    <text x="133" y="83" font-size="22" data-cell="absent,absent">10</text><text x="133" y="104" data-recall="absent,absent">41.7%</text>
-                    <text x="219" y="83" font-size="22" data-cell="absent,present">14</text><text x="219" y="104" data-recall="absent,present">58.3%</text>
-                    <text x="133" y="141" font-size="22" data-cell="present,absent">6</text><text x="133" y="162" data-recall="present,absent">100.0%</text>
-                    <text x="219" y="141" font-size="22" data-cell="present,present">0</text><text x="219" y="162" data-recall="present,present">0.0%</text>
+                    <text
+                      x="133"
+                      y="83"
+                      font-size="22"
+                      data-cell="absent,absent"
+                    >
+                      10
+                    </text>
+                    <text x="133" y="104" data-recall="absent,absent">
+                      41.7%
+                    </text>
+                    <text
+                      x="219"
+                      y="83"
+                      font-size="22"
+                      data-cell="absent,present"
+                    >
+                      14
+                    </text>
+                    <text x="219" y="104" data-recall="absent,present">
+                      58.3%
+                    </text>
+                    <text
+                      x="133"
+                      y="141"
+                      font-size="22"
+                      data-cell="present,absent"
+                    >
+                      6
+                    </text>
+                    <text x="133" y="162" data-recall="present,absent">
+                      100.0%
+                    </text>
+                    <text
+                      x="219"
+                      y="141"
+                      font-size="22"
+                      data-cell="present,present"
+                    >
+                      0
+                    </text>
+                    <text x="219" y="162" data-recall="present,present">
+                      0.0%
+                    </text>
                   </g>
-                  <text x="0" y="200" data-stat="predicted-absent">Predicted absent: 16/30</text><text x="0" y="224" font-weight="600" data-stat="ba">BA: 20.83%</text>
+                  <text x="0" y="200" data-stat="predicted-absent">
+                    Predicted absent: 16/30
+                  </text>
+                  <text x="0" y="224" font-weight="600" data-stat="ba">
+                    BA: 20.83%
+                  </text>
                 </g>
-                <g transform="translate(16 330)" data-confusion-model="full_time" data-seed="0">
-                  <text x="0" y="14" font-size="17" font-weight="600">Joint · seed 0</text>
-                  <text x="0" y="46">Observed ↓</text><text x="133" y="46" text-anchor="middle">Absent</text><text x="219" y="46" text-anchor="middle">Present</text>
-                  <rect x="90" y="58" width="86" height="58" fill="#dcefeb"/><rect x="176" y="58" width="86" height="58" fill="#fbe7e2"/>
-                  <rect x="90" y="116" width="86" height="58" fill="#fbe7e2"/><rect x="176" y="116" width="86" height="58" fill="#dcefeb"/>
-                  <text x="0" y="94">Absent (24)</text><text x="0" y="152">Present (6)</text>
+                <g
+                  transform="translate(16 330)"
+                  data-confusion-model="full_time"
+                  data-seed="0"
+                >
+                  <text x="0" y="14" font-size="17" font-weight="600">
+                    Joint · seed 0
+                  </text>
+                  <text x="0" y="46">Observed ↓</text>
+                  <text x="133" y="46" text-anchor="middle">Absent</text>
+                  <text x="219" y="46" text-anchor="middle">Present</text>
+                  <rect x="90" y="58" width="86" height="58" fill="#dcefeb" />
+                  <rect x="176" y="58" width="86" height="58" fill="#fbe7e2" />
+                  <rect x="90" y="116" width="86" height="58" fill="#fbe7e2" />
+                  <rect x="176" y="116" width="86" height="58" fill="#dcefeb" />
+                  <text x="0" y="94">Absent (24)</text>
+                  <text x="0" y="152">Present (6)</text>
                   <g text-anchor="middle">
-                    <text x="133" y="83" font-size="22" data-cell="absent,absent">14</text><text x="133" y="104" data-recall="absent,absent">58.3%</text>
-                    <text x="219" y="83" font-size="22" data-cell="absent,present">10</text><text x="219" y="104" data-recall="absent,present">41.7%</text>
-                    <text x="133" y="141" font-size="22" data-cell="present,absent">0</text><text x="133" y="162" data-recall="present,absent">0.0%</text>
-                    <text x="219" y="141" font-size="22" data-cell="present,present">6</text><text x="219" y="162" data-recall="present,present">100.0%</text>
+                    <text
+                      x="133"
+                      y="83"
+                      font-size="22"
+                      data-cell="absent,absent"
+                    >
+                      14
+                    </text>
+                    <text x="133" y="104" data-recall="absent,absent">
+                      58.3%
+                    </text>
+                    <text
+                      x="219"
+                      y="83"
+                      font-size="22"
+                      data-cell="absent,present"
+                    >
+                      10
+                    </text>
+                    <text x="219" y="104" data-recall="absent,present">
+                      41.7%
+                    </text>
+                    <text
+                      x="133"
+                      y="141"
+                      font-size="22"
+                      data-cell="present,absent"
+                    >
+                      0
+                    </text>
+                    <text x="133" y="162" data-recall="present,absent">
+                      0.0%
+                    </text>
+                    <text
+                      x="219"
+                      y="141"
+                      font-size="22"
+                      data-cell="present,present"
+                    >
+                      6
+                    </text>
+                    <text x="219" y="162" data-recall="present,present">
+                      100.0%
+                    </text>
                   </g>
-                  <text x="0" y="200" data-stat="predicted-absent">Predicted absent: 14/30</text><text x="0" y="224" font-weight="600" data-stat="ba">BA: 79.17%</text>
+                  <text x="0" y="200" data-stat="predicted-absent">
+                    Predicted absent: 14/30
+                  </text>
+                  <text x="0" y="224" font-weight="600" data-stat="ba">
+                    BA: 79.17%
+                  </text>
                 </g>
-                <g transform="translate(314 330)" data-confusion-model="full_time" data-seed="1">
-                  <text x="0" y="14" font-size="17" font-weight="600">Joint · seed 1</text>
-                  <text x="0" y="46">Observed ↓</text><text x="133" y="46" text-anchor="middle">Absent</text><text x="219" y="46" text-anchor="middle">Present</text>
-                  <rect x="90" y="58" width="86" height="58" fill="#dcefeb"/><rect x="176" y="58" width="86" height="58" fill="#fbe7e2"/>
-                  <rect x="90" y="116" width="86" height="58" fill="#fbe7e2"/><rect x="176" y="116" width="86" height="58" fill="#dcefeb"/>
-                  <text x="0" y="94">Absent (24)</text><text x="0" y="152">Present (6)</text>
+                <g
+                  transform="translate(314 330)"
+                  data-confusion-model="full_time"
+                  data-seed="1"
+                >
+                  <text x="0" y="14" font-size="17" font-weight="600">
+                    Joint · seed 1
+                  </text>
+                  <text x="0" y="46">Observed ↓</text>
+                  <text x="133" y="46" text-anchor="middle">Absent</text>
+                  <text x="219" y="46" text-anchor="middle">Present</text>
+                  <rect x="90" y="58" width="86" height="58" fill="#dcefeb" />
+                  <rect x="176" y="58" width="86" height="58" fill="#fbe7e2" />
+                  <rect x="90" y="116" width="86" height="58" fill="#fbe7e2" />
+                  <rect x="176" y="116" width="86" height="58" fill="#dcefeb" />
+                  <text x="0" y="94">Absent (24)</text>
+                  <text x="0" y="152">Present (6)</text>
                   <g text-anchor="middle">
-                    <text x="133" y="83" font-size="22" data-cell="absent,absent">21</text><text x="133" y="104" data-recall="absent,absent">87.5%</text>
-                    <text x="219" y="83" font-size="22" data-cell="absent,present">3</text><text x="219" y="104" data-recall="absent,present">12.5%</text>
-                    <text x="133" y="141" font-size="22" data-cell="present,absent">6</text><text x="133" y="162" data-recall="present,absent">100.0%</text>
-                    <text x="219" y="141" font-size="22" data-cell="present,present">0</text><text x="219" y="162" data-recall="present,present">0.0%</text>
+                    <text
+                      x="133"
+                      y="83"
+                      font-size="22"
+                      data-cell="absent,absent"
+                    >
+                      21
+                    </text>
+                    <text x="133" y="104" data-recall="absent,absent">
+                      87.5%
+                    </text>
+                    <text
+                      x="219"
+                      y="83"
+                      font-size="22"
+                      data-cell="absent,present"
+                    >
+                      3
+                    </text>
+                    <text x="219" y="104" data-recall="absent,present">
+                      12.5%
+                    </text>
+                    <text
+                      x="133"
+                      y="141"
+                      font-size="22"
+                      data-cell="present,absent"
+                    >
+                      6
+                    </text>
+                    <text x="133" y="162" data-recall="present,absent">
+                      100.0%
+                    </text>
+                    <text
+                      x="219"
+                      y="141"
+                      font-size="22"
+                      data-cell="present,present"
+                    >
+                      0
+                    </text>
+                    <text x="219" y="162" data-recall="present,present">
+                      0.0%
+                    </text>
                   </g>
-                  <text x="0" y="200" data-stat="predicted-absent">Predicted absent: 27/30</text><text x="0" y="224" font-weight="600" data-stat="ba">BA: 43.75%</text>
+                  <text x="0" y="200" data-stat="predicted-absent">
+                    Predicted absent: 27/30
+                  </text>
+                  <text x="0" y="224" font-weight="600" data-stat="ba">
+                    BA: 43.75%
+                  </text>
                 </g>
-                <g transform="translate(612 330)" data-confusion-model="full_time" data-seed="2">
-                  <text x="0" y="14" font-size="17" font-weight="600">Joint · seed 2</text>
-                  <text x="0" y="46">Observed ↓</text><text x="133" y="46" text-anchor="middle">Absent</text><text x="219" y="46" text-anchor="middle">Present</text>
-                  <rect x="90" y="58" width="86" height="58" fill="#dcefeb"/><rect x="176" y="58" width="86" height="58" fill="#fbe7e2"/>
-                  <rect x="90" y="116" width="86" height="58" fill="#fbe7e2"/><rect x="176" y="116" width="86" height="58" fill="#dcefeb"/>
-                  <text x="0" y="94">Absent (24)</text><text x="0" y="152">Present (6)</text>
+                <g
+                  transform="translate(612 330)"
+                  data-confusion-model="full_time"
+                  data-seed="2"
+                >
+                  <text x="0" y="14" font-size="17" font-weight="600">
+                    Joint · seed 2
+                  </text>
+                  <text x="0" y="46">Observed ↓</text>
+                  <text x="133" y="46" text-anchor="middle">Absent</text>
+                  <text x="219" y="46" text-anchor="middle">Present</text>
+                  <rect x="90" y="58" width="86" height="58" fill="#dcefeb" />
+                  <rect x="176" y="58" width="86" height="58" fill="#fbe7e2" />
+                  <rect x="90" y="116" width="86" height="58" fill="#fbe7e2" />
+                  <rect x="176" y="116" width="86" height="58" fill="#dcefeb" />
+                  <text x="0" y="94">Absent (24)</text>
+                  <text x="0" y="152">Present (6)</text>
                   <g text-anchor="middle">
-                    <text x="133" y="83" font-size="22" data-cell="absent,absent">22</text><text x="133" y="104" data-recall="absent,absent">91.7%</text>
-                    <text x="219" y="83" font-size="22" data-cell="absent,present">2</text><text x="219" y="104" data-recall="absent,present">8.3%</text>
-                    <text x="133" y="141" font-size="22" data-cell="present,absent">4</text><text x="133" y="162" data-recall="present,absent">66.7%</text>
-                    <text x="219" y="141" font-size="22" data-cell="present,present">2</text><text x="219" y="162" data-recall="present,present">33.3%</text>
+                    <text
+                      x="133"
+                      y="83"
+                      font-size="22"
+                      data-cell="absent,absent"
+                    >
+                      22
+                    </text>
+                    <text x="133" y="104" data-recall="absent,absent">
+                      91.7%
+                    </text>
+                    <text
+                      x="219"
+                      y="83"
+                      font-size="22"
+                      data-cell="absent,present"
+                    >
+                      2
+                    </text>
+                    <text x="219" y="104" data-recall="absent,present">
+                      8.3%
+                    </text>
+                    <text
+                      x="133"
+                      y="141"
+                      font-size="22"
+                      data-cell="present,absent"
+                    >
+                      4
+                    </text>
+                    <text x="133" y="162" data-recall="present,absent">
+                      66.7%
+                    </text>
+                    <text
+                      x="219"
+                      y="141"
+                      font-size="22"
+                      data-cell="present,present"
+                    >
+                      2
+                    </text>
+                    <text x="219" y="162" data-recall="present,present">
+                      33.3%
+                    </text>
                   </g>
-                  <text x="0" y="200" data-stat="predicted-absent">Predicted absent: 26/30</text><text x="0" y="224" font-weight="600" data-stat="ba">BA: 62.50%</text>
+                  <text x="0" y="200" data-stat="predicted-absent">
+                    Predicted absent: 26/30
+                  </text>
+                  <text x="0" y="224" font-weight="600" data-stat="ba">
+                    BA: 62.50%
+                  </text>
                 </g>
-                <text x="16" y="581">Each panel reuses a finite source pool; do not pool seeds into 90 independent observations.</text>
+                <text x="16" y="581">
+                  Each panel reuses a finite source pool; do not pool seeds into
+                  90 independent observations.
+                </text>
               </g>
             </svg>
           </div>
-          <div class="figure-scroll" tabindex="0" role="region" aria-label="Figure 5B, mean class recalls and balanced accuracy">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 354" role="img" aria-labelledby="path-recall-title path-recall-desc">
-              <title id="path-recall-title">B. Why mostly saying absent can still score below 50 percent balanced accuracy</title>
-              <desc id="path-recall-desc">Balanced accuracy gives equal weight to the two class recalls. Cue-only logistic has mean absent recall 65.28 percent and present recall zero, giving 32.64 percent balanced accuracy. Always absent is a reference rule, not a fitted model: it has 100 and zero percent recalls, giving 50 percent balanced accuracy. Joint logistic has mean recalls 79.17 and 44.44 percent, giving 61.81 percent balanced accuracy.</desc>
+          <div
+            class="figure-scroll"
+            tabindex="0"
+            role="region"
+            aria-label="Figure 5B, mean class recalls and balanced accuracy"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 900 354"
+              role="img"
+              aria-labelledby="path-recall-title path-recall-desc"
+            >
+              <title id="path-recall-title">
+                B. Why mostly saying absent can still score below 50 percent
+                balanced accuracy
+              </title>
+              <desc id="path-recall-desc">
+                Balanced accuracy gives equal weight to the two class recalls.
+                Cue-only logistic has mean absent recall 65.28 percent and
+                present recall zero, giving 32.64 percent balanced accuracy.
+                Always absent is a reference rule, not a fitted model: it has
+                100 and zero percent recalls, giving 50 percent balanced
+                accuracy. Joint logistic has mean recalls 79.17 and 44.44
+                percent, giving 61.81 percent balanced accuracy.
+              </desc>
               <g font-family="system-ui, sans-serif" font-size="14" fill="#222">
-                <text x="16" y="27" font-size="18" font-weight="600">B. Balanced accuracy = (absent recall + present recall) / 2</text>
-                <text x="302" y="64">0%</text><text x="467" y="64" text-anchor="middle">50%</text><text x="632" y="64" text-anchor="end">100%</text><text x="760" y="64">Mean BA</text>
+                <text x="16" y="27" font-size="18" font-weight="600">
+                  B. Balanced accuracy = (absent recall + present recall) / 2
+                </text>
+                <text x="302" y="64">0%</text>
+                <text x="467" y="64" text-anchor="middle">50%</text>
+                <text x="632" y="64" text-anchor="end">100%</text>
+                <text x="760" y="64">Mean BA</text>
                 <g transform="translate(0 84)" data-mean-model="cue_time">
-                  <text x="16" y="16" font-weight="600">Cue-only + logistic</text><text x="16" y="40">Saved results</text>
-                  <text x="230" y="14">Absent</text><text x="230" y="42">Present</text>
-                  <rect x="302" y="0" width="330" height="18" fill="#eeeeee"/><rect x="302" y="28" width="330" height="18" fill="#eeeeee"/>
-                  <rect x="302" y="0" width="215.416667" height="18" fill="#326879" data-bar="absent"/><rect x="302" y="28" width="0" height="18" fill="#ad6022" data-bar="present"/>
-                  <text x="644" y="14" data-mean="absent">65.28%</text><text x="644" y="42" data-mean="present">0.00%</text><text x="760" y="29" font-size="20" font-weight="600" data-mean="ba">32.64%</text>
+                  <text x="16" y="16" font-weight="600">
+                    Cue-only + logistic
+                  </text>
+                  <text x="16" y="40">Saved results</text>
+                  <text x="230" y="14">Absent</text>
+                  <text x="230" y="42">Present</text>
+                  <rect x="302" y="0" width="330" height="18" fill="#eeeeee" />
+                  <rect x="302" y="28" width="330" height="18" fill="#eeeeee" />
+                  <rect
+                    x="302"
+                    y="0"
+                    width="215.416667"
+                    height="18"
+                    fill="#326879"
+                    data-bar="absent"
+                  />
+                  <rect
+                    x="302"
+                    y="28"
+                    width="0"
+                    height="18"
+                    fill="#ad6022"
+                    data-bar="present"
+                  />
+                  <text x="644" y="14" data-mean="absent">65.28%</text>
+                  <text x="644" y="42" data-mean="present">0.00%</text>
+                  <text
+                    x="760"
+                    y="29"
+                    font-size="20"
+                    font-weight="600"
+                    data-mean="ba"
+                  >
+                    32.64%
+                  </text>
                 </g>
                 <g transform="translate(0 172)" data-mean-model="always_absent">
-                  <text x="16" y="16" font-weight="600">Always predict absent</text><text x="16" y="40">Reference rule, not a fit</text>
-                  <text x="230" y="14">Absent</text><text x="230" y="42">Present</text>
-                  <rect x="302" y="0" width="330" height="18" fill="#eeeeee"/><rect x="302" y="28" width="330" height="18" fill="#eeeeee"/>
-                  <rect x="302" y="0" width="330" height="18" fill="#326879" data-bar="absent"/><rect x="302" y="28" width="0" height="18" fill="#ad6022" data-bar="present"/>
-                  <text x="644" y="14" data-mean="absent">100.00%</text><text x="644" y="42" data-mean="present">0.00%</text><text x="760" y="29" font-size="20" font-weight="600" data-mean="ba">50.00%</text>
+                  <text x="16" y="16" font-weight="600">
+                    Always predict absent
+                  </text>
+                  <text x="16" y="40">Reference rule, not a fit</text>
+                  <text x="230" y="14">Absent</text>
+                  <text x="230" y="42">Present</text>
+                  <rect x="302" y="0" width="330" height="18" fill="#eeeeee" />
+                  <rect x="302" y="28" width="330" height="18" fill="#eeeeee" />
+                  <rect
+                    x="302"
+                    y="0"
+                    width="330"
+                    height="18"
+                    fill="#326879"
+                    data-bar="absent"
+                  />
+                  <rect
+                    x="302"
+                    y="28"
+                    width="0"
+                    height="18"
+                    fill="#ad6022"
+                    data-bar="present"
+                  />
+                  <text x="644" y="14" data-mean="absent">100.00%</text>
+                  <text x="644" y="42" data-mean="present">0.00%</text>
+                  <text
+                    x="760"
+                    y="29"
+                    font-size="20"
+                    font-weight="600"
+                    data-mean="ba"
+                  >
+                    50.00%
+                  </text>
                 </g>
                 <g transform="translate(0 260)" data-mean-model="full_time">
-                  <text x="16" y="16" font-weight="600">Joint + logistic</text><text x="16" y="40">Saved results</text>
-                  <text x="230" y="14">Absent</text><text x="230" y="42">Present</text>
-                  <rect x="302" y="0" width="330" height="18" fill="#eeeeee"/><rect x="302" y="28" width="330" height="18" fill="#eeeeee"/>
-                  <rect x="302" y="0" width="261.25" height="18" fill="#326879" data-bar="absent"/><rect x="302" y="28" width="146.666667" height="18" fill="#ad6022" data-bar="present"/>
-                  <text x="644" y="14" data-mean="absent">79.17%</text><text x="644" y="42" data-mean="present">44.44%</text><text x="760" y="29" font-size="20" font-weight="600" data-mean="ba">61.81%</text>
+                  <text x="16" y="16" font-weight="600">Joint + logistic</text>
+                  <text x="16" y="40">Saved results</text>
+                  <text x="230" y="14">Absent</text>
+                  <text x="230" y="42">Present</text>
+                  <rect x="302" y="0" width="330" height="18" fill="#eeeeee" />
+                  <rect x="302" y="28" width="330" height="18" fill="#eeeeee" />
+                  <rect
+                    x="302"
+                    y="0"
+                    width="261.25"
+                    height="18"
+                    fill="#326879"
+                    data-bar="absent"
+                  />
+                  <rect
+                    x="302"
+                    y="28"
+                    width="146.666667"
+                    height="18"
+                    fill="#ad6022"
+                    data-bar="present"
+                  />
+                  <text x="644" y="14" data-mean="absent">79.17%</text>
+                  <text x="644" y="42" data-mean="present">44.44%</text>
+                  <text
+                    x="760"
+                    y="29"
+                    font-size="20"
+                    font-weight="600"
+                    data-mean="ba"
+                  >
+                    61.81%
+                  </text>
                 </g>
-                <text x="16" y="342">Always absent gets 24/30 = 80% ordinary accuracy, but only 50% balanced accuracy.</text>
+                <text x="16" y="342">
+                  Always absent gets 24/30 = 80% ordinary accuracy, but only 50%
+                  balanced accuracy.
+                </text>
               </g>
             </svg>
           </div>
           <figcaption>
-            <strong>Figure 5. Error structure of whole-cue path-component decoding.</strong>
-            A: saved aggregate confusion counts and true-class-normalized percentages
-            for every cue-only/joint Time/logistic seed; cells are synthetic
-            combinations, not independent natural trials. Cell color marks
-            correctness, not magnitude. B: arithmetic of the
-            equal-class metric, with a clearly labeled always-absent reference.
-            Cohort, feature dimensions, split and readout match Table 3. Means
-            average the three computational seeds; no biological interval is
-            inferred. Values are rounded for display; bar lengths and BA use
-            unrounded recalls. These are empirical count/recall diagrams from
-            <a href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-cue-time-readout-20261005/observed_confusions.csv">archived whole-cue confusions</a>
-            and <a href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-cue-time-readout-20261005/observed_means.csv">mean/seed metrics</a>,
-            not new fits or reconstructed private predictions. Error patterns
+            <strong
+              >Figure 5. Error structure of whole-cue path-component
+              decoding.</strong
+            >
+            A: saved aggregate confusion counts and true-class-normalized
+            percentages for every cue-only/joint Time/logistic seed; cells are
+            synthetic combinations, not independent natural trials. Cell color
+            marks correctness, not magnitude. B: arithmetic of the equal-class
+            metric, with a clearly labeled always-absent reference. Cohort,
+            feature dimensions, split and readout match Table 3. Means average
+            the three computational seeds; no biological interval is inferred.
+            Values are rounded for display; bar lengths and BA use unrounded
+            recalls. These are empirical count/recall diagrams from
+            <a
+              href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-cue-time-readout-20261005/observed_confusions.csv"
+              >archived whole-cue confusions</a
+            >
+            and
+            <a
+              href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-cue-time-readout-20261005/observed_means.csv"
+              >mean/seed metrics</a
+            >, not new fits or reconstructed private predictions. Error patterns
             describe what failed, not its unique cause.
           </figcaption>
         </figure>
@@ -1930,21 +2475,22 @@
           The development combinations are imbalanced, but balanced accuracy
           gives absent and present equal weight; training rows were already
           balanced at 64 per class. Always saying “absent” would score 50% BA,
-          not 32.64% (Figure 5B). Joint training partly restored detection,
-          with six, zero and two of six positives detected across the three
-          seeds. Its 61.81% mean therefore hides substantial computational
-          variation, and does not establish reliable transfer.
+          not 32.64% (Figure 5B). Joint training partly restored detection, with
+          six, zero and two of six positives detected across the three seeds.
+          Its 61.81% mean therefore hides substantial computational variation,
+          and does not establish reliable transfer.
         </p>
         <p>
           These observations do not uniquely diagnose why the mapping failed.
-          Limited real-source support and source reuse are documented constraints;
-          a mismatch between learned features and the target, source-distribution
-          differences and readout behavior remain possible contributors. The
-          earlier source-transfer and decoder studies below probe parts of that
-          problem, but are not the same fitted comparison as Table 3. Neither
-          the confusion matrices nor a below-50% score establish absence of
-          hippocampal path information. Reversing predictions after inspecting
-          development labels would be a new selected rule, not a validated rescue.
+          Limited real-source support and source reuse are documented
+          constraints; a mismatch between learned features and the target,
+          source-distribution differences and readout behavior remain possible
+          contributors. The earlier source-transfer and decoder studies below
+          probe parts of that problem, but are not the same fitted comparison as
+          Table 3. Neither the confusion matrices nor a below-50% score
+          establish absence of hippocampal path information. Reversing
+          predictions after inspecting development labels would be a new
+          selected rule, not a validated rescue.
         </p>
         <h4>Behavioral measurement did not determine neural sample size</h4>
         <p>
@@ -1987,7 +2533,8 @@
           The archived broader search and its correction ledger are retained as
           provenance, not reinterpreted here as a new Time-only statistical
           test.
-          <a href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/path-generalization-completed-state-20260907.md"
+          <a
+            href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/path-generalization-completed-state-20260907.md"
             >Corrected inference authority</a
           >.
         </p>
@@ -2048,7 +2595,8 @@
           association. Eight of 22 source deletions were inestimable. Navigation
           entered encoder training only; no navigation-time prediction or frozen
           cue↔navigation transfer was demonstrated.
-          <a href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-full-trial-transfer/README.md"
+          <a
+            href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-full-trial-transfer/README.md"
             >Matched Time-arm results</a
           >.
         </p>
@@ -2089,7 +2637,8 @@
             lines the separately fitted whole-cue readouts, and gray the 0.5 BA
             reference. No biological interval or selected best bin is implied.
             Source:
-            <a href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-cue-time-readout-20261005/README.md"
+            <a
+              href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-cue-time-readout-20261005/README.md"
               >October 5 frozen-model study</a
             >.
           </figcaption>
@@ -2127,7 +2676,8 @@
             excluded from these families. The references do not test universal
             method superiority or correct the project's entire adaptive history.
             No uncertainty interval is implied. Source:
-            <a href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-cue-time-readout-20261005/README.md"
+            <a
+              href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-cue-time-readout-20261005/README.md"
               >window-study controls</a
             >.
           </figcaption>
@@ -2145,7 +2695,9 @@
           development accuracy at 250, 1,000 and 3,000 encoder updates. This
           inspected trajectory did not validate an early-stopping rule and is
           not the latest fixed-1,000-update cue/joint comparison.
-          <a href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/start-goal-cebra-diagnosis.md">Frozen-readout diagnosis</a
+          <a
+            href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/start-goal-cebra-diagnosis.md"
+            >Frozen-readout diagnosis</a
           >;
           <a
             href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/professor_updates/start_goal_20260907/endpoint-research-report.html"
@@ -2206,11 +2758,16 @@
           training rows and 24 absent/six present development combinations with
           equal class weight. Whole-cue Time/PCA readouts have 80 features.
           Computational repeats are not biological replication. Sources:
-          <a href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/start-goal-cebra-diagnosis.md">endpoint diagnosis</a>,
-          <a href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-decoder-autoresearch-20260924.md"
+          <a
+            href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/start-goal-cebra-diagnosis.md"
+            >endpoint diagnosis</a
+          >,
+          <a
+            href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-decoder-autoresearch-20260924.md"
             >fixed readout study</a
           >,
-          <a href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-hyperparameter-diagnosis-20260924.md"
+          <a
+            href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-hyperparameter-diagnosis-20260924.md"
             >penalty diagnosis</a
           >.
         </p>
@@ -2276,7 +2833,8 @@
           3D view while whole-cue BA was 44.27%. A readily compressed cloud
           therefore did not establish source generalization. No biological ring,
           torus or attractor was demonstrated.
-          <a href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-latent-atlas-results-20260924.md"
+          <a
+            href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-latent-atlas-results-20260924.md"
             >Archived Time geometry rows and definitions</a
           >.
         </p>
@@ -2317,7 +2875,8 @@
             and development are separate. Final self-comparison equals one by
             construction. There is no decoder, biological interval or
             checkpoint-selection test in this descriptive panel. Source:
-            <a href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-cue-time-readout-20261005/README.md"
+            <a
+              href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-cue-time-readout-20261005/README.md"
               >saved-checkpoint diagnostics</a
             >.
           </figcaption>
@@ -2474,7 +3033,8 @@
             synthetic population count, readout, metric or uncertainty interval
             applies. No absent/present interpretation is assigned here beyond
             the original mapping rules. Source:
-            <a href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/place195-v6-v9-autoresearch-20260906.md"
+            <a
+              href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/place195-v6-v9-autoresearch-20260906.md"
               >V6 behavior report</a
             >; unchanged archived image.
           </figcaption>
@@ -2511,7 +3071,8 @@
             support cells, not the 480/240 constructed examples per seed.
             Session blocks are not independent outer-test folds. No decoder,
             time-course metric or uncertainty interval applies. Source:
-            <a href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-endpoint-time-readout-20261006/README.md"
+            <a
+              href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-endpoint-time-readout-20261006/README.md"
               >October endpoint report</a
             >.
           </figcaption>
@@ -2537,7 +3098,8 @@
             trials. Eight development session×class pools are singletons,
             yielding inestimable source deletions. This is a support count, not
             a decoding or uncertainty result. Source:
-            <a href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-cue-time-readout-20261005/source-support.md"
+            <a
+              href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-cue-time-readout-20261005/source-support.md"
               >source-construction audit</a
             >.
           </figcaption>
@@ -2568,7 +3130,8 @@
             retains the corresponding matrices for seeds one and two and both
             six-class heads. Counts must not be summed across seeds as
             biological replication. No uncertainty interval. Source:
-            <a href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-endpoint-time-readout-20261006/README.md"
+            <a
+              href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-endpoint-time-readout-20261006/README.md"
               >all endpoint confusions</a
             >.
           </figcaption>
@@ -2599,7 +3162,8 @@
             target's class count. These are low-resolution no-association
             references, not general superiority tests or biological intervals.
             Source:
-            <a href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-endpoint-time-readout-20261006/README.md"
+            <a
+              href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-endpoint-time-readout-20261006/README.md"
               >endpoint null definitions</a
             >.
           </figcaption>
@@ -2649,21 +3213,26 @@
         </p>
         <ol>
           <li>
-            <a href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/start-goal-cebra-baseline.md"
+            <a
+              href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/start-goal-cebra-baseline.md"
               >Initial endpoint baseline</a
             >;
-            <a href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/start-goal-cebra-diagnosis.md"
+            <a
+              href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/start-goal-cebra-diagnosis.md"
               >frozen-readout diagnosis</a
             >;
-            <a href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/start-goal-autoresearch.md"
+            <a
+              href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/start-goal-autoresearch.md"
               >historical Time checkpoints and LDA follow-up</a
             >;
-            <a href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-endpoint-time-readout-20261006/report.html"
+            <a
+              href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-endpoint-time-readout-20261006/report.html"
               >latest matched endpoint study</a
             >.
           </li>
           <li>
-            <a href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/place195-v6-v9-autoresearch-20260906.md"
+            <a
+              href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/place195-v6-v9-autoresearch-20260906.md"
               >Path measurement and V6–V9 comparisons</a
             >;
             <a
@@ -2676,33 +3245,41 @@
             >.
           </li>
           <li>
-            <a href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/path-preprocessing-autoresearch-20260908.html"
+            <a
+              href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/path-preprocessing-autoresearch-20260908.html"
               >Five-endpoint preprocessing</a
             >;
-            <a href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/path-pca-matched/report.html"
+            <a
+              href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/path-pca-matched/report.html"
               >matched raw/PCA extension</a
             >;
-            <a href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-decoder-autoresearch-20260924.html"
+            <a
+              href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-decoder-autoresearch-20260924.html"
               >frozen decoder family</a
             >;
-            <a href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-hyperparameter-diagnosis-20260924.html"
+            <a
+              href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-hyperparameter-diagnosis-20260924.html"
               >regularization, confidence and kernel diagnosis</a
             >.
           </li>
           <li>
-            <a href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-full-trial-transfer/report.html"
+            <a
+              href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-full-trial-transfer/report.html"
               >Cue-only versus broader training</a
             >;
-            <a href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-cue-time-readout-20261005/report.html"
+            <a
+              href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-cue-time-readout-20261005/report.html"
               >frozen cue-window readouts and checkpoint geometry</a
             >. The latter replays the former's whole-cue results rather than
             supplying an independent whole-cue replication.
           </li>
           <li>
-            <a href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-latent-atlas/atlas.html"
+            <a
+              href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-latent-atlas/atlas.html"
               >Historical interactive latent atlas</a
             >;
-            <a href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-latent-atlas-results-20260924.md"
+            <a
+              href="https://github.com/Hong-yiii/neuro_science/blob/4862267/docs/reports/cebra-latent-atlas-results-20260924.md"
               >point definitions, display-fidelity metrics and interpretation</a
             >.
           </li>

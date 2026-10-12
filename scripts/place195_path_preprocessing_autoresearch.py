@@ -42,8 +42,8 @@ if str(REPO_ROOT) not in sys.path:
 import numpy as np
 from sklearn.linear_model import LogisticRegression
 
-from scripts.place195_split_filtered_access import SplitFilteredAccess
 from scripts.place195_v7_v8_neural_experiments import bin_events, session_from_cell
+from neuro.place195_split_access import SplitFilteredAccess
 
 LABELS = ("absent", "present")
 LABEL_TO_INT = {"absent": 0, "present": 1}

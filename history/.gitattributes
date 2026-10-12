@@ -1,0 +1,2 @@
+# Preserve relocated, checksummed reading artifacts byte-for-byte.
+*.html -text -whitespace linguist-generated=true

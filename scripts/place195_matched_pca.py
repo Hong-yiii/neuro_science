@@ -34,6 +34,7 @@ CODE_FILES = (
     "scripts/verify_matched_pca.py",
     "scripts/test_matched_pca.py",
     "scripts/place195_split_filtered_access.py",
+    "src/neuro/place195_split_access.py",
     "scripts/place195_v7_v8_neural_experiments.py",
     "scripts/verify_path_preprocessing_results.py",
     PROTOCOL,

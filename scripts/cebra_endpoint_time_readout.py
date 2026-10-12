@@ -57,7 +57,7 @@ from scripts.import_place195_sessions import (
     read_spiketrain,
     spikes_in_window,
 )
-from scripts.place195_split_filtered_access import SplitFilteredAccess
+from neuro.place195_split_access import SplitFilteredAccess
 from scripts.place195_v7_v8_neural_experiments import bin_events, session_from_cell
 
 CANONICAL_ROOT = Path("/home/hongyi-home-lab/neuro_science")
@@ -2560,6 +2560,9 @@ def helper_paths() -> dict[str, Path]:
         / "scripts/import_place195_sessions.py",
         "scripts/place195_split_filtered_access.py": CANONICAL_ROOT
         / "scripts/place195_split_filtered_access.py",
+        "src/neuro/place195_split_access.py": Path(
+            str(sys.modules[SplitFilteredAccess.__module__].__file__)
+        ),
         "scripts/place195_v7_v8_neural_experiments.py": CANONICAL_ROOT
         / "scripts/place195_v7_v8_neural_experiments.py",
         "scripts/place195_v8b_v9_cebra.py": CANONICAL_ROOT

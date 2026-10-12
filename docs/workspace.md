@@ -4,6 +4,22 @@
 2026 (Asia/Singapore).** The date `20260910` in consolidation paths identifies this
 session, not the date every operation completed.
 
+## October12 — approved hierarchy, first implementation slice
+
+Current entry points: [report](../report/README.md), [weekly history](../history/README.md)
+and [migration status](reorganization.md). The manuscript package and eleven
+standalone historical HTML files have physically moved with legacy symlinks;
+protocols/source packages remain in place. The shared split-access implementation
+moved unchanged into `src/neuro/`; current callers/provenance are updated, so old
+approval identities must not be treated as valid for the changed current scripts.
+Most scientific bodies still await extraction from `scripts/`. No private replay,
+fit, service, worktree cleanup, commit/push or PR merge accompanies this slice.
+The frozen HTML's pre-existing local byte difference is preserved and its exact
+checksum check remains failing. Original working/committed copies are retained
+in `work/reorganization-weekly-audit/before-build/`. The untracked current-state
+package remains untouched. One companion notebook is intended, not two; its
+scientific scope is still a separate decision. Earlier checkpoints below are history.
+
 ## October12 — PR preparation and next-work sequence
 
 Hongyi authorized a PR targeting `main` for the retrospective, separate research
