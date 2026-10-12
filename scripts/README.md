@@ -4,11 +4,14 @@ Updated 2026-10-12. Current focus is the
 [retrospective and its evidence](../docs/reports/README.md), not restarting runs.
 This map classifies existing entry points; it is not execution authorization.
 
-**Migration underway:** scientific logic belongs in `src/neuro/`; `scripts/` is
-the launch/compatibility layer. The [shared split-access gate](../src/neuro/README.md)
-is the first extraction; the other scientific bodies listed below are explicitly
-remaining migration work. Historical executed-source identities remain separate
-from updated current imports/approvals. See [migration status](../docs/reorganization.md).
+**Three-study package implemented:** full-trial transfer, endpoint-time and cue-time
+scientific bodies now live in [`neuro.studies`](../src/neuro/README.md), beside the
+shared split gate and equivalent execution/provenance seams. Their `cebra_*.py`
+files here are thin CLI/import aliases preserving module identity and old class
+lookup paths. Other scientific families remain legacy code outside the package;
+the audited `neuro.legacy_adapters` boundary reuses their original helpers.
+Historical executed-source identities/approvals remain separate from changed
+current source. See [migration status](../docs/reorganization.md).
 
 ## 1. Current manuscript publishing — no scientific execution
 
@@ -42,6 +45,13 @@ its provenance. Read the owning protocol before running anything.
 | Preprocessing and matched PCA | `place195_path_preprocessing_autoresearch.py`, `place195_matched_pca.py`, matched builders/verifiers | [Preprocessing](../docs/reports/path-preprocessing-autoresearch-20260908.md), [PCA](../docs/reports/path-pca-matched/README.md) |
 | Frozen readout and geometry diagnostics | `cebra_decoder_autoresearch.py`, `cebra_hyperparameter_diagnosis.py`, `cebra_latent_atlas.py` | [Decoders](../docs/reports/cebra-decoder-autoresearch-20260924.md), [diagnosis](../docs/reports/cebra-hyperparameter-diagnosis-20260924.md), [atlas](../docs/reports/cebra-latent-atlas-results-20260924.md) |
 
+The three aliases support both `python -m scripts.cebra_<name> --help` and direct
+`python scripts/cebra_<name>.py --help`; package imports use
+`from neuro.studies import full_trial_transfer, endpoint_time_readout, cue_time_readout`
+with `PYTHONPATH=src`. No installation is needed. Package code manifests include the
+actual implementations and transitive helpers, not only these aliases. Current
+approvals intentionally become stale; do not rewrite old hashes to accept this checkout.
+
 A historical report builder can read private results or saved models. It is not
 interchangeable with the manuscript's presentation-only builder. Scientific
 verification/replay can access private predictions even without fitting; obtain
@@ -58,8 +68,9 @@ separate approval for that work. No new fit is queued.
   later code. Its package initializer also imports `neural.py`; preserve it.
 - `data.py` and `inspect_spatial_bin_jld2.py` remain local data utilities, not
   authorized data-access commands merely because they are listed here.
-- Root calculations, bare sibling imports and helper hashes depend on original
-  paths. A wrapper or rename can break byte-level provenance even if imports work.
+- The packaged family's source paths/manifests now resolve its actual implementation.
+  Other legacy families still have original-path/bare-import assumptions; another
+  relocation needs a caller/provenance audit, not only a successful import.
 
 ## 4. Historical smoke or excluded modeling branches
 
@@ -68,15 +79,18 @@ not the main workflow, while retaining their executable paths:
 
 - Pilot `preflight.py` and `manifest.py`: initial synthetic/one-cell smoke CLI
   and output writer. Pilot tests and documented module commands still refer to them.
-- `start_goal_ce_followup.py`: the older cross-entropy encoder branch, excluded
-  from the current Time-focused manuscript; retained in owning endpoint provenance.
+- `start_goal_ce_followup.py`: **deprecated for new Time-focused work**, the older
+  cross-entropy encoder branch excluded from the current manuscript. Its path remains
+  available for historical provenance/tests; deprecation is not deletion.
 - Early data feasibility, V4/V5 notes and initial-trial outputs: historical
   software/selection evidence, not current neural prediction results.
 
-The first extraction relocated the shared split guard without algorithm changes;
-no scientific test or private initial-trial output was removed. Further code
-migration needs the same dependency/provenance care; no whole test was established
-as safely obsolete.
+Deprecation proceeds in phases: package this supported family (done), migrate shared
+legacy helpers with all consumers/provenance (not done), then remove an old entry
+point only after dependency proof and historical recovery coverage. Earlier endpoint,
+V6–V9, path/preprocessing and decoder/atlas experiments are historical retained families,
+not a run queue or disposable code. No scientific test/private output was removed;
+no whole older helper/test was established as safely obsolete.
 
 ## 5. Tests are not all clone-only or private-input-free
 
@@ -93,6 +107,13 @@ Thus the broad runner's “without private lab inputs” description is not a sa
 execution guarantee. This was found by reading source; the test was not run.
 Classifying/gating private-input tests is a separate follow-up, not solved by
 archiving their coverage. Import-time side effects must also be checked.
+
+For the new package use the focused, non-fitting `scripts.test_neuro_study_package`
+suite in the existing runtime and the stdlib split suite; commands/coverage are in
+[the package README](../src/neuro/README.md#safe-validation-and-notebook-decision).
+The migration AST check requires the pinned `cc0527e` Git object. Do not run whole
+study-test modules as a substitute: several fit even on invented arrays. Notebook
+integration remains the user's open decision; this package adds no notebook.
 
 The pilot `tests/test_framework.py` mixes historical smoke checks with shared
 contract/path/split checks. Keep the whole module until a reviewed split retains

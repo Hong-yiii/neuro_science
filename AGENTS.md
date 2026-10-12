@@ -18,24 +18,27 @@ PR into main. Do not merge it without authorization. See `docs/README.md` and
 `docs/codebase-design.html` for the current documentation/design map; long workspace
 and publishing logs are preserved under `history/operations/`.
 
-**October12 implementation checkpoint:** approved hierarchy and scientific-code
-separation are being built. Start at `report/README.md`, `history/README.md` and
-`docs/reorganization.md`. Seven weekly overviews and eleven byte-preserved HTML
-moves are implemented; legacy paths are compatibility symlinks. The shared
-split-access guard is now in `src/neuro/`; remaining scientific bodies in `scripts/`
-are migration work, not the target architecture. Keep launchers thin and share
-objects only when semantics match. Historical approvals are not automatically
-valid for relocated/current source. The frozen HTML's pre-existing local checksum
-mismatch is preserved, not fixed. One future companion notebook is intended;
-its scientific target/input scope remains open. No new fits/private replay.
+**October12 package consolidation:** start at `report/README.md`, `history/README.md`,
+`src/neuro/README.md` and `docs/reorganization.md`. Seven weekly overviews and eleven
+byte-preserved HTML moves remain implemented. Full-trial transfer, endpoint-time and
+cue-time scientific bodies now live in `neuro.studies`; old `scripts/cebra_*.py` paths
+are thin module/CLI aliases. Shared split access and equivalent execution/provenance
+seams are packaged; `neuro.legacy_adapters` explicitly retains older raw/binning/solver/
+geometry helpers outside the package. Do not remove them without caller/provenance proof.
+Keep distinct label/lineage objects distinct and launchers thin. Historical approvals
+are not valid automatically for relocated/current source; no old hashes were rewritten.
+The frozen HTML's pre-existing checksum mismatch is preserved. Whether/how the future
+companion notebook uses this package remains open, depending on its scope and complexity.
+No notebook is created now. No new fits/private replay.
 
 **October12 report-first filing (earlier checkpoint):** Hongyi wants the current retrospective and
 its actually used evidence to be the main working flow. Start with
 `docs/reports/cebra-retrospective-20261012/README.md` and `docs/reports/README.md`.
 The exact frozen reading HTML is versioned alongside the manuscript package;
 its original local copy remains under `outputs/cebra-retrospective-20261012/`.
-**Next sequence:** sharpen the report, then create one interpretable companion
-Jupyter notebook. Its target/cohort and approved input contract remain open.
+**Next sequence:** sharpen the report, then scope the intended companion notebook.
+Its target/cohort and input contract remain open; using this package is optional,
+not a requirement to make the notebook more complex.
 Computational transparency is distinct from formal neural-state observability;
 no new fits or private-data access are authorized by publishing.
 Retired onboarding/RNN/V4–V5 checklists are filed under

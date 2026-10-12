@@ -1,6 +1,6 @@
 # Report-first reorganization — implementation checkpoint
 
-2026-10-12. **First slice implemented; full migration is not complete.**
+2026-10-12. **Three-study scientific package implemented; wider migration remains open.**
 
 Checkpoint **`ebe8256`** preserves the implemented state on
 `refactor/report-first-weekly-layout`, based on merged PR19 (`a169edf`). The owner
@@ -9,6 +9,13 @@ subsequently authorized a draft PR and high-level documentation cleanup.
 [documentation map](README.md) replaces competing entry points. Long-form workspace
 and publishing records are preserved verbatim in the
 [operations archive](../history/operations/README.md).
+
+The subsequent package consolidation starts from **`cc0527e`** on the same branch
+(draft PR20), without staging/committing/publishing. It packages the full-trial,
+endpoint-time and cue-time readout family; the pre-existing dirty design HTML is
+explicitly excluded and unchanged. Whether/how the future companion notebook uses
+this package remains open, depending on its needs and complexity; no notebook is
+implemented or required to depend on these scientific workflows.
 
 ## Implemented
 
@@ -25,20 +32,32 @@ and publishing records are preserved verbatim in the
   to [`src/neuro/place195_split_access.py`](../src/neuro/place195_split_access.py).
   Seven scientific callers import it explicitly. Legacy imports retain module/class
   identity through a small compatibility module. No algorithm changed.
-- Relevant current provenance collectors include the actual `src/` implementation,
-  not just the legacy alias. Snapshot writers now support that nested source path.
-  Historical gates/snapshots were not rewritten to accept changed code.
+- Full-trial transfer, endpoint-time and cue-time scientific bodies now live in
+  [`neuro.studies`](../src/neuro/README.md), with thin old CLI/import aliases retaining
+  module identity, monkeypatch behavior and saved-class lookup paths. Numerical
+  definitions retain pre-migration AST; labels and pair-lineage schemas stay distinct.
+  The existing shared dataset/training/embedding/decoder objects now use package imports.
+- Equivalent file hashing, endpoint/cue-time fresh-directory policy, full-trial/endpoint
+  monotonic deadline and nested source copying are shared without a universal runner.
+  Streaming endpoint outputs versus accumulated full-trial results remain unchanged.
+- Current collectors include actual package implementations, initializers, execution/
+  provenance seams and audited transitive legacy helpers—not only aliases. Snapshots
+  support nested paths. Historical gates/hashes/approvals were not rewritten; cue-time's
+  historical typing-only review is explicitly not approval of current packaged source.
 - Removed the two obsolete tracked paper-queue documents, `papers/README.md` and
   `papers/reading-roadmap.md`; recovery is revision `b55b10f`. Ignored PDFs were
   not touched. Other proposed deletions wait for their actual dependencies to move.
 
 ## Boundaries and remaining work
 
-The remaining scientific bodies still under `scripts/` are migration debt. Next
-extract a coherent study family into `src/neuro/studies/` with thin launchers, retaining
-its exact executed-source recovery route. Do not build a catch-all utils module or
-copy implementations into weekly folders. No new package installation is needed for
-the first seam (`PYTHONPATH=src` or existing `python -m scripts...` bootstrap).
+The requested three-study family is complete in `src/neuro/studies/`. Other bodies
+remain legacy outside the package. `neuro.legacy_adapters` isolates the still-used
+importer, V7/V8 bin/session helpers, V8/V9 solver and cue-time-only atlas geometry.
+These original objects were not duplicated; extracting their entire older families
+would widen this change. The [package README](../src/neuro/README.md) records the exact
+boundary, shared seams and phased deprecation inventory. Remove nothing without
+consumer/provenance proof. No install is needed (`PYTHONPATH=src` or old bootstrap);
+a standalone wheel or portable historical snapshot runtime is not claimed.
 
 Whole evidence packages still need a location/identity-aware migration. Some protocols,
 geometry paths and helper files are bound into approvals/hashes; some historical
@@ -51,9 +70,10 @@ artifacts. Private replay compatibility has **not** been certified here.
 Old-path symlinks are deliberate transitional compatibility, not the final desired
 layout. Read weekly links to the real files on GitHub; GitHub may show a symlink's text
 instead of rendering its target. Source report templates are built before offline
-reading. No notebook, biological fit, private-data access, replay, environment change,
-server, worktree cleanup or PR merge is included. Checkpoint commits and draft-PR
-publication are explicitly authorized separately from scientific execution.
+reading. Notebook integration remains open. No fit (including fitting smoke tests),
+private-data access/replay, environment change, server, worktree cleanup or PR merge
+is included in package consolidation. Its changes remain unstaged for independent
+review; earlier checkpoint/draft publication authority is not current commit authority.
 
 ## Preservation
 
@@ -68,6 +88,11 @@ The exact frozen check continues to fail on the preserved local file. Its expect
 hash was not changed. Deciding which version should become the published milestone
 is separate from filing. Untracked `docs/reports/current-state-20260927/`, ignored
 PDFs/data/outputs/runtimes, submodules and retained worktrees remain untouched.
+For package consolidation, the dirty `docs/codebase-design.html` SHA-256 remains
+`21e05d4b11cb58a9a3d8455b99dca11868cf457a7aec8127e9fd97f40cd1b9b5`.
+The unrelated untracked tree's complete file-hash baseline and original study hashes
+are retained in `work/package-consolidation/baseline.json`; original pre-package source
+is recoverable at `cc0527e`, distinct from older executed-source snapshots.
 
 Original code/report recovery is Git revision `b55b10f`; this does not back up private
 data. The moved split implementation also retains its original exact SHA-256, recorded
@@ -79,6 +104,8 @@ artifacts, not a new experiment or an off-host backup.
 
 ```sh
 PYTHONDONTWRITEBYTECODE=1 python3 -m unittest scripts.test_place195_split_filtered_access -v
+PYTHONDONTWRITEBYTECODE=1 PYTHONNOUSERSITE=1 scratch/v6-v9-runtime/bin/python -B \
+  -m unittest scripts.test_neuro_study_package -v
 PYTHONDONTWRITEBYTECODE=1 python3 report/test_layout.py
 PYTHONDONTWRITEBYTECODE=1 python3 report/test_path_summary.py
 PYTHONDONTWRITEBYTECODE=1 python3 report/test_build.py
@@ -95,7 +122,15 @@ mistake that for passing frozen integrity.
 The broad `scripts/check_research_software.py` is deliberately not run: its unexcluded
 embedding QA can read private inputs. No additional test framework or per-week suite.
 
-### Recorded outcome
+The package suite adds four focused migration checks (pinned-source AST, nested
+snapshot/bookkeeping, cold import/module/class/source identity, and CLI help). It
+reads tracked source and invented temporary files only; cold imports reject private
+lab paths. Existing scientific test modules must be selected method-by-method: many
+fit even on invented inputs. The scoped retained validation harness in
+`work/package-consolidation/validate.py` blocks fit/optimization APIs and private
+`data/`/`outputs/` access while reusing reviewed non-fitting methods.
+
+### Earlier slice: recorded outcome
 
 Task `b65019e21` passed four split tests, the layout check, existing report aggregate
 arithmetic and builder regressions. A temporary tracked-only baseline export confirmed
@@ -135,3 +170,26 @@ correcting that harness required no production change. Chrome task `bede6cce2`
 completed and its temporary profile was removed. Full scientific diagnostics and
 private replay remain outside this publication claim; cached historical fail-fast
 conversion warnings are not silently suppressed.
+
+### Package consolidation validation — October13
+
+Task `b58aef249` completed with 42 guarded checks passing (34 existing non-fitting
+checks, four package migration checks and four split checks), followed by passing
+report layout/arithmetic/builder checks and the explicitly expected frozen-integrity
+failure. Its receipt/log are under `.pi/tasks/session-1027780-1027780/`. An earlier
+cold-import fixture omitted the repository path for scripts-first imports; the test
+harness was corrected without changing production import behavior. The implementation
+worker timed out after the successful final checks; the parent inspected the outcome
+and independently reran six stdlib source/split checks in task `b34528b0d` successfully.
+
+Independent read-only review found no findings; retained report:
+`work/package-consolidation/review.md`. Primary diagnostics were clean for the three
+study modules and seven supporting modules/wrappers/tests. Seventy-seven documentation
+links/anchors passed and all 14 protected baseline file hashes matched. No files were
+staged, committed or pushed. The audit baseline, guarded validation harness, review and
+small matplotlib cache remain under ignored `work/package-consolidation/` intentionally.
+
+CUDA availability probes in the existing runtime emitted error-804 initialization
+warnings. These passing import/source/synthetic checks do **not** establish GPU readiness,
+private replay compatibility or standalone-wheel support. No GPU fit or runtime/driver
+repair was attempted. Package use by the future notebook remains an open design choice.

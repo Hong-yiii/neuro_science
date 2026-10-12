@@ -8,3 +8,6 @@ dependencies = ["h5py>=3.12", "matplotlib>=3.9", "numpy>=1.26.4", "scipy>=1.14"]
 [dependency-groups]
 cebra-pilot = ["cebra==0.6.1"]
 dev = []
+
+[tool.pyright]
+extraPaths = ["src"]

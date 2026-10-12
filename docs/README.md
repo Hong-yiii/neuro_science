@@ -20,6 +20,8 @@ and recovery. The [operations archive](../history/operations/README.md) stores d
 logs rather than competing “current” instructions.
 
 Older direction notes, pilot plans and professor deliveries remain historical context.
-The active report-first/one-companion-notebook direction is recorded in
-[AGENTS.md](../AGENTS.md). No document reorganization authorizes new fits, private
-replay, data downloads or changes to scientific conclusions.
+The active report-first direction and implemented three-study package are recorded
+in [AGENTS.md](../AGENTS.md). Whether/how the future notebook uses the package remains
+open, depending on its scope and complexity; no notebook is created now.
+Neither filing nor packaging authorizes fits, private replay, data downloads or
+changes to scientific conclusions.

@@ -1,3 +1,4 @@
+# pyright: reportMissingImports=false
 from __future__ import annotations
 
 import csv
@@ -21,6 +22,7 @@ class SplitFilteredAccessTest(unittest.TestCase):
         from types import SimpleNamespace
 
         from neuro import place195_split_access as implementation
+        from neuro.provenance import study_sources
         from scripts import place195_split_filtered_access as legacy
 
         root = Path(__file__).resolve().parents[1]
@@ -34,7 +36,7 @@ class SplitFilteredAccessTest(unittest.TestCase):
 
         # Compile only provenance helpers, not runners' imports or private inputs.
         for name in ("cebra_full_trial_transfer", "cebra_cue_time_readout", "cebra_endpoint_time_readout"):
-            script = root / "scripts" / f"{name}.py"
+            script = root / "src/neuro/studies" / f"{name.removeprefix('cebra_')}.py"
             nodes: list[ast.stmt] = [
                 node for node in ast.parse(script.read_text()).body
                 if isinstance(node, ast.FunctionDef)
@@ -42,7 +44,9 @@ class SplitFilteredAccessTest(unittest.TestCase):
             ]
             namespace = {
                 "Path": Path, "sys": sys, "WORKTREE_ROOT": root, "CANONICAL_ROOT": root,
-                "SCRIPT_PATH": script, "PROTOCOL_PATH": root / "scripts/README.md",
+                "__file__": str(script), "SCRIPT_PATH": script,
+                "PROTOCOL_PATH": root / "scripts/README.md",
+                "REPOSITORY_ROOT": root, "study_sources": study_sources,
                 "SplitFilteredAccess": SplitFilteredAccess,
                 "ft": SimpleNamespace(SplitFilteredAccess=SplitFilteredAccess),
                 "sha256_file": lambda path: hashlib.sha256(path.read_bytes()).hexdigest(),

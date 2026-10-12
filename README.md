@@ -1,7 +1,7 @@
 # Neuroscience: CEBRA retrospective
 
 A report-led research workspace: current interpretation up front, historical evidence
-organized by week, and scientific implementation moving into `src/neuro/`.
+organized by week, and a reusable [scientific readout package](src/neuro/README.md).
 
 ## Start here
 
@@ -23,9 +23,12 @@ docs/                   living methods, evidence catalog and workspace recovery
 ```
 
 **Implemented:** report promotion, seven weekly overviews, eleven byte-preserved HTML
-moves and one shared split-access extraction. **Still pending:** the remaining
-scientific-code/evidence-package migration and one companion Jupyter notebook.
-See [migration status and checks](docs/reorganization.md); this is not a completed
+moves, the shared split-access gate and a three-study `neuro.studies` package
+(full-trial, endpoint-time and cue-time readouts) with thin legacy entry points.
+**Still pending:** other scientific/evidence migrations and the audited legacy-helper
+boundary. **Whether/how the future notebook uses this package remains open**,
+depending on its needs and complexity; no notebook is implemented here.
+See [migration status and checks](docs/reorganization.md); this is not a universal
 pipeline rewrite. Shared code is factored by scientific meaning, not put into a
 catch-all `utils.py`.
 

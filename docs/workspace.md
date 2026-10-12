@@ -13,10 +13,14 @@ Read [agent instructions](../AGENTS.md) before changing scientific code or artif
   `refactor/report-first-weekly-layout`, based on that merged main. This branch is
   being published as a separate **draft**, not merged by this task.
 - [Implementation status](reorganization.md): report promoted, seven weekly overviews,
-  eleven byte-preserved HTML relocations, one shared scientific-module extraction.
-  Most scientific bodies and complete evidence packages still await migration.
-- One companion notebook is intended; no notebook, new biological fit, private replay,
-  data download or installation is authorized by this documentation/publishing work.
+  eleven byte-preserved HTML relocations, shared split access and the full-trial/
+  endpoint-time/cue-time [`neuro.studies` package](../src/neuro/README.md). Older helper
+  families stay behind an audited legacy adapter; other evidence migrations remain open.
+- The package consolidation starts from `cc0527e` on this branch and remains unstaged
+  for independent review; draft PR20 already exists. It makes no commit/publication.
+- Whether/how the intended companion notebook uses this package remains open,
+  depending on its scope and complexity. No notebook, fit, private replay, installation
+  or service is added.
 
 The historical durable-session designation is
 `01a08ab0-4fd4-704c-ac18-3b002e40c116`. It identifies the consolidation history, not
@@ -24,8 +28,9 @@ permission to resume old task queues. Store current decisions in Git-backed note
 
 ## Preserve before changing
 
-- Untracked `docs/reports/current-state-20260927/` is unrelated and excluded from
-  the draft PR. Do not absorb or remove it opportunistically.
+- Untracked `docs/reports/current-state-20260927/` and the pre-existing dirty
+  `docs/codebase-design.html` are unrelated to the package change and preserved
+  byte-for-byte. Do not absorb, overwrite or remove them opportunistically.
 - The frozen report's pre-existing checksum difference is preserved in the checkpoint.
   Its exact-integrity check still fails; both original versions are retained under
   `work/reorganization-weekly-audit/before-build/`. See the report README for hashes.

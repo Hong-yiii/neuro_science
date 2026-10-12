@@ -57,17 +57,19 @@ The original Git blob is recoverable with
 Do not change the expected hash just to make the check pass. The builder checks run
 before this integrity assertion, but that does **not** make the full test green.
 
-## Next work: report first, then notebook
+## Next work: report first; notebook/package integration remains open
 
 1. Finish the [feedback ledger](feedback-20261012.md): defer shuffle/loss detail,
    distinguish training diagnostics from scientific results, clarify real-source
    marginal counts and within-bin variability. Do not run missing analyses to fill gaps.
-2. Build **one companion Jupyter notebook**, with its target/cohort and approved inputs
-   specified first. Start with tracked aggregates, visible provenance, shape/count/split
-   assertions and explanations beside each figure. Import shared implementation from
-   `src/neuro/`; do not copy scientific algorithms into notebook cells.
-3. Require restart-and-run-all without hidden cell state. Private predictions/checkpoints
-   must not leak into committed outputs. Fits and private replay remain separate approvals.
+2. Scope the intended companion notebook: target/cohort and approved inputs first.
+   **Whether/how it uses the [scientific package](../src/neuro/README.md) remains open**,
+   depending on the notebook's needs and complexity. A tracked-aggregate presentation
+   notebook need not import scientific runners. No notebook is created by this change.
+3. Keep provenance and shape/count/split assertions visible beside figures. Where a
+   notebook actually needs existing algorithms, prefer imports over copied implementations.
+   Require restart-and-run-all without hidden state. Private predictions/checkpoints must
+   not leak into committed outputs; fits and replay need separate approval.
 
 Here observability means inspectable computation, not formal observability of neural
 state. Endpoint decoding, binary path components and full ordered routes remain distinct;
