@@ -48,16 +48,15 @@ from neuro.studies.full_trial_transfer import (  # reuse reviewed CEBRA-time pie
     make_solver,
     train_encoder as _train_encoder,
 )
-from neuro.legacy_adapters import (
+from neuro.raw_io import (
     _codes_at,
     _times_at,
-    bin_events,
-    imported_csv_value,
     read_ripple_trials,
     read_spiketrain,
-    session_from_cell,
     spikes_in_window,
+    _csv_value as imported_csv_value,
 )
+from neuro.neural_inputs import bin_events, session_from_cell
 from neuro.place195_split_access import SplitFilteredAccess
 from neuro.provenance import REPOSITORY_ROOT, study_sources
 

@@ -9,7 +9,10 @@ scientific bodies now live in [`neuro.studies`](../src/neuro/README.md), beside 
 shared split gate and equivalent execution/provenance seams. Their `cebra_*.py`
 files here are thin CLI/import aliases preserving module identity and old class
 lookup paths. Other scientific families remain legacy code outside the package;
-the audited `neuro.legacy_adapters` boundary reuses their original helpers.
+October15's uncommitted cleanup extracts only current helper dependencies into
+`neuro.raw_io`, `neuro.neural_inputs`, `neuro.cebra_solver` and `neuro.geometry` and
+removes `neuro.legacy_adapters`. Older script implementations stay unchanged as
+historical code, outside package support and not the current source of truth.
 Historical executed-source identities/approvals remain separate from changed
 current source. See [migration status](../docs/reorganization.md).
 
@@ -59,8 +62,8 @@ separate approval for that work. No new fit is queued.
 
 ## 3. Shared dependencies, not disposable initial-trial code
 
-- `import_place195_sessions.py`, V7/V8 helpers and V8b/V9 solver helpers are
-  imported across retained studies. `place195_split_filtered_access.py` now only
+- `import_place195_sessions.py`, V7/V8 helpers and V8b/V9 solver helpers remain
+  used by older script families, not by the three maintained package workflows. `place195_split_filtered_access.py` now only
   aliases `src/neuro/place195_split_access.py`, the shared scientific implementation.
 - `place195_graph_path_baseline.py` and `place195_split_and_behavior_audit.py`
   carry graph/source-split infrastructure despite their early names.
@@ -85,9 +88,9 @@ not the main workflow, while retaining their executable paths:
 - Early data feasibility, V4/V5 notes and initial-trial outputs: historical
   software/selection evidence, not current neural prediction results.
 
-Deprecation proceeds in phases: package this supported family (done), migrate shared
-legacy helpers with all consumers/provenance (not done), then remove an old entry
-point only after dependency proof and historical recovery coverage. Earlier endpoint,
+The supported family and its active helper closure are now packaged. Whole older
+families are intentionally not migrated. Removal of any old external entry point still
+requires caller/provenance proof and historical recovery coverage. Earlier endpoint,
 V6–V9, path/preprocessing and decoder/atlas experiments are historical retained families,
 not a run queue or disposable code. No scientific test/private output was removed;
 no whole older helper/test was established as safely obsolete.

@@ -1,6 +1,6 @@
 # Workspace and recovery
 
-Updated October12, 2026. Canonical checkout: **`~/neuro_science`**. Owner: Hongyi.
+Updated October15, 2026. Canonical checkout: **`~/neuro_science`**. Owner: Hongyi.
 Read [agent instructions](../AGENTS.md) before changing scientific code or artifacts.
 
 ## Current state
@@ -11,13 +11,18 @@ Read [agent instructions](../AGENTS.md) before changing scientific code or artif
   at `a169edf` (verified October12). PR15's studies remain in ancestry.
 - Reorganization checkpoint: **`ebe8256`**, branch
   `refactor/report-first-weekly-layout`, based on that merged main. This branch is
-  published in open **draft PR20**, not merged by this task.
+  delivered through [PR20](https://github.com/Hong-yiii/neuro_science/pull/20).
+  The owner authorized publication and merge to close this session; consult the PR
+  for the authoritative merge result before selecting a branch for new work.
 - [Implementation status](reorganization.md): report promoted, seven weekly overviews,
   eleven byte-preserved HTML relocations, shared split access and the full-trial/
-  endpoint-time/cue-time [`neuro.studies` package](../src/neuro/README.md). Older helper
-  families stay behind an audited legacy adapter; other evidence migrations remain open.
+  endpoint-time/cue-time [`neuro.studies` package](../src/neuro/README.md). October15's
+  reviewed active-helper cleanup removes the legacy adapter and packages
+  only necessary raw IO/binning/solver/geometry dependencies. Historical-only experiment
+  implementations remain unchanged outside package support; other evidence migrations remain open.
 - Package consolidation from `cc0527e` is committed at **`8c98b52`** and pushed to
-  [draft PR20](https://github.com/Hong-yiii/neuro_science/pull/20), open and unmerged.
+  [PR20](https://github.com/Hong-yiii/neuro_science/pull/20), followed by reviewed
+  helper extraction and README/showcase improvements in the same PR.
   Earlier local validation/review receipts describe the historical pre-commit state.
   [Software design](software-design.md) is the maintained engineering reference;
   the preserved HTML preview may lag the package.

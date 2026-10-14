@@ -12,8 +12,8 @@ and publishing records are preserved verbatim in the
 [operations archive](../history/operations/README.md).
 
 The subsequent package consolidation from **`cc0527e`** is committed at **`8c98b52`**
-and pushed on the same branch in open, unmerged
-[draft PR20](https://github.com/Hong-yiii/neuro_science/pull/20). It packages the full-trial,
+and published on the same branch in
+[PR20](https://github.com/Hong-yiii/neuro_science/pull/20). It packages the full-trial,
 endpoint-time and cue-time readout family; the pre-existing dirty design HTML is
 explicitly excluded and unchanged. Whether/how the future companion notebook uses
 this package remains open, depending on its needs and complexity; no notebook is
@@ -43,7 +43,7 @@ implemented or required to depend on these scientific workflows.
   monotonic deadline and nested source copying are shared without a universal runner.
   Streaming endpoint outputs versus accumulated full-trial results remain unchanged.
 - Current collectors include actual package implementations, initializers, execution/
-  provenance seams and audited transitive legacy helpers—not only aliases. Snapshots
+  provenance seams and audited active helper modules—not only aliases. Snapshots
   support nested paths. Historical gates/hashes/approvals were not rewritten; cue-time's
   historical typing-only review is explicitly not approval of current packaged source.
 - Removed the two obsolete tracked paper-queue documents, `papers/README.md` and
@@ -52,14 +52,18 @@ implemented or required to depend on these scientific workflows.
 
 ## Boundaries and remaining work
 
-The requested three-study family is complete in `src/neuro/studies/`. Other bodies
-remain legacy outside the package. `neuro.legacy_adapters` isolates the still-used
-importer, V7/V8 bin/session helpers, V8/V9 solver and cue-time-only atlas geometry.
-These original objects were not duplicated; extracting their entire older families
-would widen this change. The [package README](../src/neuro/README.md) records the exact
-boundary, shared seams and phased deprecation inventory. Remove nothing without
-consumer/provenance proof. No install is needed (`PYTHONPATH=src` or old bootstrap);
-a standalone wheel or portable historical snapshot runtime is not claimed.
+The requested three-study family is complete in `src/neuro/studies/`. **October15
+active-helper cleanup is implemented and independently reviewed**, after
+checkpoint `ce31248`. Only the 21 required raw IO/binning/session/solver/geometry
+definitions and their support closure were extracted, retaining exact pinned AST.
+`neuro.legacy_adapters` is removed. Current package imports have no scripts dependency
+or path shim. Other scientific bodies remain unchanged historical implementations
+outside package support, not a current second source of truth. The source manifest
+now includes only active package closure and external CLI aliases/initializer justified
+by the current launch/snapshot contract. Older scripts are not hashed merely for history.
+See [ownership](../src/neuro/README.md#active-helper-ownership-and-historical-boundary).
+No install is needed (`PYTHONPATH=src` or external legacy bootstrap); a standalone wheel
+or portable historical snapshot runtime is not claimed.
 
 Whole evidence packages still need a location/identity-aware migration. Some protocols,
 geometry paths and helper files are bound into approvals/hashes; some historical
@@ -73,10 +77,11 @@ Old-path symlinks are deliberate transitional compatibility, not the final desir
 layout. Read weekly links to the real files on GitHub; GitHub may show a symlink's text
 instead of rendering its target. Source report templates are built before offline
 reading. Notebook integration remains open. No fit (including fitting smoke tests),
-private-data access/replay, environment change, server, worktree cleanup or PR merge
-is included in package consolidation. The package is committed/pushed at `8c98b52`;
-this engineering-documentation follow-up remains for parent review/publication. Draft
-publication does not authorize merging or scientific execution.
+private-data access/replay, environment change, server or worktree cleanup
+is included in package consolidation. The owner subsequently authorized publication
+and merge of PR20, including the reviewed October15 helper cleanup and README showcase,
+to close this session. The linked PR records the merge result; merging does not
+approve scientific execution or additional migration work.
 
 ## Preservation
 
@@ -222,3 +227,34 @@ retained under ignored `work/package-consolidation/engineering-diagrams/`. Tempo
 renderer assets/profiles were removed after verification; no installation, serving port,
 retained process or private-data transfer was introduced. The Git-backed Markdown uses
 GitHub's native Mermaid rendering, not a repository renderer dependency.
+
+### Active-helper cleanup validation — October15
+
+Task `b06823806` completed with **46 guarded checks passing**: 34 reviewed existing
+non-fitting study checks, eight focused package checks and four split checks. All
+21 extracted definitions match pinned `ce31248` AST; all other study top-level AST
+is unchanged apart from imports and the exact cue-time geometry reexport. Cold imports
+from an unrelated cwd load no scripts or mutate the import path. Copied source closures
+import without fallback to the checkout, then retain documented external alias identity.
+Invented HDF5 markers/spikes and geometry arrays exercise extracted input/geometry seams.
+
+Earlier tasks `b3712d633` and `bcf85ba7b` failed on an intermediate generated import
+formatting error and stale test expectations (the old implicit checkout bootstrap and
+historical split-alias manifest entry). These were corrected, not suppressed; final
+guarded coverage passed. No fit, private input/model/replay, broad scientific runner,
+installation or service was invoked. CUDA error804 import/help warnings remain a
+runtime caveat, not GPU certification.
+
+Ruff and syntax checks passed. Primary diagnostics confirmed all seven small helper/
+provenance/test files clean; one study was clean and two larger study checks timed out,
+so full type-check cleanliness is not claimed. All 14 original protected hashes match,
+including unrelated dirty HTML and untracked report files. Seventy-six local Markdown
+link targets exist. All six updated Mermaid diagrams rendered with temporary Mermaid
+11.4.1 and existing headless Chrome in task `b3b3361b7`; the dependency/import preview
+was visually checked. At that validation checkpoint no files were staged. Independent source-only acceptance review
+found no findings. Existing untested MATLAB-v5/string/fallback-reader branches retain
+exact AST and complete dependencies; no new execution certification is implied.
+Evidence (baseline, exact AST/caller inventory, validation logs, extraction scripts,
+review and diagram receipts) is retained intentionally under ignored
+`work/active-helper-cleanup/`. Temporary browser assets/profile were removed. No
+historical source/hash/approval was rewritten.

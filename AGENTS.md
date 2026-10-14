@@ -12,19 +12,38 @@ PR status, recovery records and safe verification commands. Do not recreate old
 sibling worktrees or restart experiments from historical pending-work flags.
 Keep new durable decisions in Git-backed notes, not only in a chat transcript.
 
-**Publication update:** PR19 is merged at `a169edf`. Reorganization checkpoint
-`ebe8256` is on `refactor/report-first-weekly-layout`, targeting a separate draft
-PR into main. Do not merge it without authorization. See `docs/README.md` and
-`docs/codebase-design.html` for the current documentation/design map; long workspace
-and publishing logs are preserved under `history/operations/`.
+**Session closure / publication:** PR19 merged at `a169edf`. The owner authorized
+publishing and merging [PR20](https://github.com/Hong-yiii/neuro_science/pull/20),
+including reviewed helper extraction and the README showcase, to conclude this session.
+The PR records the authoritative merge result; do not resume historical task queues.
+Start with `README.md`, `docs/workspace.md` and `src/neuro/README.md`.
+`docs/software-design.md` is the current architecture reference; `docs/codebase-design.html`
+is a preserved older preview. Next: sharpen the retrospective, then agree the companion
+notebook's target and inputs. No new fits, private access or further architecture
+migration is authorized by merging. Long logs remain under `history/operations/`.
 
-**October12 package consolidation:** start at `report/README.md`, `history/README.md`,
+**Standing package scope — October15:** `src/neuro/` supports the latest maintained
+experiments end to end, including their necessary input validation, scientific controls,
+provenance and verification. Historical reproducibility, old callers or possible future
+notebook use alone do not justify package features or compatibility layers. Keep obsolete
+experiments and any historical-only compatibility outside the package; preserve their
+records/snapshots without promising support from current package APIs. October15 cleanup
+(independently reviewed) extracted only currently required
+helpers into `neuro.raw_io`, `neuro.neural_inputs`, `neuro.cebra_solver` and `neuro.geometry`,
+then removed `neuro.legacy_adapters`. Older implementations remain outside package
+support. Do not delete
+still-required helpers or weaken scientific safeguards to remove a legacy-named module.
+The future notebook's package use remains open; it does not define package scope yet.
+
+**October12 package consolidation (historical checkpoint):** start at
+`report/README.md`, `history/README.md`,
 `src/neuro/README.md` and `docs/reorganization.md`. Seven weekly overviews and eleven
 byte-preserved HTML moves remain implemented. Full-trial transfer, endpoint-time and
 cue-time scientific bodies now live in `neuro.studies`; old `scripts/cebra_*.py` paths
 are thin module/CLI aliases. Shared split access and equivalent execution/provenance
-seams are packaged; `neuro.legacy_adapters` explicitly retains older raw/binning/solver/
-geometry helpers outside the package. Do not remove them without caller/provenance proof.
+seams were packaged with a temporary legacy adapter, superseded by the October15
+active-helper extraction above. Historical script implementations remain unchanged;
+current source closure includes only active helpers and justified external CLI aliases.
 Keep distinct label/lineage objects distinct and launchers thin. Historical approvals
 are not valid automatically for relocated/current source; no old hashes were rewritten.
 The frozen HTML's pre-existing checksum mismatch is preserved. Whether/how the future

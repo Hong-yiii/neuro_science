@@ -1,20 +1,52 @@
 # Scientific package software design
 
-Maintained as-built engineering reference for package checkpoint **`8c98b52`**
-(October13, 2026), on `refactor/report-first-weekly-layout` in
-[draft PR20](https://github.com/Hong-yiii/neuro_science/pull/20), **unmerged**.
+Maintained as-built engineering reference: historical package checkpoint **`8c98b52`**
+plus **October15 active-helper cleanup (independently reviewed)**, delivered through
+[PR20](https://github.com/Hong-yiii/neuro_science/pull/20). The linked PR records publication/merge status.
 This document is the canonical engineering source; the preserved
 [HTML design preview](codebase-design.html) is historical and may lag it.
 GitHub renders the Mermaid blocks; no server, renderer dependency or new HTML is required.
 
 ## Scope and reading contract
 
-The package contains three **functional exploratory workflows**, not a common
-`Runner`, experiment service or general-purpose pipeline framework. Packaging preserves
-scientific definitions while changing imports, equivalent bookkeeping and current-source
-provenance. It does not authorize execution, approve current hashes, certify deployment
-or strengthen a biological claim. See the [analysis contract](analysis-contract.md),
-[package usage](../src/neuro/README.md) and [migration ledger](reorganization.md).
+`src/neuro/` contains **whole concrete exploratory experiment workflows and reusable
+helpers**, not a pure helper library. The supported family is full-trial transfer,
+endpoint-time readout and frozen cue-time readout, end to end: input validation,
+assembly, training/readout algorithms, controls, provenance and verification. There is
+no common `Runner`, experiment service, general-purpose pipeline framework or shared
+result schema. Support is justified by these latest maintained experiments—not old
+callers, historical reproducibility alone or a speculative notebook.
+
+Packaging preserves scientific definitions while changing imports, equivalent
+bookkeeping and current-source provenance. It does not authorize execution, approve
+current hashes, certify deployment or strengthen a biological claim. Frozen historical
+approvals do not approve today's source. Historical-only experiment bodies remain
+outside package support; no architectural/code migration is requested by this scope note.
+
+**Document roles:** the [root README](../README.md) is the evidence/reader landing page;
+[package reference](../src/neuro/README.md) owns checkout usage and module contracts;
+this document owns as-built dependencies, objects, lifecycle ordering and gaps.
+[Migration ledger](reorganization.md) owns implementation status/history; the preserved
+[HTML design preview](codebase-design.html) may lag source and is not a competing current
+architecture. Scientific claims belong to the [report](../report/README.md) and
+[analysis contract](analysis-contract.md).
+
+### Workflow/library boundary: current coupling, not a finished split
+
+The three study modules are **not three reusable helper APIs**. They each contain
+concrete orchestration and substantial scientific algorithms/data objects. Endpoint
+imports full-trial's CEBRA dataset/training/embedding machinery; cue-time imports
+full-trial cohorts, binary assembly, decoder states and comparison machinery. Full-trial
+therefore acts both as one experiment and as the current owner of common algorithms.
+The diagram's endpoint/cue → full-trial arrows are real coupling, not merely references
+to an independent helper layer. Imports bring in its scientific runtime too.
+
+Purpose-specific `raw_io`, `neural_inputs`, `cebra_solver`, `geometry`, split access,
+execution and provenance are the factored helper seams. A cleaner separation of shared
+algorithms from study orchestration would be future work, **not an implemented change**.
+Do not merge distinct binary/endpoint labels, cohort or lineage objects to obtain that
+separation. There is no notebook yet; whether/how a future notebook uses the package
+remains open and does not define current scope.
 
 Diagrams below describe implemented source, not a proposed target architecture.
 Dependency arrows mean “imports/uses,” not data movement. In the UML, composition denotes
@@ -41,24 +73,24 @@ flowchart TD
     CT --> PR
     FT --> SP["neuro.place195_split_access"]
     EP --> SP
-    FT --> LA["neuro.legacy_adapters"]
-    EP --> LA
-    CT --> LA
-    LA --> IMP["scripts.import_place195_sessions"]
-    LA --> V7["scripts.place195_v7_v8_neural_experiments"]
-    LA --> V8["scripts.place195_v8b_v9_cebra"]
-    LA --> AT["scripts.cebra_latent_atlas: cue geometry only"]
-    V8 --> V7
-    V7 --> SP
+    FT --> IO["neuro.raw_io: Ripple and spike IO"]
+    EP --> IO
+    FT --> NI["neuro.neural_inputs: bins and session identity"]
+    EP --> NI
+    CT --> NI
+    FT --> SOL["neuro.cebra_solver"]
+    CT --> SOL
+    CT --> GEO["neuro.geometry: fidelity and spectrum"]
     FT --> SCI["CEBRA / torch / NumPy / sklearn"]
     EP --> SCI
     CT --> SCI
     EP --> JOB["joblib: saved endpoint readouts"]
 ```
 
-Legend: selected direct dependencies and audited legacy edges, not an exhaustive
-third-party import graph. Atlas helpers are loaded when the cue module calls
-`geometry_helpers`; full-trial/endpoint do not need that import. Provenance enumerates
+Legend: selected direct dependencies, not an exhaustive third-party import graph.
+Endpoint uses full-trial solver/training objects. Cue-time imports geometry directly;
+full-trial/endpoint do not load it. No package module imports `scripts` or changes
+`sys.path`. External CLI bootstraps point into the package only. Provenance enumerates
 source identities, rather than importing all enumerated files.
 
 | Owner / source | Public-use entry or shared seam | Internal implementation responsibilities |
@@ -69,7 +101,10 @@ source identities, rather than importing all enumerated files.
 | [Split gate](../src/neuro/place195_split_access.py) | `SplitFilteredAccess`, `SplitAccessError`, `SplitFilteredAudit.as_dict` | CSV/gzip source validation before yield, allowed-source gate and seen/skipped/yielded counters |
 | [Execution](../src/neuro/execution.py) | `sha256_file`, `ensure_fresh_dir`, `check_deadline`, `snapshot_sources` | Equivalent byte hashing, endpoint/cue fresh paths, full-trial/endpoint monotonic deadlines, bounded nested snapshot paths |
 | [Provenance](../src/neuro/provenance.py) | `REPOSITORY_ROOT`, `study_sources` | Explicit current source closure; reject unknown study, missing source or implementation outside checkout |
-| [Legacy adapter](../src/neuro/legacy_adapters.py) | Existing reader/binning/solver objects; `geometry_helpers` | Checkout bootstrap and explicit retained `src → scripts` migration boundary |
+| [Raw IO](../src/neuro/raw_io.py) | `read_ripple_trials`, `read_spiketrain`, `spikes_in_window`, marker/time and CSV precision helpers | `EventTrials`/`SpikeTrain`, HDF5 group/orientation checks, MATLAB decoding, ms-to-seconds and accepted serialization |
+| [Neural inputs](../src/neuro/neural_inputs.py) | `bin_events`, `session_from_cell` | Count/exposure/omission rules and session identity |
+| [Solver](../src/neuro/cebra_solver.py) | `make_solver` | Fixed offset1 model, cosine criterion and Adam optimizer construction |
+| [Geometry](../src/neuro/geometry.py) | `fidelity`, `spectrum` | Cross-row distances/neighbors, rank correlation and descriptive spectrum |
 
 “Public-use” is a navigation guide, **not** a promise of versioned stable APIs.
 Private functions, module constants and state formats remain study-specific. Legacy aliases
@@ -88,8 +123,9 @@ runtime/output budgets against frozen maxima. Constants are not a generic config
 Importing `neuro`, `neuro.studies`, `execution` and `provenance` is stdlib-only. Study
 imports require the retained scientific runtime but do not open lab inputs or fit models.
 Some parser defaults probe CUDA availability, so help can emit driver warnings.
-Use `PYTHONPATH=src` (absolute checkout `src` when elsewhere). `legacy_adapters` prepends
-its owning checkout root for remaining `scripts` imports. `pyproject.toml` supplies a
+Use `PYTHONPATH=src` (absolute checkout `src` when elsewhere). Package imports do not
+bootstrap the checkout root or load historical scripts. External aliases alone own
+path bootstrapping. `pyproject.toml` supplies a
 Pyright source path and general dependencies, not a complete historical replay environment.
 **Standalone wheel use is unsupported/unverified**; these are checkout-backed imports.
 
@@ -130,6 +166,20 @@ no-fit commands can read protected inputs and write new artifacts.
 
 ```mermaid
 classDiagram
+    class RawEventTrials {
+        ndarray codes
+        ndarray times
+        optional rows
+        int bad_event_count
+        optional first_numeric_line
+    }
+    class RawSpikeTrain {
+        ndarray timestamps_seconds
+        str mat_format
+        str reference
+        str components
+        bool sorted_input
+    }
     class FTSourceMeta {
         str source_trial_id
         str session_id
@@ -213,7 +263,9 @@ classDiagram
     CueSeedFeatures *-- "2" FTRowBundle
 ```
 
-Legend: `FT*` and `EndpointRowBundle` are diagram-qualified names; real full-trial types
+Legend: `RawEventTrials`/`RawSpikeTrain` qualify the `neuro.raw_io` types and have
+no inheritance or identity relationship to study source/lineage classes.
+`FT*` and `EndpointRowBundle` are diagram-qualified names; real full-trial types
 are `SourceMeta`, `CueCohort`, `RowBundle`, `PairBank`; endpoint also defines its own
 `RowBundle`. Cue's actual container is `SeedFeatures`. Selected fields are shown, not
 complete API declarations. Each pair bank also stores labels and per-row sample/pair
@@ -232,6 +284,11 @@ exposure, masks, source identity, offsets and native bin counts. They are not su
 | Navigation | Native 100 ms bins referenced to cue end, ragged flattened `(total_bins,cells)` counts/masks; offsets int64, exposure seconds. Endpoint retains complete bins with a numerical tolerance/clamp, not a partial terminal bin |
 | Pair banks | Float32 neural vectors; int64 labels/pair indices. Cue pairs only adjacent bins in each row. Nav pairs select native adjacent bins per session at normalized progress `q=(j+0.5)/L`; not synchronized cross-session biological time |
 | Endpoint compact lineage | `session_ids`, per-row `source_trial_ids`, int64 `row_pair_offsets`, uint16 `native_anchor_bins`; explicit capacity guard. Full-trial instead stores per-pair dictionaries with row, label, phase_q and session/source/native-bin blocks |
+
+Raw reader UML boundary: `raw_io.EventTrials` owns marker `codes` and `times` arrays
+plus optional row/audit metadata; `raw_io.SpikeTrain` owns sorted timestamp seconds
+and format/reference/component metadata. They are not the study-specific source or
+lineage classes above. Readers construct these objects, not historical importer classes.
 
 Cue and navigation boundaries are verified against Ripple trial timestamps and imported
 windows by the owning extraction functions; numerical bin index is not independent trial
@@ -258,6 +315,9 @@ Do not infer timing, simultaneity or label semantics from tensor shape alone.
   be unified because their array containers look similar.
 
 ## Full-trial run lifecycle
+
+Helper extraction changes import/source ownership, not the three lifecycle orderings
+below. Snapshots now capture internal helpers rather than obsolete script bodies.
 
 Source: `cmd_run` → `run_world_seed` in [full_trial_transfer.py](../src/neuro/studies/full_trial_transfer.py).
 
@@ -391,8 +451,10 @@ These are bounded workflow guards, **not security sandboxes** or universal fit i
 | Endpoint | Root `run_config.json`, `run_inputs.json`, `code_snapshot/`, support, `metrics.jsonl`, final `summary.json`; `observed/seedN` and `null_NNN/seedN` own features, compact pair lineage, readouts, confusion JSON and pseudo manifests. `artifact_hashes.json`; replay requires completed summary, exact grid, input/approval/benchmark hashes, **current code equality with frozen hashes** and snapshot hashes |
 | Cue-time | Root approval/config/runtime/protocol/helper snapshots and journal; `worlds/NN_name/seedN/readouts/rep/window/decoder` contains new states. Aggregate metrics, gzip predictions, confusion/sensitivity/summary plus full-trial-style hash manifest; verify writes separate `verification.json` and comparisons |
 
-`study_sources` enumerates implementation, package/script initializers, aliases, shared
-seams and audited transitive legacy helpers. Endpoint includes its protocol in helper
+`study_sources` enumerates the active implementation/helper closure, package initializers
+and external CLI aliases plus their initializer. The alias files remain solely to preserve
+the current launch/snapshot contract; no obsolete experiment body is included. Geometry
+is included only for cue-time. Historical helper scripts and the adapter are excluded. Endpoint includes its protocol in helper
 paths along with `pyproject.toml` and `uv.lock`; other workflows bind documents through their own facts. Snapshot copying creates
 nested repository-relative paths and rejects escapes. Flat `code_snapshot_cebra_*.py`
 files now contain implementation, not merely wrapper code. Snapshots are source evidence,
@@ -445,9 +507,11 @@ PYTHONDONTWRITEBYTECODE=1 /usr/bin/python3 report/test_layout.py
 PYTHONDONTWRITEBYTECODE=1 /usr/bin/python3 report/test_path_summary.py
 ```
 
-The package suite covers pinned `cc0527e` AST equivalence, shared bookkeeping/nested
-snapshots, cold imports rejecting private paths, aliases/class/pickle identity, source
-closure and nine help invocations. It needs that Git object and the retained runtime.
+The package suite covers pinned `cc0527e` study AST equivalence and exact AST of all
+21 extracted helpers against `ce31248`, shared bookkeeping/nested snapshots, cold imports
+rejecting private paths and fit/step APIs, aliases/class/pickle identity, active source
+closure and nine help invocations. Package-only cold imports and copied snapshot imports
+from another cwd load no scripts; a static check forbids package script imports/path shims. It needs that Git object and the retained runtime.
 The split suite uses invented CSVs and source/identity checks. Report layout/arithmetic
 cover presentation, not model science. These commands are maintenance guidance, not a
 claim they were all rerun when writing this reference. The
@@ -469,9 +533,12 @@ wheel/build/install contract, cross-host portability matrix, restart/resume impl
 or deployment certification. Current source closure is manually audited, not automatic
 arbitrary dynamic dependency discovery. Those gaps are not reasons to invent a Runner.
 
-Legacy extraction/removal requires all callers and provenance/recovery paths to migrate;
-[script inventory](../scripts/README.md) and [package deprecation notes](../src/neuro/README.md#audited-legacy-boundary-and-deprecation)
-own that staged plan. Nothing here makes older scientific bodies safely deletable.
+Active-helper extraction is implemented without migrating old experiment families.
+The [script inventory](../scripts/README.md) and
+[package scope and historical boundary](../src/neuro/README.md#active-helper-ownership-and-historical-boundary)
+distinguish supported current helpers from unchanged historical script implementations.
+No historical snapshot, hash or approval is rewritten. Current approval/source hashes
+intentionally change. No old scientific body is declared safely deletable.
 
 **Notebook integration remains OPEN:** decide target/cohort, input contract and complexity
 first. A tracked-aggregate presentation notebook need not import scientific workflows.

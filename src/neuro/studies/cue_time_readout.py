@@ -32,11 +32,11 @@ import numpy as np
 import torch
 
 from neuro.execution import ensure_fresh_dir, sha256_file, snapshot_sources
-from neuro.legacy_adapters import geometry_helpers, make_solver, session_from_cell
+from neuro.neural_inputs import session_from_cell
+from neuro.cebra_solver import make_solver
+from neuro.geometry import fidelity, spectrum
 from neuro.provenance import study_sources
 from neuro.studies import full_trial_transfer as ft
-
-fidelity, spectrum = geometry_helpers()
 
 CANONICAL_ROOT = ft.CANONICAL_ROOT
 ACCEPTED_RUN = ft.OUTPUT_ROOT / "biological-run-20260924T162913Z"

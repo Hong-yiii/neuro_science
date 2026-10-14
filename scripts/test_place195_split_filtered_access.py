@@ -56,8 +56,9 @@ class SplitFilteredAccessTest(unittest.TestCase):
             hashes = namespace["helper_hashes"]()
             self.assertEqual(paths["src/neuro/place195_split_access.py"].resolve(), source)
             self.assertEqual(hashes["src/neuro/place195_split_access.py"], original_sha256)
-            old_key = next(key for key in hashes if key.endswith("place195_split_filtered_access.py"))
-            self.assertNotEqual(hashes[old_key], original_sha256)  # old approvals are stale
+            # The historical alias is not an active package dependency or snapshot source.
+            self.assertFalse(any(key.endswith("place195_split_filtered_access.py") for key in hashes))
+            self.assertIn("src/neuro/provenance.py", hashes)  # current closure, not old approvals
 
         with tempfile.TemporaryDirectory() as tmp:
             env = {**os.environ, "PYTHONPATH": str(root), "PYTHONDONTWRITEBYTECODE": "1"}

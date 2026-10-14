@@ -46,16 +46,15 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
 
 from neuro.execution import check_deadline, sha256_file, snapshot_sources
-from neuro.legacy_adapters import (
+from neuro.raw_io import (
     _codes_at,
     _times_at,
-    bin_events,
-    make_solver,
     read_ripple_trials,
     read_spiketrain,
-    session_from_cell,
     spikes_in_window,
 )
+from neuro.neural_inputs import bin_events, session_from_cell
+from neuro.cebra_solver import make_solver
 from neuro.place195_split_access import SplitFilteredAccess
 from neuro.provenance import REPOSITORY_ROOT, study_sources
 
