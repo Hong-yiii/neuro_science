@@ -3,6 +3,7 @@
 
 import argparse
 import base64
+import os
 import re
 import subprocess
 from html.parser import HTMLParser
@@ -10,8 +11,10 @@ from pathlib import Path
 from urllib.parse import quote, urlsplit
 
 HERE = Path(__file__).resolve().parent
-ROOT = HERE.parents[2]
-OUTPUT = ROOT / "outputs/cebra-retrospective-20261012/outline.html"
+ROOT = HERE.parent
+# Source URLs retain their historical base so pinned Git citations stay truthful.
+SOURCE_BASE = ROOT / "docs/reports/cebra-retrospective-20261012"
+OUTPUT = ROOT / "outputs/cebra-retrospective-20261012/manuscript.html"
 EVIDENCE_REVISION = "4862267"
 REPOSITORY = "https://github.com/Hong-yiii/neuro_science"
 
@@ -105,7 +108,8 @@ def standalone(source):
             return match.group()
         if parsed.scheme or parsed.netloc or parsed.query:
             raise ValueError(f"Expected a repository-local source reference: {url}")
-        target = (HERE / parsed.path).resolve()
+        target = Path(os.path.abspath(SOURCE_BASE / parsed.path))
+        target.resolve().relative_to(ROOT)  # reject escaping symlink targets
         relative = target.relative_to(ROOT).as_posix()
         if not target.is_file():
             raise ValueError(f"Missing source: {relative}")
@@ -135,7 +139,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "source",
         nargs="?",
-        default="outline.html",
+        default="manuscript.html",
         choices=("outline.html", "manuscript.html"),
     )
     filename = parser.parse_args().source

@@ -12,16 +12,54 @@ PR status, recovery records and safe verification commands. Do not recreate old
 sibling worktrees or restart experiments from historical pending-work flags.
 Keep new durable decisions in Git-backed notes, not only in a chat transcript.
 
-**October12 report-first filing:** Hongyi wants the current retrospective and
+**Session closure / publication:** PR19 merged at `a169edf`. The owner authorized
+publishing and merging [PR20](https://github.com/Hong-yiii/neuro_science/pull/20),
+including reviewed helper extraction and the README showcase, to conclude this session.
+The PR records the authoritative merge result; do not resume historical task queues.
+Start with `README.md`, `docs/workspace.md` and `src/neuro/README.md`.
+`docs/software-design.md` is the current architecture reference; `docs/codebase-design.html`
+is a preserved older preview. Next: sharpen the retrospective, then agree the companion
+notebook's target and inputs. No new fits, private access or further architecture
+migration is authorized by merging. Long logs remain under `history/operations/`.
+
+**Standing package scope — October15:** `src/neuro/` supports the latest maintained
+experiments end to end, including their necessary input validation, scientific controls,
+provenance and verification. Historical reproducibility, old callers or possible future
+notebook use alone do not justify package features or compatibility layers. Keep obsolete
+experiments and any historical-only compatibility outside the package; preserve their
+records/snapshots without promising support from current package APIs. October15 cleanup
+(independently reviewed) extracted only currently required
+helpers into `neuro.raw_io`, `neuro.neural_inputs`, `neuro.cebra_solver` and `neuro.geometry`,
+then removed `neuro.legacy_adapters`. Older implementations remain outside package
+support. Do not delete
+still-required helpers or weaken scientific safeguards to remove a legacy-named module.
+The future notebook's package use remains open; it does not define package scope yet.
+
+**October12 package consolidation (historical checkpoint):** start at
+`report/README.md`, `history/README.md`,
+`src/neuro/README.md` and `docs/reorganization.md`. Seven weekly overviews and eleven
+byte-preserved HTML moves remain implemented. Full-trial transfer, endpoint-time and
+cue-time scientific bodies now live in `neuro.studies`; old `scripts/cebra_*.py` paths
+are thin module/CLI aliases. Shared split access and equivalent execution/provenance
+seams were packaged with a temporary legacy adapter, superseded by the October15
+active-helper extraction above. Historical script implementations remain unchanged;
+current source closure includes only active helpers and justified external CLI aliases.
+Keep distinct label/lineage objects distinct and launchers thin. Historical approvals
+are not valid automatically for relocated/current source; no old hashes were rewritten.
+The frozen HTML's pre-existing checksum mismatch is preserved. Whether/how the future
+companion notebook uses this package remains open, depending on its scope and complexity.
+No notebook is created now. No new fits/private replay.
+
+**October12 report-first filing (earlier checkpoint):** Hongyi wants the current retrospective and
 its actually used evidence to be the main working flow. Start with
 `docs/reports/cebra-retrospective-20261012/README.md` and `docs/reports/README.md`.
 The exact frozen reading HTML is versioned alongside the manuscript package;
 its original local copy remains under `outputs/cebra-retrospective-20261012/`.
-**Next sequence:** sharpen the report, then create an interpretable high-observability
-Jupyter notebook. Read the package's next-work contract; clarify whether “pair”
-means pair decoding or two notebooks before implementation. Computational
-transparency is distinct from formal neural-state observability; no new fits or
-private-data access are authorized by this publishing/handoff request.
+**Next sequence:** sharpen the report, then scope the intended companion notebook.
+Its target/cohort and input contract remain open; using this package is optional,
+not a requirement to make the notebook more complex.
+Computational transparency is distinct from formal neural-state observability;
+no new fits or private-data access are authorized by publishing.
 Retired onboarding/RNN/V4–V5 checklists are filed under
 `docs/reports/archive/early-work-20261012/`, with old-path pointers. Initial-trial
 records are historical, not a run queue. Pilot helpers and mixed contract/smoke
@@ -186,7 +224,7 @@ In the current code, the default `trial_start` is `2`, so alignment begins at th
 - For the next session, start with the manuscript package and report-focused index named in the October12 filing note, plus `docs/analysis-contract.md`. Consult `docs/cebra-observability-agenda-20261011.md` for separately proposed future research. `docs/research-questions.md` retains prior framing; `docs/getting-started-tasks.md` is now an archive pointer, not a run queue.
 - Prefer adding dated notes under `context/` when learning something durable.
 - Use `learning/` for neuroscience learning scaffolds, glossaries, and method explainers.
-- Use `papers/` for paper notes and reading queues; do not commit copyrighted PDFs by default.
+- Keep relevant citations with the report or methods note, not a second paper-reading queue. Local `papers/*.pdf` remain protected and ignored; do not commit or delete copyrighted/lab PDFs as filing cleanup.
 - Do not commit raw lab data, credentials, private links, tokens, large `.mat`/`.jld2` outputs, or generated figure/video dumps by default.
 - If analyzing data from Hongyi, ask where it should live if unclear. Default to `data/` for ignored local data and `outputs/` for ignored generated results.
 - For code changes inside submodules, work within that submodule's own git history. Do not make parent-repo commits that silently depend on uncommitted submodule changes.

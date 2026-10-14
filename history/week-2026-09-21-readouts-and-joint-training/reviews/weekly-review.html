@@ -1,0 +1,350 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light"><title>Neuroscience · research reset · 26 September 2026</title>
+<style>
+:root{color-scheme:light;--ink:#193832;--muted:#536760;--accent:#096653}
+*{box-sizing:border-box}body{margin:0;background:#f4f2eb;color:var(--ink);font:17px/1.7 system-ui,sans-serif}
+main{max-width:1120px;margin:auto;padding:48px 28px 90px}h1{font-size:clamp(2rem,4vw,3.5rem);line-height:1.12;max-width:900px}
+h2{scroll-margin-top:160px;margin-top:3rem;padding-top:1rem;border-top:2px solid #ccd5ca;line-height:1.3}h3{margin-top:2rem;line-height:1.35}
+a{color:var(--accent);text-underline-offset:3px}a:focus-visible{outline:3px solid #b86e1b;outline-offset:4px}
+nav{position:sticky;top:0;z-index:1;background:#193832;padding:12px 24px;display:flex;gap:24px;flex-wrap:wrap}
+nav a{color:white;font-size:.9rem}blockquote{margin:24px 0;padding:18px 24px;background:#e0ece3;border-left:5px solid #096653}
+.table-wrap{overflow-x:auto;margin:24px 0;background:white;border:1px solid #cdd6ce}table{border-collapse:collapse;width:100%;font-size:.91rem}
+th,td{padding:13px 16px;text-align:left;vertical-align:top;border-bottom:1px solid #dce2da}th{background:#e6ece3}
+code{font-size:.86em;overflow-wrap:anywhere}pre{overflow:auto;background:#e9ebe4;padding:16px}li{margin:.45em 0}
+.local-source{color:var(--muted);font-size:.82em}footer{margin-top:40px;color:var(--muted);font-size:.9rem}
+@media(max-width:600px){main{padding:22px 16px}nav{gap:12px;padding:10px 16px}table{min-width:660px}}
+@media print{nav{display:none}body{background:white}main{padding:0}h2{break-after:avoid}.table-wrap{overflow:visible}table{min-width:0}}
+</style></head><body id="top"><nav aria-label="Review sections"><a href="#section-1">1 · Route</a><a href="#section-2">2 · This week</a><a href="#section-3">3 · Open questions</a><a href="#section-4">4 · Options</a><a href="#section-5">5 · Cleanup</a><a href="#section-6">6 · Decide</a><a href="#section-7">7 · Sources</a></nav>
+<main><h1>Research reset: evidence → decisions → cleanup</h1>
+<p><strong>Review date:</strong> 26 September 2026, Asia/Singapore. <strong>Evidence window:</strong> 19–26 September; three most recently active prior neuroscience sessions. <strong>Status:</strong> retrospective evidence review and proposed roadmap, not a new analysis or authorization to fit. <a href="#top">Portable review · currently open</a>.</p>
+<p><strong>Later workspace update (September27):</strong> Hongyi authorized integration,
+publication and then merging <a href="https://github.com/Hong-yiii/neuro_science/pull/11">consolidated PR #11</a>.
+Main (<code>e8f2308</code>) includes PRs #8/#9/#10 and preserved local studies; #10 was
+subsequently closed as already included. <strong>Decisions are now recorded in
+September27 project direction <span class="local-source">[local: <code>docs/project-direction.md</code>]</span>:</strong> retain H1, remove
+H2, narrow to CEBRA-Time cue-only/joint training with two checkpoints and
+source-safe folds, retain PCA/LDA, leave the decoder open, and keep full ordered
+graph-path prediction as the ambition beyond the simpler component assay.
+The construction artifact and phase-selectivity follow-up are described there.
+That update—not all recommendations below—is the next-session authority.
+See the integration receipt <span class="local-source">[local: <code>docs/reports/review-integration-20260926.md</code>]</span>. The inventory
+and cleanup discussion below remain <strong>pre-integration history</strong>, not a new
+experiment or destructive-cleanup queue.</p>
+<blockquote>
+<p><strong>Bottom line:</strong> we have learned more about the measurement pipeline than established new biology. Stop treating CEBRA as the question. Decide which prospective-path claim the available recordings can identify; then consolidate the software around that evaluation.</p>
+</blockquote>
+<h2 id="section-1">1. The review trajectory — a 30-minute decision meeting</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Stop</th>
+<th>Read / discuss</th>
+<th>Decision to leave with</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1 · 5 min: reset the question</strong></td>
+<td>Cue-period information about the later observed <strong>path beyond start and goal</strong>. Not endpoint classification, intention or attractive latent plots.</td>
+<td>Keep H1 as the thesis question; explicitly choose the next operational research lane.</td>
+</tr>
+<tr>
+<td><strong>2 · 8 min: reconcile the week</strong></td>
+<td>The evidence ledger below. Separate relative improvement, absolute prediction, null support and independent replication.</td>
+<td>Agree what is established, what is a lead, and what has already been tried.</td>
+</tr>
+<tr>
+<td><strong>3 · 7 min: choose the next uncertainty</strong></td>
+<td>Source support/identifiability versus another encoder or decoder tweak.</td>
+<td>Select one bounded milestone with an explicit stop condition.</td>
+</tr>
+<tr>
+<td><strong>4 · 5 min: agree the cleanup boundary</strong></td>
+<td>Four worktrees, dirty source, three open PRs, private artifacts.</td>
+<td>Authorize staged integration and preservation, not a bulk move/delete.</td>
+</tr>
+<tr>
+<td><strong>5 · 5 min: freeze the handoff</strong></td>
+<td>Answer the decision card at the end.</td>
+<td>One current roadmap, one owner, one evaluation contract. No automatic experiment queue.</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Recommended default:</strong> preserve the condition-level pseudopopulation lane, pause broad model searches on the exposed benchmark, and make the next milestone a no-fit support/provenance/identifiability audit. This is a recommendation for Hongyi's decision—not an already approved pivot. Exact trial-specific H1 remains a separate, stronger recording contract; we do not need a simultaneous 195-unit recording to make useful condition-level progress.</p>
+<h2 id="section-2">2. What actually happened</h2>
+<h3>The last three sessions</h3>
+<p>Identified by the most recently modified parent transcripts before this review, excluding this session and child-agent logs. Read targeted user/final messages and checked their claims against reports, lightweight summaries and Git/PR state. Session history was not rewritten or exported into this report.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Session</th>
+<th>User's question</th>
+<th>What was completed</th>
+<th>What it changed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Sept 23–25 · <code>01a0ce04…</code></strong></td>
+<td>Is logistic regression too simple to read the CEBRA latent? Is excessive regularization the problem?</td>
+<td>Literature/readout review; eight frozen-embedding decoder recipes; C/gamma diagnosis; professor-facing synthesis and teaching update.</td>
+<td>No tested nonlinear CEBRA rescue; reducing regularization did not resolve poor historical-source transfer. A PCA+RBF lead remains descriptive.</td>
+</tr>
+<tr>
+<td><strong>Sept 23–25 · <code>01a0ce08…</code></strong></td>
+<td>Can we visualize Time/Behavior like the CEBRA website?</td>
+<td>Saved-run atlas, spectra and projection diagnostics; reviewed package in <strong>PR #8</strong>; temporary previews ended.</td>
+<td>A 3D plot can omit much of the representation. Shape and apparent complexity are not evidence of prospective-path information or biological topology.</td>
+</tr>
+<tr>
+<td><strong>Sept 24–25 · <code>01a0d2ef…</code></strong></td>
+<td>Can navigation-period training teach a representation that helps cue-only decoding?</td>
+<td>Bounded cue-only versus broader-training experiment in <strong>PR #9</strong>; teaching-only explanation in <strong>PR #10</strong>.</td>
+<td>Broader CEBRA-Time training improved relative loss and mean BA, but failed its absolute-loss success condition. Behavior did not improve loss.</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Week boundary matters:</strong> no additional Sept 19–22 work was found in these session records or inspected recent Git history; that is not proof that nothing happened elsewhere. <strong>PR #7 merged on Sept 23, but its matched PCA experiment ran Sept 13–14.</strong> Count the merge as integration this week, not 26,266 new fits this week.</p>
+<h3>Evidence ledger — not a cross-study leaderboard</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Study / evaluation object</th>
+<th>Result</th>
+<th>Strongest safe reading</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Matched raw/PCA, five endpoint panels</strong> · 147 train + 41 historical-validation sources; 49 unit IDs / 13 sessions; first-second pooled rates</td>
+<td>Raw loss <strong>0.664564</strong>, PCA <strong>0.657541</strong>; paired difference <strong>+0.007023 nats</strong>; both BA <strong>55%</strong>. Fixed-selection source sensitivity for the difference spans <strong>−0.011444 to +0.023426</strong>.</td>
+<td>Small descriptive PCA advantage on exposed sources; not PCA superiority or broad prospective coding. Completed and merged in PR #7.</td>
+</tr>
+<tr>
+<td><strong>Frozen-CEBRA readouts, 4→3 path component</strong> · 29 units / 7 sessions; 82 + 22 sources</td>
+<td>Best nonlinear mean BA: Time <strong>37.33%</strong>, Behavior <strong>35.67%</strong>. PCA + scaled RBF SVM <strong>77.50%</strong>.</td>
+<td>No tested decoder rescue for these embeddings. PCA+RBF is a lead, not an all-linear model or a null-established H1 result.</td>
+</tr>
+<tr>
+<td><strong>C/gamma diagnosis on those saved representations</strong></td>
+<td>Weaker L2 did not rescue CEBRA; temperature could improve probability loss without changing discrimination. Anchored CEBRA/raw-PCA/joint family tails <strong>18/21, 15/21, 19/21</strong>.</td>
+<td>Poor source-pool transfer is observed; its unique cause and CEBRA's general suitability remain unresolved. These anchored nulls do <strong>not</strong> test the PCA five-assembly 77.5% mean.</td>
+</tr>
+<tr>
+<td><strong>Saved-run latent atlas</strong> · 39 saved objects, no encoder/decoder fits</td>
+<td>Strong early endpoint Behavior displays retained roughly <strong>56.3–64.2%</strong> of development energy in three axes; participation ratio <strong>5.32–6.04</strong>.</td>
+<td>Three axes are an incomplete view. Neither those values nor visible shapes establish intrinsic biological dimension, topology or H1b.</td>
+</tr>
+<tr>
+<td><strong>Broader-training transfer, same 4→3 target/cohort but newly matched construction/training</strong></td>
+<td>Time/logistic loss <strong>1.010464 → 0.710618</strong>, BA <strong>32.64% → 61.81%</strong>, AUROC <strong>0.146 → 0.574</strong>. Constant-.5 loss is <strong>0.693147</strong>.</td>
+<td>Relative Time improvement, <strong>primary criterion failed</strong>. Only one of three seeds had AUROC above .5. Not confirmed absolute path information.</td>
+</tr>
+</tbody>
+</table></div>
+<p>BA means balanced accuracy; its binary chance reference is 50%. Probability loss penalizes confident errors. The model with improved loss need not have improved discrimination; a better model than a weak baseline need not beat a useful baseline.</p>
+<p><strong>Do not compare 77.5%, 61.8%, 55% and endpoint ~83% as a league table.</strong> Different panels, path components, assembly seeds, feature construction, fitting procedures and readouts change the evaluation object. Endpoint decoding is a different target. The later transfer experiment's own PCA+RBF control was <strong>55.56% BA</strong>, not the earlier 77.5%; that is not an independent replication or refutation of the earlier score.</p>
+<h3>The most tempting misreading: “1/21 means broader training works”</h3>
+<p>The broader-Time mean paired loss gain was <strong>+0.299846 nats</strong>. Its source-coherent, full-pipeline label-null tail was <strong>1/21</strong>. But:</p>
+<ul>
+<li>Maximum-over-Time/Behavior paired-gain tail: <strong>3/21</strong>.</li>
+<li>Absolute broader-Time loss-based no-association tail: <strong>12/21</strong>.</li>
+<li>The frozen success rule required gain ≥ .01 nats <strong>and</strong> loss &lt; log2 <strong>and</strong> BA &gt; .5 <strong>and</strong> AUROC &gt; .5. The loss requirement failed.</li>
+<li>BA source-weight sensitivity: <strong>44.44 / 61.81 / 76.42%</strong>; <strong>8/22</strong> source deletions became inestimable. These are sensitivity diagnostics, not biological confidence intervals.</li>
+</ul>
+<p>The gain concerns improvement over a poor cue-only model under a particular null. It is not a general equal-risk superiority test, a passed absolute-performance null, or confirmation on untouched sources.</p>
+<h3>What “broader training” did—and did not—mean</h3>
+<p>Navigation activity entered <strong>encoder training from training sources only</strong>. Decoder fitting and historical-validation predictions used <strong>cue-only</strong> inputs. The comparison used a fixed 1,000-update budget with 50/50 cue/navigation sampling, not simply extra optimization. Native bins were not time-warped; normalized-progress assembly is not a simultaneously observed physical path. CEBRA-Time's objective omits path labels, but its pseudopopulation assembly remains label-conditioned.</p>
+<p>This is a valid bounded engineering question. It is not proof that we have learned a label-free navigation manifold, decoded unknown real trials, or observed planning.</p>
+<h3>Execution and failure accounting</h3>
+<ul>
+<li>Decoder study: <strong>710 new readouts</strong>, zero new biological CEBRA fits. Five planned PCA transforms plus three disclosed preflight transforms. A class-local product-row ID merge broke postprocessing; the recovery repaired lineage and replayed <strong>800</strong> saved models with fitting blocked. Preserve the failed attempt, not as a second result.</li>
+<li>Hyperparameter study: <strong>1,700 new readouts</strong>, <strong>20 null-only PCA transforms</strong>, zero CEBRA or observed-PCA refits. Verification covered <strong>2,500 model records / 395,000 predictions</strong>; records include reused models, not 2,500 new fits.</li>
+<li>Atlas: no encoder/decoder fitting or checkpoint loading; display/projection operations are descriptive. Retain failed/repaired build attempts separately.</li>
+<li>Transfer: one completed biological attempt, <strong>252 encoders + 63 PCA transforms + 756 readouts</strong>; recorded forward-only replay of <strong>1,071 fitted artifacts</strong>. Teaching PR #10 adds no fits.</li>
+<li>Historical verification and software-test counts are reported from their receipts. <strong>This reset did not rerun model verification, inspect raw recordings, or fit models.</strong> AI review is not laboratory metadata validation or human scientific peer review.</li>
+</ul>
+<h2 id="section-3">3. What the week resolves—and what it leaves open</h2>
+<p><strong>Resolved enough to stop repeating:</strong> the decoder was trained; nonlinear readouts were tested; reducing L2 was tested; an atlas exists; broader-training transfer was tested; matched raw/PCA was executed and merged. Old “pending” checklists are not an experiment queue.</p>
+<p><strong>Still open:</strong> whether a meaningful future-path contrast is identifiable beyond endpoints and nuisance variables; how much independent source support it has; why these source pools transfer poorly; whether any lead reproduces on genuinely unexposed observations; the biological interpretation of any reproducible signal.</p>
+<p>The 195 selected units across 58 sessions are an archive scope, not a simultaneous 195-column recording or the sample size of each benchmark. Synthetic rows, cue bins, optimizer seeds and plotted points do not create independent biological trials. Selection, marker/clock semantics, cue/history/gaze/heading confounds and original holdout exposure remain limitations. A negative result here does not establish absence of H1.</p>
+<h2 id="section-4">4. High-level choices</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Decision</th>
+<th>Recommended default</th>
+<th>Alternative and what it costs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Research lane</strong></td>
+<td>Condition-level reproducibility beyond endpoints, with exact H1 language kept separate.</td>
+<td>Exact same-trial population prediction requires verified simultaneous recordings linked to the same trial's path. No pseudo-assembly can supply that missing observation.</td>
+</tr>
+<tr>
+<td><strong>Next uncertainty to reduce</strong></td>
+<td>Source support, identifiability and recording/nuisance provenance before more model variants.</td>
+<td>Another bounded CEBRA engineering study is legitimate if declared methodological, but cannot by itself repair exposure, support or missing metadata.</td>
+</tr>
+<tr>
+<td><strong>Role of CEBRA</strong></td>
+<td>Candidate representation beside raw/PCA, not the project's success criterion. Keep broader Time as a secondary candidate.</td>
+<td>Making CEBRA/manifold methodology the central deliverable is a thesis-scope change to discuss explicitly with the professor.</td>
+</tr>
+<tr>
+<td><strong>Geometry / H2</strong></td>
+<td>Keep atlas for diagnostics and teaching; defer biological topology and artificial-agent comparison as primary aims.</td>
+<td>A descriptive geometry project is possible, but must not be relabelled as prospective-path evidence.</td>
+</tr>
+<tr>
+<td><strong>Software target</strong></td>
+<td>One supported evaluation path plus frozen study runners/evidence. Integrate before reorganizing files.</td>
+<td>A package-wide rewrite now adds provenance and regression risk without creating better scientific identification.</td>
+</tr>
+</tbody>
+</table></div>
+<h3>Proposed next milestone: a no-fit go/no-go memo</h3>
+<p>A bounded <strong>2–3 working-day planning target</strong>, subject to lab availability—not a promise and not authorization to access new data.</p>
+<ol>
+<li><strong>Freeze the operational claim.</strong> Pick a behavior-defined interior component or route contrast, cue window, population lane and strongest allowed claim. Do not pick it because it produced the highest neural score.</li>
+<li><strong>Audit existing manifests first.</strong> Map real sources × sessions × endpoints × target class, singleton pools, prior exposure and exclusions. Label missing metadata; do not infer simultaneity or cue identity from file names. Any new raw-data extraction needs a scoped protocol.</li>
+<li><strong>Ask the lab targeted questions.</strong> Verify marker/cue semantics, recording groups, unit selection and whether required nuisance variables/new source trials are available. Retain selected195 scope unless explicitly changed; do not resurrect the excluded eight-unit supplement.</li>
+<li><strong>Define the decision rule before outcomes.</strong> Agree minimum worthwhile incremental performance, baseline, primary metric, split unit, uncertainty/null assumptions and stop rule. The .01-nat rule in PR #9 is not automatically a biologically meaningful threshold for the thesis.</li>
+<li><strong>Return go/no-go options, not fits.</strong> If adequate support exists, propose one frozen raw/PCA-led, matched evaluation with bounded CEBRA secondary comparisons and source-aware controls. If not, choose targeted data/metadata collection or an explicitly narrower methodological deliverable.</li>
+</ol>
+<p><strong>Make the memo decisive:</strong> deliver one candidate-contrast support table, an exposure ledger, a short list of lab-verifiable unknowns, and a go/no-go recommendation. Pause the biological interpretation if the contrast is effectively determined by endpoints, class support collapses after conditioning, or plausible critical nuisance variables cannot be addressed. No new confirmation set means <strong>no confirmatory claim</strong>, not a ban on explicitly exploratory or methodological work. If these gates are already satisfied, do not spend three days rewriting caveats: proceed to proposing one frozen matched study.</p>
+<p><strong>Gate for a subsequent experiment:</strong> independent code and scientific review, source-first splits, training-only learned transformations, endpoint/nuisance baselines, coherent nulls and a fixed budget. Reserve genuinely unexposed observations prospectively if confirmation is intended. Another shuffle/resplit of already inspected sources does not restore a pristine test. Per-unit checks are complementary, not a requirement that each neuron first be significant.</p>
+<h2 id="section-5">5. Cleanup: what is actually wrong</h2>
+<p>The immediate problem is <strong>fragmented authority</strong>, not insufficient folder nesting.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Location / publication</th>
+<th>Inspected state on Sept 26</th>
+<th>Handling</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Canonical <code>~/neuro_science</code></td>
+<td>Dirty old release branch, <strong><code>438856e</code></strong>; Sept24 decoder/diagnosis/professor files are not committed. Local <code>main</code> is older still.</td>
+<td>Preserve exact dirty bytes before integrating. Do not reset or switch over them.</td>
+</tr>
+<tr>
+<td>Cached <code>origin/main</code></td>
+<td><strong><code>8340631</code></strong>, includes merged <strong>PR #7</strong>. Live GitHub confirms #7 merged Sept23.</td>
+<td>Recheck main before integration; base the integration branch on current main, not the old release.</td>
+</tr>
+<tr>
+<td><code>work/issue-6-pca</code></td>
+<td>Clean branch <strong><code>018d5f6</code></strong>; PR #7 merged. <strong>Its ignored fitted artifacts remain here.</strong></td>
+<td>Candidate for later retirement only after hashed copy/migration, verification and owner confirmation. Merge coverage is not data backup.</td>
+</tr>
+<tr>
+<td>Atlas <strong>PR #8</strong></td>
+<td>Open, head <strong><code>a401eb3</code></strong>; no registered atlas worktree. Local runner matches PR bytes, at least one report differs.</td>
+<td>Reconcile local edits; do not overwrite one version wholesale. Derived private research content remains access-sensitive.</td>
+</tr>
+<tr>
+<td><code>work/cebra-full-trial-transfer</code> / <strong>PR #9</strong></td>
+<td>Clean <strong><code>c19d07c</code></strong>, open against main; outputs deliberately live in canonical <code>outputs/</code>.</td>
+<td>Keep during review; code has live canonical-root/protocol coupling.</td>
+</tr>
+<tr>
+<td><code>work/cebra-time-teach</code> / <strong>PR #10</strong></td>
+<td>Clean <strong><code>ea6a8fe</code></strong>, open <strong>against PR #9's branch</strong>, not main.</td>
+<td>Review #9 first; if approved/merged, reconcile #10's base/diff. Retain worktree until its own review completes.</td>
+</tr>
+</tbody>
+</table></div>
+<p>Publication status is not scientific acceptance. No PR was merged, retargeted, closed or pushed by this reset.</p>
+<h3>Active code map — preserve these relationships</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Existing entry points / dependencies</th>
+<th>Cleanup implication</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Import, QC, source splits</td>
+<td><code>scripts/import_place195_sessions.py</code>, <code>place195_split_*</code>; retained source tensors/manifests</td>
+<td>Preserve private data, source identities and frozen split hashes. Do not reimport as a cleanup shortcut.</td>
+</tr>
+<tr>
+<td>Historical V6–V9 and path studies</td>
+<td><code>place195_v7_v8_neural_experiments.py</code>, <code>place195_v8b_v9_cebra.py</code>, <code>place195_path_generalization_phase1.py</code> and their verifiers</td>
+<td>Older runners are also imported helpers and replay dependencies, not automatically dead code.</td>
+</tr>
+<tr>
+<td>Preprocessing / matched PCA</td>
+<td><code>place195_path_preprocessing_autoresearch.py</code>; main/PR7 adds <code>place195_matched_pca.py</code>, <code>verify_matched_pca.py</code> and replay schema changes</td>
+<td>Integrate the PR7 helper change before assessing compatibility of dirty Sept24 runners. Do not cherry-pick only pretty reports.</td>
+</tr>
+<tr>
+<td>Frozen decoder → diagnosis</td>
+<td><code>cebra_decoder_autoresearch.py</code> → <code>cebra_hyperparameter_diagnosis.py</code>; paired tests</td>
+<td>Package uncommitted implementation and scientific records together; audit imports before any moves.</td>
+</tr>
+<tr>
+<td>Atlas</td>
+<td><code>cebra_latent_atlas.py</code>, <code>.html</code>, paired test; PR8 package</td>
+<td>Descriptive saved-artifact viewer; distinguish local output from authorized PR copies.</td>
+</tr>
+<tr>
+<td>Broader transfer</td>
+<td>PR9 <code>cebra_full_trial_transfer.py</code>, builder/test</td>
+<td><code>WORKTREE_ROOT</code> resolves protocol; hardcoded <code>CANONICAL_ROOT</code> resolves outputs/runtime. These are live dependencies.</td>
+</tr>
+<tr>
+<td>Software checks</td>
+<td><code>scripts/check_research_software.py</code> discovers <code>scripts/test_*.py</code></td>
+<td>A move into <code>src/</code>/<code>tests/</code> breaks current discovery/import/root assumptions unless changed and tested together.</td>
+</tr>
+<tr>
+<td>External lab references</td>
+<td><code>Hippocampus.jl</code>, <code>PyHipp</code> submodules</td>
+<td>Keep their histories/pointers intact; do not fold them into a new Python package.</td>
+</tr>
+</tbody>
+</table></div>
+<h3>Safe cleanup sequence</h3>
+<p><strong>Phase 0 — done in this reset:</strong> created a fresh <strong>cmux review workspace</strong>, not another Git worktree; recorded four-worktree/PR state; hash-verified copies of pre-existing dirty/untracked source/docs plus navigation files (<strong>27 files / 3,332,830 bytes</strong>). Added this consolidated review and refreshed current navigation. No biological files moved or deleted.</p>
+<p><strong>Phase 1 — integration checkpoint, proposed:</strong> inventory and preserve the rest of each worktree's unique ignored evidence; create a recoverable Git snapshot/bundle before branch operations. Build targeted manifests for PR7's worktree-local outputs, the root Sept24 outputs and canonical PR9 outputs before touching those locations. Other <code>work/</code> directories, including <code>work/cebra-hyperparameter-20260924/</code>, remain unclassified, not disposable. Reconcile root Sept24 source/reports against main and PR8. Review PR9, then stacked PR10. Preserve failure logs, frozen protocols and exact executed snapshots. One writer; independent reviewers remain read-only.</p>
+<p><strong>Phase 2 — consolidate accepted artifacts, proposed:</strong> first copy—not move—<code>work/issue-6-pca/outputs/path-pca-matched/</code> to a canonical named output location with a source→destination hash/symlink map. Check branch containment, all unique untracked/ignored files, path resolution and no-fit replay before any worktree removal. Record relocated paths without rewriting old execution manifests. Only remove the exact owned, verified worktree after approval.</p>
+<p><strong>Phase 3 — structural cleanup, proposed:</strong> designate the supported pipeline and group navigation by <strong>question → protocol → runner → accepted run → verifier → report</strong>. Keep completed study runners and hash-bound snapshots frozen. Extract or relocate shared helpers only when the selected next study needs it; update every importer, test-discovery rule and root-relative path in that bounded change. Avoid a speculative framework or mass renaming.</p>
+<p><strong>Phase 4 — archive and prune, proposed:</strong> only retire items with documented owner, retained replacement, dependency checks, hashes and rollback. <code>work/retired-worktrees</code>, <code>.pi</code>, <code>.pi-subagents</code>, runtime environments and unknown caches are not blanket deletion targets. Report disk savings after verified deletion, not projected from directory names.</p>
+<p><strong>Validation for integration:</strong> existing clone-only software suite on the actual integrated tree, focused regression tests for shared-helper/replay compatibility, link checks and explicitly authorized saved-artifact replay with fits blocked. A clean type checker or process exit alone is insufficient. Never recreate missing accepted outputs by fitting models during cleanup.</p>
+<p><strong>Recovery:</strong> pre-reset copies and manifest are under <code>work/research-reset-20260926/before/</code> and <code>outputs/research-reset-20260926/before.json</code>. Compare current hashes before selectively restoring a file so later edits are not lost. These copies protect the current source/docs only; <strong>they are not an off-host backup of raw data, models or all worktrees</strong>. Broader migration requires its own recovery manifest and retained originals.</p>
+<h2 id="section-6">6. Decision card — answer these before the next run</h2>
+<ol>
+<li><strong>Priority:</strong> condition-level biological evidence first, or a deliberately methodological CEBRA thesis lane? <strong>Recommendation: evidence first.</strong></li>
+<li><strong>Next deliverable:</strong> authorize the no-fit support/metadata go/no-go memo, or choose one explicit competing study? <strong>Recommendation: the memo.</strong></li>
+<li><strong>Data:</strong> can we obtain genuinely new source trials and the missing task/nuisance metadata if support fails? If not, what narrower claim would still be useful?</li>
+<li><strong>Cleanup authority:</strong> approve preservation/integration first, then a separately verified PCA-artifact relocation/worktree retirement? <strong>Recommendation: yes in stages, no bulk deletion.</strong></li>
+<li><strong>Stop rule:</strong> what minimum useful effect and replication would justify more representation work? Agree this with the professor, rather than inheriting an arbitrary score from an old study.</li>
+</ol>
+<p>A good answer to this review is a short set of choices, not another giant parameter sweep.</p>
+<h2 id="section-7">7. Evidence and review provenance</h2>
+<p>Canonical question and constraints: <code>docs/research-questions.md</code> <span class="local-source">[local: <code>docs/research-questions.md</code>]</span>, <code>docs/analysis-contract.md</code> <span class="local-source">[local: <code>docs/analysis-contract.md</code>]</span>. Workspace recovery: <code>docs/workspace.md</code> <span class="local-source">[local: <code>docs/workspace.md</code>]</span>.</p>
+<p>Primary sources checked:</p>
+<ul>
+<li>Matched PCA: <a href="https://github.com/Hong-yiii/neuro_science/blob/8340631/docs/reports/path-pca-matched/report.md">merged report at main commit <code>8340631</code></a>; local <code>work/issue-6-pca/docs/reports/path-pca-matched/{report.md,summary.json,execution.md}</code>. Execution Sept13–14, merge Sept23.</li>
+<li>Frozen decoders: result <span class="local-source">[local: <code>docs/reports/cebra-decoder-autoresearch-20260924.md</code>]</span>; <code>outputs/cebra-decoder-autoresearch-20260924/recovery-20260924T042259Z/summary.json</code>.</li>
+<li>Hyperparameter diagnosis: result <span class="local-source">[local: <code>docs/reports/cebra-hyperparameter-diagnosis-20260924.md</code>]</span>; <code>outputs/cebra-hyperparameter-diagnosis-20260924/run-20260924T105957Z/{summary.json,null_family_tails.json}</code>.</li>
+<li>Atlas: result <span class="local-source">[local: <code>docs/reports/cebra-latent-atlas-results-20260924.md</code>]</span>; <code>outputs/cebra-latent-atlas-20260924/atlas/</code>; <a href="https://github.com/Hong-yiii/neuro_science/pull/8">PR #8</a>.</li>
+<li>Broader transfer: <a href="https://github.com/Hong-yiii/neuro_science/blob/c19d07c/docs/reports/cebra-full-trial-transfer/README.md">report at <code>c19d07c</code></a>; local <code>work/cebra-full-trial-transfer/docs/reports/cebra-full-trial-transfer/{README.md,summary.json,execution.md}</code>; <a href="https://github.com/Hong-yiii/neuro_science/pull/9">PR #9</a>.</li>
+<li>Teaching only: <code>work/cebra-time-teach/learning/cebra-time-transfer-teach-max-20260925.html</code>; <a href="https://github.com/Hong-yiii/neuro_science/pull/10">stacked PR #10</a>.</li>
+<li>Earlier professor synthesis: Sept24 review <span class="local-source">[local: <code>docs/professor_updates/cebra_review_20260924/review.md</code>]</span>. Historical source reports remain intact even where their PCA-pending wording is superseded by PR7.</li>
+</ul>
+<p><strong>First fan-out:</strong> three fresh-context session researchers and one codebase scout. <strong>Parent convergence:</strong> reconciled their evidence with live GitHub PR status, branch-specific PCA results and transfer summaries. Rejected one inherited assertion that the Sept13 PCA experiment was still unexecuted: its execution ledger and merged PR7 establish completion. Local branch copies can carry stale facts even when a recent transcript repeats them.</p>
+<p><strong>Second fan-out:</strong> independent scientific-claim review, research-priority challenge and cleanup safety review. Findings and parent dispositions are recorded in review-checks.md <span class="local-source">[local: <code>docs/reports/research-reset-20260926/review-checks.md</code>]</span>. The scientific reviewer supported the core interpretation; low delivery/provenance findings were addressed. The cleanup reviewer recommended the navigation-only slice before integration. The strategy challenger ranked support/identifiability first, then a bounded matched raw/PCA-led study, then another broader-Time methods experiment. Live PR evidence was captured by the parent at <strong>2026-09-26 09:24:17 UTC</strong>, in <code>outputs/research-reset-20260926/publication-state.json</code>; the reviewers did not independently query GitHub. Agent briefs stay local under <code>work/research-reset-20260926/</code>; original harness artifacts/transcripts remain untouched. No web literature search was needed for this retrospective, and no new laboratory access was used.</p>
+<h3>Reading and preview operations</h3>
+<p><code>review.html</code> is self-contained, with no network resources or server. The cmux browser displays an in-memory copy in a verified <code>about:blank</code> document; reloading clears that disposable view. The durable HTML can be reopened locally. Source links are optional and may require private GitHub access. No listener, daemon, timer or public ingress is introduced; existing cmux lifecycle rules apply. Close the browser/workspace to dismiss it. The durable Markdown/HTML remain here.</p>
+<p>Rebuild/check with the retained environment: <code>scratch/v6-v9-runtime/bin/python docs/reports/research-reset-20260926/render.py</code> or append <code>--check</code>. The renderer reads this Markdown, checks existence of its local references, and writes/checks the sibling HTML. In the standalone browser view, local-only references are shown as filesystem paths instead of broken relative links; optional GitHub links remain clickable. It does not import research runners or load data/models.</p>
+<footer>Offline decision review. No scripts, external resources or running server. Print or save this page to retain a local copy.</footer></main></body></html>

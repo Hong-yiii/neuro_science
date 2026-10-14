@@ -36,7 +36,8 @@ from sklearn.metrics import (
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
-from scripts.place195_split_filtered_access import SplitFilteredAccess
+import scripts  # noqa: F401 — bootstrap src for legacy direct/PYTHONPATH callers
+from neuro.place195_split_access import SplitFilteredAccess
 from scripts.place195_v7_v8_neural_experiments import (
     SourceMeta,
     assemble_pseudo,
@@ -612,6 +613,7 @@ def main(argv=None):
         Path(__file__),
         REPOSITORY / "scripts/test_start_goal_cebra_baseline.py",
         REPOSITORY / "scripts/place195_split_filtered_access.py",
+        Path(str(sys.modules[SplitFilteredAccess.__module__].__file__)),
         REPOSITORY / "scripts/place195_v7_v8_neural_experiments.py",
         REPOSITORY / "scripts/place195_v8b_v9_cebra.py",
         REPOSITORY / "docs/reports/start-goal-cebra-baseline.md",

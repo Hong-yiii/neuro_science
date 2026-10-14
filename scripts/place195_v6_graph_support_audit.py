@@ -38,7 +38,7 @@ from scripts.import_place195_sessions import (
     validate_output_dir,
 )
 from scripts.place195_split_and_behavior_audit import write_csv, write_json
-from scripts.place195_split_filtered_access import SplitFilteredAccess
+from neuro.place195_split_access import SplitFilteredAccess
 
 DEFAULT_IMPORT_DIR = DEFAULT_OUTPUT_PARENT / "place195-all-sessions-20260830-v4"
 DEFAULT_SPLIT_DIR = DEFAULT_OUTPUT_PARENT / "place195-splits-20260830-v3"

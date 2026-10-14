@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Neuroscience workspace — codebase design review</title>
+<style>
+:root{--ink:#192a39;--muted:#506276;--paper:#f5f4ef;--white:#fff;--line:#d8dfdf;--green:#17634d;--green-bg:#e5f3eb;--amber:#815015;--amber-bg:#fff1d9;--blue:#254e90;--blue-bg:#e9f0fc;--dark:#152e3a}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:1rem}body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.65 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}a{color:var(--blue);text-underline-offset:3px}a:focus-visible,summary:focus-visible{outline:3px solid var(--amber);outline-offset:4px}code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.9em;overflow-wrap:anywhere}h1,h2,h3,p{margin-top:0}h1{font-size:clamp(2.3rem,5vw,4rem);line-height:1.1;letter-spacing:-.045em;max-width:900px}h2{font-size:1.75rem;line-height:1.25;letter-spacing:-.025em;margin-bottom:1.15rem}h3{font-size:1.08rem;line-height:1.4;margin-bottom:.5rem}p{margin-bottom:1rem}ul,ol{padding-left:1.3rem}li+li{margin-top:.45rem}.wrap{max-width:1180px;margin:auto;padding:0 32px}.hero{background:var(--dark);color:#fff;padding:62px 0 46px}.hero p{color:#d3e2e7;max-width:820px}.eyebrow{text-transform:uppercase;font-size:.75rem;letter-spacing:.13em;font-weight:750;margin-bottom:1.25rem}.lede{font-size:1.2rem}.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}.chip{display:inline-block;border:1px solid #67828d;border-radius:30px;padding:5px 13px;font-size:.8rem;color:#f0f6f8}.layout{display:grid;grid-template-columns:185px minmax(0,1fr);gap:42px;padding-top:38px;padding-bottom:40px}nav{position:sticky;top:24px;align-self:start;font-size:.85rem}nav strong{display:block;margin-bottom:10px}nav a{display:block;padding:7px 0;color:var(--muted);text-decoration:none}nav a:hover{text-decoration:underline}section{margin-bottom:48px}main{min-width:0}.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.card{background:var(--white);border:1px solid var(--line);border-radius:12px;padding:22px}.card p:last-child{margin-bottom:0}.tag{display:inline-block;padding:3px 9px;border-radius:5px;font-size:.7rem;letter-spacing:.05em;font-weight:750;text-transform:uppercase;margin-bottom:10px}.done{background:var(--green-bg);color:var(--green)}.pending{background:var(--blue-bg);color:var(--blue)}.caution{background:var(--amber-bg);color:var(--amber)}.note{border-left:4px solid var(--amber);background:var(--amber-bg);padding:17px 20px;border-radius:0 8px 8px 0}.note p:last-child{margin-bottom:0}.muted,.caption{color:var(--muted)}.caption{font-size:.85rem;margin:12px 0 0}.flow{display:grid;grid-template-columns:1fr 28px 1fr 28px 1fr;align-items:stretch;gap:8px}.node{border:1px solid var(--line);background:#fff;border-radius:10px;padding:18px}.node strong{display:block}.node small{display:block;margin-top:8px;color:var(--muted);line-height:1.5}.future{border:2px dashed #8197b2;background:#f0f4fb}.arrow{align-self:center;text-align:center;font-size:1.5rem;color:var(--muted)}.tree{background:var(--dark);color:#eff7f8;border-radius:10px;padding:24px;white-space:pre-wrap;font:14px/1.85 ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere}.table-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:#fff}table{border-collapse:collapse;width:100%;font-size:.88rem}th,td{text-align:left;vertical-align:top;padding:13px 15px;border-bottom:1px solid var(--line)}th{background:#eaf0f1;font-weight:700}tr:last-child td{border-bottom:none}td:first-child{font-weight:650}.timeline{list-style:none;padding:0;margin:0}.timeline li{border-left:3px solid #a6bcb6;padding:0 0 20px 23px;margin:0}.timeline li:last-child{padding-bottom:0}.timeline strong{display:block}.timeline p{margin:3px 0 0;font-size:.94rem}.split{display:grid;grid-template-columns:1fr 1fr;gap:20px}.checklist li{padding-left:4px}.footer{border-top:1px solid var(--line);font-size:.85rem;color:var(--muted);padding:24px 0 40px}details{background:#fff;border:1px solid var(--line);border-radius:9px;padding:16px 20px;margin-top:16px}summary{cursor:pointer;font-weight:650}details p{margin:14px 0 0}.short-code{display:block;background:#edf1f4;padding:16px;border-radius:8px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:.85rem}strong{font-weight:700}
+@media(max-width:850px){.layout{grid-template-columns:1fr;gap:24px}nav{position:static;display:flex;gap:6px 18px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:16px}nav strong{width:100%;margin:0}nav a{padding:2px 0}.wrap{padding:0 22px}.hero{padding:42px 0 32px}}
+@media(max-width:560px){body{font-size:16px}.wrap{padding:0 17px}.cards,.split,.flow{grid-template-columns:1fr}.arrow{transform:rotate(90deg)}.card{padding:18px}.tree{font-size:12px;padding:17px}th,td{padding:10px;font-size:.83rem}.hero .chip{font-size:.72rem}section{margin-bottom:34px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media print{body{background:#fff;font-size:11pt}.hero{background:#fff;color:#192a39;padding:15px 0}.hero p{color:#506276}.chips,nav{display:none}.layout{display:block}.wrap{max-width:none;padding:0}.card,.node,.table-scroll,details{break-inside:avoid}.tree{background:#f2f4f5;color:#192a39}.footer{padding-bottom:0}a{color:inherit}}
+</style>
+</head>
+<body>
+<header class="hero">
+<div class="wrap">
+<p class="eyebrow">Neuroscience workspace · Design review · 12 October 2026</p>
+<h1>One current report.<br>A readable research history.<br>Scientific code in plain sight.</h1>
+<p class="lede">A high-level review of the approved direction and the first implemented slice. This is a codebase organization artifact—not a new neuroscience result.</p>
+<div class="chips"><span class="chip">Checkpoint: ebe8256</span><span class="chip">7 weekly overviews</span><span class="chip">11 reading files moved</span><span class="chip">1 shared module extracted</span><span class="chip">Full migration pending</span></div>
+</div>
+</header>
+<div class="wrap layout">
+<nav aria-label="Sections">
+<strong>Review map</strong>
+<a href="#intent">1. The design</a>
+<a href="#ownership">2. What lives where</a>
+<a href="#weeks">3. Weekly hierarchy</a>
+<a href="#code">4. Shared code</a>
+<a href="#workflow">5. Reader → notebook</a>
+<a href="#status">6. What is shipped</a>
+<a href="#safety">7. Preservation</a>
+<a href="#review">8. What to review next</a>
+</nav>
+<main>
+<section id="intent">
+<h2>1. Organize around use, not around the agent that produced a file</h2>
+<p>The old layout mixed current reporting, historical experiments, plans, utilities and execution logic. The new structure separates three jobs:</p>
+<div class="flow" aria-label="Three complementary roles">
+<div class="node"><strong>Read and explain</strong><code>report/</code><small>One editable manuscript, its feedback and publishing tools. A companion notebook comes later.</small></div>
+<div class="arrow" aria-hidden="true">↔</div>
+<div class="node"><strong>Trace the evidence</strong><code>history/week-…/</code><small>What happened each week, what it established, and where the original evidence lives.</small></div>
+<div class="arrow" aria-hidden="true">↔</div>
+<div class="node"><strong>Inspect the method</strong><code>src/neuro/</code><small>Scientific objects and algorithms. Share genuine common behavior; keep study-specific methods explicit.</small></div>
+</div>
+<p class="caption">Conceptual organization, not a claim that every existing file has already moved.</p>
+</section>
+<section id="ownership">
+<h2>2. A small set of clear owners</h2>
+<div class="tree" role="img" aria-label="Target repository hierarchy: report, history organized by week and study, scientific source, launch scripts, tests, and living documentation">README.md                    short entry point
+report/                      current manuscript + future notebook
+history/
+  week-YYYY-MM-DD-topic/
+    README.md                weekly explanation and reading order
+    study-name/
+      report.html            reading artifact
+      protocol.md            study contract
+      execution.md           what actually ran
+      figures/               study evidence
+  operations/                dated delivery and recovery records
+src/neuro/
+  &lt;shared scientific modules&gt;
+  studies/                   study-specific scientific logic
+scripts/                     arguments → call implementation → exit
+tests/                       eventual explicit test tiers
+docs/                        living methods, design and recovery</div>
+<p class="caption"><strong>Target, not current inventory.</strong> <code>studies/</code>, the companion notebook and a consolidated <code>tests/</code> layout are not yet implemented. Existing tests retain their original discovery paths.</p>
+<div class="table-scroll"><table>
+<thead><tr><th scope="col">Surface</th><th scope="col">Owns</th><th scope="col">Does not own</th></tr></thead>
+<tbody>
+<tr><td>Root README</td><td>Where to begin and the current migration status</td><td>A second research history or recovery manual</td></tr>
+<tr><td>Report</td><td>Current narrative, feedback, publishing</td><td>Fresh experiments to fill an editorial gap</td></tr>
+<tr><td>Weekly history</td><td>Chronology and study evidence, with one owner per study</td><td>A new copy of shared algorithms per week</td></tr>
+<tr><td>Scientific source</td><td>Validation, scientific transformations and study implementations</td><td>A generic utility framework without real callers</td></tr>
+<tr><td>Scripts</td><td>CLI arguments, paths, invocation and exit handling</td><td>Hidden scientific implementation as the permanent architecture</td></tr>
+<tr><td>Living docs</td><td>Data/method contracts, current state and recovery map</td><td>Competing old “next work” queues</td></tr>
+</tbody></table></div>
+</section>
+<section id="weeks">
+<h2>3. Week → explanation → study → artifacts</h2>
+<p>Weeks run <strong>Monday–Sunday in Singapore time</strong>. Use names such as <code>week-2026-10-05-cue-and-endpoint-readouts</code>, not “week1” or a flat list of timestamped reports.</p>
+<ul class="timeline">
+<li><strong>Aug31–Sep6 · Graph and source support</strong><p>V5 and V6–V9 reading files, with links to source-support and geometry provenance.</p></li>
+<li><strong>Sep7–13 · Endpoint and path decoding</strong><p>Endpoint development, source-transfer findings, preprocessing and the matched-PCA launch.</p></li>
+<li><strong>Sep14–20 · PCA completion</strong><p>A short completion milestone. The study started September13, so its sole package belongs to the previous week.</p></li>
+<li><strong>Sep21–27 · Readouts and joint training</strong><p>Decoder/regularization comparisons, atlas, broader training, teaching and weekly review.</p></li>
+<li><strong>Sep28–Oct4 · Review and validation</strong><p>Professor-facing synthesis and a validation proposal—not another fitted experiment.</p></li>
+<li><strong>Oct5–11 · Cue and endpoint readouts</strong><p>Separate component and endpoint cohorts, followed by the research-direction discussion.</p></li>
+<li><strong>Oct12–18 · Retrospective</strong><p>Publishing and repository organization. Week in progress; no later days are invented. Links to the current report rather than duplicating it.</p></li>
+</ul>
+<div class="note"><p><strong>Dates have different meanings.</strong> Execution, report preparation, Git publication and merge dates are recorded separately. A filename is not proof of an execution date. Cross-week completion gets a link, not duplicated evidence.</p></div>
+</section>
+<section id="code">
+<h2>4. Shared objects where the science really is shared</h2>
+<div class="cards">
+<article class="card"><span class="tag done">Implemented</span><h3>The development split-access guard</h3><p><code>src/neuro/place195_split_access.py</code> now owns the unchanged reader/validation logic and the <code>SplitFilteredAccess</code>, <code>SplitFilteredAudit</code> and <code>SplitAccessError</code> objects.</p><p>Seven scientific callers import it explicitly. The old script is an import alias, preserving module/class identity—not a second implementation.</p></article>
+<article class="card"><span class="tag pending">Next slices</span><h3>Visible study implementations</h3><p>Move a coherent study family into <code>src/neuro/studies/</code>, then leave thin launchers in <code>scripts/</code>. Extract further shared objects only after their invariants and callers agree.</p><p>Most scientific bodies are still in <code>scripts/</code>. This is acknowledged migration work, not the finished design.</p></article>
+</div>
+<div class="split" style="margin-top:18px">
+<div><h3>Good reasons to share</h3><ul><li>The same definition of source-trial identity and allowed splits.</li><li>The same assembly or evaluation semantics across actual callers.</li><li>One correction should apply to every user of that method.</li></ul></div>
+<div><h3>Reasons to keep methods separate</h3><ul><li>Different targets, cohorts, conditioning or null hypotheses.</li><li>Different independent units or admissible timing windows.</li><li>Similar-looking code that implements different scientific contracts.</li></ul></div>
+</div>
+<p><strong>No catch-all <code>utils.py</code>.</strong> Reusability determines a module's role inside <code>src/</code>; it does not decide whether scientific logic deserves to be visible there.</p>
+</section>
+<section id="workflow">
+<h2>5. The notebook explains the same implementation</h2>
+<div class="flow" aria-label="Future notebook and launcher workflow">
+<div class="node"><strong>Inputs + contracts</strong><small>Declared cohort, source provenance, allowed splits and known limitations.</small></div>
+<div class="arrow" aria-hidden="true">→</div>
+<div class="node"><strong>Scientific implementation</strong><code>src/neuro/</code><small>Callable methods with explicit inputs/outputs, reused rather than copied.</small></div>
+<div class="arrow" aria-hidden="true">→</div>
+<div class="node future"><strong>Report + companion notebook</strong><small>Visible intermediate shapes/checks and explanations beside results. Notebook not yet built.</small></div>
+</div>
+<p class="caption">Target flow. The existing manuscript builder currently reads tracked aggregates and historical figures directly; it does not import scientific runners or fit models.</p>
+<p>The first notebook should explain approved report views from tracked aggregates. It should restart and run in order, show where each result comes from, and clearly distinguish a measured variable from a derived feature or interpretation.</p>
+<p><strong>Computational transparency is not formal neural-state observability.</strong> Creating a notebook does not authorize new data access, fitting or saved-model reanalysis.</p>
+</section>
+<section id="status">
+<h2>6. What this draft actually delivers</h2>
+<div class="table-scroll"><table>
+<thead><tr><th scope="col">Area</th><th scope="col">Current state</th><th scope="col">Still to do</th></tr></thead>
+<tbody>
+<tr><td>Current manuscript</td><td>Promoted to top-level <code>report/</code>; builder defaults to current manuscript</td><td>Editorial feedback and the separate frozen-integrity decision</td></tr>
+<tr><td>History</td><td>7 weekly overviews; 11 standalone HTML files physically moved, exact bytes preserved</td><td>Whole evidence packages and relative-link report migrations</td></tr>
+<tr><td>Shared science</td><td>1 stdlib-only split-access module extracted unchanged; callers/provenance updated</td><td>Remaining study implementations and thin launchers</td></tr>
+<tr><td>Cleanup</td><td>2 obsolete tracked paper-queue documents removed; high-level docs shortened and archived</td><td>Other redundant pointers only after ownership/dependencies are resolved</td></tr>
+<tr><td>Notebook</td><td>One companion agreed as the direction</td><td>Target/input contract, implementation and run-all validation</td></tr>
+</tbody></table></div>
+<h3 style="margin-top:24px">Checks kept deliberately small</h3>
+<ul><li>Three existing invented-data split checks plus one migration check: class identity, source hashes and cold imports.</li><li>One layout check covering moved HTML hashes, legacy aliases and weekly navigation.</li><li>Existing manuscript arithmetic and builder checks reused.</li><li>Generated manuscript and revision02 compared byte-for-byte with the pre-move builder.</li><li>Independent review found no issues in the first slice; it did not certify private replay or full scientific CLI behavior.</li></ul>
+<p class="muted">No new test framework, per-week suite, scientific fit or broad private-input test run. Large-module type checks were partly inconclusive, not a clean project-wide type-check result.</p>
+</section>
+<section id="safety">
+<h2>7. Preserve evidence, not the old clutter</h2>
+<div class="cards">
+<article class="card"><h3>Historical identity stays historical</h3><p>Legacy paths remain compatibility symlinks. Frozen protocols, original snapshots and receipts are not rewritten to make new locations pass old checks. Current callers hash the actual extracted implementation, not merely the alias.</p><p>Changed current source means historical approvals can be stale. Reproduction needs the recorded source/runtime/input contract—not a freshly blessed wrapper hash.</p></article>
+<article class="card"><h3>Private material stays untouched</h3><p>No data/model/prediction, runtime, PDF, submodule or retained worktree cleanup. The unrelated untracked current-state report is excluded from publication.</p><p>Deleting a paper queue does not delete its ignored PDFs. Git recovery is not a private-data backup.</p></article>
+</div>
+<div class="note" style="margin-top:18px"><span class="tag caution">Known unresolved integrity issue</span><p>The frozen retrospective HTML already differed from its original committed milestone before migration. The current state is checkpointed without replacing those bytes. Its exact-hash assertion still fails; the expected hash was not weakened. Resolve this explicitly before calling the frozen milestone verified.</p></div>
+<details><summary>Frozen-file identities and recovery</summary><p>Original milestone at <code>b55b10f</code>:</p><code class="short-code">86497662096908f5fa92f1d00747377b2046e07a37ea225ae8fdbedcc9dfbde6</code><p>Preserved working bytes at checkpoint <code>ebe8256</code>:</p><code class="short-code">849fe48f40f9d8140517393bd7686c4153cbf89860fa2eb820216300c00f1a5c</code><p>Both copies were preserved locally under <code>work/reorganization-weekly-audit/before-build/</code>. The original source/report tree remains recoverable from Git. Neither recovery route recreates ignored private scientific artifacts.</p></details>
+</section>
+<section id="review">
+<h2>8. Review the design before expanding the migration</h2>
+<ol class="checklist"><li><strong>Reading hierarchy:</strong> can you find the current report immediately, then move from week → study → evidence without interpreting filenames?</li><li><strong>Scientific ownership:</strong> is shared behavior visible in <code>src/</code>, while study-specific contracts stay explicit?</li><li><strong>Migration boundary:</strong> is it clear which files moved and which remain legacy? This draft intentionally does not claim a completed rewrite.</li><li><strong>Next extraction:</strong> choose one complete study family, preserve its provenance, and replace its script body with a launcher. Do not refactor all algorithms simultaneously.</li><li><strong>Publication gate:</strong> decide the frozen-file mismatch explicitly, then continue editorial work and define the notebook's approved inputs.</li></ol>
+<p>Recommended sequence: <strong>review this draft → migrate one scientific family → migrate its complete evidence package → build the companion notebook after its scope is agreed.</strong> Continue report editing independently; no scientific rerun is required by the directory design.</p>
+</section>
+</main>
+</div>
+<footer class="wrap footer">
+<p><strong>Offline artifact:</strong> all styling and diagrams are embedded; no JavaScript, remote assets, telemetry or server. This document reviews checkpoint <code>ebe8256</code> plus the documentation cleanup that accompanies it. It makes no new scientific claims.</p>
+<p>Repository navigation: <code>README.md</code> · <code>report/README.md</code> · <code>history/README.md</code> · <code>docs/reorganization.md</code> · <code>docs/workspace.md</code>. These are text references so a downloaded standalone copy has no broken local-file links.</p>
+</footer>
+</body>
+</html>

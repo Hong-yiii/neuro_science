@@ -1,5 +1,14 @@
 # Collaborative retrospective manuscript
 
+**October12 reorganization:** this is now the top-level report package.
+[Weekly reading history](../history/README.md) owns past deliveries; the future
+notebook will be one companion to this report. Detailed notebook targets remain open.
+The current frozen file has a **pre-existing local byte difference** from the
+committed milestone described below. Migration preserved it, not repaired it;
+`test_build.py` still reports that integrity failure. Both original versions are
+preserved locally under `work/reorganization-weekly-audit/before-build/`.
+See [migration status](../docs/reorganization.md).
+
 Created October 12, 2026. **Current reading version: revision 03, `manuscript.html`.**
 It is an expanded **CEBRA-Time-focused** paper-style draft with methods, results,
 literature references, existing empirical figures and visual construction/feature
@@ -16,7 +25,7 @@ old browser URL. Revision 01 is retained under the ignored
 `outputs/cebra-retrospective-20261012/revision-01/` directory.
 
 This manuscript complements the
-[October 11 evidence blueprint](../cebra-research-synthesis-20261011.md); it does
+[October 11 evidence blueprint](../docs/reports/cebra-research-synthesis-20261011.md); it does
 not replace that audit or adopt the separate future-research proposals.
 
 ## Frozen whole-file reading milestone — October 12
@@ -31,7 +40,7 @@ From GitHub, download the raw file and open it locally; GitHub's HTML source vie
 is not a rendered preview. A fresh clone can open it without Python, private
 artifacts, scientific dependencies or a server.
 
-It is a byte-identical copy of the verified portable manuscript: 2,670,108 bytes,
+The committed milestone was a byte-identical copy of the verified portable manuscript: 2,670,108 bytes,
 14 embedded PNGs and five inline SVGs, no scripts or server requirement. SHA-256:
 `86497662096908f5fa92f1d00747377b2046e07a37ea225ae8fdbedcc9dfbde6`.
 The original local `outputs/cebra-retrospective-20261012/retrospective-frozen-20261012.receipt.json`
@@ -45,9 +54,9 @@ Optional evidence links still require repository access.
 editorial completion. Pending feedback below remains recorded. The original
 export stays protected in ignored outputs; the identical versioned copy makes
 this report portable through Git, not a backup of the private scientific artifacts.
-The separate [repository reorganization proposal](../../repo-reorganization-plan-20261012.md)
-records the bounded archival work already applied. No scientific evidence or
-executable dependency was relocated.
+The [original reorganization proposal](../docs/repo-reorganization-plan-20261012.md)
+records the earlier filing pass. The [current migration record](../docs/reorganization.md)
+distinguishes newly moved reading files/shared code from retained frozen evidence.
 
 ## Reader feedback and next revision
 
@@ -86,9 +95,9 @@ and handoff; it does not claim the report revisions or notebook are complete.
    start/goal marginal views where saved aggregates support them, and define
    exactly which observations “within-bin variability” refers to. Preserve
    historical selection criteria and explicitly label unavailable diagnostics.
-2. Before notebook implementation, clarify “pair”: start–goal pair decoding or
-   two companion notebooks. Freeze its target/cohort, input availability and
-   intended reader; do not silently pick a new scientific question.
+2. The repository discussion now specifies one companion notebook. Before
+   implementation, freeze its target/cohort, input availability and intended
+   reader; do not silently select pair decoding or another scientific question.
 3. Proposed minimal first notebook: explain and reproduce approved report views
    from tracked aggregates, using narrative cells, visible input provenance,
    shape/count/split assertions, labeled figures, baselines and interpretation
@@ -110,14 +119,18 @@ Edit [manuscript.html](manuscript.html) for the next revision, preserving the
 revision 02 source [outline.html](outline.html). From the repository root:
 
 ```sh
-/usr/bin/python3 docs/reports/cebra-retrospective-20261012/test_build.py
-/usr/bin/python3 docs/reports/cebra-retrospective-20261012/test_path_summary.py
-/usr/bin/python3 docs/reports/cebra-retrospective-20261012/build.py manuscript.html
+/usr/bin/python3 report/test_build.py
+/usr/bin/python3 report/test_path_summary.py
+/usr/bin/python3 report/build.py
 ```
 
 This writes `outputs/cebra-retrospective-20261012/manuscript.html` separately.
-The no-argument command still rebuilds revision 02 from its own source; it does
-not apply revision 03 edits.
+The no-argument command now builds the current manuscript. Pass `outline.html`
+explicitly only to build revision 02. The two HTML sources retain historical
+relative evidence URLs: the builder resolves them against their original virtual
+base and keeps citations pinned to `4862267`, even when evidence has moved through
+a compatibility symlink. Treat them as build templates, not portable reading files;
+open the standalone output or frozen milestone for offline reading.
 
 The standard-library-only builder checks local navigation, unique IDs, image
 alternative text and the existence of every evidence path in accepted revision

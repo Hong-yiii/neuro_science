@@ -4,20 +4,34 @@ Updated 2026-10-12. Current focus is the
 [retrospective and its evidence](../docs/reports/README.md), not restarting runs.
 This map classifies existing entry points; it is not execution authorization.
 
+**Three-study package implemented:** full-trial transfer, endpoint-time and cue-time
+scientific bodies now live in [`neuro.studies`](../src/neuro/README.md), beside the
+shared split gate and equivalent execution/provenance seams. Their `cebra_*.py`
+files here are thin CLI/import aliases preserving module identity and old class
+lookup paths. Other scientific families remain legacy code outside the package;
+October15's uncommitted cleanup extracts only current helper dependencies into
+`neuro.raw_io`, `neuro.neural_inputs`, `neuro.cebra_solver` and `neuro.geometry` and
+removes `neuro.legacy_adapters`. Older script implementations stay unchanged as
+historical code, outside package support and not the current source of truth.
+Historical executed-source identities/approvals remain separate from changed
+current source. See [migration status](../docs/reorganization.md).
+
 ## 1. Current manuscript publishing — no scientific execution
 
 The tools live beside the manuscript, not in this directory:
 
 ```sh
-/usr/bin/python3 docs/reports/cebra-retrospective-20261012/test_build.py
-/usr/bin/python3 docs/reports/cebra-retrospective-20261012/test_path_summary.py
-/usr/bin/python3 docs/reports/cebra-retrospective-20261012/build.py manuscript.html
+/usr/bin/python3 report/test_build.py
+/usr/bin/python3 report/test_path_summary.py
+/usr/bin/python3 report/test_layout.py
+/usr/bin/python3 report/build.py
 ```
 
 They check presentation/archived aggregate arithmetic and package existing PNGs
 plus inline SVGs. They do not access raw data, fit or replay scientific models.
-Always specify `manuscript.html`; the older default builds revision 02.
-See [publishing and frozen-copy policy](../docs/reports/cebra-retrospective-20261012/README.md).
+The default now builds `manuscript.html`; revision02 requires explicit `outline.html`.
+The frozen checksum check still flags the preserved pre-existing local mismatch.
+See [publishing and frozen-copy policy](../report/README.md).
 
 ## 2. Retained scientific families behind the report
 
@@ -34,6 +48,13 @@ its provenance. Read the owning protocol before running anything.
 | Preprocessing and matched PCA | `place195_path_preprocessing_autoresearch.py`, `place195_matched_pca.py`, matched builders/verifiers | [Preprocessing](../docs/reports/path-preprocessing-autoresearch-20260908.md), [PCA](../docs/reports/path-pca-matched/README.md) |
 | Frozen readout and geometry diagnostics | `cebra_decoder_autoresearch.py`, `cebra_hyperparameter_diagnosis.py`, `cebra_latent_atlas.py` | [Decoders](../docs/reports/cebra-decoder-autoresearch-20260924.md), [diagnosis](../docs/reports/cebra-hyperparameter-diagnosis-20260924.md), [atlas](../docs/reports/cebra-latent-atlas-results-20260924.md) |
 
+The three aliases support both `python -m scripts.cebra_<name> --help` and direct
+`python scripts/cebra_<name>.py --help`; package imports use
+`from neuro.studies import full_trial_transfer, endpoint_time_readout, cue_time_readout`
+with `PYTHONPATH=src`. No installation is needed. Package code manifests include the
+actual implementations and transitive helpers, not only these aliases. Current
+approvals intentionally become stale; do not rewrite old hashes to accept this checkout.
+
 A historical report builder can read private results or saved models. It is not
 interchangeable with the manuscript's presentation-only builder. Scientific
 verification/replay can access private predictions even without fitting; obtain
@@ -41,16 +62,18 @@ separate approval for that work. No new fit is queued.
 
 ## 3. Shared dependencies, not disposable initial-trial code
 
-- `import_place195_sessions.py`, `place195_split_filtered_access.py`, V7/V8
-  helpers and V8b/V9 solver helpers are imported across retained studies.
+- `import_place195_sessions.py`, V7/V8 helpers and V8b/V9 solver helpers remain
+  used by older script families, not by the three maintained package workflows. `place195_split_filtered_access.py` now only
+  aliases `src/neuro/place195_split_access.py`, the shared scientific implementation.
 - `place195_graph_path_baseline.py` and `place195_split_and_behavior_audit.py`
   carry graph/source-split infrastructure despite their early names.
 - `docs/cebra_pilot/implementation/{contracts,paths,splits}.py` are imported by
   later code. Its package initializer also imports `neural.py`; preserve it.
 - `data.py` and `inspect_spatial_bin_jld2.py` remain local data utilities, not
   authorized data-access commands merely because they are listed here.
-- Root calculations, bare sibling imports and helper hashes depend on original
-  paths. A wrapper or rename can break byte-level provenance even if imports work.
+- The packaged family's source paths/manifests now resolve its actual implementation.
+  Other legacy families still have original-path/bare-import assumptions; another
+  relocation needs a caller/provenance audit, not only a successful import.
 
 ## 4. Historical smoke or excluded modeling branches
 
@@ -59,14 +82,18 @@ not the main workflow, while retaining their executable paths:
 
 - Pilot `preflight.py` and `manifest.py`: initial synthetic/one-cell smoke CLI
   and output writer. Pilot tests and documented module commands still refer to them.
-- `start_goal_ce_followup.py`: the older cross-entropy encoder branch, excluded
-  from the current Time-focused manuscript; retained in owning endpoint provenance.
+- `start_goal_ce_followup.py`: **deprecated for new Time-focused work**, the older
+  cross-entropy encoder branch excluded from the current manuscript. Its path remains
+  available for historical provenance/tests; deprecation is not deletion.
 - Early data feasibility, V4/V5 notes and initial-trial outputs: historical
   software/selection evidence, not current neural prediction results.
 
-No scientific source, script, test or private initial-trial output was relocated
-or deleted in this filing pass. Full code archival needs a separate dependency
-and compatibility change; no whole test was established as safely obsolete.
+The supported family and its active helper closure are now packaged. Whole older
+families are intentionally not migrated. Removal of any old external entry point still
+requires caller/provenance proof and historical recovery coverage. Earlier endpoint,
+V6–V9, path/preprocessing and decoder/atlas experiments are historical retained families,
+not a run queue or disposable code. No scientific test/private output was removed;
+no whole older helper/test was established as safely obsolete.
 
 ## 5. Tests are not all clone-only or private-input-free
 
@@ -83,6 +110,13 @@ Thus the broad runner's “without private lab inputs” description is not a sa
 execution guarantee. This was found by reading source; the test was not run.
 Classifying/gating private-input tests is a separate follow-up, not solved by
 archiving their coverage. Import-time side effects must also be checked.
+
+For the new package use the focused, non-fitting `scripts.test_neuro_study_package`
+suite in the existing runtime and the stdlib split suite; commands/coverage are in
+[the package README](../src/neuro/README.md#safe-validation-and-notebook-decision).
+The migration AST check requires the pinned `cc0527e` Git object. Do not run whole
+study-test modules as a substitute: several fit even on invented arrays. Notebook
+integration remains the user's open decision; this package adds no notebook.
 
 The pilot `tests/test_framework.py` mixes historical smoke checks with shared
 contract/path/split checks. Keep the whole module until a reviewed split retains

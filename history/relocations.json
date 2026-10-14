@@ -1,0 +1,61 @@
+{
+  "baseline_revision": "b55b10f",
+  "scope": "Byte-preserved offline reading artifacts; old paths are compatibility symlinks. Protocols and scientific source packages stay at original locations in this slice.",
+  "files": [
+    {
+      "original": "docs/professor_updates/place195_v5_20260902/place195-v5-professor-methods-results-validity-20260902.html",
+      "current": "history/week-2026-08-31-graph-and-source-support/v5/report.html",
+      "sha256": "c85296ad81e1bbcd92854d446ed26ea3bebbf809f61368e15fd2bd85db6c40ba"
+    },
+    {
+      "original": "docs/professor_updates/place195_v6_v9_20260906/place195-v6-v9-professor-methods-results-validity-20260906.html",
+      "current": "history/week-2026-08-31-graph-and-source-support/v6-v9/report.html",
+      "sha256": "525e2967040bf9dc4e14ba51d64c2d7c3abe00cb4337b440d7b488e901a78ce6"
+    },
+    {
+      "original": "docs/professor_updates/start_goal_20260907/endpoint-research-report.html",
+      "current": "history/week-2026-09-07-endpoint-and-path-decoding/endpoint/report.html",
+      "sha256": "f5e33d42a4b74a18078e970fdccd6c40e82d44660a544b125e531ed10562f52b"
+    },
+    {
+      "original": "docs/professor_updates/path_generalization_20260907/path-generalization-teaching-audit-20260907.html",
+      "current": "history/week-2026-09-07-endpoint-and-path-decoding/path-generalization/report.html",
+      "sha256": "cc941bed4aad08ff042c09895f871ce7f809221fc002d81f0078954c5cd65ec2"
+    },
+    {
+      "original": "docs/professor_updates/weekly_progress_20260913/weekly-progress.html",
+      "current": "history/week-2026-09-07-endpoint-and-path-decoding/weekly-progress.html",
+      "sha256": "72107b96ff0cf7a33990982c60cf51a75a8b3106d693b925ced98245b08d7830"
+    },
+    {
+      "original": "docs/reports/path-pca-matched/report.html",
+      "current": "history/week-2026-09-07-endpoint-and-path-decoding/matched-pca/report.html",
+      "sha256": "d5c6e10f01de1e56dced7656c7403db317a2622262fbf608624081617285bbf4"
+    },
+    {
+      "original": "docs/reports/cebra-latent-atlas/atlas.html",
+      "current": "history/week-2026-09-21-readouts-and-joint-training/atlas/atlas.html",
+      "sha256": "dba38d33c0f03ecd9a10a4246175280788312f6abfdadb4fc6727f1dafa445d5"
+    },
+    {
+      "original": "docs/reports/research-reset-20260926/review.html",
+      "current": "history/week-2026-09-21-readouts-and-joint-training/reviews/weekly-review.html",
+      "sha256": "af6ed80eb77434c5f55fdea36d8a35a0bb6a0bf78d292a6ec9658895e621a5bf"
+    },
+    {
+      "original": "learning/cebra-time-transfer-teach-max-20260925.html",
+      "current": "history/week-2026-09-21-readouts-and-joint-training/joint-training/teaching.html",
+      "sha256": "8ef382cc5216e2a2b67b02a5494cbc13463d45f7fc6644d61219e81964a86664"
+    },
+    {
+      "original": "docs/professor_updates/research_review_20260928/review.html",
+      "current": "history/week-2026-09-28-review-and-validation/professor-review/report.html",
+      "sha256": "fb45c9c80593c0d4273b31df77a837adb2c0ba8083f2729cf2712f3ac6f43357"
+    },
+    {
+      "original": "docs/reports/cebra-endpoint-time-readout-20261006/report.html",
+      "current": "history/week-2026-10-05-cue-and-endpoint-readouts/endpoints/report.html",
+      "sha256": "e5bbe859358e5648ba349a3f5601506c333c99fabbaade19fe7393cd8b3832e8"
+    }
+  ]
+}
