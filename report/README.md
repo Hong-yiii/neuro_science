@@ -1,7 +1,12 @@
-# CEBRA-Time retrospective
+# CEBRA-Time review notebook and retrospective
 
-**Working draft 03, not a finished paper.** This package owns the current manuscript,
-its editorial feedback and presentation-only tools. Past studies live in
+**Start with the [executed review notebook](endpoint_walkthrough.ipynb).** It follows
+saved standardized cue → fitted PCA/CEBRA → readouts → verified evidence, with inline
+equations, tensor diagrams, source-count views, confusions and all-seed comparisons.
+GitHub renders its saved outputs without access to the private artifacts.
+
+**Manuscript: working draft 03, not a finished paper.** This package owns the notebook,
+current manuscript, editorial feedback and presentation tools. Past studies live in
 [weekly history](../history/README.md); the [evidence catalog](../docs/reports/README.md)
 links their original methods, results and limitations.
 
@@ -9,6 +14,8 @@ links their original methods, results and limitations.
 
 | File | Purpose |
 | --- | --- |
+| [endpoint_walkthrough.ipynb](endpoint_walkthrough.ipynb) | Primary professor-facing artifact; executed saved-model walkthrough, 14 code cells and 15 inline images |
+| [endpoint_replay.py](endpoint_replay.py) | Narrow authenticated observed-input adapter using current package operations; no fits |
 | [manuscript.html](manuscript.html) | Editable revision03 source; build before reading offline |
 | [retrospective-frozen-20261012.html](retrospective-frozen-20261012.html) | Standalone reading file; preserved checksum difference below |
 | [feedback-20261012.md](feedback-20261012.md) | Original feedback and remaining editorial checklist |
@@ -25,6 +32,7 @@ From the repository root, using Python's standard library:
 ```sh
 python3 report/test_layout.py
 python3 report/test_path_summary.py
+python3 report/test_editorial.py
 python3 report/test_build.py
 python3 report/build.py
 ```
@@ -57,19 +65,69 @@ The original Git blob is recoverable with
 Do not change the expected hash just to make the check pass. The builder checks run
 before this integrity assertion, but that does **not** make the full test green.
 
-## Next work: report first; notebook/package integration remains open
+## Saved-artifact notebook: execution and boundaries
 
-1. Finish the [feedback ledger](feedback-20261012.md): defer shuffle/loss detail,
-   distinguish training diagnostics from scientific results, clarify real-source
-   marginal counts and within-bin variability. Do not run missing analyses to fill gaps.
-2. Scope the intended companion notebook: target/cohort and approved inputs first.
-   **Whether/how it uses the [scientific package](../src/neuro/README.md) remains open**,
-   depending on the notebook's needs and complexity. A tracked-aggregate presentation
-   notebook need not import scientific runners. No notebook is created by this change.
-3. Keep provenance and shape/count/split assertions visible beside figures. Where a
-   notebook actually needs existing algorithms, prefer imports over copied implementations.
-   Require restart-and-run-all without hidden state. Private predictions/checkpoints must
-   not leak into committed outputs; fits and replay need separate approval.
+October19 owner-approved scope: the accepted October7 **observed endpoint** artifacts,
+seeds0–2, not raw recordings or null worlds. The notebook freshly replays six CEBRA
+encoders, three PCA states and **495 fitted readouts / 990 split-level score rows**,
+with zero fits. Authentication precedes parsing and pickle deserialization; never
+substitute an untrusted checkpoint. Private arrays, per-example predictions and source
+identifiers remain in memory and outside the published notebook.
+
+This is a **new saved-input replay using current package operations**, not a rerun of
+the historical full verifier. It starts at authenticated `scaled_cue.npz`: original
+source assembly, input-scaler fitting, navigation preparation and null controls remain
+inherited evidence, not newly reproduced. No old approval, helper hash or artifact is
+rewritten. See the notebook's verification ledger and original study links.
+
+The recorded scientific runtime is separate from `pyproject.toml`/`uv.lock`. On this
+host, a notebook-only overlay inherits the retained scientific environment; creating
+it does not modify that runtime:
+
+```sh
+scratch/v6-v9-runtime/bin/python -B -m venv \
+  --without-pip --system-site-packages scratch/endpoint-notebook-runtime
+uv pip install --python scratch/endpoint-notebook-runtime/bin/python \
+  -r report/requirements-notebook.txt
+```
+
+For a deliberate, authorized re-execution from the repository root:
+
+```sh
+export PYTHONPATH="$PWD/src:$PWD/report:$PWD/scratch/v6-v9-runtime/lib/python3.13/site-packages"
+export PYTHONNOUSERSITE=1 PYTHONDONTWRITEBYTECODE=1
+scratch/endpoint-notebook-runtime/bin/python -B report/run_endpoint_notebook.py
+scratch/endpoint-notebook-runtime/bin/python -B report/test_endpoint_notebook.py
+```
+
+The runner clears outputs, creates a temporary kernelspec, executes all14 code cells
+in a fresh native kernel, checks outputs, then replaces the tracked notebook and writes
+`outputs/endpoint-notebook/endpoint_walkthrough.html`. It starts no server and leaves
+no registered kernel. The HTML contains inline PNG equations/figures and needs neither
+MathJax nor a network connection. Reading existing outputs requires no scientific runtime;
+execution requires the approved private run, matching package versions and original CUDA
+backend. Notebook execution metadata records UTC time and helper/code hashes.
+
+**Numerical detail:** retain the original two-thread BLAS budget. A one-thread attempt
+passed feature replay but failed five probabilities in the seed0 whole-cue pair LDA
+readout (maximum difference4.17×10⁻⁷); changing only BLAS threads to two reproduced them
+exactly. The full fresh-kernel pass retains the original feature/probability tolerances,
+exact labels/predictions and `1e-9` score agreement; no tolerance was relaxed.
+
+[Focused tests](test_endpoint_notebook.py) cover authentication, observed-only scope,
+no-fit/thread guards and the executed artifact. Without the scientific environment,
+the fit-guard test explicitly skips; the recorded-runtime command above must pass it.
+Local preparation/render checks remain under `work/endpoint-notebook-20261019/`, and
+native execution logs under the owning session's `.pi/tasks/`; these are not public data.
+
+## Remaining editorial work
+
+Review the October19 [editorial pass](feedback-20261012.md#october19-editorial-pass--training-metrics-and-controls):
+training/validation is §2.4, with historical checkpoint accuracy and the latest endpoint
+training–development gap; shuffle-heavy detail and displayed loss metrics are deferred
+while original criteria and limitations remain. The notebook now supplies real-source
+start/goal marginals. A definition of within-bin variability and a matched latest-endpoint
+checkpoint trajectory remain unavailable; do not run missing analyses merely to fill gaps.
 
 Here observability means inspectable computation, not formal observability of neural
 state. Endpoint decoding, binary path components and full ordered routes remain distinct;

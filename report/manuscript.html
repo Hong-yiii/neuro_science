@@ -317,6 +317,7 @@
         <nav aria-label="Manuscript contents">
           <a href="#abstract">Abstract</a
           ><a href="#introduction">Introduction</a><a href="#methods">Methods</a
+          ><a href="#training-validation">Training and validation</a
           ><a href="#results">Results</a><a href="#discussion">Discussion</a
           ><a href="#conclusions">Conclusion</a
           ><a href="#supporting">Supporting information</a
@@ -336,20 +337,20 @@
           start, goal and ordered start–goal conditions. In the latest matched
           endpoint comparison, whole-cue pair balanced accuracy was 83.61% for
           PCA, 75.56% for jointly trained cue/navigation CEBRA, 70.28% for raw
-          features and 63.75% for cue-only CEBRA. Joint CEBRA had slightly lower
-          pair probability loss than PCA, demonstrating a metric-dependent
-          ranking. Separate path-component studies exposed a large gap between
-          transfer to new mixtures of familiar source trials and transfer to
-          different sources. Nonlinear readouts and broader regularization
-          searches did not rescue the tested frozen CEBRA path representations.
-          Broader encoder training and individual cue windows produced
-          descriptive improvements, but absolute-performance and shuffled-label
-          controls did not establish robust path information beyond endpoints.
-          Projection and checkpoint diagnostics further separated display
-          geometry from predictive utility. These findings support conditional
-          task-information recovery in the constructed populations, rather than
-          general CEBRA superiority, validated full-route prediction or recovery
-          of trial-specific hippocampal states.
+          features and 63.75% for cue-only CEBRA. The strongest representation
+          depended on the endpoint target. Separate path-component studies
+          exposed a large gap between transfer to new mixtures of familiar
+          source trials and transfer to different sources. Nonlinear readouts
+          and broader regularization searches did not rescue the tested frozen
+          CEBRA path representations. Broader encoder training and individual
+          cue windows produced descriptive improvements, but the original
+          absolute-performance and control criteria did not establish robust
+          path information beyond endpoints. Projection and checkpoint
+          diagnostics further separated display geometry from predictive
+          utility. These findings support conditional task-information recovery
+          in the constructed populations, rather than general CEBRA superiority,
+          validated full-route prediction or recovery of trial-specific
+          hippocampal states.
         </p>
         <p class="keywords">
           <strong>Keywords:</strong> hippocampus; navigation; CEBRA; neural
@@ -1422,7 +1423,78 @@
             >endpoint readout protocol</a
           >.
         </p>
-        <h4>Representation fitting</h4>
+        <h3 id="training-validation">2.4. Training and validation</h3>
+        <p>
+          Representation fitting and decoder fitting answer different questions.
+          CEBRA-Time learns a mapping from one population bin to eight features;
+          a separate supervised readout learns to predict a task label from
+          those features. A successful fit to training rows is not evidence of
+          transfer to different real sources. The sequence below applies within
+          each study's declared source split, not across pooled study
+          populations.
+        </p>
+        <div
+          class="table-wrap"
+          tabindex="0"
+          role="region"
+          aria-label="Training and evaluation stages"
+        >
+          <table>
+            <caption>
+              What is fitted, and what stays fixed at evaluation?
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Stage</th>
+                <th scope="col">Training sources</th>
+                <th scope="col">Exposed-development sources</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1 · Assemble inputs</td>
+                <td>Draw intact session blocks from training pools.</td>
+                <td>
+                  Use separate source pools; known labels still condition
+                  assembly.
+                </td>
+              </tr>
+              <tr>
+                <td>2 · Fit the representation</td>
+                <td>
+                  Fit scaling and PCA or CEBRA. Joint CEBRA adds training-source
+                  navigation.
+                </td>
+                <td>
+                  Apply the fitted cue-input transform and encoder unchanged.
+                </td>
+              </tr>
+              <tr>
+                <td>3 · Fit the readout</td>
+                <td>
+                  Fit a separate classifier for each declared target and feature
+                  view.
+                </td>
+                <td>
+                  Freeze its scaling and classifier; do not fit on development
+                  labels.
+                </td>
+              </tr>
+              <tr>
+                <td>4 · Inspect predictions</td>
+                <td>
+                  Training scores diagnose fit to the constructed training rows.
+                </td>
+                <td>
+                  Class recall and confusion matrices describe source-disjoint
+                  performance, but repeated inspection makes this development,
+                  not untouched confirmation.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <h4>Representation fitting: one bin in, eight coordinates out</h4>
         <p>
           Raw inputs were spike-count features or study-specific rate summaries.
           PCA fitted one shared basis to pooled training-bin vectors, not a
@@ -1469,6 +1541,7 @@
           activity only. Joint training is not navigation-time decoding or
           frozen cross-phase transfer.
         </p>
+        <h4>Readout fitting: task labels enter a separate classifier</h4>
         <p>
           The latest endpoint comparison used separate pair30, start6 and goal6
           logistic heads with training-only scaling, <i>C</i> = 0.01 and at most
@@ -1493,18 +1566,261 @@
           capacity-matched.
         </p>
 
-        <h3>2.4. Evaluation, controls and reproducibility</h3>
+        <h4>Diagnostics: what the available checks can establish</h4>
         <p>
-          Balanced accuracy (BA) averages class recall; logarithmic loss
-          measures probability quality and penalizes confident errors.
-          Chance-reference BA is 1/30 for ordered pair, 1/6 for start or goal,
-          and 1/2 for binary components. Uniform-prediction losses are log(30),
-          log(6) and log(2), respectively. Loss improvement is reported with its
-          reference stated explicitly; a positive gain over a poor model does
-          not necessarily beat constant prediction. AUROC measures ranking
-          rather than a particular classification threshold. No
-          development-selected threshold inversion was used to turn below-chance
-          results into successful predictions.
+          Training progress must be checked against predictions on different
+          sources, not just the encoder's optimization objective. The historical
+          checkpoint diagnostic below is separate from the latest fixed-budget
+          cue/joint comparison; it does not select a new stopping point.
+        </p>
+        <figure id="fig-training-checkpoints">
+          <div
+            class="figure-scroll"
+            tabindex="0"
+            role="region"
+            aria-label="Figure 2D, historical Time checkpoint readout accuracy"
+          >
+            <svg
+              viewBox="0 0 900 390"
+              role="img"
+              aria-labelledby="checkpoint-title checkpoint-desc"
+            >
+              <title id="checkpoint-title">
+                Historical CEBRA-Time checkpoint readout accuracy
+              </title>
+              <desc id="checkpoint-desc">
+                Training and exposed-development pair accuracy both decrease at
+                250, 1000 and 3000 encoder updates. Points are three-seed means;
+                vertical ranges show seed minima and maxima, not confidence
+                intervals. A separate logistic readout was fitted at each
+                checkpoint.
+              </desc>
+              <g font-family="system-ui, sans-serif" font-size="16" fill="#222">
+                <text x="80" y="25" fill="#245370">● Training readout</text>
+                <text x="310" y="25" fill="#9b4b00">
+                  ● Exposed-development readout
+                </text>
+                <text x="8" y="50">Accuracy (%)</text>
+                <g stroke="#ddd" stroke-width="1">
+                  <path d="M80 60H730 M80 120H730 M80 180H730 M80 240H730" />
+                </g>
+                <path d="M80 60V300H730" fill="none" stroke="#555" />
+                <g text-anchor="end">
+                  <text x="70" y="66">100</text>
+                  <text x="70" y="126">75</text>
+                  <text x="70" y="186">50</text>
+                  <text x="70" y="246">25</text>
+                  <text x="70" y="306">0</text>
+                </g>
+                <path
+                  d="M80 292H730"
+                  fill="none"
+                  stroke="#777"
+                  stroke-dasharray="4 4"
+                />
+                <text x="450" y="280">Uniform reference: 3.33%</text>
+                <g text-anchor="middle">
+                  <text x="130" y="326">250</text>
+                  <text x="280" y="326">1,000</text>
+                  <text x="680" y="326">3,000</text>
+                  <text x="405" y="358">Encoder updates (linear scale)</text>
+                </g>
+                <polyline
+                  data-checkpoint-line="train"
+                  fill="none"
+                  stroke="#245370"
+                  stroke-width="2"
+                  points="130,83.833333 280,103.166667 680,128"
+                />
+                <polyline
+                  data-checkpoint-line="development"
+                  fill="none"
+                  stroke="#9b4b00"
+                  stroke-width="2"
+                  stroke-dasharray="7 4"
+                  points="130,132.666667 280,176 680,208.666667"
+                />
+                <g fill="#245370" stroke="#245370" text-anchor="middle">
+                  <g data-checkpoint-split="train" data-step="250">
+                    <line x1="130" x2="130" y1="74" y2="89" stroke-width="4" />
+                    <circle cx="130" cy="83.833333" r="5" />
+                    <text x="148" y="65" stroke="none" data-checkpoint-mean="">
+                      90.07%
+                    </text>
+                  </g>
+                  <g data-checkpoint-split="train" data-step="1000">
+                    <line x1="280" x2="280" y1="93" y2="111" stroke-width="4" />
+                    <circle cx="280" cy="103.166667" r="5" />
+                    <text x="300" y="83" stroke="none" data-checkpoint-mean="">
+                      82.01%
+                    </text>
+                  </g>
+                  <g data-checkpoint-split="train" data-step="3000">
+                    <line
+                      x1="680"
+                      x2="680"
+                      y1="117.5"
+                      y2="133.5"
+                      stroke-width="4"
+                    />
+                    <circle cx="680" cy="128" r="5" />
+                    <text x="680" y="108" stroke="none" data-checkpoint-mean="">
+                      71.67%
+                    </text>
+                  </g>
+                </g>
+                <g fill="#9b4b00" stroke="#9b4b00" text-anchor="middle">
+                  <g data-checkpoint-split="development" data-step="250">
+                    <line
+                      x1="130"
+                      x2="130"
+                      y1="121"
+                      y2="152"
+                      stroke-width="4"
+                    />
+                    <circle cx="130" cy="132.666667" r="5" />
+                    <text x="148" y="173" stroke="none" data-checkpoint-mean="">
+                      69.72%
+                    </text>
+                  </g>
+                  <g data-checkpoint-split="development" data-step="1000">
+                    <line
+                      x1="280"
+                      x2="280"
+                      y1="161"
+                      y2="194"
+                      stroke-width="4"
+                    />
+                    <circle cx="280" cy="176" r="5" />
+                    <text x="280" y="216" stroke="none" data-checkpoint-mean="">
+                      51.67%
+                    </text>
+                  </g>
+                  <g data-checkpoint-split="development" data-step="3000">
+                    <line
+                      x1="680"
+                      x2="680"
+                      y1="192"
+                      y2="220"
+                      stroke-width="4"
+                    />
+                    <circle cx="680" cy="208.666667" r="5" />
+                    <text x="680" y="242" stroke="none" data-checkpoint-mean="">
+                      38.06%
+                    </text>
+                  </g>
+                </g>
+              </g>
+            </svg>
+          </div>
+          <figcaption>
+            <strong
+              >Figure 2D. More encoder updates did not improve task readout in
+              this historical checkpoint comparison.</strong
+            >
+            September endpoint cohort: 195 units/58 sessions, 12,288 training /
+            3,265 exposed-development real sources, 480/240 label-conditioned
+            rows per seed. Cue-only Time, temperature 1; ten eight-coordinate
+            bins concatenate to 80 features for 30-way pair prediction. At each
+            checkpoint, a new training-fitted scaler and logistic readout (<i
+              >C</i
+            >
+            = 0.01) evaluated training and development embeddings. Points are
+            means of seeds 0–2; vertical bars show their min–max, not biological
+            confidence intervals. Connecting lines guide the eye between saved
+            checkpoints; they are not measurements at every update. Training
+            accuracy is the downstream readout's score on training rows, not a
+            classification objective optimized by the encoder. Both curves
+            decline. The readout setting had been chosen using earlier
+            development diagnosis; neither this curve nor its best point is
+            independent confirmation or a validated early-stopping rule. Source:
+            the embedded metric CSV in the
+            <a
+              href="../../professor_updates/start_goal_20260907/endpoint-research-report.html"
+              >historical endpoint report</a
+            >, selecting <code>case=time_t1</code> and
+            <code>target=joint</code>. Here “joint” names the ordered-pair
+            target, <em>not</em> joint cue/navigation training. This redraw uses
+            only tracked aggregates; no model was loaded or refitted.
+          </figcaption>
+        </figure>
+        <figure id="fig-training-gap">
+          <div
+            class="figure-scroll"
+            tabindex="0"
+            role="region"
+            aria-label="Figure 2E, latest endpoint training minus development gap"
+          >
+            <img
+              src="../cebra-endpoint-time-readout-20261006/figures/training_development_gap.png"
+              alt="Training minus development balanced accuracy across cue bins and whole cue for pair, start and goal, with raw, PCA, cue-Time, joint-Time and LDA references."
+            />
+          </div>
+          <figcaption>
+            <strong
+              >Figure 2E. Training–development gaps in the latest endpoint
+              comparison.</strong
+            >
+            October endpoint cohort: 195 units/58 sessions, 12,288/3,265 real
+            sources and 480/240 pair-balanced constructed rows per seed.
+            Cue/joint encoders have a fixed 1,000-update budget. The horizontal
+            axis is cue bin index 0–9 (100-ms bins from cue onset) plus a
+            separately fitted whole-cue readout, <em>not</em> encoder updates.
+            The vertical axis is training minus development BA: 0.1 is ten
+            percentage points; the dotted zero line means equal scores. Lines
+            are three-seed means, shading seed min–max, not biological
+            intervals. Each bin has its own readout; raw/PCA/CEBRA use logistic
+            <i>C</i> = 0.01 and raw SVD-LDA is separate. A small gap can occur
+            when both scores are poor: read this together with absolute
+            development performance in Figures 3–4, not as a method ranking or
+            proof of training validity. Source:
+            <a href="../cebra-endpoint-time-readout-20261006/README.md"
+              >accepted endpoint report</a
+            >; existing image unchanged.
+          </figcaption>
+        </figure>
+        <p>
+          Count and row-normalized confusion matrices complement an average
+          score. Counts show how many constructed examples fall in each error
+          category; row normalization shows recall within each true class.
+          <a href="#fig-s4">Figure S4</a> gives the endpoint pair errors at the
+          explicitly identified seed zero;
+          <a href="#fig-path-failure">Figure 5</a>
+          gives all three cue/joint path seeds. These are development
+          predictions, not encoder training curves or independent biological
+          replications. Their class-specific interpretation follows with the
+          scientific results.
+        </p>
+        <p>
+          <strong>Diagnostic gaps.</strong> A matched accuracy-versus-update
+          trajectory for the latest endpoint cue/joint comparison is not
+          supplied here. Nor is a plot of neural variability within a bin:
+          variation across real sources, assembled examples, classes and
+          computational seeds would measure different things. The intended
+          quantity and its source-aware denominator must be defined before
+          adding that panel. The displayed seed ranges must not be relabeled as
+          neural variability.
+        </p>
+
+        <h3>2.5. Evaluation, controls and reproducibility</h3>
+        <p>
+          Ordinary accuracy is the fraction of correctly classified examples.
+          Class recall is the fraction correct within one true class; balanced
+          accuracy (BA) is the unweighted mean of those recalls. Thus an
+          always-absent predictor on the 24-absent/six-present path combinations
+          gets 80% ordinary accuracy but only 50% BA. Uniform-reference BA is
+          1/30 for ordered pair, 1/6 for start or goal, and 1/2 for binary
+          components. AUROC, retained where needed to describe historical
+          readout criteria, measures ranking rather than one classification
+          threshold. No development-selected threshold inversion was used to
+          turn below-chance results into successful predictions.
+        </p>
+        <p>
+          This presentation leads with accuracy, BA, class recall and confusion
+          matrices. Original probability-loss selection and success criteria
+          remain unchanged in the study records; they are not retrospectively
+          replaced by accuracy criteria. The encoder's optimization objective is
+          also distinct from these downstream evaluation metrics.
         </p>
         <p>
           Constructed rows, neighboring bins and computational seeds are
@@ -1518,15 +1834,12 @@
           additional recorded populations.
         </p>
         <p>
-          Source-coherent nulls permuted labels before conditional assembly and
-          repeated the specified fitting procedure. October comparisons retained
-          20 null worlds, giving a minimum inclusive plus-one tail fraction of
-          1/21. Seed averaging preceded the predefined maxima across targets,
-          windows or methods. The five-endpoint study instead used 100 ordinary
-          and 100 temporal-half worlds, repeating selection within each null.
-          These references ask whether a declared statistic is unusual under a
-          specific no-association construction; they are not interchangeable
-          tests of method superiority. Historical exposure, serial
+          Detailed shuffled-label figures and numerical comparisons are deferred
+          to the <a href="#study-records">original study records</a>, not
+          discarded from the evidence. Those controls did not establish a
+          reliable optimal path window or general joint-training superiority.
+          Omitting their detail here does not validate inspected peaks or
+          reverse a failed original criterion. Historical exposure, serial
           exchangeability and nuisance structure remain unresolved. Small sample
           support cannot be repaired merely by reporting variability across
           repeated fitting runs <a href="#ref-validation">[4]</a>.
@@ -1549,17 +1862,16 @@
       <section id="results">
         <h2>3. Results</h2>
         <h3 id="endpoints">
-          3.1. Endpoint conditions were recoverable, with target- and
-          metric-dependent method rankings
+          3.1. Endpoint conditions were recoverable, with target-dependent
+          accuracy rankings
         </h3>
         <p>
           The initial endpoint baseline established recoverable condition
           information but did not favor its fixed CEBRA configuration. With the
           original logistic <i>C</i> = 1 readout, pair accuracy was 54.86% for
           one-second raw totals, 71.39% for ten-bin raw counts and 82.50% for
-          PCA8/bin, compared with 42.78% for CEBRA-Time. These methods exceeded
-          their corresponding 20 source-shuffle means, but those low-resolution
-          references did not make the exposed development pool confirmatory.
+          PCA8/bin, compared with 42.78% for CEBRA-Time. These are exploratory
+          scores on an exposed development pool, not confirmatory evidence.
           Readout regularization changed the frozen Time score (§3.3).
         </p>
         <p>
@@ -1590,7 +1902,6 @@
                 <th scope="col">Pair BA</th>
                 <th scope="col">Start BA</th>
                 <th scope="col">Goal BA</th>
-                <th scope="col">Pair log loss ↓</th>
               </tr>
             </thead>
             <tbody>
@@ -1599,35 +1910,30 @@
                 <td>70.28%</td>
                 <td>78.75%</td>
                 <td>90.83%</td>
-                <td>2.1701</td>
               </tr>
               <tr>
                 <td>PCA8/bin + logistic</td>
                 <td>83.61%</td>
                 <td>89.44%</td>
                 <td>86.81%</td>
-                <td>1.6736</td>
               </tr>
               <tr>
                 <td>Cue-only CEBRA-Time + logistic</td>
                 <td>63.75%</td>
                 <td>71.81%</td>
                 <td>85.14%</td>
-                <td>1.7795</td>
               </tr>
               <tr>
                 <td>Joint CEBRA-Time + logistic</td>
                 <td>75.56%</td>
                 <td>72.64%</td>
                 <td>83.89%</td>
-                <td>1.6373</td>
               </tr>
               <tr>
                 <td>Raw SVD-LDA</td>
                 <td>48.47%</td>
                 <td>57.22%</td>
                 <td>80.97%</td>
-                <td>3.7206</td>
               </tr>
             </tbody>
           </table>
@@ -1642,59 +1948,44 @@
           >.
         </p>
         <figure id="fig-endpoints">
-          <p class="panel-label">A · Balanced accuracy</p>
+          <p class="panel-label">Balanced accuracy</p>
           <div
             class="figure-scroll"
             tabindex="0"
             role="region"
-            aria-label="Figure 3A, endpoint accuracy"
+            aria-label="Figure 3, endpoint accuracy"
           >
             <img
               src="../cebra-endpoint-time-readout-20261006/figures/wholecue_balanced_accuracy.png"
               alt="Whole-cue balanced accuracy for ordered pair, start and goal across raw, PCA, cue CEBRA, joint CEBRA and LDA."
             />
           </div>
-          <p class="panel-label">B · Logarithmic loss</p>
-          <div
-            class="figure-scroll"
-            tabindex="0"
-            role="region"
-            aria-label="Figure 3B, endpoint loss"
-          >
-            <img
-              src="../cebra-endpoint-time-readout-20261006/figures/wholecue_log_loss.png"
-              alt="Probability losses for the same whole-cue endpoint comparison."
-            />
-          </div>
           <figcaption>
-            <strong
-              >Figure 3. Endpoint performance depends on target and
-              metric.</strong
-            >
+            <strong>Figure 3. Endpoint accuracy depends on the target.</strong>
             October 7 endpoint population: 195 selected units/58 sessions,
             12,288 training/3,265 exposed-development sources, 480/240
             pair-conditioned rows per seed. Inputs concatenate 0–1 s cue
             activity; raw/PCA/CEBRA use training-only transforms and logistic
             <i>C</i> = 0.01, with separate SVD-LDA. Cue/joint encoders use 1,000
             updates. Bars are three-seed means and points computational seeds,
-            not biological intervals. Dotted lines show uniform BA/loss
-            references. “Pair30,” “start6” and “goal6” are separately trained
-            heads. Endpoint recovery does not establish path information.
+            not biological intervals. Dotted lines show uniform BA references.
+            “Pair30,” “start6” and “goal6” are separately trained heads.
+            Endpoint recovery does not establish path information.
             <a href="../cebra-endpoint-time-readout-20261006/README.md"
               >Original figures and protocol context</a
             >.
           </figcaption>
         </figure>
         <p>
-          Accuracy and probability loss did not select the same method. Joint
-          CEBRA had slightly lower pair loss than PCA (1.6373 versus 1.6736),
-          despite lower pair BA (75.56% versus 83.61%). The whole-cue
-          joint-loss-gain family tail was 8/21. The bin-wise absolute-accuracy,
-          loss-skill and joint-gain families reached 1/21, the finest possible
-          resolution with 20 worlds, but these findings neither validate a
-          chosen time window nor establish general joint-training superiority.
-          All-bin curves are shown in Figure 4, and family controls in Figure
-          S5.
+          The accuracy gains are target-specific, not evidence that joint
+          training is generally superior. The original controls also did not
+          establish general joint superiority. All-bin curves are shown in
+          Figure 4; inspecting a high point does not validate that time window.
+          The
+          <a href="../cebra-endpoint-time-readout-20261006/README.md"
+            >original endpoint report</a
+          >
+          retains the complete evaluation and controls.
         </p>
         <figure id="fig-endpoint-time">
           <div
@@ -2488,10 +2779,10 @@
           features achieved mean BA of 45.3% and 47.4%; PCA3 and PCA8 achieved
           52.1% and 45.3%. PCA3 ranged from 25.8% to 78.9% across assembly
           seeds. A subsequently inspected 200–300-ms raw bin reached 100% BA,
-          but its maximum-over-ten-bin reference was 22/101. V9 CEBRA-Time8
-          whole-cue mean BA was 44.27%. These observations motivated source and
-          temporal diagnostics rather than establishing a successful whole-path
-          predictor.
+          but the original window-family control did not validate that peak. V9
+          CEBRA-Time8 whole-cue mean BA was 44.27%. These observations motivated
+          source and temporal diagnostics rather than establishing a successful
+          whole-path predictor.
         </p>
         <h4>Synthetic recombination was not source generalization</h4>
         <p>
@@ -2521,37 +2812,31 @@
           Track C tested actual per-unit trial inputs with endpoint, trial-index
           and cue-duration controls. It considered the original interior
           component, its anywhere-in-route counterpart and a more supported
-          interior target. Ordinary and temporal three-target family references
-          were approximately 0.475 and 0.436; the analyses did not establish
-          incremental cue-rate evidence. This was a complementary lane, not a
-          test of simultaneous population dynamics or a requirement that every
-          informative population contain individually significant cells.
+          interior target. The analyses did not establish incremental cue-rate
+          evidence under the original evaluation and controls. This was a
+          complementary lane, not a test of simultaneous population dynamics or
+          a requirement that every informative population contain individually
+          significant cells.
         </p>
         <h4>
-          Preprocessing and matched PCA provided small, heterogeneous
-          probability gains
+          Preprocessing and matched PCA did not establish robust improvement
         </h4>
         <p>
           The separate five-endpoint study compared 20 recipes varying time
           pooling, rate transformation, feature scaling and regularization.
           Training-source cross-validation favored first-second raw rates with a
           variance floor and stronger regularization. The selected historical
-          diagnostic had mean baseline-relative loss improvement +0.02858 nats
-          and 55% BA, but only two of five endpoint panels improved over
-          constant prediction. Removing 6→1 reversed the mean improvement to
-          −0.03787 nats. The four declared ordinary/temporal selection-null
-          comparisons ranged from 0.139 to 0.356.
-        </p>
-        <p>
-          A subsequent matched PCA/raw comparison held the source panels, inputs
-          and tuning budget fixed. PCA reduced mean loss from 0.664564 to
-          0.657541 nats, a paired gain of 0.007023, while both methods remained
-          at 55% BA. The fixed-selection source-resampling range extended from
-          −0.011444 to +0.023426 nats. These are sensitivity percentiles, not a
-          superiority interval. The largest PCA-over-raw improvement occurred at
-          5→1, where both methods still lost to constant prediction; the
-          aggregate baseline-relative success remained driven by 6→1. This study
-          is not a validation of the separate fixed-4→3 PCA/SVM result.
+          diagnostic achieved 55% BA; the matched PCA/raw extension also
+          reported 55% BA for both methods. Selection and the original success
+          criteria concerned probability quality, not BA. Under those original
+          criteria, gains were heterogeneous and source-sensitive rather than
+          robust, with 6→1 dominating the aggregate improvement. The unchanged
+          <a href="../path-preprocessing-autoresearch-20260908.html"
+            >preprocessing</a
+          >
+          and <a href="../path-pca-matched/report.html">matched PCA</a> records
+          retain that evaluation. This is neither a new accuracy-based success
+          test nor validation of the separate fixed-4→3 PCA/SVM result.
         </p>
         <h4>
           Broader encoder training improved a relative score but failed the
@@ -2559,21 +2844,19 @@
         </h4>
         <p>
           At a matched 1,000-update budget, broader cue/navigation training
-          improved Time's cue-only logistic loss from 1.010464 to 0.710618 nats
-          and BA from 32.64% to 61.81%. Time's loss gain was positive in all
-          three seeds, but broader-Time BA was 79.17%, 43.75% and 62.50%, and
-          only one seed had AUROC above 0.5. The primary criterion failed
-          because mean loss remained above constant prediction, log(2) =
-          0.693147.
+          increased Time/logistic mean BA from 32.64% to 61.81%. However,
+          broader-Time BA was 79.17%, 43.75% and 62.50% across seeds, and only
+          one seed had AUROC above 0.5. The original probability-based absolute
+          criterion against constant prediction failed. That outcome is
+          retained; it must not be replaced after the fact by a favorable
+          mean-BA threshold.
         </p>
         <p>
-          The distinction between relative and absolute performance was also
-          present in the controls. The Time paired-gain tail was 1/21, but its
-          absolute broader-training loss tail was 12/21. Improvement over a poor
-          cue-only model was therefore not equivalent to established path
-          association. Eight of 22 source deletions were inestimable. Navigation
-          entered encoder training only; no navigation-time prediction or frozen
-          cue↔navigation transfer was demonstrated.
+          Improvement over a poor cue-only model was not equivalent to
+          established path association under the original controls. Eight of 22
+          source deletions were inestimable. Navigation entered encoder training
+          only; no navigation-time prediction or frozen cue↔navigation transfer
+          was demonstrated.
           <a href="../cebra-full-trial-transfer/README.md"
             >Matched Time-arm results</a
           >.
@@ -2621,43 +2904,14 @@
           </figcaption>
         </figure>
         <p>
-          Sixteen of 20 source-label-shuffled worlds had a maximum across the
-          same 80 views at least as high as the observed 94.44%, giving an
-          inclusive tail of 17/21. The predeclared maximum joint-training
-          logistic gain had tail 9/21 (Figure 7). These controls prevent the
-          inspected peaks from establishing robust path information or a
-          reliable optimal cue window.
+          The original window-family controls did not establish robust path
+          information or a reliable optimal cue window. Their numerical detail
+          is retained in the
+          <a href="../cebra-cue-time-readout-20261005/README.md"
+            >window-study record</a
+          >, rather than reproduced here. The plotted peaks remain descriptive,
+          not validated selections.
         </p>
-        <figure id="fig-path-nulls">
-          <div
-            class="figure-scroll"
-            tabindex="0"
-            role="region"
-            aria-label="Figure 7, path window-family nulls"
-          >
-            <img
-              src="../cebra-cue-time-readout-20261005/figures/null_families.png"
-              alt="Observed path-decoding family statistics relative to twenty source-coherent shuffled worlds."
-            />
-          </div>
-          <figcaption>
-            <strong
-              >Figure 7. Family-level controls for the cue-window peaks.</strong
-            >
-            Same target, real sources, weighted combinations and readouts as
-            Figure 6. Histograms contain 20 source-coherent shuffled worlds; red
-            lines indicate observed statistics. Three-seed averaging precedes
-            maxima: paired logistic gain across ten bins, BA across 80 views,
-            and loss improvement over constant prediction across 40 views.
-            Inclusive plus-one tails are 9/21, 17/21 and 8/21. Whole cue is
-            excluded from these families. The references do not test universal
-            method superiority or correct the project's entire adaptive history.
-            No uncertainty interval is implied. Source:
-            <a href="../cebra-cue-time-readout-20261005/README.md"
-              >window-study controls</a
-            >.
-          </figcaption>
-        </figure>
 
         <h3 id="ablations">
           3.3. Readout and regularization diagnostics constrained explanations
@@ -2666,16 +2920,10 @@
         <p>
           Holding the endpoint Time representation fixed, changing the logistic
           readout from <i>C</i> = 1 to 0.01 increased pair accuracy from 42.78%
-          to 51.67%. Separately, the historical Time checkpoint study with a
-          common <i>C</i> = 0.01 readout found 69.72%, 51.67% and 38.06%
-          development accuracy at 250, 1,000 and 3,000 encoder updates. This
-          inspected trajectory did not validate an early-stopping rule and is
-          not the latest fixed-1,000-update cue/joint comparison.
+          to 51.67%. The separate historical checkpoint diagnostic appears in
+          <a href="#training-validation">§2.4</a>; it is not the latest
+          fixed-1,000-update cue/joint comparison.
           <a href="../start-goal-cebra-diagnosis.md">Frozen-readout diagnosis</a
-          >;
-          <a
-            href="../../professor_updates/start_goal_20260907/endpoint-research-report.html"
-            >historical Time checkpoints</a
           >.
         </p>
         <div
@@ -2757,9 +3005,9 @@
           PCA with scaled RBF-SVM reached 77.50% BA and 0.829 AUROC, versus
           42.92% BA for its matched logistic readout. This was a lead for a
           different representation, not established robust path signal: that
-          experiment lacked a matched PCA null. Later raw/PCA controls had
-          family tail 15/21 and fixed center-SVM tail 7/21 at assembly zero;
-          they do not directly test the earlier five-assembly mean.
+          experiment lacked a matched PCA control for association. Later raw/PCA
+          controls at assembly zero did not establish robust association and do
+          not directly test the earlier five-assembly mean.
         </p>
         <h4>
           Weaker regularization and broader kernels did not restore source
@@ -2808,7 +3056,7 @@
         </p>
         <p>
           Saved checkpoints from the later path experiment further separated
-          training and development geometry (Figure 8). Between 250 and 1,000
+          training and development geometry (Figure 7). Between 250 and 1,000
           updates, whole-cue development participation ratio changed from 3.50
           to 3.99 for cue-only Time and from 2.92 to 2.79 for joint Time.
           Training values instead changed from 7.73 to 5.20 and 10.05 to 9.71.
@@ -2823,7 +3071,7 @@
             class="figure-scroll"
             tabindex="0"
             role="region"
-            aria-label="Figure 8, saved checkpoint geometry"
+            aria-label="Figure 7, saved checkpoint geometry"
           >
             <img
               src="../cebra-cue-time-readout-20261005/figures/geometry_evolution.png"
@@ -2832,7 +3080,7 @@
           </div>
           <figcaption>
             <strong
-              >Figure 8. Geometry across saved path-model checkpoints.</strong
+              >Figure 7. Geometry across saved path-model checkpoints.</strong
             >
             Fixed 4→3 component population: 29 units/seven sessions, 82/22 real
             sources, 128 training rows/30 weighted development combinations; ten
@@ -2945,7 +3193,7 @@
         </p>
         <p>
           Historical raw-feature LDA goal temporal generalization is available
-          (Figure S6), whereas matched CEBRA cue/joint train-time × test-time
+          (Figure S5), whereas matched CEBRA cue/joint train-time × test-time
           and cross-phase readout transfer remain unexecuted. Latest endpoint
           nonlinear frozen-latent readout comparisons and geometry also remain
           gaps, not results concealed by this manuscript. None is required
@@ -3068,7 +3316,7 @@
             >.
           </figcaption>
         </figure>
-        <h3>S2. Endpoint errors and null controls</h3>
+        <h3>S2. Endpoint errors</h3>
         <figure id="fig-s4">
           <div
             class="figure-scroll"
@@ -3099,44 +3347,13 @@
             >.
           </figcaption>
         </figure>
-        <figure id="fig-s5">
-          <div
-            class="figure-scroll"
-            tabindex="0"
-            role="region"
-            aria-label="Figure S5, endpoint null families"
-          >
-            <img
-              src="../cebra-endpoint-time-readout-20261006/figures/null_families.png"
-              alt="Twenty source-label-shuffled endpoint worlds compared with observed absolute and joint-training-gain family statistics."
-            />
-          </div>
-          <figcaption>
-            <strong
-              >Figure S5. Endpoint association and training-gain
-              controls.</strong
-            >
-            Same October source population, label-conditioned rows, cue windows
-            and models as Figures 3–4. Each of 20 session×split pair-label
-            shuffles repeats assembly, transforms, encoders and readouts,
-            preserving paired arms. Seed means precede family maxima. Absolute
-            bin BA/loss-skill and bin joint-gain tails are 1/21; whole-cue
-            joint-gain tail is 8/21. Chance/loss normalization follows the
-            target's class count. These are low-resolution no-association
-            references, not general superiority tests or biological intervals.
-            Source:
-            <a href="../cebra-endpoint-time-readout-20261006/README.md"
-              >endpoint null definitions</a
-            >.
-          </figcaption>
-        </figure>
         <h3>S3. Historical temporal generalization</h3>
         <figure id="fig-s6">
           <div
             class="figure-scroll"
             tabindex="0"
             role="region"
-            aria-label="Figure S6, historical raw-LDA temporal generalization"
+            aria-label="Figure S5, historical raw-LDA temporal generalization"
           >
             <img
               src="../../professor_updates/start_goal_20260907/endpoint-research-report.html#image-8"
@@ -3145,7 +3362,7 @@
           </div>
           <figcaption>
             <strong
-              >Figure S6. Existing raw-feature goal temporal
+              >Figure S5. Existing raw-feature goal temporal
               generalization.</strong
             >
             Historical endpoint population, 195 units/58 sessions, 12,288/3,265
@@ -3164,14 +3381,16 @@
             >.
           </figcaption>
         </figure>
-        <h3>S4. Study-specific records</h3>
+        <h3 id="study-records">S4. Study-specific records</h3>
         <p>
-          Complete configurations, all-seed metrics, additional confusions,
-          source sensitivity, failed attempts and numerical replay records
-          remain in the owning reports. Those archives retain additional model
-          variants outside this manuscript's Time-only encoder scope. Different
-          studies reused recordings and, in some cases, exact models; their
-          numerical verification is not independent biological replication.
+          Complete configurations, original probability-based selection and
+          success criteria, all-seed metrics, shuffled-label controls,
+          additional confusions, source sensitivity, failed attempts and
+          numerical replay records remain in the owning reports. Those archives
+          retain additional model variants outside this manuscript's Time-only
+          encoder scope. Different studies reused recordings and, in some cases,
+          exact models; their numerical verification is not independent
+          biological replication.
         </p>
         <ol>
           <li>
@@ -3275,8 +3494,9 @@
       <footer>
         <p>
           Private working manuscript · Revision 03. Main figures and
-          supplementary images are unchanged bytes from accepted repository
-          reports; Figure 2 is a labeled method schematic. No new model fitting,
+          supplementary raster images are unchanged bytes from accepted
+          repository reports. Inline diagrams are labeled as method schematics
+          or presentations of existing aggregate evidence. No new model fitting,
           saved-model reanalysis or raw-data access was performed for this
           manuscript. The portable copy embeds all images; optional source and
           literature links require network access, and private source reports

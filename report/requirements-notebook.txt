@@ -1,0 +1,6 @@
+# Notebook-only overlay; preserve the existing requirements-replay.txt scientific runtime.
+# Install into a separate --system-site-packages venv, never the retained runtime.
+ipykernel==6.30.1
+nbclient==0.10.2
+nbconvert==7.16.6
+nbformat==5.10.4
