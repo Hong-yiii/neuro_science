@@ -14,7 +14,7 @@ links their original methods, results and limitations.
 
 | File | Purpose |
 | --- | --- |
-| [endpoint_walkthrough.ipynb](endpoint_walkthrough.ipynb) | Primary professor-facing artifact; executed saved-model walkthrough, 14 code cells and 15 inline images |
+| [endpoint_walkthrough.ipynb](endpoint_walkthrough.ipynb) | Primary professor-facing artifact; executed saved-model walkthrough, 14 code cells and 15 inline images; code map and line-linked listings of the executed and historical source |
 | [endpoint_replay.py](endpoint_replay.py) | Narrow authenticated observed-input adapter using current package operations; no fits |
 | [manuscript.html](manuscript.html) | Editable revision03 source; build before reading offline |
 | [retrospective-frozen-20261012.html](retrospective-frozen-20261012.html) | Standalone reading file; preserved checksum difference below |

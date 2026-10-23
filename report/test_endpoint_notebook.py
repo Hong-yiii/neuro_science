@@ -6,6 +6,7 @@ Run with the notebook environment. No private artifacts are opened by this test.
 import base64
 import hashlib
 import json
+import re
 import tempfile
 import unittest
 from pathlib import Path
@@ -88,6 +89,24 @@ class NotebookChecks(unittest.TestCase):
         for forbidden in ("source_trial_id", "session_id", str(HERE.parent), "checkpoint_final.pth", "array(["):
             self.assertNotIn(forbidden, public)
         self.assertIn("END-TO-END SAVED-INPUT REPLAY PASSED", public)
+
+    def test_code_listings_match_source(self):
+        notebook = json.loads((HERE / "endpoint_walkthrough.ipynb").read_text())
+        listing = re.compile(
+            r"\[`(?P<path>[^`]+)` lines (?P<start>\d+)–(?P<end>\d+)\]\([^)]*\)\n\n"
+            r"```python\n(?P<code>.*?)\n```",
+            re.DOTALL,
+        )
+        checked = 0
+        for cell in notebook["cells"]:
+            if cell["cell_type"] != "markdown":
+                continue
+            for match in listing.finditer("".join(cell["source"])):
+                lines = (HERE.parent / match["path"]).read_text().splitlines()
+                expected = "\n".join(lines[int(match["start"]) - 1 : int(match["end"])])
+                self.assertEqual(match["code"], expected, f"{match['path']}:{match['start']}")
+                checked += 1
+        self.assertGreaterEqual(checked, 25)
 
 
 if __name__ == "__main__":
