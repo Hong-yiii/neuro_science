@@ -1,10 +1,16 @@
 # Workspace and recovery
 
-Updated October15, 2026. Canonical checkout: **`~/neuro_science`**. Owner: Hongyi.
+Updated October19, 2026. Canonical checkout: **`~/neuro_science`**. Owner: Hongyi.
 Read [agent instructions](../AGENTS.md) before changing scientific code or artifacts.
 
 ## Current state
 
+- Primary review artifact: [executed endpoint notebook](../report/endpoint_walkthrough.ipynb).
+  October19 authorized observed-only saved-input replay passed in a fresh native kernel:
+  six CEBRA encoders, three PCA states,495 readouts and990 score rows, zero fitting.
+  [Runtime, verification and privacy boundaries](../report/README.md#saved-artifact-notebook-execution-and-boundaries).
+  Branch `docs/saved-endpoint-notebook` includes the notebook and manuscript editorial
+  pass; the owner requested a PR, not merge. PR20 is merged at `19ae1b0`.
 - [Current report](../report/README.md) → [weekly history](../history/README.md) →
   [source/evidence catalog](reports/README.md).
 - [PR19](https://github.com/Hong-yiii/neuro_science/pull/19) is merged into `main`
@@ -26,9 +32,11 @@ Read [agent instructions](../AGENTS.md) before changing scientific code or artif
   Earlier local validation/review receipts describe the historical pre-commit state.
   [Software design](software-design.md) is the maintained engineering reference;
   the preserved HTML preview may lag the package.
-- Whether/how the intended companion notebook uses this package remains open,
-  depending on its scope and complexity. No notebook, fit, private replay, installation
-  or service is added.
+- October15's open notebook scope is superseded by the narrow October19 saved-input
+  walkthrough above. It uses current package operations without an architecture migration.
+  Only a separate notebook-tooling overlay was installed under
+  `scratch/endpoint-notebook-runtime/`; the retained scientific runtime is unchanged.
+  No service, new fit, raw reconstruction or null replay was added.
 
 The historical durable-session designation is
 `01a08ab0-4fd4-704c-ac18-3b002e40c116`. It identifies the consolidation history, not

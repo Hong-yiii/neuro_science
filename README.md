@@ -3,6 +3,7 @@
 A report-led research workspace for hippocampal navigation recordings: **what can
 we recover from cue activity, and what does a learned representation actually show?**
 CEBRA is a central tool, not a required winner. The repository brings together an
+[executed saved-model review notebook](report/endpoint_walkthrough.ipynb),
 [editable retrospective](report/README.md), accepted exploratory evidence and a
 [Python package](src/neuro/README.md) containing **whole concrete experiment
 workflows as well as reusable scientific helpers**—not a pure helper library.
@@ -68,6 +69,7 @@ H2/artificial-agent comparison is removed. No new fit is queued.
 
 | Reader / goal | Start here | Then |
 | --- | --- | --- |
+| Professor/reviewer: inspect the fitted computation | [Executed endpoint notebook](report/endpoint_walkthrough.ipynb) — equations, intermediate shapes, diagrams, six encoders and495 readouts replayed without fitting | [Execution boundaries](report/README.md#saved-artifact-notebook-execution-and-boundaries); public aggregates, private inputs required only to rerun |
 | Scientist: understand the evidence and claims | [Current report](report/README.md) — working draft, not a finished paper | [Evidence catalog](docs/reports/README.md), [analysis contract](docs/analysis-contract.md) |
 | Scientist: follow how the question evolved | [Weekly research history](history/README.md) | Original study protocols/results; old next steps are not a run queue |
 | Programmer: use or change the maintained package | [Package reference and safe examples](src/neuro/README.md) | [As-built software design](docs/software-design.md), [script map](scripts/README.md) |

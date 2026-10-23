@@ -12,7 +12,19 @@ PR status, recovery records and safe verification commands. Do not recreate old
 sibling worktrees or restart experiments from historical pending-work flags.
 Keep new durable decisions in Git-backed notes, not only in a chat transcript.
 
-**Session closure / publication:** PR19 merged at `a169edf`. The owner authorized
+**October19 review deliverable:** the owner requested an executed professor-facing
+saved-artifact notebook and a PR (not a merge). Start with
+`report/endpoint_walkthrough.ipynb` and `report/README.md`. The notebook replays only
+the accepted October7 observed endpoint seeds0–2 from saved standardized cue: six
+CEBRA encoders, three PCA states and495 fitted readouts; no fits, raw access or null
+replay. Public outputs contain aggregates only. Source assembly/scaler fitting and
+historical controls are inherited, not newly reproduced. A fresh native kernel passed
+all14 code cells with the original two-thread numerical budget and unchanged tolerances.
+This narrow approval does not authorize other private replay or new studies. The
+manuscript editorial pass is included; unrelated design HTML and current-state files
+remain untouched. See workspace status and the PR for publication, not old task queues.
+
+**October15 session closure / publication (historical):** PR19 merged at `a169edf`. The owner authorized
 publishing and merging [PR20](https://github.com/Hong-yiii/neuro_science/pull/20),
 including reviewed helper extraction and the README showcase, to conclude this session.
 The PR records the authoritative merge result; do not resume historical task queues.
