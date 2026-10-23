@@ -23,6 +23,7 @@ def study_sources(study_path: Path) -> dict[str, Path]:
         "src/neuro/raw_io.py",
         "src/neuro/neural_inputs.py",
         "src/neuro/cebra_solver.py",
+        "src/neuro/_cebra_sampling.py",
         "src/neuro/place195_split_access.py",
         "src/neuro/studies/full_trial_transfer.py",
         f"src/neuro/studies/{name}.py",

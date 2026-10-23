@@ -12,7 +12,37 @@ PR status, recovery records and safe verification commands. Do not recreate old
 sibling worktrees or restart experiments from historical pending-work flags.
 Keep new durable decisions in Git-backed notes, not only in a chat transcript.
 
-**October19 review deliverable:** the owner requested an executed professor-facing
+**October24 draft-PR follow-up — current:** the owner requested a draft PR with a
+structural overview and review instructions. Publish only the implementation, invented
+source-notebook outputs and reviewed documentation/aggregate notes. Private inputs,
+executed real notebooks/figures, manifests, model states and predictions remain ignored
+and local. This supersedes the earlier no-publication checkpoint for this draft only;
+no merge, new license, package-registry release or further biological run is authorized.
+See the draft PR for publication/review status; preserve unrelated notes and the stash.
+
+**October23 approved implementation:** the owner accepted
+`docs/notebook-package-plan-20261023.md` as the north star and requested implementation,
+real-data end-to-end execution and independent subagent validation. Read
+`docs/shareable-notebooks-execution-20261023.md` for actual progress and
+`docs/shareable-notebooks-protocol-20261023.md` for the bounded real-data scope and
+prefit gates. One installable library, independently usable pseudopopulation/PCA-LDA/
+CEBRA modules and fresh-input notebooks are the target. Preserve accepted historical
+notebooks/results, original inputs, runtime and stash. New real fitting is exploratory,
+cue-only and subject to code/data/resource review; no public data/license grant,
+publication, merge, navigation extension or unbounded study is authorized. Earlier
+“no notebook” and planning-only statements below are historical, not the current task.
+
+**October23 execution checkpoint:** all three fresh-input notebooks and installed-wheel
+workflows are implemented. Source-notebook outputs are invented software checks;
+publication now follows the separate draft-PR request above.
+Reviewed real run `b0497792d` completed115seconds with6CEBRA/10PCA/78logistic/12LDA,
+6000updates and180fit-blocked readout-split replays;4GiB/no-swap cgroup remained within
+1.09GiB peak, no OOM, unit unloaded. Private results live under
+`outputs/fresh-notebooks-20261023/real/`; final independent results/privacy review
+accepted the run, with a nonblocking confusion-heading overlap noted in the ledger.
+No further fits, retries, merge or private artifact moves are queued. Preserve the old notebook/results and all failure evidence.
+
+**October19 review deliverable (historical):** the owner requested an executed professor-facing
 saved-artifact notebook and a PR (not a merge). Start with
 `report/endpoint_walkthrough.ipynb` and `report/README.md`. The notebook replays only
 the accepted October7 observed endpoint seeds0–2 from saved standardized cue: six

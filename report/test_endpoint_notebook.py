@@ -7,6 +7,7 @@ import base64
 import hashlib
 import json
 import re
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
@@ -25,15 +26,26 @@ class NotebookChecks(unittest.TestCase):
             path = root / "observed/seed0/example.json"
             path.parent.mkdir(parents=True)
             path.write_bytes(payload)
-            manifest = {"observed/seed0/example.json": hashlib.sha256(payload).hexdigest()}
+            manifest = {
+                "observed/seed0/example.json": hashlib.sha256(payload).hexdigest()
+            }
             manifest_bytes = json.dumps(manifest).encode()
             (root / "hash_manifest.json").write_bytes(manifest_bytes)
             with self.assertRaisesRegex(ValueError, "manifest identity"):
                 replay.SavedRun(root)
-            with patch.object(replay, "MANIFEST_SHA256", hashlib.sha256(manifest_bytes).hexdigest()):
+            with patch.object(
+                replay, "MANIFEST_SHA256", hashlib.sha256(manifest_bytes).hexdigest()
+            ):
                 saved = replay.SavedRun(root)
-                self.assertEqual(saved.json("observed/seed0/example.json"), {"ok": True})
-                for outside in ("null_000/seed0/example.json", "../example.json", "/tmp/example.json", "observed/seed3/example.json"):
+                self.assertEqual(
+                    saved.json("observed/seed0/example.json"), {"ok": True}
+                )
+                for outside in (
+                    "null_000/seed0/example.json",
+                    "../example.json",
+                    "/tmp/example.json",
+                    "observed/seed3/example.json",
+                ):
                     with self.assertRaisesRegex(ValueError, "scope"):
                         saved.read(outside)
                 path.write_bytes(b"tampered")
@@ -58,7 +70,11 @@ class NotebookChecks(unittest.TestCase):
         parameter = torch.nn.Parameter(torch.zeros(1))
         optimizer = torch.optim.Adam([parameter])
         with replay.no_fitting():
-            blas = [library for library in threadpool_info() if library["user_api"] == "blas"]
+            blas = [
+                library
+                for library in threadpool_info()
+                if library["user_api"] == "blas"
+            ]
             self.assertTrue(blas)
             self.assertTrue(all(library["num_threads"] == 2 for library in blas))
             with self.assertRaisesRegex(RuntimeError, "forbids fitting"):
@@ -71,22 +87,40 @@ class NotebookChecks(unittest.TestCase):
     def test_executed_notebook_and_public_outputs(self):
         notebook = json.loads((HERE / "endpoint_walkthrough.ipynb").read_text())
         cells = [c for c in notebook["cells"] if c["cell_type"] == "code"]
-        self.assertEqual([c["execution_count"] for c in cells], list(range(1, len(cells) + 1)))
+        self.assertEqual(
+            [c["execution_count"] for c in cells], list(range(1, len(cells) + 1))
+        )
         evidence = notebook["metadata"]["saved_artifact_execution"]
-        self.assertEqual(evidence["helper_sha256"], hashlib.sha256((HERE / "endpoint_replay.py").read_bytes()).hexdigest())
+        self.assertEqual(
+            evidence["helper_sha256"],
+            hashlib.sha256((HERE / "endpoint_replay.py").read_bytes()).hexdigest(),
+        )
         sources = ["".join(c["source"]) for c in cells]
-        self.assertEqual(evidence["code_sha256"], hashlib.sha256("\n".join(sources).encode()).hexdigest())
+        self.assertEqual(
+            evidence["code_sha256"],
+            hashlib.sha256("\n".join(sources).encode()).hexdigest(),
+        )
         images = 0
         for cell in cells:
             for output in cell["outputs"]:
                 self.assertNotEqual(output["output_type"], "error")
                 if "image/png" in output.get("data", {}):
-                    data = base64.b64decode("".join(output["data"]["image/png"]), validate=True)
+                    data = base64.b64decode(
+                        "".join(output["data"]["image/png"]), validate=True
+                    )
                     self.assertTrue(data.startswith(b"\x89PNG\r\n\x1a\n"))
                     images += 1
-        self.assertGreaterEqual(images, 12)  # Six data/schematic figures plus rendered equations.
+        self.assertGreaterEqual(
+            images, 12
+        )  # Six data/schematic figures plus rendered equations.
         public = json.dumps([c["outputs"] for c in cells])
-        for forbidden in ("source_trial_id", "session_id", str(HERE.parent), "checkpoint_final.pth", "array(["):
+        for forbidden in (
+            "source_trial_id",
+            "session_id",
+            str(HERE.parent),
+            "checkpoint_final.pth",
+            "array([",
+        ):
             self.assertNotIn(forbidden, public)
         self.assertIn("END-TO-END SAVED-INPUT REPLAY PASSED", public)
 
@@ -102,9 +136,16 @@ class NotebookChecks(unittest.TestCase):
             if cell["cell_type"] != "markdown":
                 continue
             for match in listing.finditer("".join(cell["source"])):
-                lines = (HERE.parent / match["path"]).read_text().splitlines()
+                # The accepted notebook is a frozen October19 listing, not live API docs.
+                lines = subprocess.check_output(
+                    ["git", "show", f"3f84018:{match['path']}"],
+                    cwd=HERE.parent,
+                    text=True,
+                ).splitlines()
                 expected = "\n".join(lines[int(match["start"]) - 1 : int(match["end"])])
-                self.assertEqual(match["code"], expected, f"{match['path']}:{match['start']}")
+                self.assertEqual(
+                    match["code"], expected, f"{match['path']}:{match['start']}"
+                )
                 checked += 1
         self.assertGreaterEqual(checked, 25)
 
