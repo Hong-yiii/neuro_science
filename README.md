@@ -3,12 +3,26 @@
 A report-led research workspace for hippocampal navigation recordings: **what can
 we recover from cue activity, and what does a learned representation actually show?**
 CEBRA is a central tool, not a required winner. The repository brings together an
-[executed saved-model review notebook](report/endpoint_walkthrough.ipynb),
-[editable retrospective](report/README.md), accepted exploratory evidence and a
-[Python package](src/neuro/README.md) containing **whole concrete experiment
-workflows as well as reusable scientific helpers**—not a pure helper library.
+[fresh-input notebooks](notebooks/README.md), a preserved
+[historical saved-model review](report/endpoint_walkthrough.ipynb),
+[editable retrospective](report/README.md), accepted exploratory evidence and an
+[installable Python package](src/neuro/README.md).
 
-## A look at the completed work
+## Start here: fresh source-to-result computation
+
+Three independently runnable notebooks cover [pseudopopulation construction](notebooks/01_pseudopopulation.ipynb),
+[PCA/LDA](notebooks/02_pca_lda.ipynb) and [CEBRA](notebooks/03_cebra.ipynb).
+Their saved source-notebook outputs are **invented-data software checks**. They expose input/target
+and split construction, fresh fitting, matched refitted source ablations and diagnostics;
+they do not load old research results. [Installation and execution](notebooks/README.md).
+
+The separately authorized real run has a new27-unit/10-session contributor-disjoint
+panel, not the historical195-unit cohort. Its [protocol](docs/shareable-notebooks-protocol-20261023.md)
+and [execution ledger](docs/shareable-notebooks-execution-20261023.md) own status and limits.
+No biological independence, pristine test set or matched historical score comparison
+follows from this change. Historical notebooks/results remain intact.
+
+## A look at the completed historical work
 
 These are existing **exploratory results**, not new analyses or independent biological
 confirmation. The gallery deliberately keeps two different cohorts and targets separate.
@@ -69,11 +83,12 @@ H2/artificial-agent comparison is removed. No new fit is queued.
 
 | Reader / goal | Start here | Then |
 | --- | --- | --- |
-| Professor/reviewer: inspect the fitted computation | [Executed endpoint notebook](report/endpoint_walkthrough.ipynb) — equations, intermediate shapes, diagrams, six encoders and495 readouts replayed without fitting | [Execution boundaries](report/README.md#saved-artifact-notebook-execution-and-boundaries); public aggregates, private inputs required only to rerun |
+| Scientist/programmer: compute from fresh inputs | [Three fresh-input notebooks](notebooks/README.md) — executed invented examples; explicit supplied-input route | [Public APIs](src/neuro/README.md#independent-public-workflow); [real-run ledger](docs/shareable-notebooks-execution-20261023.md) |
+| Professor/reviewer: inspect the historical fitted computation | [Executed endpoint notebook](report/endpoint_walkthrough.ipynb) — equations, intermediate shapes, diagrams, six encoders and495 readouts replayed without fitting | [Execution boundaries](report/README.md#saved-artifact-notebook-execution-and-boundaries); public aggregates, private inputs required only to rerun |
 | Scientist: understand the evidence and claims | [Current report](report/README.md) — working draft, not a finished paper | [Evidence catalog](docs/reports/README.md), [analysis contract](docs/analysis-contract.md) |
 | Scientist: follow how the question evolved | [Weekly research history](history/README.md) | Original study protocols/results; old next steps are not a run queue |
 | Programmer: use or change the maintained package | [Package reference and safe examples](src/neuro/README.md) | [As-built software design](docs/software-design.md), [script map](scripts/README.md) |
-| Returning contributor: recover current state | [Workspace and recovery](docs/workspace.md) | [Agent instructions](AGENTS.md), [documentation map](docs/README.md) |
+| Returning contributor: recover current state | [Workspace and recovery](docs/workspace.md) | [Agent instructions](./AGENTS.md), [documentation map](docs/README.md) |
 | Discuss the next research question | [Reusable latent-model agenda](docs/cebra-observability-agenda-20261011.md) | Narrow hypotheses and admissible data first; this is a proposal, not execution approval |
 
 **Which architecture document?** [Software design](docs/software-design.md) is the
@@ -92,15 +107,18 @@ and verification. Reusable helpers are part of that scope, not its entirety.
 
 | Layer | Modules | Responsibility |
 | --- | --- | --- |
+| Independent supplied-input APIs | `source_data`, `pseudopopulation`, `pca_lda`, `cebra`, `evaluation` | Validated source contracts, assembly, train-only transformations/fitting and metrics; no study/Git/private-root dependency |
+| Observable notebook support | `place195`, `notebook_inputs`, `notebook_support`, `notebook_artifacts` | Explicit dataset semantics, fresh input routes, small readout/plot operations, provenance and authenticated replay |
 | Whole experiment workflows | `neuro.studies.full_trial_transfer` | Fixed-endpoint binary path-component assay: cue-only versus broader encoder training, baselines, nulls and source sensitivity |
 | Whole experiment workflows | `neuro.studies.endpoint_time_readout` | Ordered pair/start/goal cue readouts, navigation preparation, approval/resource gates and saved-run replay |
 | Whole experiment workflows | `neuro.studies.cue_time_readout` | Frozen full-trial features, single-bin decoder fits, whole-cue replay and descriptive saved-checkpoint geometry; no encoder training |
 | Reusable scientific helpers | `raw_io`, `neural_inputs`, `cebra_solver`, `geometry` | Ripple/spike IO, count/exposure bins, fixed solver construction and geometry diagnostics actually needed by those workflows |
 | Shared safeguards/bookkeeping | `place195_split_access`, `execution`, `provenance` | Source-split access gate, hashing/deadlines/nested snapshots and audited current source closure |
 
-**The workflow/library separation is not yet clean.** Endpoint imports full-trial's
-CEBRA dataset/training/embedding machinery; cue-time imports its cohort, assembly,
-decoder-state and comparison machinery. `full_trial_transfer` is both a concrete
+**Legacy study coupling remains.** The new public APIs do not import studies; shared
+CEBRA datasets/samplers now live in `_cebra_sampling`. Endpoint still imports full-trial
+training/embedding machinery; cue-time imports its cohort, assembly, decoder-state
+and comparison machinery. `full_trial_transfer` is both a concrete
 experiment and a provider of shared objects. These are not three independent helper
 modules. Binary labels, endpoint labels and their lineage objects remain distinct;
 similar shapes do not make them interchangeable. No architecture migration is implied
@@ -139,10 +157,11 @@ probe CUDA availability; it is not a GPU/runtime certification. Helpers can be i
 directly without importing a study. From another directory, use the absolute checkout
 `src` path for `PYTHONPATH`.
 
-This is a **checkout-backed package**, not a guaranteed standalone wheel or stable
-versioned public API. `pyproject.toml`/`uv.lock` and the historical replay runtime have
-different roles; do not infer that one reproduces the other. Defaults still refer to
-local private study roots. **These examples do not authorize raw access, fitting,
+The new supplied-input APIs are **installable and wheel-tested outside the checkout**,
+with optional `cebra` and `notebooks` extras; they are an initial API, not a backwards-
+compatibility promise. Concrete historical studies remain checkout/private-input workflows.
+`pyproject.toml`/`uv.lock` and the historical replay runtime have different roles; do not
+infer that one reproduces the other. Historical study defaults still name private roots. **These examples do not authorize raw access, fitting,
 checkpoint loading, private replay or downloads.** Even `audit`, `verify`, `geometry`
 and `report` can access protected artifacts or write files; “no fit” is not “data-free.”
 

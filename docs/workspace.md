@@ -1,16 +1,40 @@
 # Workspace and recovery
 
-Updated October19, 2026. Canonical checkout: **`~/neuro_science`**. Owner: Hongyi.
+Updated October24, 2026. Canonical checkout: **`~/neuro_science`**. Owner: Hongyi.
 Read [agent instructions](../AGENTS.md) before changing scientific code or artifacts.
 
 ## Current state
 
-- Primary review artifact: [executed endpoint notebook](../report/endpoint_walkthrough.ipynb).
+- **October24 publication request:** prepare a draft PR on `feat/fresh-input-notebooks`
+  with the structure and review guide in its description. The owner authorized code,
+  invented notebooks and reviewed documentation/aggregate notes, not private input or
+  result artifacts, a merge, a new license, a package-registry release or further fits.
+  GitHub owns the authoritative draft/review status. Unrelated current-state notes and
+  the retained stash remain outside this PR.
+- **October23 direction:** the owner requested shareable pseudopopulation, PCA/LDA and
+  CEBRA modules with runnable notebooks that compute from supplied source inputs, show
+  target/split/assembly construction and support dataset ablations—not depend on old
+  fitted results. [Read-only reconnaissance and proposed implementation plan](notebook-package-plan-20261023.md)
+  records module boundaries, validity limits and release gates. The owner subsequently
+  approved building and running it end to end on real data. [Execution ledger](shareable-notebooks-execution-20261023.md)
+  and [bounded protocol](shareable-notebooks-protocol-20261023.md) own current status:
+  public APIs/adapter and [three executed invented notebooks](../notebooks/README.md)
+  are implemented and independently reviewed. Installed-wheel/no-CEBRA checks passed;
+  the exact-shape benchmark and authorized real run completed under hard resource limits.
+  Real runb0497792d:6CEBRA/10PCA/78logistic/12LDA/6000updates and180loaded-model replay
+  checks,115seconds, no swap/OOM; independent final results/privacy review accepted
+  the run with a nonblocking confusion-title overlap limitation.
+  New private results: `outputs/fresh-notebooks-20261023/real/`. Preserve the accepted
+  replay below as historical evidence; no additional fit is queued. Code publication
+  follows the separate draft-PR request above.
+- Historical review artifact: [executed endpoint notebook](../report/endpoint_walkthrough.ipynb).
   October19 authorized observed-only saved-input replay passed in a fresh native kernel:
   six CEBRA encoders, three PCA states,495 readouts and990 score rows, zero fitting.
   [Runtime, verification and privacy boundaries](../report/README.md#saved-artifact-notebook-execution-and-boundaries).
-  Branch `docs/saved-endpoint-notebook` includes the notebook and manuscript editorial
-  pass; the owner requested a PR, not merge. PR20 is merged at `19ae1b0`.
+  The notebook and manuscript editorial pass are now on local `main` at `3f84018`,
+  the PR21 merge inspected October23 after the owner's pull. The original October19
+  request was a PR, not a merge; that earlier publication status is historical.
+  PR20 remains in ancestry at `19ae1b0`.
 - [Current report](../report/README.md) → [weekly history](../history/README.md) →
   [source/evidence catalog](reports/README.md).
 - [PR19](https://github.com/Hong-yiii/neuro_science/pull/19) is merged into `main`
@@ -80,8 +104,10 @@ obtain scope before replaying or migrating anything. Do not recreate removed sib
 
 ## Execution and environment boundary
 
-`pyproject.toml`/`uv.lock` describe the general environment; `requirements-replay.txt`
-and retained `scratch/v6-v9-runtime/` describe a different historical runtime. Filing
+`pyproject.toml`/`uv.lock` now support the installable public APIs and optional extras;
+`requirements-replay.txt` and retained `scratch/v6-v9-runtime/` describe a different
+historical runtime. October23 validation used a task-owned installed-wheel runtime
+under `work/shareable-notebooks-20261023/`, borrowing dependencies read-only. Filing
 is not environment consolidation. Do not install, upgrade or delete either by default.
 
 Use [focused software/presentation checks](reorganization.md#focused-validation-no-broad-scientific-runner).

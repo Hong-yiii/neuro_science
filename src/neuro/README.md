@@ -1,10 +1,10 @@
 # `neuro`: experiment workflows and reusable helpers
 
-`neuro` is the checkout-backed Python implementation of the **latest maintained
-full-trial, endpoint-time and cue-time experiment family**. It contains whole concrete
-exploratory workflows **and** the reusable scientific/safety helpers they need.
-It is **not** a pure helper library, a universal experiment runner or a stable,
-versioned public API. Packaging does not authorize execution or strengthen a claim.
+`neuro` is one installable distribution with **independent supplied-input APIs** plus
+the maintained full-trial/endpoint/cue-time concrete studies. The new public entry
+points are `neuro.pseudopopulation`, `neuro.pca_lda` and `neuro.cebra`; none imports a
+study or discovers historical/private inputs. There is no universal experiment runner
+or stable backwards-compatibility promise. Packaging does not strengthen a claim.
 
 **Start with:** [safe checkout usage](#use-from-a-checkout) →
 [module reference](#module-reference) → [workflow contracts](#whole-experiment-workflows) →
@@ -13,6 +13,49 @@ The [software design](../../docs/software-design.md) is the maintained as-built
 engineering reference, with lifecycle/UML/dependency diagrams; this page is the usage guide.
 [Current report](../../report/README.md) and [evidence catalog](../../docs/reports/README.md)
 own scientific interpretation, not package imports.
+
+## Independent public workflow
+
+Install from a checkout into a new environment with `python -m pip install .`.
+Add `.[notebooks]` for the construction/baseline notebooks, or `.[notebooks,cebra]`
+for all three. Core imports do not require CEBRA/torch/GPU. Installed-wheel fresh-kernel
+runs passed outside the checkout; dependencies/template assets were inherited read-only,
+not freshly resolved. See [the runnable notebook guide](../../notebooks/README.md).
+
+| Module | Public contract |
+| --- | --- |
+| `source_data` | `SourceData`, source/unit/target/split definitions; source×unit×bin values, mask/exposure/timing and declared contributor/group policy |
+| `pseudopopulation` | `support`, `sample_plan`, `materialize`, `source_usage`, `ablate_training_sources`; bound plans, intact source blocks and fixed evaluation lineage |
+| `pca_lda` | `fit_standardizer`, `raw_features`, `fit_pca`, `fit_lda`; train-only transformations, explicit raw unit-major/latent time-major layouts, numerical-rank refusal rather than padding |
+| `cebra` | `fit` → fitted `transform` and diagnostics; maintained adjacent-bin Time sampling, supplied budget/device and optional save |
+| `evaluation` | `classification_metrics`; explicit class order, accuracy/BA/macro-F1/log loss and count/normalized confusions |
+
+A safe invented-input construction (no model fitting or private access):
+
+```python
+from neuro.notebook_inputs import demo_configuration, inspect_inputs, load_inputs
+from neuro.pseudopopulation import sample_plan, materialize
+
+data, audit = load_inputs(inspect_inputs(demo_configuration()))
+plan = sample_plan(data, split_id="train", rows_per_condition=4, seed=0)
+assembly = materialize(data, plan)
+assert assembly.values.shape == (24, 9, 4)
+```
+
+`place195` owns the current six-file dataset-specific target/split/reconstruction
+adapter. `notebook_inputs` selects that explicit route or invented data;
+`notebook_support` keeps small plotting/readout operations out of cells;
+`notebook_artifacts` owns fresh fit accounting, actual kernel identity and authenticated
+fit-blocked model replay. Scientific configuration/experiment loops remain visible in
+notebooks. `_cebra_sampling` contains the unchanged shared dataset/samplers extracted
+from full-trial; that study re-exports them for existing callers.
+
+Observed zeros are distinct from unavailable measurements. Source×unit masks require
+complete observed bins; unsupported dropout fails. Source labels/contributors are
+explicit, not inferred from neural activity. The current notebook CSV adapter is not
+a universal file-format loader. Known-label development assembly remains a conditional
+assay, not an unknown-trial prediction pipeline. Licensing/public upload and private
+lab-data rights remain separate, unresolved release decisions.
 
 ## Use from a checkout
 
@@ -65,10 +108,10 @@ help/clean imports do not certify GPU execution. From another directory, set
 `PYTHONPATH` to the **absolute checkout `src` path** and use an absolute interpreter
 path. Python's `-B`/`PYTHONDONTWRITEBYTECODE` avoid writing bytecode into the checkout.
 
-**This is not an installation or standalone-wheel guarantee.** Package modules do not
-import `scripts` or mutate `sys.path`; external CLI aliases alone bootstrap checkout
-paths. `pyproject.toml` gives Pyright a source path and describes the general environment;
-it is not an installer for this source package or a complete historical replay recipe.
+**These concrete-study examples are not a historical replay guarantee.** Package
+modules do not import `scripts` or mutate `sys.path`; external CLI aliases alone
+bootstrap checkout paths. `pyproject.toml` now supplies setuptools package discovery,
+direct dependencies and extras, but is not a complete historical replay recipe.
 The general `uv.lock` and retained replay runtime are not interchangeable certifications.
 Private defaults still name host-local dated study roots; cloning does not provide inputs.
 
@@ -149,9 +192,9 @@ particular, `full_trial_transfer` serves both as one experiment and as shared ma
   provenance seams and the required purpose-specific helper dependencies.
 
 Thus importing an endpoint or cue-time study also brings in the full-trial scientific
-runtime. They are not three isolated reusable APIs. Moving more common algorithms
-out of the full-trial workflow would be **future architecture work**, not implemented
-or required by this documentation change.
+runtime. They are not three isolated reusable APIs. The shared dataset/samplers have now moved to `_cebra_sampling`; study-specific
+training/cohort/readout coupling remains. The new public APIs bypass those studies.
+Further extraction is not required merely to make the old workflows look identical.
 
 Do not merge objects by shape alone: full-trial `RowBundle.y` is a binary component
 label, endpoint `RowBundle.y_pair` is a 30-class endpoint-pair label, and their pair-
@@ -227,9 +270,10 @@ check is not GPU/run/replay verification or biological evidence.
 or readouts on invented arrays; the broad `scripts/check_research_software.py` includes
 private embedding QA and is not a data-free runner.
 
-There is **no companion notebook yet**. Its target/cohort and input contract, and
-whether/how it uses this package, remain open. A tracked-aggregate presentation
-notebook need not import study runners; if it actually needs existing algorithms,
-prefer imports over copying them. No notebook, dependency install, fits, private replay
-or service is part of this package reference. Use
-[workspace/recovery](../../docs/workspace.md) for operational ownership and protected files.
+The [three fresh-input notebooks](../../notebooks/README.md) now use the public APIs;
+the October19 saved-model notebook remains historical evidence. Public API/adapter
+checks additionally cover unsigned/complex timing, forged selections/plans, poisoned
+excluded numeric fields, support, train-only behavior, trusted replay and executor
+identity/final-budget gates. See the [execution ledger](../../docs/shareable-notebooks-execution-20261023.md)
+for exact tested commands/results and [workspace/recovery](../../docs/workspace.md) for
+ownership/protected files. The notebooks do not authorize additional private runs.

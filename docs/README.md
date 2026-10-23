@@ -5,6 +5,8 @@
 | See the project and selected accepted figures | [Landing page and gallery](../README.md) — exploratory results with claim limits |
 | Read or edit the current retrospective | [Report](../report/README.md) |
 | Understand current package engineering and diagrams | [Maintained software design](software-design.md) — canonical as-built reference |
+| Run fresh source-to-result computation | [Three notebooks](../notebooks/README.md), [public APIs](../src/neuro/README.md#independent-public-workflow) — installed-wheel validated invented examples |
+| Inspect implementation and bounded real execution | [Approved north star](notebook-package-plan-20261023.md), [frozen protocol](shareable-notebooks-protocol-20261023.md), [execution ledger](shareable-notebooks-execution-20261023.md) |
 | Review the earlier codebase organization preview | [Historical HTML design overview](codebase-design.html) — may lag the package |
 | Follow completed work by week | [Research history](../history/README.md) |
 | Find original study methods and evidence | [Evidence catalog](reports/README.md) |
@@ -25,7 +27,10 @@ logs rather than competing “current” instructions.
 
 Older direction notes, pilot plans and professor deliveries remain historical context.
 The active report-first direction and implemented three-study package are recorded
-in [AGENTS.md](../AGENTS.md). Whether/how the future notebook uses the package remains
-open, depending on its scope and complexity; no notebook is created now.
+in [AGENTS.md](../AGENTS.md). The [accepted endpoint notebook](../report/README.md)
+replays saved inputs/models. The [October23 direction](notebook-package-plan-20261023.md)
+now has implemented runnable construction/model notebooks using supplied source data;
+saved source-notebook outputs are invented examples and private real-run status belongs to its ledger. Earlier “no notebook” statements
+in architecture-era documents are historical, not the current artifact inventory.
 Neither filing nor packaging authorizes fits, private replay, data downloads or
 changes to scientific conclusions.
