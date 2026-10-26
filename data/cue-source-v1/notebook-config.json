@@ -1,0 +1,35 @@
+{
+  "bin_width_s": 0.1,
+  "biological_execution": false,
+  "data_root": ".",
+  "dataset_manifest_sha256": "8af267ca189a98a3bcc3c24e498259d36079e41402a6cf2fdb9a0d9e5291ed11",
+  "execution": {
+    "batch_size": 256,
+    "development_rows_per_condition": 8,
+    "hidden": 32,
+    "iterations": 1000,
+    "learning_rate": 0.0003,
+    "logistic_C": 0.01,
+    "logistic_max_iter": 2000,
+    "output_dimension": 8,
+    "pca_components": 8,
+    "permutation_seed": 50000,
+    "seeds": [
+      0,
+      1
+    ],
+    "subset_seed": 20261023,
+    "train_rows_per_condition": 16
+  },
+  "inner_split_seed": 20260907,
+  "landmarks": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "mode": "compact",
+  "nominal_s": 1.0
+}

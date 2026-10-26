@@ -63,7 +63,7 @@ called with authorization. Counts are protocol expectations, not fresh execution
 
 ```mermaid
 flowchart TD
-    NB[Three visible experiment notebooks] --> AD[Explicit notebook_inputs / place195 adapter]
+    NB[Three visible experiment notebooks] --> AD[notebook_inputs: invented / compact cue_source / place195]
     AD --> SD[SourceData: sources, units, targets, splits, values, masks, exposure]
     NB --> PP[pseudopopulation: support, plans, intact blocks, source ablation]
     PP --> SD
@@ -85,6 +85,12 @@ The place195 adapter authenticates six named inputs, derives provisional endpoin
 regenerates frozen assignments and selects a directly contributor-disjoint panel
 before interpreting neural numbers. Reconstruction independently recomputes canonical
 metadata before numeric traversal; mutable/forged selections cannot replace the gate.
+The compact `cue_source` route derives trial metadata and fresh native-precision bins
+from the committed unbinned view, reusing that historical selection policy and frozen
+assignments. Both routes bind the inspection-time configuration fingerprint and
+reinspect canonical metadata before consumption. Compact NPZ headers and payloads
+are bounded before allocation; selected units' whole timestamp vectors are scanned
+to find cue windows. No historical neural tables or fitted results are required.
 This dataset policy is not hidden in the general model/assembly APIs.
 
 Raw normalization is training-only with unit-major flattening. PCA uses full SVD and
@@ -100,7 +106,9 @@ Authenticated new states are transformed/predicted again with fitting/updates bl
 Manifest authentication is not safe loading of arbitrary external pickles: only trusted
 fresh artifacts with a separately retained expected manifest hash are supported.
 Private output and final disk/deadline checks complement, not replace, independent
-privacy/scientific review. Public notebook outputs contain invented data only.
+privacy/scientific review. Current source-notebook outputs are cleared, not stale
+invented outputs. The [October26 ledger](compact-cue-source-20261026.md) records the
+non-fitting compact-source A execution; B/C were not executed for this update.
 
 One setuptools distribution supplies optional `cebra` and `notebooks` extras. Public
 construction/PCA use does not import CEBRA/torch/studies or require Git/private roots.

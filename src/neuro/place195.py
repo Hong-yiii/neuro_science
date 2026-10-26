@@ -13,6 +13,7 @@ import hashlib
 import json
 from collections import Counter, defaultdict
 from dataclasses import dataclass
+from dataclasses import field as dataclass_field
 from pathlib import Path
 
 import numpy as np
@@ -81,6 +82,19 @@ class MetadataSelection:
     selected: tuple[dict, ...]
     exclusions: tuple[dict, ...]
     audit: dict
+    manifest_fingerprint: str = dataclass_field(init=False)
+
+    def __post_init__(self):
+        object.__setattr__(self, "manifest_fingerprint", self._fingerprint())
+
+    def _fingerprint(self):
+        return hashlib.sha256(
+            json.dumps(self.manifest, sort_keys=True).encode()
+        ).hexdigest()
+
+    def validate_manifest(self):
+        if self._fingerprint() != self.manifest_fingerprint:
+            raise ValueError("inspection-time configuration fingerprint changed")
 
 
 def select_metadata(manifest: dict, *, base: Path = Path(".")) -> MetadataSelection:
@@ -93,8 +107,18 @@ def select_metadata(manifest: dict, *, base: Path = Path(".")) -> MetadataSelect
         json.dumps(manifest)
     )  # Own a value snapshot, not caller-owned nested dictionaries.
     paths = authenticate_inputs(manifest, base=base)
-    outer = _index(_rows(paths["outer_splits"]), "source_trial_id")
-    trials_all = _index(_rows(paths["trials"]), "source_trial_id")
+    return select_tables(
+        manifest,
+        paths=paths,
+        outer=_index(_rows(paths["outer_splits"]), "source_trial_id"),
+        trials_all=_index(_rows(paths["trials"]), "source_trial_id"),
+        units_by_id=_index(_rows(paths["units"]), "cell_id"),
+        frozen=_index(_rows(paths["inner_splits"]), "source_trial_id"),
+    )
+
+
+def select_tables(manifest, *, paths, outer, trials_all, units_by_id, frozen):
+    """Pure historical eligibility/assignment/embargo policy shared by both adapters."""
     if outer.keys() != trials_all.keys():
         raise ValueError("outer assignment/trial ID mismatch")
     trials = {
@@ -108,7 +132,6 @@ def select_metadata(manifest: dict, *, base: Path = Path(".")) -> MetadataSelect
             or row["previous_source_trial_id"] != assigned["previous_source_trial_id"]
         ):
             raise ValueError("outer split identity metadata mismatch")
-    units_by_id = _index(_rows(paths["units"]), "cell_id")
     units = tuple(units_by_id[key] for key in sorted(units_by_id))
     if any(u["selection_provenance"] != "place_selective_195_snapshot" for u in units):
         raise ValueError("unexpected inherited unit selection provenance")
@@ -181,7 +204,6 @@ def select_metadata(manifest: dict, *, base: Path = Path(".")) -> MetadataSelect
                 pool[int(index)]["split_id"] = (
                     "development" if i < max(1, len(pool) // 4) else "train"
                 )
-    frozen = _index(_rows(paths["inner_splits"]), "source_trial_id")
     if frozen.keys() != {s["source_id"] for s in eligible}:
         raise ValueError("regenerated eligible IDs differ from frozen assignments")
     for source in eligible:
@@ -281,10 +303,16 @@ def select_metadata(manifest: dict, *, base: Path = Path(".")) -> MetadataSelect
         raise ValueError("empty complete support panel")
     normalized = {
         **manifest,
-        "inputs": {
-            key: {**manifest["inputs"][key], "path": str(path)}
-            for key, path in paths.items()
-        },
+        **(
+            {
+                "inputs": {
+                    key: {**manifest["inputs"][key], "path": str(path)}
+                    for key, path in paths.items()
+                }
+            }
+            if "inputs" in manifest
+            else {}
+        ),
     }
     return MetadataSelection(
         paths,
@@ -320,6 +348,7 @@ def reconstruct_neural(
         raise PermissionError(
             "neural interpretation requires explicit execution authorization"
         )
+    selection.validate_manifest()
     # Frozen dataclasses do not freeze nested dictionaries. Recompute canonical
     # metadata from authenticated files and compare VALUES before interpreting
     # any neural numeric payload. Use only that independent canonical selection.

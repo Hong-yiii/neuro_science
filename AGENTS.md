@@ -12,7 +12,22 @@ PR status, recovery records and safe verification commands. Do not recreate old
 sibling worktrees or restart experiments from historical pending-work flags.
 Keep new durable decisions in Git-backed notes, not only in a chat transcript.
 
-**October24 draft-PR follow-up — current:** the owner requested a draft PR with a
+**October26 compact lab-source copy — current:** after confirming lab permission,
+the owner chose compact **unbinned source in ordinary Git only**, excluding incidental
+metadata. `data/cue-source-v1/` contains all195 selected units' timestamps (no sorting,
+deduplication or cue clipping), all58 sessions' cue-relevant Ripple/Eye event records,
+all Unity marker/delta rows and cleaned frozen assignments. Dense behavior/gaze and
+private paths/patches are omitted. No GitHub Release was created or uploaded; no LFS,
+new license, merge or model fit is authorized. The earlier full sanitized archive stays
+local and is not the deliverable. [Data contract](data/README.md) and the
+[October26 ledger](docs/compact-cue-source-20261026.md) own scope and validation.
+Compact mode makes the notebooks independent of old private imports/results/native
+files at runtime. Downstream consumption still enforces outer-train, frozen exposed
+development, global predecessor embargo and complete support. NotebookA is non-fitting;
+B/C model grids remain unchanged and must not be executed for this change. Originals,
+models, runtimes, stash, failed evidence and unrelated work remain unchanged.
+
+**October24 draft-PR follow-up:** the owner requested a draft PR with a
 structural overview and review instructions. Publish only the implementation, invented
 source-notebook outputs and reviewed documentation/aggregate notes. Private inputs,
 executed real notebooks/figures, manifests, model states and predictions remain ignored

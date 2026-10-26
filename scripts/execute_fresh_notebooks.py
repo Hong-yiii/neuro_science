@@ -356,7 +356,7 @@ def execute(args):
         if not args.manifest_sha256 or sha(args.manifest) != args.manifest_sha256:
             raise ValueError("supplied configuration requires exact manifest SHA256")
         config["manifest_directory"] = str(args.manifest.resolve().parent)
-    if config["mode"] == "place195":
+    if config["mode"] in {"place195", "compact"}:
         if not args.allow_biological or not config.get("biological_execution"):
             raise PermissionError("biological execution is not authorized")
         expected = {
@@ -381,7 +381,7 @@ def execute(args):
     deadline = time.monotonic() + args.timeout_seconds
     actual_kernel = probe_kernel_identity(args, deadline)
     expected_kernel = config.get("expected_kernel_identity")
-    if config["mode"] == "place195" and expected_kernel is None:
+    if config["mode"] in {"place195", "compact"} and expected_kernel is None:
         raise ValueError(
             "real execution requires reviewed pinned expected_kernel_identity"
         )

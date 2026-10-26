@@ -42,8 +42,12 @@ assembly = materialize(data, plan)
 assert assembly.values.shape == (24, 9, 4)
 ```
 
-`place195` owns the current six-file dataset-specific target/split/reconstruction
-adapter. `notebook_inputs` selects that explicit route or invented data;
+`place195` retains the six-file adapter and the shared pure `select_tables` historical
+eligibility/assignment/embargo policy. `cue_source_export` exports only an explicit
+native allowlist; `cue_source` authenticates the compact Git dataset and freshly bins
+native-precision spikes with an explicit half-open boundary policy (no historical
+binning epsilon). Both selectors share the same scientific policy. `notebook_inputs`
+selects compact, legacy six-file or invented data explicitly;
 `notebook_support` keeps small plotting/readout operations out of cells;
 `notebook_artifacts` owns fresh fit accounting, actual kernel identity and authenticated
 fit-blocked model replay. Scientific configuration/experiment loops remain visible in
@@ -55,7 +59,9 @@ complete observed bins; unsupported dropout fails. Source labels/contributors ar
 explicit, not inferred from neural activity. The current notebook CSV adapter is not
 a universal file-format loader. Known-label development assembly remains a conditional
 assay, not an unknown-trial prediction pipeline. Licensing/public upload and private
-lab-data rights remain separate, unresolved release decisions.
+lab-data rights remain separate. The owner-approved compact Git source exception is
+specified in [data/README.md](../../data/README.md); it does not grant a license,
+authorize another fit or publish any private model/result.
 
 ## Use from a checkout
 

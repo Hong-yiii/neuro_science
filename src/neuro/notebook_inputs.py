@@ -113,6 +113,18 @@ class InputInspection:
 
 
 def inspect_inputs(config: dict) -> InputInspection:
+    if config["mode"] == "compact":
+        from neuro.cue_source import inspect_compact
+
+        selection = inspect_compact(config)
+        return InputInspection(
+            config,
+            selection.selected,
+            selection.eligible,
+            selection.units,
+            selection.audit,
+            selection,
+        )
     if config["mode"] == "place195":
         selection = select_metadata(
             config, base=Path(config.get("manifest_directory", "."))
@@ -160,6 +172,12 @@ def load_inputs(inspection: InputInspection) -> tuple[SourceData, dict]:
         ):
             raise PermissionError(
                 "biological neural interpretation remains gated pending independent review"
+            )
+        if config["mode"] == "compact":
+            from neuro.cue_source import reconstruct_compact
+
+            return reconstruct_compact(
+                inspection.place195_selection, interpret_neural=True
             )
         return reconstruct_neural(inspection.place195_selection, interpret_neural=True)
     rng = np.random.default_rng(config["fixture_seed"])

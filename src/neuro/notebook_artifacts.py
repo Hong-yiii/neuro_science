@@ -85,7 +85,7 @@ def stable_kernel_identity(identity):
 def validate_kernel_identity(configuration):
     actual = runtime_identity()
     expected = configuration.get("expected_kernel_identity")
-    if expected is None and configuration["mode"] == "place195":
+    if expected is None and configuration["mode"] in {"place195", "compact"}:
         raise ValueError(
             "supplied biological execution requires a pinned kernel identity"
         )

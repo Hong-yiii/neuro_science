@@ -528,21 +528,34 @@ class TimingAndArtifactTests(unittest.TestCase):
             self.assertNotIn("outputs/start-goal", source)
             self.assertNotIn("run_everything", source)
             codes = [c for c in notebook["cells"] if c["cell_type"] == "code"]
-            self.assertEqual(
-                [c["execution_count"] for c in codes], list(range(1, len(codes) + 1))
-            )
-            self.assertEqual(
-                notebook["metadata"]["fresh_demo_execution"]["code_sha256"],
-                hashlib.sha256(
-                    "\n".join("".join(c["source"]) for c in codes).encode()
-                ).hexdigest(),
-            )
-            self.assertEqual(
-                notebook["metadata"]["fresh_demo_execution"][
-                    "fit_blocked_loaded_model_replay"
-                ],
-                "fit-blocked-loaded-model-replay-passed",
-            )
+            if name == "01_pseudopopulation":
+                self.assertIn(
+                    "whole_notebook_no_fitting.__enter__()", "".join(codes[0]["source"])
+                )
+            else:
+                self.assertNotIn("whole_notebook_no_fitting", source)
+            evidence = notebook["metadata"].get("fresh_demo_execution")
+            if evidence is None:
+                self.assertTrue(
+                    all(
+                        c["execution_count"] is None and not c["outputs"] for c in codes
+                    )
+                )
+            else:
+                self.assertEqual(
+                    [c["execution_count"] for c in codes],
+                    list(range(1, len(codes) + 1)),
+                )
+                self.assertEqual(
+                    evidence["code_sha256"],
+                    hashlib.sha256(
+                        "\n".join("".join(c["source"]) for c in codes).encode()
+                    ).hexdigest(),
+                )
+                self.assertEqual(
+                    evidence["fit_blocked_loaded_model_replay"],
+                    "fit-blocked-loaded-model-replay-passed",
+                )
             public = json.dumps([c["outputs"] for c in codes])
             self.assertNotIn("/home/", public)
             self.assertNotIn("invented/block", public)

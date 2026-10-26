@@ -2,7 +2,9 @@
 
 These are the active **source-to-result** walkthroughs. Each notebook starts from its
 own declared inputs, constructs source-safe pseudopopulations and computes fresh results.
-The saved source-notebook outputs are **invented-data software smoke tests**, not biological evidence.
+Current source-notebook outputs are cleared, not reused from the earlier invented
+software checks. The [October26 ledger](../docs/compact-cue-source-20261026.md) records
+actual non-fitting validation; B/C were not executed for this change.
 
 | Notebook | What it computes |
 | --- | --- |
@@ -50,12 +52,31 @@ are not thereby certified.
 
 ## Supplied inputs and scientific boundaries
 
+**Actual lab source is included in Git:** [compact unbinned cue-source v1](../data/README.md#compact-unbinned-cue-source--october26-2026)
+contains all selected-unit spikes and event/timing records, not old binned tensors or
+results. No Release, LFS or private raw download is needed. Dense gaze/behavior are
+intentionally omitted; original native sources stay local. All three notebooks use
+the shared compact inspection/load route without old private imports/results/splits.
+
+To inspect real metadata only (no biological execution flag/kernel pin needed), load
+`data/cue-source-v1/notebook-config.json`, set `manifest_directory` to its parent,
+and call `inspect_inputs`. The data guide contains a runnable checkout example.
+For actual neural reconstruction, copy that configuration to your own output area,
+set `data_root` explicitly to the compact directory and `biological_execution=true`,
+record a reviewed `expected_kernel_identity` from the intended runtime using
+`stable_kernel_identity(runtime_identity())`, then pass its SHA256 and
+`--allow-biological` to the executor. Select **only** `--notebooks 01_pseudopopulation`
+for this non-fitting walkthrough. Set `NEURO_NOTEBOOK_CONFIG` when using a Jupyter
+frontend; biological loads additionally require `NEURO_ALLOW_BIOLOGICAL=1`.
+No B/C model run is authorized by this source-data update. Default execution remains
+invented; wrong/missing supplied files fail, never fall back.
+
 `neuro.source_data.SourceData` is the explicit binned-input contract: source/unit/target
 ledgers, observation mask, exposure, timing, units, provenance and declared split policy.
 `neuro.pseudopopulation`, `neuro.pca_lda` and `neuro.cebra` can be used independently.
-The current notebook manifest adapter is specifically the authenticated six-file
-place195 input route; arbitrary file formats require an explicit adapter, not a guessed
-label/timing interpretation. Missing supplied inputs never fall back to a demo.
+Supported manifest adapters are the compact unbinned source view and the preserved
+six-file place195 route. Arbitrary formats require explicit semantics, not guessed
+labels/timing. Missing supplied inputs never fall back to a demo.
 
 The authorized local real-data protocol uses a **new27-unit/10-session panel**, with
 1,415training/551exposed-development sources after direct-contributor embargo. It is
@@ -72,15 +93,18 @@ are never included in these shareable source notebooks. No further biological ru
 ## Rebuild, verify and share
 
 Notebook cell source is maintained in `scripts/build_fresh_notebooks.py`; rebuilding
-produces empty outputs. The current saved outputs were executed from the same cell text
-and record their software-smoke provenance. Do not replace them with private outputs.
+produces empty outputs. Structural checks accept empty notebooks; optional saved
+execution evidence must match cell hashes/order. Whole-NotebookA uses the existing
+`no_fitting` guard before source work, not only late zero fit counters. Do not replace
+source notebooks with private ID-bearing outputs.
 Focused checks are `scripts/test_public_workflow.py` and `scripts/test_fresh_notebooks.py`;
 inspect their requirements before running. Do not use broad research-test discovery as
 a substitute: some historical tests access private artifacts.
 
 Artifact replay uses trusted joblib states only after authenticating a separately
-retained manifest hash. Never load an untrusted pickle/joblib directory. No code license
-or lab-data redistribution permission has been granted by this implementation. The
-owner-requested draft PR includes code, invented outputs and reviewed documentation/
-aggregate notes only; private inputs/results and package-registry publication remain
-outside its scope.
+retained manifest hash. Never load an untrusted pickle/joblib directory. The initial
+implementation/draft PR did not grant a code license or publish lab inputs. The separate
+October26 owner authorization covers only the compact source view and cleaned
+assignments described above; it grants no new license, model/result publication,
+merge or package-registry release. Original private inputs, execution manifests, predictions and fitted results
+remain local.

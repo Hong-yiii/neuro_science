@@ -1,10 +1,24 @@
 # Workspace and recovery
 
-Updated October24, 2026. Canonical checkout: **`~/neuro_science`**. Owner: Hongyi.
+Updated October26, 2026. Canonical checkout: **`~/neuro_science`**. Owner: Hongyi.
 Read [agent instructions](../AGENTS.md) before changing scientific code or artifacts.
 
 ## Current state
 
+- **October26 owner-approved compact unbinned source:** `data/cue-source-v1/`
+  contains all195 units' spikes, all58 sessions' event/timing records and cleaned frozen
+  assignment metadata in ordinary Git (about54.7MB). No Release was created/uploaded;
+  no LFS or new license. [Scope and checksums](../data/README.md) describe intentional
+  dense-stream omissions, native precision and public identity limits. The old full
+  sanitized archive remains local under `work/lab-source-publication-20261026/`.
+  Compact notebook mode needs no old private native/import/result files. Metadata
+  selection reproduces historical assignments/embargo; non-fitting reconstruction
+  passed fresh Notebook A execution with fitting blocked, with zero selected-contributor
+  Eye missing events. Independent artifact/privacy and code reviews closed all findings;
+  25 focused no-fit tests passed. Source notebooks retain empty outputs; B/C were not run. New bounded receipts live at
+  `work/compact-cue-source-20261026/`; [dated ledger](compact-cue-source-20261026.md)
+  separates executed checks from unexecuted notebook evidence. Originals, runtimes,
+  models, stash and unrelated work remain untouched.
 - **October24 publication request:** prepare a draft PR on `feat/fresh-input-notebooks`
   with the structure and review guide in its description. The owner authorized code,
   invented notebooks and reviewed documentation/aggregate notes, not private input or
@@ -18,8 +32,9 @@ Read [agent instructions](../AGENTS.md) before changing scientific code or artif
   records module boundaries, validity limits and release gates. The owner subsequently
   approved building and running it end to end on real data. [Execution ledger](shareable-notebooks-execution-20261023.md)
   and [bounded protocol](shareable-notebooks-protocol-20261023.md) own current status:
-  public APIs/adapter and [three executed invented notebooks](../notebooks/README.md)
-  are implemented and independently reviewed. Installed-wheel/no-CEBRA checks passed;
+  public APIs/adapter and the then-[executed invented notebooks](../notebooks/README.md)
+  were implemented and independently reviewed (October26 source regeneration clears
+  those old outputs; that earlier evidence does not attest the current cells). Installed-wheel/no-CEBRA checks passed;
   the exact-shape benchmark and authorized real run completed under hard resource limits.
   Real runb0497792d:6CEBRA/10PCA/78logistic/12LDA/6000updates and180loaded-model replay
   checks,115seconds, no swap/OOM; independent final results/privacy review accepted

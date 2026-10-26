@@ -104,9 +104,58 @@ print(json.dumps(worked))
 assert worked['derived_pair'] == example['condition']
 print('Exclusion waterfall:', json.dumps(inspection.audit['exclusion_counts'], sort_keys=True))"""),
         md(
-            "## Fresh neural measurements, observation and exposure\nThe real adapter gates exact source/unit identities before interpreting numeric fields, rejects duplicates/invalid windows, checks full-window counts against events, and freshly bins with the maintained half-open rule. Sequential gzip traversal and whole-file hashing are disclosed, not called physical non-reading."
+            "## Inventory, eligibility and support are different questions\nCompact source mode retains all records, including failed/mismatched trials. The historical outer-train gate, frozen development labels and global predecessor-contributor embargo apply only to consumption. Eye masked placeholders are never observed events. Metadata summaries do not create a pristine holdout."
+        ),
+        code("""from collections import Counter
+landmarks = configuration['landmarks']
+pair_counts = Counter(s['condition'] for s in inspection.eligible)
+selected_counts = Counter(s['condition'] for s in inspection.selected)
+print('Before/after source counts:', len(inspection.eligible), len(inspection.selected))
+print('Input inventory:', {k: inspection.audit[k] for k in ('exported_trials', 'exported_units', 'unity_timing_rows', 'native_eye_missing_events') if k in inspection.audit})
+print('Metadata all-record outcomes (historically exposed, not a holdout):', inspection.audit.get('all_record_outcomes', {}))
+for title, counts in [('Eligible outer-train ordered pairs', pair_counts), ('Selected ordered pairs', selected_counts)]:
+    matrix = np.array([[counts[f'{a}->{b}'] for b in landmarks] for a in landmarks])
+    print(title, '(rows=start, columns=goal; diagonal/unsupported cells remain zero):'); print(matrix)
+    fig, ax = plt.subplots(figsize=(5, 4)); image = ax.imshow(matrix); fig.colorbar(image, ax=ax, label='Real source trials')
+    ax.set(xticks=range(len(landmarks)), xticklabels=landmarks, yticks=range(len(landmarks)), yticklabels=landmarks, xlabel='Goal', ylabel='Start', title=title)
+    display(fig); plt.close(fig)
+# Every original block/pair appears, including zero surviving training support.
+eligible = inspection.eligible
+contributors = {sid for s in eligible if s['split_id'] == 'development' for sid in (s['source_id'], s['previous_id'])}
+surviving = [s for s in eligible if s['split_id'] == 'development' or not {s['source_id'], s['previous_id']} & contributors]
+pools = Counter((s['block_id'], s['condition'], s['split_id']) for s in surviving)
+blocks = sorted({s['block_id'] for s in eligible})
+pairs = [f'{a}->{b}' for a in landmarks for b in landmarks if a != b]
+block_support = np.array([[pools[block, pair, 'train'] for pair in pairs] for block in blocks])
+print('All original block/pair training support (zeros retained):', block_support.tolist())
+print('Predecessor edges:', inspection.audit.get('directed_edges', {}))
+print('Development contributor union / embargo removed:', len(contributors), inspection.audit['embargo_removed_train'])
+if inspection.place195_selection is not None:
+    joined = inspection.place195_selection.trials[example['source_id']]
+    print('Worked marker join:', {k: joined[k] for k in ('ripple_codes', 'unity_codes', 'eyelink_codes', 'eye_observed', 'outcome', 'qc_flags') if k in joined})
+    print('Native-precision cue seconds:', joined['ripple_cue_duration_s'])"""),
+        md(
+            "## Fresh neural measurements, observation and exposure\nThe compact adapter consumes only the selected outer-train panel, retains repeated native spikes, and uses explicit absolute half-open boundaries without the historical binning epsilon. Full-precision results need not equal old nine-significant-digit CSV results. The older six-file adapter retains its own conservation checks; neither route loads fitted results. Whole-file hashes traverse all supplied bytes, not physical non-reading."
         ),
         code(LOAD),
+        md(
+            "## One raw spike train → ten cue bins\nThe input stores unbinned native timestamps, not cached counts. The exact boundary policy is visible below; zeros are observed only within the source's recorded block, while off-block values remain masked/NaN."
+        ),
+        code("""if configuration['mode'] == 'compact':
+    from neuro.cue_source import authenticate, exact_bins
+    root, dataset_manifest = authenticate(inspection.place195_selection.manifest)
+    first_source = inspection.selected[0]
+    ui = next(i for i, u in enumerate(inspection.units) if u['session_id'] == first_source['block_id'])
+    unit = inspection.units[ui]
+    trial = inspection.place195_selection.trials[first_source['source_id']]
+    with np.load(root / 'spikes.npz', allow_pickle=False) as archive:
+        native_ms = archive[unit['key'] + '__timestamps']
+    counts, tail, full = exact_bins(native_ms, trial['ripple_start_s'], trial['ripple_end_s'], data.bin_edges)
+    np.testing.assert_array_equal(counts, data.values[0, ui])
+    print('Cue edges (seconds from onset):', data.bin_edges.tolist())
+    print('Fresh counts:', counts.tolist(), '| omitted cue tail:', tail, '| all cue spikes:', full)
+print('Observed zero count bins:', int(np.sum(data.values[data.observed] == 0)))
+print('Off-block unavailable bins:', int(np.isnan(data.values).sum()))"""),
         code("""from neuro.notebook_support import plot_input_audit
 fig = plot_input_audit(inspection, data, neural_audit)
 display(fig); plt.close(fig)
@@ -135,8 +184,7 @@ display(fig); plt.close(fig)"""),
 print(json.dumps(usage, sort_keys=True))
 fig, ax = plt.subplots(figsize=(6, 3)); ax.bar(list(usage['reuse_histogram']), list(usage['reuse_histogram'].values()))
 ax.set(xlabel='Uses of a real source', ylabel='Real sources', title='Source reuse distribution')
-display(fig); plt.close(fig)
-accounting = FitAccounting().start()"""),
+display(fig); plt.close(fig)"""),
         md(LIMIT),
         finish(
             "{'pca': 0, 'logistic': 0, 'lda': 0, 'cebra': 0, 'optimizer_updates': 0}"
@@ -284,6 +332,18 @@ print('Grid summary: 6CEBRA,6PCA,54logistic; observed and permuted worlds are no
             "{'pca': 6, 'logistic': 54, 'lda': 0, 'cebra': 6, 'optimizer_updates': 6 * settings['iterations']}"
         ),
     ]
+    # Hold the existing no-fitting guard across *all* A cells, not just final replay.
+    a[1] = dict(a[1])  # The common cell is shared with B/C; guard only A.
+    a[1]["source"] = (
+        "from neuro.notebook_artifacts import no_fitting, FitAccounting\n"
+        "whole_notebook_no_fitting = no_fitting()\n"
+        "whole_notebook_no_fitting.__enter__()\n"
+        "accounting = FitAccounting().start()\n" + "".join(a[1]["source"])
+    ).splitlines(keepends=True)
+    a[-1]["source"] = (
+        "".join(a[-1]["source"])
+        + "\nwhole_notebook_no_fitting.__exit__(None, None, None)"
+    ).splitlines(keepends=True)
     for name, cells in zip(
         ("01_pseudopopulation", "02_pca_lda", "03_cebra"), (a, b, c), strict=True
     ):

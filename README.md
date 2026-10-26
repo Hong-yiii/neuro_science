@@ -2,7 +2,7 @@
 
 A report-led research workspace for hippocampal navigation recordings: **what can
 we recover from cue activity, and what does a learned representation actually show?**
-CEBRA is a central tool, not a required winner. The repository brings together an
+CEBRA is a central tool, not a required winner. The repository brings together
 [fresh-input notebooks](notebooks/README.md), a preserved
 [historical saved-model review](report/endpoint_walkthrough.ipynb),
 [editable retrospective](report/README.md), accepted exploratory evidence and an
@@ -12,9 +12,17 @@ CEBRA is a central tool, not a required winner. The repository brings together a
 
 Three independently runnable notebooks cover [pseudopopulation construction](notebooks/01_pseudopopulation.ipynb),
 [PCA/LDA](notebooks/02_pca_lda.ipynb) and [CEBRA](notebooks/03_cebra.ipynb).
-Their saved source-notebook outputs are **invented-data software checks**. They expose input/target
-and split construction, fresh fitting, matched refitted source ablations and diagnostics;
-they do not load old research results. [Installation and execution](notebooks/README.md).
+They expose input/target and split construction, fresh fitting, matched refitted source
+ablations and diagnostics; they do not load old research results. Current notebook
+outputs are cleared. Notebook A passed fresh non-fitting execution; B/C were not rerun.
+[Installation and execution](notebooks/README.md).
+
+**Actual lab source is included in ordinary Git:** [compact unbinned cue-source v1](data/README.md#compact-unbinned-cue-source--october26-2026)
+contains all195 selected units' spikes and all58 sessions' event/timing records plus
+cleaned historical assignments (about54.7MB). No Release or LFS is used. Dense gaze and
+behavior are deliberately omitted; originals remain local. The shared compact notebook
+route reconstructs fresh native-precision bins without old private imports/results.
+[Non-fitting validation and historical reconciliation](docs/compact-cue-source-20261026.md).
 
 The separately authorized real run has a new27-unit/10-session contributor-disjoint
 panel, not the historical195-unit cohort. Its [protocol](docs/shareable-notebooks-protocol-20261023.md)
@@ -83,7 +91,7 @@ H2/artificial-agent comparison is removed. No new fit is queued.
 
 | Reader / goal | Start here | Then |
 | --- | --- | --- |
-| Scientist/programmer: compute from fresh inputs | [Three fresh-input notebooks](notebooks/README.md) — executed invented examples; explicit supplied-input route | [Public APIs](src/neuro/README.md#independent-public-workflow); [real-run ledger](docs/shareable-notebooks-execution-20261023.md) |
+| Scientist/programmer: compute from fresh inputs | [Three fresh-input notebooks](notebooks/README.md) — invented default; explicit compact source route; current outputs cleared | [Public APIs](src/neuro/README.md#independent-public-workflow); [real-run ledger](docs/shareable-notebooks-execution-20261023.md) |
 | Professor/reviewer: inspect the historical fitted computation | [Executed endpoint notebook](report/endpoint_walkthrough.ipynb) — equations, intermediate shapes, diagrams, six encoders and495 readouts replayed without fitting | [Execution boundaries](report/README.md#saved-artifact-notebook-execution-and-boundaries); public aggregates, private inputs required only to rerun |
 | Scientist: understand the evidence and claims | [Current report](report/README.md) — working draft, not a finished paper | [Evidence catalog](docs/reports/README.md), [analysis contract](docs/analysis-contract.md) |
 | Scientist: follow how the question evolved | [Weekly research history](history/README.md) | Original study protocols/results; old next steps are not a run queue |
@@ -179,8 +187,9 @@ and `report` can access protected artifacts or write files; “no fit” is not 
   for separately authorized historical replay; do not rewrite old hashes to make it pass.
 - **Reuse by scientific meaning, not by visual similarity.** Preserve distinct labels,
   cohorts and lineage; keep launch aliases thin. No speculative framework or notebook API.
-- **Report first; notebook scope remains open.** There is no companion notebook yet.
-  Whether/how it uses this package depends on its target, approved inputs and complexity.
+- **Separate current notebooks from historical evidence.** The fresh-input notebooks
+  expose source construction and computation; the historical endpoint notebook replays
+  accepted fitted artifacts. Neither authorizes another biological fit.
 
 ```text
 report/                 current manuscript, feedback and presentation-only tools
