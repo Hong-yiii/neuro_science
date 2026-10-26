@@ -5,6 +5,15 @@ Read [agent instructions](../AGENTS.md) before changing scientific code or artif
 
 ## Current state
 
+- **October26 research teaching revamp:** the owner asked for defensible notebooks
+  that teach the research and expose decisions, construction skew, model learning,
+  3D geometry, decoder performance and historical joint-training impact. Begin with
+  [the standalone research guide](../notebooks/00_research_guide.ipynb), whose figures
+  are existing public aggregates, then the three practical notebooks. Model grids
+  remain cue-only and unchanged; no new biological fits or private replay accompany
+  this revision. The owner requested publishing the revision to existing
+  [draft PR22](https://github.com/Hong-yiii/neuro_science/pull/22); GitHub owns its
+  publication/review status. [Scope and verification](notebook-research-guide-20261026.md).
 - **October26 owner-approved compact unbinned source:** `data/cue-source-v1/`
   contains all195 units' spikes, all58 sessions' event/timing records and cleaned frozen
   assignment metadata in ordinary Git (about54.7MB). No Release was created/uploaded;

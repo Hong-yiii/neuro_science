@@ -1,16 +1,34 @@
-# Fresh-input neuroscience notebooks
+# A research guide, from recordings to defensible claims
 
-These are the active **source-to-result** walkthroughs. Each notebook starts from its
-own declared inputs, constructs source-safe pseudopopulations and computes fresh results.
-Current source-notebook outputs are cleared, not reused from the earlier invented
-software checks. The [October26 ledger](../docs/compact-cue-source-20261026.md) records
-actual non-fitting validation; B/C were not executed for this change.
+Start with [00 — Research guide](00_research_guide.ipynb). It explains how the question
+evolved, what was measured, why the analysis decisions matter, what the completed
+research found, and what remains unresolved. Accepted public aggregate figures are
+embedded in the notebook: its evidence can be read without running code or locating
+private models. Historical results are explicitly distinguished from current computation.
+
+The three practical chapters follow **question → design decision → calculation →
+diagnostic → interpretation**. Each independently reconstructs its declared inputs.
+They teach how to inspect the work, not just how to call the package. Their current
+source outputs are empty; they do not pretend the revised cells have new biological
+results. [Revamp and verification record](../docs/notebook-research-guide-20261026.md).
 
 | Notebook | What it computes |
 | --- | --- |
-| [01 — Pseudopopulation](01_pseudopopulation.ipynb) | Target/split provenance, exclusions, masks/exposure, source support, intact block assembly, reconstruction and reuse; no fits |
-| [02 — PCA/LDA](02_pca_lda.ipynb) | Train-only normalization/PCA, logistic heads and supervised SVD-LDA; full versus reduced source pools, refitting every learned stage |
-| [03 — CEBRA](03_cebra.ipynb) | Fresh cue-only CEBRA-Time, raw/PCA references, source-level alignment-breaking diagnostic, matched readouts, losses/exposure and loaded-model replay |
+| [00 — Research guide](00_research_guide.ipynb) | Reading chapter: research history, cohort distinctions, accepted decoder and joint-training evidence, controls and claim limits; no execution |
+| [01 — Can we form this pseudopopulation?](01_pseudopopulation.ipynb) | Label/predecessor derivation, source support and exclusions, class/pool/session skew, count/exposure semantics, worked block lineage, balanced assembly versus real-source reuse; no fits |
+| [02 — What can simple models recover?](02_pca_lda.ipynb) | Train-only scaling/PCA, supervised LDA, decoder metric arithmetic, seed/budget comparisons, confusions, generalization gaps and explicitly selected 3D PCA views |
+| [03 — Is CEBRA learning something useful?](03_cebra.ipynb) | Temporal contrastive objective, loss components and sampling coverage, embedding spread/collapse checks, explicit observed/full/seed0 3D views, matched readouts and alignment-breaking controls |
+
+“Joint pair prediction” and “joint cue/navigation encoder training” are different
+questions. The current runnable model chapters are cue-only. Chapter 00 explains the
+accepted historical joint experiment, including its changed cue exposure and mixed
+endpoint effects. It does not invent a matched joint arm for the new 27-unit panel.
+
+**Suggested handoff:** read 00, work through 01, then compare the baselines in 02
+before inspecting CEBRA in 03. Answer the interpretation prompts before changing a
+parameter. The 3D plots retain the fitted model's dimension and display three existing
+coordinates; geometry is descriptive, while source-disjoint readouts test recovery.
+Computational transparency is distinct from identifying a biological neural state.
 
 The separate [historical endpoint notebook](../report/endpoint_walkthrough.ipynb)
 replays accepted saved artifacts. It is preserved unchanged; it is not fresh source
@@ -92,13 +110,19 @@ are never included in these shareable source notebooks. No further biological ru
 
 ## Rebuild, verify and share
 
-Notebook cell source is maintained in `scripts/build_fresh_notebooks.py`; rebuilding
-produces empty outputs. Structural checks accept empty notebooks; optional saved
+Notebook cell source is maintained in `scripts/build_fresh_notebooks.py` and the three
+`scripts/notebook_*_guide.py` teaching sources. Run `python scripts/build_fresh_notebooks.py`
+to rebuild all four; this reads only already-public figure assets for chapter 00 and
+produces empty code outputs. It performs no neural reconstruction or fitting.
+Structural checks accept empty notebooks; optional saved
 execution evidence must match cell hashes/order. Whole-NotebookA uses the existing
 `no_fitting` guard before source work, not only late zero fit counters. Do not replace
 source notebooks with private ID-bearing outputs.
-Focused checks are `scripts/test_public_workflow.py` and `scripts/test_fresh_notebooks.py`;
-inspect their requirements before running. Do not use broad research-test discovery as
+The new `scripts/test_notebook_diagnostics.py` checks metric units, time-major 3D
+coordinates, collapse diagnostics and plotting using invented arrays with fitting
+blocked. Existing checks include `scripts/test_public_workflow.py` and
+`scripts/test_fresh_notebooks.py`; some focused cases fit invented models, so inspect
+their requirements before running. Do not use broad research-test discovery as
 a substitute: some historical tests access private artifacts.
 
 Artifact replay uses trusted joblib states only after authenticating a separately

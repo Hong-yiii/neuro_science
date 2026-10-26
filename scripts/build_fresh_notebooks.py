@@ -1,4 +1,4 @@
-"""Build the three fresh-input notebooks; no computation or data access."""
+"""Build the research guide and three teaching notebooks; no neural data or fits."""
 
 from __future__ import annotations
 
@@ -82,6 +82,15 @@ assert replay['status'] == 'fit-blocked-loaded-model-replay-passed' """)
 
 
 def build():
+    if __package__:
+        from .notebook_construction_guide import enrich_construction_notebook
+        from .notebook_model_guide import enrich_model_notebooks
+        from .notebook_research_guide import research_guide
+    else:
+        from notebook_construction_guide import enrich_construction_notebook
+        from notebook_model_guide import enrich_model_notebooks
+        from notebook_research_guide import research_guide
+
     common = [
         code(COMMON),
         md(
@@ -332,6 +341,9 @@ print('Grid summary: 6CEBRA,6PCA,54logistic; observed and permuted worlds are no
             "{'pca': 6, 'logistic': 54, 'lda': 0, 'cebra': 6, 'optimizer_updates': 6 * settings['iterations']}"
         ),
     ]
+    a = enrich_construction_notebook(a, md, code)
+    b, c = enrich_model_notebooks(b, c, md, code)
+    overview = research_guide(md, code, ROOT)
     # Hold the existing no-fitting guard across *all* A cells, not just final replay.
     a[1] = dict(a[1])  # The common cell is shared with B/C; guard only A.
     a[1]["source"] = (
@@ -345,7 +357,9 @@ print('Grid summary: 6CEBRA,6PCA,54logistic; observed and permuted worlds are no
         + "\nwhole_notebook_no_fitting.__exit__(None, None, None)"
     ).splitlines(keepends=True)
     for name, cells in zip(
-        ("01_pseudopopulation", "02_pca_lda", "03_cebra"), (a, b, c), strict=True
+        ("00_research_guide", "01_pseudopopulation", "02_pca_lda", "03_cebra"),
+        (overview, a, b, c),
+        strict=True,
     ):
         notebook = {
             "nbformat": 4,
@@ -357,7 +371,11 @@ print('Grid summary: 6CEBRA,6PCA,54logistic; observed and permuted worlds are no
                     "language": "python",
                 },
                 "language_info": {"name": "python"},
-                "scope": "fresh-input exploratory computation; invented default; supplied-data gated",
+                "scope": (
+                    "reading guide; previously public aggregate evidence; no execution"
+                    if name == "00_research_guide"
+                    else "fresh-input exploratory computation; invented default; supplied-data gated"
+                ),
             },
             "cells": cells,
         }

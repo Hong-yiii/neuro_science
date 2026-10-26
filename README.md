@@ -10,6 +10,12 @@ CEBRA is a central tool, not a required winner. The repository brings together
 
 ## Start here: fresh source-to-result computation
 
+Begin with the [standalone research guide](notebooks/00_research_guide.ipynb): the
+scientific questions, measurement and assembly decisions, accepted decoder results,
+joint-training comparison and limits, with public figures embedded for reading without
+execution. The practical chapters below teach how to inspect each decision through
+source-skew audits, worked lineage, learning diagnostics and explicit 3D views.
+
 Three independently runnable notebooks cover [pseudopopulation construction](notebooks/01_pseudopopulation.ipynb),
 [PCA/LDA](notebooks/02_pca_lda.ipynb) and [CEBRA](notebooks/03_cebra.ipynb).
 They expose input/target and split construction, fresh fitting, matched refitted source

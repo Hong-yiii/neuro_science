@@ -12,6 +12,15 @@ PR status, recovery records and safe verification commands. Do not recreate old
 sibling worktrees or restart experiments from historical pending-work flags.
 Keep new durable decisions in Git-backed notes, not only in a chat transcript.
 
+**October26 notebook teaching revamp:** the owner requested a standalone research
+handoff, with explanations of decisions, pseudopopulation feasibility/skew, CEBRA
+learning, 3D geometry, decoder performance and joint-training effects. Start with
+`notebooks/00_research_guide.ipynb`, then the three practical chapters. The reading
+guide embeds previously public aggregate evidence; current cue-only fitting grids
+remain unchanged. This revision adds teaching and non-fitting diagnostics, not new
+biological fits or historical private replay. See
+`docs/notebook-research-guide-20261026.md` for verification and evidence boundaries.
+
 **October26 compact lab-source copy — current:** after confirming lab permission,
 the owner chose compact **unbinned source in ordinary Git only**, excluding incidental
 metadata. `data/cue-source-v1/` contains all195 selected units' timestamps (no sorting,
