@@ -12,7 +12,72 @@ PR status, recovery records and safe verification commands. Do not recreate old
 sibling worktrees or restart experiments from historical pending-work flags.
 Keep new durable decisions in Git-backed notes, not only in a chat transcript.
 
-**October19 review deliverable:** the owner requested an executed professor-facing
+**October27 standalone course:** the owner requested deeper foundations and visible
+implementation and allowed splitting into multiple notebooks. Start with the seven
+chapters in `notebooks/README.md`: overview, experiment foundations, executed invented
+arithmetic, construction, PCA/LDA, CEBRA and historical study evidence. B/C now stage
+the first planned case before completing the unchanged grids; no-fit mock regression
+checks attest orchestration, not real training. New saved outputs are invented
+arithmetic only; historical figures come from tracked public reports. A code is
+unchanged, B/C were not executed, no biological fits or private replay occurred.
+Continue the already authorized draft-PR update; no merge. See
+`docs/notebook-course-20261027.md` for verification and remaining evidence limits.
+
+**October26 notebook teaching revamp:** the owner requested a standalone research
+handoff, with explanations of decisions, pseudopopulation feasibility/skew, CEBRA
+learning, 3D geometry, decoder performance and joint-training effects. Start with
+`notebooks/00_research_guide.ipynb`, then the three practical chapters. The reading
+guide embeds previously public aggregate evidence; current cue-only fitting grids
+remain unchanged. This revision adds teaching and non-fitting diagnostics, not new
+biological fits or historical private replay. See
+`docs/notebook-research-guide-20261026.md` for verification and evidence boundaries.
+
+**October26 compact lab-source copy — current:** after confirming lab permission,
+the owner chose compact **unbinned source in ordinary Git only**, excluding incidental
+metadata. `data/cue-source-v1/` contains all195 selected units' timestamps (no sorting,
+deduplication or cue clipping), all58 sessions' cue-relevant Ripple/Eye event records,
+all Unity marker/delta rows and cleaned frozen assignments. Dense behavior/gaze and
+private paths/patches are omitted. No GitHub Release was created or uploaded; no LFS,
+new license, merge or model fit is authorized. The earlier full sanitized archive stays
+local and is not the deliverable. [Data contract](data/README.md) and the
+[October26 ledger](docs/compact-cue-source-20261026.md) own scope and validation.
+Compact mode makes the notebooks independent of old private imports/results/native
+files at runtime. Downstream consumption still enforces outer-train, frozen exposed
+development, global predecessor embargo and complete support. NotebookA is non-fitting;
+B/C model grids remain unchanged and must not be executed for this change. Originals,
+models, runtimes, stash, failed evidence and unrelated work remain unchanged.
+
+**October24 draft-PR follow-up:** the owner requested a draft PR with a
+structural overview and review instructions. Publish only the implementation, invented
+source-notebook outputs and reviewed documentation/aggregate notes. Private inputs,
+executed real notebooks/figures, manifests, model states and predictions remain ignored
+and local. This supersedes the earlier no-publication checkpoint for this draft only;
+no merge, new license, package-registry release or further biological run is authorized.
+See the draft PR for publication/review status; preserve unrelated notes and the stash.
+
+**October23 approved implementation:** the owner accepted
+`docs/notebook-package-plan-20261023.md` as the north star and requested implementation,
+real-data end-to-end execution and independent subagent validation. Read
+`docs/shareable-notebooks-execution-20261023.md` for actual progress and
+`docs/shareable-notebooks-protocol-20261023.md` for the bounded real-data scope and
+prefit gates. One installable library, independently usable pseudopopulation/PCA-LDA/
+CEBRA modules and fresh-input notebooks are the target. Preserve accepted historical
+notebooks/results, original inputs, runtime and stash. New real fitting is exploratory,
+cue-only and subject to code/data/resource review; no public data/license grant,
+publication, merge, navigation extension or unbounded study is authorized. Earlier
+“no notebook” and planning-only statements below are historical, not the current task.
+
+**October23 execution checkpoint:** all three fresh-input notebooks and installed-wheel
+workflows are implemented. Source-notebook outputs are invented software checks;
+publication now follows the separate draft-PR request above.
+Reviewed real run `b0497792d` completed115seconds with6CEBRA/10PCA/78logistic/12LDA,
+6000updates and180fit-blocked readout-split replays;4GiB/no-swap cgroup remained within
+1.09GiB peak, no OOM, unit unloaded. Private results live under
+`outputs/fresh-notebooks-20261023/real/`; final independent results/privacy review
+accepted the run, with a nonblocking confusion-heading overlap noted in the ledger.
+No further fits, retries, merge or private artifact moves are queued. Preserve the old notebook/results and all failure evidence.
+
+**October19 review deliverable (historical):** the owner requested an executed professor-facing
 saved-artifact notebook and a PR (not a merge). Start with
 `report/endpoint_walkthrough.ipynb` and `report/README.md`. The notebook replays only
 the accepted October7 observed endpoint seeds0–2 from saved standardized cue: six

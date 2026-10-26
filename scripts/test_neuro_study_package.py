@@ -62,6 +62,12 @@ HELPER_SOURCES = {
     ),
 }
 STUDIES = ("full_trial_transfer", "endpoint_time_readout", "cue_time_readout")
+SAMPLER_MOVED = {
+    "CebraVectorDataset",
+    "pad_groups",
+    "PhaseTimeLoader",
+    "PhaseBehaviorLoader",
+}
 ORIGINAL_HASHES = (
     "bea7561b922f1c3a36dfe563ba1c1d08b85749d4a3221243bf1adc35d425b7d1",
     "0967a9a69c56e7d0b59aa20600817d48c34deeb7fd9aceabec11b3706a4f84a5",
@@ -110,6 +116,19 @@ class StudyPackageTests(unittest.TestCase):
                 for node in ast.parse(_source(name).read_text()).body
                 if isinstance(node, (ast.FunctionDef, ast.ClassDef))
             }
+            if name == "full_trial_transfer":
+                extracted = {
+                    node.name: node
+                    for node in ast.parse(
+                        (ROOT / "src/neuro/_cebra_sampling.py").read_text()
+                    ).body
+                    if isinstance(node, (ast.FunctionDef, ast.ClassDef))
+                }
+                self.assertEqual(set(extracted), SAMPLER_MOVED)
+                self.assertTrue(set(extracted).isdisjoint(after))
+                after.update(
+                    extracted
+                )  # Exact pinned AST checks still cover every moved body.
             changed = {"sha256_file", "helper_paths"}
             moved = {"sha256_file"} if name != "endpoint_time_readout" else set()
             if name == "full_trial_transfer":
@@ -166,6 +185,14 @@ class StudyPackageTests(unittest.TestCase):
                 removed = [n for n in before.body if ast.dump(n) == ast.dump(reexport)]
                 self.assertEqual(len(removed), 1)
                 before.body.remove(removed[0])
+            if name == "full_trial_transfer":
+                before.body = [
+                    n
+                    for n in before.body
+                    if not isinstance(n, (ast.ClassDef, ast.FunctionDef))
+                    or n.name not in SAMPLER_MOVED
+                ]
+                # Moved bodies are independently compared against the pinned baseline above.
             for tree in (before, after):
                 tree.body = [
                     n
@@ -267,6 +294,7 @@ class StudyPackageTests(unittest.TestCase):
                         f"scripts/cebra_{name}.py",
                     },
                 )
+                self.assertIn("src/neuro/_cebra_sampling.py", paths)
                 self.assertIn("src/neuro/execution.py", paths)
                 self.assertIn("src/neuro/provenance.py", paths)
                 self.assertNotIn("scripts/place195_v8b_v9_cebra.py", paths)

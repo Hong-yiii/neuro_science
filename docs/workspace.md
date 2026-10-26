@@ -1,16 +1,75 @@
 # Workspace and recovery
 
-Updated October19, 2026. Canonical checkout: **`~/neuro_science`**. Owner: Hongyi.
+Updated October27, 2026. Canonical checkout: **`~/neuro_science`**. Owner: Hongyi.
 Read [agent instructions](../AGENTS.md) before changing scientific code or artifacts.
 
 ## Current state
 
-- Primary review artifact: [executed endpoint notebook](../report/endpoint_walkthrough.ipynb).
+- **October27 standalone research course:** the owner requested deeper foundations
+  and implementation teaching and allowed multiple notebooks. The
+  [seven-chapter course](../notebooks/README.md) now adds task/measurement foundations,
+  an executed invented spikes-to-predictions example and a retrospective covering
+  path targets, source transfer, ablations and joint-navigation construction. B/C
+  expose their first planned case in stages; mocked no-fit tests preserve the exact
+  grids, inputs and artifact identities. Fourteen existing public figures include
+  historical learning/3D evidence; no new real model evidence is implied. A's code
+  is unchanged; B/C remain unexecuted. [Verification and scope](notebook-course-20261027.md).
+  This continues the authorized [draft PR22](https://github.com/Hong-yiii/neuro_science/pull/22)
+  update, without merge, biological fitting or private model replay.
+- **October26 research teaching revamp:** the owner asked for defensible notebooks
+  that teach the research and expose decisions, construction skew, model learning,
+  3D geometry, decoder performance and historical joint-training impact. Begin with
+  [the standalone research guide](../notebooks/00_research_guide.ipynb), whose figures
+  are existing public aggregates, then the three practical notebooks. Model grids
+  remain cue-only and unchanged; no new biological fits or private replay accompany
+  this revision. The owner requested publishing the revision to existing
+  [draft PR22](https://github.com/Hong-yiii/neuro_science/pull/22); GitHub owns its
+  publication/review status. [Scope and verification](notebook-research-guide-20261026.md).
+- **October26 owner-approved compact unbinned source:** `data/cue-source-v1/`
+  contains all195 units' spikes, all58 sessions' event/timing records and cleaned frozen
+  assignment metadata in ordinary Git (about54.7MB). No Release was created/uploaded;
+  no LFS or new license. [Scope and checksums](../data/README.md) describe intentional
+  dense-stream omissions, native precision and public identity limits. The old full
+  sanitized archive remains local under `work/lab-source-publication-20261026/`.
+  Compact notebook mode needs no old private native/import/result files. Metadata
+  selection reproduces historical assignments/embargo; non-fitting reconstruction
+  passed fresh Notebook A execution with fitting blocked, with zero selected-contributor
+  Eye missing events. Independent artifact/privacy and code reviews closed all findings;
+  25 focused no-fit tests passed. Source notebooks retain empty outputs; B/C were not run. New bounded receipts live at
+  `work/compact-cue-source-20261026/`; [dated ledger](compact-cue-source-20261026.md)
+  separates executed checks from unexecuted notebook evidence. Originals, runtimes,
+  models, stash and unrelated work remain untouched.
+- **October24 publication request:** prepare a draft PR on `feat/fresh-input-notebooks`
+  with the structure and review guide in its description. The owner authorized code,
+  invented notebooks and reviewed documentation/aggregate notes, not private input or
+  result artifacts, a merge, a new license, a package-registry release or further fits.
+  GitHub owns the authoritative draft/review status. Unrelated current-state notes and
+  the retained stash remain outside this PR.
+- **October23 direction:** the owner requested shareable pseudopopulation, PCA/LDA and
+  CEBRA modules with runnable notebooks that compute from supplied source inputs, show
+  target/split/assembly construction and support dataset ablations—not depend on old
+  fitted results. [Read-only reconnaissance and proposed implementation plan](notebook-package-plan-20261023.md)
+  records module boundaries, validity limits and release gates. The owner subsequently
+  approved building and running it end to end on real data. [Execution ledger](shareable-notebooks-execution-20261023.md)
+  and [bounded protocol](shareable-notebooks-protocol-20261023.md) own current status:
+  public APIs/adapter and the then-[executed invented notebooks](../notebooks/README.md)
+  were implemented and independently reviewed (October26 source regeneration clears
+  those old outputs; that earlier evidence does not attest the current cells). Installed-wheel/no-CEBRA checks passed;
+  the exact-shape benchmark and authorized real run completed under hard resource limits.
+  Real runb0497792d:6CEBRA/10PCA/78logistic/12LDA/6000updates and180loaded-model replay
+  checks,115seconds, no swap/OOM; independent final results/privacy review accepted
+  the run with a nonblocking confusion-title overlap limitation.
+  New private results: `outputs/fresh-notebooks-20261023/real/`. Preserve the accepted
+  replay below as historical evidence; no additional fit is queued. Code publication
+  follows the separate draft-PR request above.
+- Historical review artifact: [executed endpoint notebook](../report/endpoint_walkthrough.ipynb).
   October19 authorized observed-only saved-input replay passed in a fresh native kernel:
   six CEBRA encoders, three PCA states,495 readouts and990 score rows, zero fitting.
   [Runtime, verification and privacy boundaries](../report/README.md#saved-artifact-notebook-execution-and-boundaries).
-  Branch `docs/saved-endpoint-notebook` includes the notebook and manuscript editorial
-  pass; the owner requested a PR, not merge. PR20 is merged at `19ae1b0`.
+  The notebook and manuscript editorial pass are now on local `main` at `3f84018`,
+  the PR21 merge inspected October23 after the owner's pull. The original October19
+  request was a PR, not a merge; that earlier publication status is historical.
+  PR20 remains in ancestry at `19ae1b0`.
 - [Current report](../report/README.md) → [weekly history](../history/README.md) →
   [source/evidence catalog](reports/README.md).
 - [PR19](https://github.com/Hong-yiii/neuro_science/pull/19) is merged into `main`
@@ -80,8 +139,10 @@ obtain scope before replaying or migrating anything. Do not recreate removed sib
 
 ## Execution and environment boundary
 
-`pyproject.toml`/`uv.lock` describe the general environment; `requirements-replay.txt`
-and retained `scratch/v6-v9-runtime/` describe a different historical runtime. Filing
+`pyproject.toml`/`uv.lock` now support the installable public APIs and optional extras;
+`requirements-replay.txt` and retained `scratch/v6-v9-runtime/` describe a different
+historical runtime. October23 validation used a task-owned installed-wheel runtime
+under `work/shareable-notebooks-20261023/`, borrowing dependencies read-only. Filing
 is not environment consolidation. Do not install, upgrade or delete either by default.
 
 Use [focused software/presentation checks](reorganization.md#focused-validation-no-broad-scientific-runner).
