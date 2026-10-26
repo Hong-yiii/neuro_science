@@ -16,6 +16,9 @@ the hippocampus predicts a path.
 Start with [the research guide](00_research_guide.ipynb) for the completed research and
 accepted results. Continue to [PCA/LDA](02_pca_lda.ipynb) and [CEBRA](03_cebra.ipynb)
 only after you can explain the gates here. Each chapter can reconstruct its own inputs.
+For the task/recording background, read [foundations](00a_experiment_foundations.ipynb).
+For a tiny spike-to-prediction calculation with visible values, read the
+[worked example](00b_worked_example.ipynb) before this larger construction workflow.
 
 **Reading contract.** The default is an invented software example: three landmarks,
 six ordered pairs, nine units in three blocks and four bins. It teaches mechanics;

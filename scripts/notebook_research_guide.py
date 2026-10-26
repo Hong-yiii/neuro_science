@@ -53,6 +53,15 @@ figures does not reproduce their source construction or fit their models.
 Read in order: **question → measurement → population construction → model → evidence →
 claim**. Use [the notebook index](README.md) for execution instructions and
 [the source contract](../data/README.md) for the compact lab-source contents.
+
+This overview is the entry point to a seven-chapter course. Continue with
+[experimental foundations](00a_experiment_foundations.ipynb), then follow one source
+through [worked numerical calculations](00b_worked_example.ipynb). Chapters 1–3
+show construction and the actual model workflow, with a staged first case before
+the remaining grid. Finish with [historical tests and evidence](04_study_evidence.ipynb):
+path-target construction, transfer/decoder ablations, joint-navigation preparation,
+and existing optimization and 3D figures are explained there without needing the
+original reports to reconstruct the argument.
 """),
         md("""
 ## 1. What was the scientific question?
@@ -219,7 +228,10 @@ bins within a constructed row; negatives sample row/bin vectors. The full pipeli
 still condition-dependent because labels define assembly. Chapter 3 exposes the actual
 loss components and sampler exposure alongside predictive results. Its invented default
 uses only 20 updates: a software demonstration, not evidence for trained biological
-representations. No current real learning curve is supplied by this reading chapter.
+representations. No current compact-source learning curve is supplied by this reading
+chapter. [Chapter 4](04_study_evidence.ipynb) embeds actual historical optimization and
+3D diagnostics, with the original cohort and configuration identified; those do not
+become new evidence for the compact-source model grid.
 
 For a 3D view, first state whether each point is one row×bin, a whole-cue vector or a
 condition average. State the world, source budget, seed, split and projection. Color

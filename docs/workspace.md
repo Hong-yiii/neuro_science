@@ -1,10 +1,21 @@
 # Workspace and recovery
 
-Updated October26, 2026. Canonical checkout: **`~/neuro_science`**. Owner: Hongyi.
+Updated October27, 2026. Canonical checkout: **`~/neuro_science`**. Owner: Hongyi.
 Read [agent instructions](../AGENTS.md) before changing scientific code or artifacts.
 
 ## Current state
 
+- **October27 standalone research course:** the owner requested deeper foundations
+  and implementation teaching and allowed multiple notebooks. The
+  [seven-chapter course](../notebooks/README.md) now adds task/measurement foundations,
+  an executed invented spikes-to-predictions example and a retrospective covering
+  path targets, source transfer, ablations and joint-navigation construction. B/C
+  expose their first planned case in stages; mocked no-fit tests preserve the exact
+  grids, inputs and artifact identities. Fourteen existing public figures include
+  historical learning/3D evidence; no new real model evidence is implied. A's code
+  is unchanged; B/C remain unexecuted. [Verification and scope](notebook-course-20261027.md).
+  This continues the authorized [draft PR22](https://github.com/Hong-yiii/neuro_science/pull/22)
+  update, without merge, biological fitting or private model replay.
 - **October26 research teaching revamp:** the owner asked for defensible notebooks
   that teach the research and expose decisions, construction skew, model learning,
   3D geometry, decoder performance and historical joint-training impact. Begin with

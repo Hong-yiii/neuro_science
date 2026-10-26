@@ -1,4 +1,4 @@
-"""Build the research guide and three teaching notebooks; no neural data or fits."""
+"""Build the research course and three workflows; no neural data or model fits."""
 
 from __future__ import annotations
 
@@ -84,12 +84,18 @@ assert replay['status'] == 'fit-blocked-loaded-model-replay-passed' """)
 def build():
     if __package__:
         from .notebook_construction_guide import enrich_construction_notebook
+        from .notebook_foundations import foundations
         from .notebook_model_guide import enrich_model_notebooks
         from .notebook_research_guide import research_guide
+        from .notebook_study_evidence import study_evidence
+        from .notebook_worked_example import worked_example
     else:
         from notebook_construction_guide import enrich_construction_notebook
+        from notebook_foundations import foundations
         from notebook_model_guide import enrich_model_notebooks
         from notebook_research_guide import research_guide
+        from notebook_study_evidence import study_evidence
+        from notebook_worked_example import worked_example
 
     common = [
         code(COMMON),
@@ -344,6 +350,9 @@ print('Grid summary: 6CEBRA,6PCA,54logistic; observed and permuted worlds are no
     a = enrich_construction_notebook(a, md, code)
     b, c = enrich_model_notebooks(b, c, md, code)
     overview = research_guide(md, code, ROOT)
+    foundation_cells = foundations(md, code, ROOT)
+    worked_cells = worked_example(md, code, ROOT)
+    evidence_cells = study_evidence(md, code, ROOT)
     # Hold the existing no-fitting guard across *all* A cells, not just final replay.
     a[1] = dict(a[1])  # The common cell is shared with B/C; guard only A.
     a[1]["source"] = (
@@ -357,8 +366,11 @@ print('Grid summary: 6CEBRA,6PCA,54logistic; observed and permuted worlds are no
         + "\nwhole_notebook_no_fitting.__exit__(None, None, None)"
     ).splitlines(keepends=True)
     for name, cells in zip(
-        ("00_research_guide", "01_pseudopopulation", "02_pca_lda", "03_cebra"),
-        (overview, a, b, c),
+        (
+            "00_research_guide", "00a_experiment_foundations", "00b_worked_example",
+            "01_pseudopopulation", "02_pca_lda", "03_cebra", "04_study_evidence",
+        ),
+        (overview, foundation_cells, worked_cells, a, b, c, evidence_cells),
         strict=True,
     ):
         notebook = {
@@ -372,8 +384,12 @@ print('Grid summary: 6CEBRA,6PCA,54logistic; observed and permuted worlds are no
                 },
                 "language_info": {"name": "python"},
                 "scope": (
-                    "reading guide; previously public aggregate evidence; no execution"
-                    if name == "00_research_guide"
+                    "reading chapter; stated evidence/provenance; no execution"
+                    if name in {"00_research_guide", "00a_experiment_foundations"}
+                    else "public historical evidence; optional invented arithmetic only; no model replay or fitting"
+                    if name == "04_study_evidence"
+                    else "invented worked arithmetic; no fitted encoder or classifier; no lab inputs"
+                    if name == "00b_worked_example"
                     else "fresh-input exploratory computation; invented default; supplied-data gated"
                 ),
             },

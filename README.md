@@ -8,20 +8,28 @@ CEBRA is a central tool, not a required winner. The repository brings together
 [editable retrospective](report/README.md), accepted exploratory evidence and an
 [installable Python package](src/neuro/README.md).
 
-## Start here: fresh source-to-result computation
+## Start here: the research course
 
 Begin with the [standalone research guide](notebooks/00_research_guide.ipynb): the
 scientific questions, measurement and assembly decisions, accepted decoder results,
 joint-training comparison and limits, with public figures embedded for reading without
-execution. The practical chapters below teach how to inspect each decision through
-source-skew audits, worked lineage, learning diagnostics and explicit 3D views.
+execution. Continue with [experiment foundations](notebooks/00a_experiment_foundations.ipynb)
+and an [executed numerical example](notebooks/00b_worked_example.ipynb) that follows
+invented spikes through counts, assembly, scaling, projection, predictions and metrics.
 
 Three independently runnable notebooks cover [pseudopopulation construction](notebooks/01_pseudopopulation.ipynb),
 [PCA/LDA](notebooks/02_pca_lda.ipynb) and [CEBRA](notebooks/03_cebra.ipynb).
-They expose input/target and split construction, fresh fitting, matched refitted source
-ablations and diagnostics; they do not load old research results. Current notebook
-outputs are cleared. Notebook A passed fresh non-fitting execution; B/C were not rerun.
-[Installation and execution](notebooks/README.md).
+They expose input/target and split construction, then walk one planned model case
+through separate fit, transform, decoder and scoring stages before finishing the
+comparison grid. Equations, network layers and setting rationale explain the calls.
+The [study-evidence chapter](notebooks/04_study_evidence.ipynb) closes the course with
+path construction, source transfer, ablations, actual historical loss/3D figures and
+joint-training implementation and results. [Reading order and execution](notebooks/README.md).
+
+The practical A/B/C outputs remain cleared. A's verified non-fitting code is unchanged;
+B/C were not rerun, and their staged grids passed no-fit orchestration tests. The
+worked example includes saved invented outputs; historical figures retain their
+original cohorts and limitations. [Verification record](docs/notebook-course-20261027.md).
 
 **Actual lab source is included in ordinary Git:** [compact unbinned cue-source v1](data/README.md#compact-unbinned-cue-source--october26-2026)
 contains all195 selected units' spikes and all58 sessions' event/timing records plus

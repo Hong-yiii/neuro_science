@@ -1,31 +1,38 @@
 # A research guide, from recordings to defensible claims
 
-Start with [00 — Research guide](00_research_guide.ipynb). It explains how the question
-evolved, what was measured, why the analysis decisions matter, what the completed
-research found, and what remains unresolved. Accepted public aggregate figures are
-embedded in the notebook: its evidence can be read without running code or locating
-private models. Historical results are explicitly distinguished from current computation.
+This seven-chapter course is intended for a graduate student taking over the study.
+Start with [00 — Research guide](00_research_guide.ipynb), then follow the table in
+order. The foundations explain the task and measurements; a small executed example
+traces the arithmetic; the practical chapters expose the implemented computation;
+the retrospective explains what each experiment changed in our understanding.
+Fourteen historical figures and the invented example's outputs are embedded for
+reading without private files or model execution.
 
-The three practical chapters follow **question → design decision → calculation →
+The practical chapters follow **question → design decision → calculation →
 diagnostic → interpretation**. Each independently reconstructs its declared inputs.
-They teach how to inspect the work, not just how to call the package. Their current
-source outputs are empty; they do not pretend the revised cells have new biological
-results. [Revamp and verification record](../docs/notebook-research-guide-20261026.md).
+B/C walk the first planned case through assembly, normalization, representation,
+transformation, decoder fitting and scoring in separate cells, then finish the
+remaining grid. Equations and arithmetic checks expose what the package computes.
+[Scope and verification](../docs/notebook-course-20261027.md).
 
-| Notebook | What it computes |
+| Notebook | What you should understand afterward |
 | --- | --- |
 | [00 — Research guide](00_research_guide.ipynb) | Reading chapter: research history, cohort distinctions, accepted decoder and joint-training evidence, controls and claim limits; no execution |
+| [00a — Experiment foundations](00a_experiment_foundations.ipynb) | Maze/cue task, spike sorting and count measurements, clocks and markers, units versus sessions, missingness, pseudopopulation assumptions, label conditioning and what remains undocumented |
+| [00b — Worked numerical example](00b_worked_example.ipynb) | One invented dataset from timestamps through counts/masks, split, block recipes, scaling, given projection/logits, probabilities, confusion metrics and one contrastive term; saved outputs, no fitted model |
 | [01 — Can we form this pseudopopulation?](01_pseudopopulation.ipynb) | Label/predecessor derivation, source support and exclusions, class/pool/session skew, count/exposure semantics, worked block lineage, balanced assembly versus real-source reuse; no fits |
-| [02 — What can simple models recover?](02_pca_lda.ipynb) | Train-only scaling/PCA, supervised LDA, decoder metric arithmetic, seed/budget comparisons, confusions, generalization gaps and explicitly selected 3D PCA views |
-| [03 — Is CEBRA learning something useful?](03_cebra.ipynb) | Temporal contrastive objective, loss components and sampling coverage, embedding spread/collapse checks, explicit observed/full/seed0 3D views, matched readouts and alignment-breaking controls |
+| [02 — What can simple models recover?](02_pca_lda.ipynb) | Staged scaler/PCA/readout implementation, supervised LDA, logits and metrics, rationale for settings, seed/budget comparisons, confusions, gaps and explicit 3D PCA views |
+| [03 — Is CEBRA learning something useful?](03_cebra.ipynb) | Actual network layers and temporal sampler, staged fit/transform/readout, contrastive terms, sampling coverage, spread/collapse checks, observed/full/seed0 3D views and controls |
+| [04 — How the studies changed our understanding](04_study_evidence.ipynb) | Graph/path targets, source transfer versus recombination, preprocessing/sampling/readout ablations, actual historical loss and 3D figures, joint navigation construction and weighting, negative results and unresolved tests |
 
 “Joint pair prediction” and “joint cue/navigation encoder training” are different
-questions. The current runnable model chapters are cue-only. Chapter 00 explains the
-accepted historical joint experiment, including its changed cue exposure and mixed
-endpoint effects. It does not invent a matched joint arm for the new 27-unit panel.
+questions. The current runnable model chapters are cue-only. Chapters 00 and 04
+explain the accepted historical joint experiments, including native navigation bins,
+relative-duration pairing, changed cue exposure and mixed endpoint effects. There
+is no matched joint arm for the new 27-unit panel.
 
-**Suggested handoff:** read 00, work through 01, then compare the baselines in 02
-before inspecting CEBRA in 03. Answer the interpretation prompts before changing a
+**Suggested handoff:** read 00 → 00a → 00b → 01 → 02 → 03 → 04. Answer the
+interpretation prompts before changing a
 parameter. The 3D plots retain the fitted model's dimension and display three existing
 coordinates; geometry is descriptive, while source-disjoint readouts test recovery.
 Computational transparency is distinct from identifying a biological neural state.
@@ -34,7 +41,25 @@ The separate [historical endpoint notebook](../report/endpoint_walkthrough.ipynb
 replays accepted saved artifacts. It is preserved unchanged; it is not fresh source
 reconstruction and is not required by these notebooks.
 
-## Install and run the invented examples
+## Read or run the teaching examples
+
+Chapters 00/00a need no kernel. Chapter 00b includes seven executed arithmetic cells
+and three figures; Chapter 04 includes two executed symbolic examples alongside
+historical evidence. All those new outputs use invented inputs and no fitted models.
+After installing notebook dependencies, reproduce just these examples with:
+
+```sh
+jupyter nbconvert --to notebook --execute \
+  notebooks/00b_worked_example.ipynb notebooks/04_study_evidence.ipynb \
+  --output-dir /tmp/neuro-teaching-new-run
+```
+
+The practical A/B/C source outputs remain empty. A's code is unchanged from its
+verified non-fitting run. B/C have not been rerun; their revised orchestration was
+tested with actual invented assemblies and mocked fitting. Historical learning
+curves do not attest learning by the current compact-source models.
+
+## Install and run the practical workflows
 
 Use a **new** Python environment, not this host's retained research runtimes. From a
 checkout, install the distribution with the extras you need:
@@ -110,15 +135,24 @@ are never included in these shareable source notebooks. No further biological ru
 
 ## Rebuild, verify and share
 
-Notebook cell source is maintained in `scripts/build_fresh_notebooks.py` and the three
-`scripts/notebook_*_guide.py` teaching sources. Run `python scripts/build_fresh_notebooks.py`
-to rebuild all four; this reads only already-public figure assets for chapter 00 and
-produces empty code outputs. It performs no neural reconstruction or fitting.
+Notebook cell source is maintained in `scripts/build_fresh_notebooks.py`, the three
+`scripts/notebook_*_guide.py` sources, and `notebook_foundations.py`,
+`notebook_worked_example.py`, `notebook_study_evidence.py`. Run
+`python scripts/build_fresh_notebooks.py` to rebuild all seven. This reads only
+tracked public PNG/HTML figure assets, performs no neural reconstruction or fitting,
+and clears code outputs, including the saved invented examples. Re-execute those
+two teaching chapters separately to restore their outputs. Embedded historical
+figures survive rebuilding and include source/image hashes.
 Structural checks accept empty notebooks; optional saved
 execution evidence must match cell hashes/order. Whole-NotebookA uses the existing
 `no_fitting` guard before source work, not only late zero fit counters. Do not replace
 source notebooks with private ID-bearing outputs.
-The new `scripts/test_notebook_diagnostics.py` checks metric units, time-major 3D
+`scripts/test_teaching_notebook_grid.py` compares original and staged orchestration
+under a no-fitting guard, with deterministic mock estimators and actual invented
+source assembly. It checks every case/input/label/argument, development reuse,
+artifact names and budgets: B has 4 PCA/24 logistic/12 LDA; C has 6 CEBRA/6 PCA/54
+logistic and six times the configured updates. It does not certify actual training.
+`scripts/test_notebook_diagnostics.py` checks metric units, time-major 3D
 coordinates, collapse diagnostics and plotting using invented arrays with fitting
 blocked. Existing checks include `scripts/test_public_workflow.py` and
 `scripts/test_fresh_notebooks.py`; some focused cases fit invented models, so inspect

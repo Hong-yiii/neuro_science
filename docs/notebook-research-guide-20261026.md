@@ -1,5 +1,9 @@
 # Research notebook teaching revamp — October 26, 2026
 
+The [October27 course expansion](notebook-course-20261027.md) supersedes this
+four-chapter layout and records the deeper foundations, worked implementation,
+historical evidence and current validation. This ledger preserves the first pass.
+
 The owner requested notebooks that teach the research to a successor: why a
 pseudopopulation is admissible, what biases construction introduces, how to judge
 CEBRA optimization and representation quality, what three-dimensional views mean,

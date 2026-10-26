@@ -6,7 +6,153 @@ diagnostics around the existing approved grids. It never executes notebooks.
 
 from __future__ import annotations
 
+import ast
 from copy import deepcopy
+from textwrap import dedent, indent
+
+
+DECISION_LEDGER = r"""
+## Which settings are scientific choices, and which are inherited?
+
+These settings define the assay being evaluated. They were fixed in the bounded
+fresh-input protocol, rather than selected from the development scores shown here.
+A plausible rationale is not evidence that a setting is optimal; the distinction
+is recorded explicitly so the next researcher knows what would require a new study.
+
+| Decision | Value in the lab protocol | Why keep it in this comparison? | What has not been established? |
+| --- | --- | --- | --- |
+| Cue measurement | First 1 s in ten 100-ms bins | Inherits the endpoint assay's time reference; counts trade temporal detail for more spikes per bin | 100 ms is not a demonstrated optimal bin width; later cue tails are excluded |
+| Representation width | PCA8 and CEBRA8 per bin | Holds nominal latent width fixed and keeps a compact reference | Eight outputs are not eight biological states; equal width does not imply equal capacity or useful rank |
+| CEBRA duration | 1,000 Adam updates | Uses the declared checkpoint and bounds computation | No convergence/early-stopping or optimal-duration claim; demo uses 20 updates only |
+| Logistic regularization | C = 0.01, lbfgs, max_iter = 2,000 | Keeps the same regularized linear readout family across representations | C is not optimized independently for every representation; failure to converge stops execution |
+| Constructed row budget | 16 train / 8 development per pair | Equalizes condition weight within a fixed computational budget | Synthetic row count is not biological sample size or the task's natural class prior; demo uses 8 / 4 |
+| Source intervention | Full versus nested floor-half training pools | Probes dependence on real source availability while retaining units and the fixed development assembly | One subset is not a sample-efficiency curve or causal effect |
+
+The configuration printed in the setup cells is the operational value used by this
+execution. [Foundations](00a_experiment_foundations.ipynb) and the
+[small worked example](00b_worked_example.ipynb) develop the arithmetic without
+fitting. Here we follow the **actual first fitted case** through separate cells,
+then run only the remaining declared comparisons. That first case counts toward
+the original grid; it is not an additional pilot or a chosen best seed.
+"""
+
+
+SCALER_MECHANICS = r"""
+## Worked case, step 2 — fit the unit scaler on training only
+
+For unit u, estimate μᵤ as the mean of its counts over training rows and bins and
+σᵤ as the square root of its population variance (ddof=0). Transform every count by
+zᵣᵤₜ = (xᵣᵤₜ − μᵤ) / σᵤ. `StandardScaler` uses scale 1 for a constant feature.
+The mean and scale belong to the training data; development supplies no fitted
+statistics. Different recording baselines therefore become comparable in numerical
+units of training standard deviation, without claiming that all cells have equal
+biological significance or that standardized spikes are normally distributed.
+
+The cell checks the learned parameters against visible arithmetic on the training
+tensor. It then confirms that the raw feature matrix has R rows and U×T columns.
+The additional scaler inside each decoder later operates on **whole-cue feature
+columns**, so it can estimate different scales at different bins; that is a separate
+operation from this one mean/scale per unit. If an apparent benefit depends on these
+choices, it is a benefit of the specified pipeline, not automatically of the encoder.
+"""
+
+
+PCA_MECHANICS = r"""
+## Worked case, step 3 — learn a projection, then freeze it
+
+After unit standardization, arrange training data as A with shape (R×T) × U,
+center its columns, and factor A = Uₛ S Vᵀ by singular-value decomposition.
+The first d=8 rows of Vᵀ are the PCA directions. A new standardized vector a maps
+to (a − PCA_training_mean) V_d. No endpoint label enters this fit. Large singular
+values identify directions with more standardized training variance; they do not
+identify goal neurons or directions guaranteed to decode endpoints.
+
+`fit_pca` owns its own training-fitted unit scaler so the saved PCA object is usable
+independently. It does not consume the raw baseline's scaler or development values.
+The cell fits exactly the PCA already planned for this case; the next cell applies
+it to both splits and verifies the projection equation against the stored state.
+No whitening is used: retained components keep their learned relative variances.
+"""
+
+
+DECODER_MECHANICS = r"""
+## Worked case, step 5 — train the readouts, before asking for scores
+
+For whole-cue feature row q, logistic regression computes one score per class,
+aₖ = wₖᵀq + bₖ, then probabilities pₖ = exp(aₖ) / Σⱼ exp(aⱼ). It learns weights
+using training labels by minimizing classification log loss with an L2 penalty;
+smaller C means stronger regularization. The row goes through a training-fitted
+feature scaler before this equation. We fit separate heads for pair, start and goal,
+since knowing one marginal label is not the same prediction problem as knowing both.
+The feature/target arrays and fixed C/max_iter remain visible below.
+
+In Notebook B, raw LDA is a different supervised classifier. Its linear class score
+has the form qᵀΣ⁻¹μₖ − ½μₖᵀΣ⁻¹μₖ + log πₖ under a shared within-class covariance
+model. The SVD implementation handles the supported subspace without explicitly
+inverting a large matrix. Its fitted means, priors and within-class directions use
+training labels. Thus “PCA versus LDA” here compares a PCA-plus-logistic pipeline
+with a raw-feature LDA classifier, rather than two interchangeable unsupervised
+embeddings. Notebook C uses matched logistic heads for all three representations.
+
+The following cell only trains and retains this case's declared readouts. Scoring
+comes afterward, using their frozen transformations and weights. The printed scaler
+and coefficient shapes expose what the decoder learned without publishing its
+weight values or any row-level predictions. Moving these operations into separate
+cells makes the boundary reviewable; it does not introduce extra fits.
+"""
+
+
+SCORING_MECHANICS = r"""
+## Worked case, step 6 — predict first, then compute the metric
+
+The worked logistic head below predicts **pair** from the frozen whole-cue features.
+We reconstruct its logits and softmax probabilities using the fitted readout scaler
+and coefficients, compare them with `predict_proba`, and check that class ordering
+agrees with `predict`. These are extra arithmetic checks on the same fitted model,
+not training or a second decoder. Full predictions remain in protected artifacts;
+the notebook prints aggregate support and performance.
+
+`store.readout` then scores and records every declared head on train/development.
+For the worked confusion matrix C, class k's recall is Cₖₖ / ΣⱼCₖⱼ and balanced
+accuracy is their mean. Ordinary accuracy is trace(C) / ΣₖⱼCₖⱼ. Seeing these
+calculations makes clear why one large class can dominate ordinary accuracy and why
+balanced accuracy still hides a completely missed minority condition. Our constructed
+class balance is imposed by assembly; it does not repair unequal real-source support.
+After this first case, the remaining loop repeats the same declared operations.
+"""
+
+
+CEBRA_ARCHITECTURE = r"""
+## What network is actually inside `offset1-model`?
+
+The installed CEBRA 0.6.1 implementation was inspected directly. With hidden width
+H=32 and output width D=8, the model used here is:
+
+```text
+one standardized U-unit vector at one native bin
+  → Flatten
+  → Linear(U, 32) → GELU
+  → Linear(32, 32) → GELU
+  → Linear(32, 16) → GELU
+  → Linear(16, 8)
+  → divide by the vector's L2 norm
+  → Squeeze (remove a singleton dimension if present)
+  → eight-dimensional unit-length embedding
+```
+
+Linear layers learn affine mixtures; GELU adds nonlinearity. L2 normalization makes
+cosine similarity compare direction. Unit length is imposed by design: every vector
+could still collapse to one direction. Norm division has no epsilon in this version;
+package finiteness checks detect numerical failures.
+
+This model has a **one-sample receptive field**, without recurrence or temporal
+convolution. Adjacent-bin sampling supplies the temporal relation. The third hidden
+width is floor(H/2). The learning cell prints the existing fitted model for inspection.
+The
+[upstream architecture source](https://github.com/AdaptiveMotorControlLab/CEBRA/blob/v0.6.1/cebra/models/model.py)
+defines `Offset0Model` under the registry name `offset1-model`; the local
+[solver constructor](../src/neuro/cebra_solver.py) selects that registry entry.
+"""
 
 
 INPUT_EXPLANATION = r"""
@@ -374,7 +520,7 @@ information beyond start/goal was recovered. The present complete-support panel 
 predecessor embargo differ, so comparing its score directly with the historical joint
 score would confound the cohort and construction with training phase.
 
-The [research walkthrough](00_research_guide.ipynb) places the actual historical
+The [study evidence chapter](04_study_evidence.ipynb) places the actual historical
 figures and their provenance in the full story. For the accepted original numbers,
 seed detail, nulls and confusions, use the
 [historical endpoint report](../docs/reports/cebra-endpoint-time-readout-20261006/README.md)
@@ -543,6 +689,236 @@ def _revise_cebra_loop(text):
     return text + "\nstore.save('diagnostic_summaries', case_diagnostics)"
 
 
+def _statement_source(text, statements):
+    """Keep the actual supplied experiment statements, only removing indentation."""
+    if not statements:
+        return ""
+    return dedent("\n".join(text.splitlines()[statements[0].lineno - 1 : statements[-1].end_lineno]))
+
+
+def _cut_before(text, anchor):
+    if text.count(anchor) != 1:
+        raise ValueError(f"Worked case expected one stage boundary: {anchor!r}")
+    before, after = text.split(anchor, 1)
+    return before.rstrip(), anchor + after
+
+
+SCALER_CHECK_CODE = """# Check the fitted training statistics without fitting another scaler.
+pooled_training = train.values.transpose(0, 2, 1).reshape(-1, train.values.shape[1]).astype(float)
+manual_unit_mean = pooled_training.mean(axis=0)
+manual_unit_variance = pooled_training.var(axis=0, ddof=0)
+np.testing.assert_allclose(standardizer.scaler.mean_, manual_unit_mean)
+np.testing.assert_allclose(standardizer.scaler.var_, manual_unit_variance)
+print('Scaler learned from dependent training vectors:', pooled_training.shape)
+print('Unit mean / scale dimensions:', standardizer.scaler.mean_.shape, standardizer.scaler.scale_.shape)
+print('Raw whole-cue train/development shapes:', raw_train.shape, raw_dev.shape)"""
+
+
+PCA_CHECK_CODE = """# Reconstruct the existing frozen PCA transform from its learned parameters.
+pca_development_vectors = pca.standardizer.transform(development.values).transpose(0, 2, 1).reshape(-1, train.values.shape[1])
+manual_projection = (pca_development_vectors - pca.pca.mean_) @ pca.pca.components_.T
+manual_whole_cue = manual_projection.reshape(len(development.values), -1)
+np.testing.assert_allclose(manual_whole_cue, pca_dev, rtol=1e-5, atol=1e-5)
+print('PCA axes × units:', pca.pca.components_.shape)
+print('Frozen projected vectors → whole-cue rows:', manual_projection.shape, pca_dev.shape)
+print('First-bin coordinate columns:', list(range(settings['pca_components'])))"""
+
+
+def _worked_readouts(*, cebra):
+    feature_expression = (
+        "feature_pairs.items()" if cebra
+        else "(('raw', (raw_train, raw_dev)), ('pca', (pca_train, pca_dev)))"
+    )
+    training = f"""worked_readouts = {{}}
+for representation, (train_x, dev_x) in {feature_expression}:
+    for head, y in target_heads(train).items():
+        model = fit_logistic(train_x, y, C=settings['logistic_C'], max_iter=settings['logistic_max_iter'])
+        worked_readouts[representation, head] = model"""
+    scoring = f"""run_results = []
+for representation, (train_x, dev_x) in {feature_expression}:
+    for head, y in target_heads(train).items():
+        model = worked_readouts[representation, head]
+        row = store.readout(key + '_' + representation + '_' + head, model, encoder=key + '_' + representation,
+                            bundle=key, head=head, train_features=train_x, development_features=dev_x)
+        run_results.append(row)"""
+    if not cebra:
+        training += """
+for head, y in target_heads(train).items():
+    model = fit_lda(raw_train, y)
+    worked_readouts['lda', head] = model"""
+        scoring += """
+for head, y in target_heads(train).items():
+    model = worked_readouts['lda', head]
+    row = store.readout(key + '_lda_' + head, model, encoder=key + '_raw', bundle=key, head=head,
+                        train_features=raw_train, development_features=raw_dev)
+    run_results.append(row)"""
+    representation = "cebra" if cebra else "pca"
+    features = "feature_pairs['cebra'][1]" if cebra else "pca_dev"
+    training += f"""
+worked_decoder = worked_readouts['{representation}', 'pair']
+readout_scaler = worked_decoder.named_steps['standardscaler']
+linear_head = worked_decoder.named_steps['logisticregression']
+print('Worked {representation}/pair readout: scaler columns, class×feature weights, intercept:',
+      readout_scaler.mean_.shape, linear_head.coef_.shape, linear_head.intercept_.shape)
+print('Regularization C and realized lbfgs iterations:', linear_head.C, linear_head.n_iter_.tolist())"""
+    arithmetic = f"""# Forward computation only: use exactly the fitted scaler and class order.
+worked_development_features = {features}
+decoder_input = readout_scaler.transform(worked_development_features)
+logits = decoder_input @ linear_head.coef_.T + linear_head.intercept_
+if logits.shape[1] == 1:  # Binary logistic stores one log-odds column.
+    logits = np.column_stack((np.zeros(len(logits)), logits[:, 0]))
+stable_exp = np.exp(logits - logits.max(axis=1, keepdims=True))
+manual_probabilities = stable_exp / stable_exp.sum(axis=1, keepdims=True)
+np.testing.assert_allclose(manual_probabilities, worked_decoder.predict_proba(worked_development_features), rtol=1e-5, atol=1e-5)
+np.testing.assert_array_equal(linear_head.classes_[manual_probabilities.argmax(axis=1)], worked_decoder.predict(worked_development_features))
+print('Probability matrix shape:', manual_probabilities.shape, '| rows sum to one:', bool(np.allclose(manual_probabilities.sum(axis=1), 1)))
+"""
+    confusion = f"""
+worked_score = next(row['development'] for row in run_results if row['name'] == key + '_{representation}_pair')
+worked_confusion = np.asarray(worked_score['confusion_counts'])
+worked_support = worked_confusion.sum(axis=1)
+worked_recalls = np.diag(worked_confusion) / worked_support
+np.testing.assert_allclose(worked_recalls.mean(), worked_score['balanced_accuracy'])
+print('Worked pair target supports:', worked_support.tolist())
+print('Worked per-class recalls:', worked_recalls.round(3).tolist())
+print('Mean recall / balanced accuracy:', round(float(worked_recalls.mean()), 4))"""
+    return training, arithmetic + scoring + confusion
+
+
+def _staged_baseline(text, md, code):
+    """Walk the original first case once, then skip it in the remaining grid."""
+    revised = _revise_baseline_loop(text)
+    tree = ast.parse(revised)
+    outer = tree.body[0]
+    if not isinstance(outer, ast.For) or not isinstance(outer.body[0], ast.For):
+        raise ValueError("PCA teaching expects the declared seed/budget loop")
+    body = _statement_source(revised, outer.body[0].body)
+    assembly, rest = _cut_before(body, "standardizer = fit_standardizer(train.values)")
+    scaling, rest = _cut_before(rest, "pca = fit_pca(train.values,")
+    projection_fit, rest = _cut_before(rest, "pca_train, pca_dev =")
+    transformations, readouts = _cut_before(rest, "run_results = []")
+    _, final_reporting = _cut_before(readouts, "results.extend(run_results)")
+    training, scoring = _worked_readouts(cebra=False)
+    remaining = _replace_once(
+        revised,
+        "    for budget in ('full', 'reduced'):\n",
+        "    for budget in ('full', 'reduced'):\n        if seed == 0 and budget == 'full':\n            continue  # Already completed, step by step, above.\n",
+    )
+    return [
+        md("""## Worked case, step 1 — assemble observed seed 0 with full sources
+
+This is the first of the four planned cases. We use seed 0 because it is declared
+first, before observing any result. One full-source training assembly is paired
+with the already frozen development assembly. Inspect real-source reuse and shapes
+before normalization. The following cells share these objects; run in order.
+No model has been fitted for this case yet."""),
+        code("assert settings['seeds'] == [0, 1]\nseed, budget = 0, 'full'\n" + assembly + "\nprint('Worked case counts: train/development rows, units, bins:', train.values.shape, development.values.shape)"),
+        md(SCALER_MECHANICS),
+        code(scaling + "\n" + SCALER_CHECK_CODE),
+        md(PCA_MECHANICS),
+        code(projection_fit),
+        md("""## Worked case, step 4 — transform and inspect without learning again
+
+The training-fitted PCA now transforms both splits. The explicit matrix product
+below reconstructs its development projection, then checks the time-major flattening.
+The geometry summary describes the same coordinates that the readout will receive.
+At this point PCA has seen training counts but no target labels; the decoder has
+not yet been trained. Keep that distinction when inspecting any apparent separation."""),
+        code(transformations + "\n" + PCA_CHECK_CODE),
+        md(DECODER_MECHANICS),
+        code(training),
+        md(SCORING_MECHANICS),
+        code(scoring + "\n" + final_reporting),
+        md("""## Complete the remaining three comparison cases
+
+The first case is complete: one PCA, six logistic heads and three LDA classifiers.
+The loop skips observed seed 0/full and runs seed 0/reduced, seed 1/full and
+seed 1/reduced. Every stage is refitted on its training assembly, with the same
+development plan. Total accounting stays four PCA, 24 logistic and 12 LDA fits.
+Compare these results as computational/source sensitivities, not biological replicates."""),
+        code(remaining),
+    ]
+
+
+def _staged_cebra(text, md, code):
+    """Expose the first CEBRA case while preserving one saved development per world."""
+    revised = _revise_cebra_loop(text)
+    tree = ast.parse(revised)
+    outer = tree.body[0]
+    if not isinstance(outer, ast.For):
+        raise ValueError("CEBRA teaching expects the declared world loop")
+    seed_loop = next(n for n in outer.body if isinstance(n, ast.For))
+    if not isinstance(seed_loop.body[0], ast.For):
+        raise ValueError("CEBRA teaching expects the declared seed/budget loop")
+    world_setup = _statement_source(revised, outer.body[:outer.body.index(seed_loop)])
+    body = _statement_source(revised, seed_loop.body[0].body)
+    assembly, rest = _cut_before(body, "standardizer = fit_standardizer(train.values)")
+    references, rest = _cut_before(rest, "remaining = float(os.environ.get(")
+    encoder_fit, rest = _cut_before(rest, "store.save_encoder(key + '_raw'")
+    transformations, readouts = _cut_before(rest, "run_results = []")
+    _, final_reporting = _cut_before(readouts, "results.extend(run_results)")
+    training, scoring = _worked_readouts(cebra=True)
+    remaining = _replace_once(
+        revised,
+        indent(world_setup, "    "),
+        "    # Observed development was saved once in the worked case.\n"
+        "    if world == 'permuted':\n" + indent(world_setup, "        "),
+    )
+    remaining = _replace_once(
+        remaining,
+        "        for budget in ('full', 'reduced'):\n",
+        "        for budget in ('full', 'reduced'):\n            if world == 'observed' and seed == 0 and budget == 'full':\n                continue  # Already completed, step by step, above.\n",
+    )
+    return [
+        md("""## Worked case, step 1 — assemble one observed world and freeze development
+
+Start with the predeclared observed seed 0/full case. The world map retains the
+observed pair labels; the fixed development assembly is generated once and stored
+once. Later observed cases must reuse it exactly. The permuted world will receive
+its own independently constructed, fixed development assembly when that world begins.
+Source accounting describes real inputs to this assembly, not the optimizer's draws."""),
+        code("world, seed, budget = 'observed', 0, 'full'\n" + world_setup + "\n" + assembly + "\nprint('Worked train/development tensor shapes:', train.values.shape, development.values.shape)"),
+        md(SCALER_MECHANICS + "\nThe same cell fits the one planned PCA reference; the next stage fits the one planned CEBRA encoder. Neither uses development values for learning."),
+        code(references + "\n" + SCALER_CHECK_CODE),
+        md("""## Worked case, step 3 — fit the declared CEBRA encoder once
+
+The function below fits its training-only unit scaler, builds the verified network,
+constructs the adjacent-bin sampler and performs the fixed number of Adam updates.
+Inputs, targets, dimension, width, learning rate, seed, device and remaining deadline
+are all visible. The targets annotate the assembled rows; they do not replace Time
+pairing with a supervised endpoint loss. Printing `encoder.solver.model` afterward
+inspects that fitted object and creates no second network or optimizer."""),
+        code(encoder_fit + "\nprint(encoder.solver.model)\nprint('Trainable parameter count:', sum(p.numel() for p in encoder.solver.model.parameters() if p.requires_grad))"),
+        md("""## Worked case, step 4 — transform both splits and inspect what was learned
+
+Each bin is transformed with frozen training statistics and model weights, then
+its coordinates are concatenated in time-major order. Training is finished before
+development is transformed. The saved learning summary is training optimization;
+the covariance/effective-rank summary inspects both transformed distributions.
+For CEBRA, norms near one follow from its output normalization and cannot by
+themselves demonstrate a useful representation. The next stage tests readout utility."""),
+        code(transformations + """
+worked_cebra_vectors = feature_pairs['cebra'][1].reshape(-1, settings['output_dimension'])
+print('CEBRA development bin-vector norms (min/median/max):',
+      np.quantile(np.linalg.norm(worked_cebra_vectors, axis=1), [0, .5, 1]).round(5).tolist())
+print('Each whole-cue feature row concatenates bins × coordinates:',
+      train.values.shape[2], settings['output_dimension'])"""),
+        md(DECODER_MECHANICS),
+        code(training),
+        md(SCORING_MECHANICS),
+        code(scoring + "\n" + final_reporting),
+        md("""## Complete the remaining five cases without repeating the worked fit
+
+The first case accounts for one CEBRA, one PCA and nine logistic heads. The loop
+below skips it, finishes the other three observed cases, then constructs the
+permuted world once and runs its seed-0 full/reduced cases. The observed fixed
+development object is reused; saving it twice would be an artifact error.
+The full declared grid remains six CEBRA, six PCA and 54 logistic fits, with
+six times the configured number of optimizer updates."""),
+        code(remaining),
+    ]
+
+
 def enrich_model_notebooks(b, c, md, code):
     """Return enriched cells, leaving first code and final accounting intact."""
     baseline = []
@@ -579,7 +955,7 @@ accepted fit grid or authorizes another biological run.
             elif text.startswith("## Freeze development"):
                 baseline.append(md(SPLIT_EXPLANATION))
             elif text.startswith("## Visible refit"):
-                baseline.extend([md(PCA_METHOD), md(METRICS_EXPLANATION)])
+                baseline.extend([md(DECISION_LEDGER), md(PCA_METHOD), md(METRICS_EXPLANATION)])
             elif text.startswith("## Training statistics"):
                 baseline.extend([
                     md("""## Read the scores before looking at the clouds
@@ -603,7 +979,7 @@ from neuro.notebook_diagnostics import metrics_table, plot_decoder_summary, embe
 case_diagnostics = {}
 reference_view = None"""))
         elif text.startswith("for seed in settings['seeds']"):
-            baseline.append(code(_revise_baseline_loop(text)))
+            baseline.extend(_staged_baseline(text, md, code))
         elif text.startswith("print('Last training pooled-bin"):
             baseline.append(code("""assert reference_view is not None and reference_view['key'] == 'observed_seed0_full'
 print('Displayed case:', reference_view['key'])
@@ -650,7 +1026,7 @@ another model or authorizing a new study.
             elif text.startswith("## Explicit metadata"):
                 contrastive.append(md(INPUT_EXPLANATION))
             elif text.startswith("## Declare optimization"):
-                contrastive.extend([md(SPLIT_EXPLANATION), md(CEBRA_METHOD), md(CONTROL_EXPLANATION)])
+                contrastive.extend([md(SPLIT_EXPLANATION), md(DECISION_LEDGER), md(CEBRA_METHOD), md(CEBRA_ARCHITECTURE), md(CONTROL_EXPLANATION)])
             elif text.startswith("## Visible fresh encoder"):
                 contrastive.extend([md(LEARNING_EXPLANATION), md(METRICS_EXPLANATION)])
             elif text.startswith("## Inspect transformed"):
@@ -677,7 +1053,7 @@ from neuro.notebook_diagnostics import metrics_table, plot_decoder_summary, embe
 case_diagnostics = {}
 reference_view = None"""))
         elif text.startswith("for world in ('observed', 'permuted')"):
-            contrastive.append(code(_revise_cebra_loop(text)))
+            contrastive.extend(_staged_cebra(text, md, code))
         elif text.startswith("z = feature_pairs['cebra'][1]"):
             contrastive.append(code("""assert reference_view is not None and reference_view['key'] == 'observed_seed0_full'
 print('Displayed case:', reference_view['key'])

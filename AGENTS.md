@@ -12,6 +12,17 @@ PR status, recovery records and safe verification commands. Do not recreate old
 sibling worktrees or restart experiments from historical pending-work flags.
 Keep new durable decisions in Git-backed notes, not only in a chat transcript.
 
+**October27 standalone course:** the owner requested deeper foundations and visible
+implementation and allowed splitting into multiple notebooks. Start with the seven
+chapters in `notebooks/README.md`: overview, experiment foundations, executed invented
+arithmetic, construction, PCA/LDA, CEBRA and historical study evidence. B/C now stage
+the first planned case before completing the unchanged grids; no-fit mock regression
+checks attest orchestration, not real training. New saved outputs are invented
+arithmetic only; historical figures come from tracked public reports. A code is
+unchanged, B/C were not executed, no biological fits or private replay occurred.
+Continue the already authorized draft-PR update; no merge. See
+`docs/notebook-course-20261027.md` for verification and remaining evidence limits.
+
 **October26 notebook teaching revamp:** the owner requested a standalone research
 handoff, with explanations of decisions, pseudopopulation feasibility/skew, CEBRA
 learning, 3D geometry, decoder performance and joint-training effects. Start with
