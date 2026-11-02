@@ -1,8 +1,104 @@
 # Local Data Workspace
 
 This directory is the single local home for research data used by this workspace.
-The **directory rules are version-controlled; the data files are not**. Lab data
-can contain sensitive information and is usually too large for Git.
+The **directory rules are version-controlled; data is ignored by default**. Lab data
+can contain sensitive information and is usually too large for Git. The explicit
+owner-approved public-copy exception below does not expose other local data.
+
+## Compact unbinned cue source — October26, 2026
+
+Hongyi confirmed lab permission and chose **ordinary Git only** for a compact source
+view without incidental metadata. [cue-source-v1/](cue-source-v1/) is part of the
+checkout: no download service, GitHub Release or Git LFS. No Release was ever created
+or uploaded. The earlier full sanitized archive remains local, not a deliverable.
+No new data/software license is assigned; public access does not invent reuse rights.
+
+The compact payload is **54,684,694 bytes** plus its709-byte notebook configuration
+(**54,685,403 bytes total**, about52.2MiB); largest blob `spikes.npz` is about21MiB, below100MiB. It contains:
+
+| File | Meaning |
+| --- | --- |
+| `spikes.npz` | All5,576,459 timestamps for195 selected units, native dtype/shape/order/full precision; unsorted or repeated timestamps are not changed. Also native reference/components. No cue clipping or split filtering. |
+| `2018????_session01.npz` (58) | Ripple trial matrices, raw Args/Data markers/timestamps, trialIndices/sample rate/session-clock metadata where present; Eye trial codes/times, timeouts, missingness and clock metadata; every Unity marker/delta row as exact ASCII tokens. |
+| `outer_splits.csv.gz`, `inner_splits.csv.gz` | Cleaned frozen IDs, predecessor/group assignments, labels and policy provenance from the two authenticated historical tables. No fitted results or private paths. |
+| `manifest.json`, `manifest.sha256` | Schema, clocks, selection order/IDs, original370-input hashes, processing commit (including `-dirty` where supplied), compact file hashes/sizes and explicit omissions. |
+| `notebook-config.json` | Explicit opt-in compact route; biological execution disabled by default. |
+
+**Intentionally omitted:** dense Unity position/heading, continuous gaze/analog/full
+sample timestamps, fixations/saccades, machine paths, object-reference scaffolding,
+MAT headers, embedded source patches, ancillary notes/spreadsheets/logs, all fitted
+models/predictions/private executed figures. Full native sources remain unchanged locally.
+This is not an archival replacement for the full recordings or their MATLAB objects.
+
+### Timing, records and historical exposure
+
+Spikes remain native milliseconds; conversion to seconds occurs only for consumption.
+Ripple timestamps are native seconds; outer and optional raw-stream sample rates and
+session origin remain available. Per-array `attributes` retain MATLAB class, empty
+encoding and integer-decoding metadata where present. In five Eye `timeouts` arrays,
+`MATLAB_empty=1` means the backing `[0,0]` describes an empty shape, not two timeouts;
+backing dtype/shape/bytes remain untouched.
+Eye timestamps are milliseconds per the Julia reader; raw `missing_idx` is one-based
+trial/event indexing (stored HDF5 as2×N). A separate observation mask distinguishes
+missing placeholders from genuine observed zeros. The historical importer's Eye-unit
+heuristic is disclosed only for policy reconciliation, not used to overwrite native data.
+All7,761,853 Unity marker/delta rows contribute to cumulative seconds, including startup,
+zero-marker and orphan rows; ordered task headers are retained. No dense x/y/heading
+is needed to reproduce parsed navigation-row-bound QC. Event matrices explicitly use
+event axis0 in HDF5, including singleton/3×3 cases; no `squeeze` inference.
+
+The ordinal Ripple/Unity/Eye trial join and previous/current marker-digit start/goal
+semantics remain provisional assumptions, not verified behavioral truth. All23,901
+records (23,200success/701timeout) remain available, including mismatches and failed
+records. Metadata availability does not make every record analysis-eligible.
+Consumption preserves original outer train and frozen exposed development assignments,
+the global predecessor-contributor embargo and complete pair support:27units/10blocks,
+1,415train/551development sources. Native missing Eye events affect no selected
+contributors; full-source missingness remains explicit. No fresh all-trials split.
+
+Binning uses native-precision absolute Ripple-clock half-open edges, ten100ms bins,
+without the historical helper's epsilon. Timestamps are not rounded to force equality
+with nine-significant-digit historical CSVs. This reconstructs fresh inputs, **not old
+scores/models/results**. Source trials are provenance units; balanced synthetic rows
+resample with replacement and are not new measurements or independent replications.
+
+### Authenticate, inspect and reproduce the export
+
+```sh
+(cd data/cue-source-v1 && sha256sum -c manifest.sha256)
+PYTHONPATH=src python - <<'PY'
+import json
+from pathlib import Path
+from neuro.notebook_inputs import inspect_inputs
+p = Path('data/cue-source-v1/notebook-config.json').resolve()
+c = json.loads(p.read_text()); c['manifest_directory'] = str(p.parent)
+print(inspect_inputs(c).audit)  # metadata only; no model fitting
+PY
+```
+
+The reader pins the manifest hash from the configuration, retains an immutable
+inspection-time configuration fingerprint, and verifies every compact file again
+before reconstruction. It rejects duplicate IDs/NPZ members, path traversal,
+symlinks, wrong hashes/schema and oversized or malformed NPY headers/payloads before
+array allocation. Selected units' complete timestamp vectors are scanned to choose
+cue windows; this is not a promise of held-out timestamp non-reading. Arrays use
+`allow_pickle=False`. Keep the reviewed manifest hash separately when accepting an
+untrusted copy; a checksum stored alongside mutable bytes is not a signature.
+
+The thin exporter `scripts/export_cue_source.py` takes explicit `--root`, `--inventory`,
+`--outer`, `--inner`, `--output` and `--revision`; there are no private path defaults.
+Use a new output directory. It authenticates all370 allowlisted native files before
+and after, requires the two exact frozen-assignment hashes, preserves numeric arrays,
+compares written arrays, and writes deterministic NPZ/gzip bytes. It reads no models.
+Export source is `neuro.cue_source_export`; reconstruction is `neuro.cue_source`.
+See the [dated execution/reconciliation ledger](../docs/compact-cue-source-20261026.md)
+for actual commands, sizes, tests and limits. No originals, runtime or old results are
+required by compact-mode notebooks after cloning. B/C fitting remains a separate
+explicitly reviewed execution, not a consequence of including source data.
+
+Dates, session/array/channel/cell IDs, native task headers and scientific metadata
+are intentionally public. Removed paths/patches do **not** guarantee anonymity.
+All other local data and private execution artifacts remain outside this exception.
 
 `Hippocampus.jl/data/` belongs to the upstream Julia package. Do not place our
 working datasets there: changing it mixes lab data with a submodule that has its

@@ -1,8 +1,11 @@
 # Scientific package software design
 
-Maintained as-built engineering reference: historical package checkpoint **`8c98b52`**
-plus **October15 active-helper cleanup (independently reviewed)**, delivered through
-[PR20](https://github.com/Hong-yiii/neuro_science/pull/20). The linked PR records publication/merge status.
+Maintained as-built engineering reference, updated for the **October23 independent
+public APIs and fresh-input notebooks** (local implementation on `3f84018`).
+[Execution ledger](shareable-notebooks-execution-20261023.md) owns validation/run identities.
+Historical package checkpoint `8c98b52` and October15 helper cleanup were delivered
+through [PR20](https://github.com/Hong-yiii/neuro_science/pull/20); that publication does
+not imply publication of the current local changes.
 This document is the canonical engineering source; the preserved
 [HTML design preview](codebase-design.html) is historical and may lag it.
 GitHub renders the Mermaid blocks; no server, renderer dependency or new HTML is required.
@@ -13,9 +16,10 @@ GitHub renders the Mermaid blocks; no server, renderer dependency or new HTML is
 helpers**, not a pure helper library. The supported family is full-trial transfer,
 endpoint-time readout and frozen cue-time readout, end to end: input validation,
 assembly, training/readout algorithms, controls, provenance and verification. There is
-no common `Runner`, experiment service, general-purpose pipeline framework or shared
-result schema. Support is justified by these latest maintained experiments—not old
-callers, historical reproducibility alone or a speculative notebook.
+no common `Runner`, experiment service or general-purpose pipeline framework. The owner
+has additionally approved the independently usable source/assembly/PCA-LDA/CEBRA APIs
+and three actual notebooks described below. Historical reproducibility or hypothetical
+future consumers still do not justify compatibility layers.
 
 Packaging preserves scientific definitions while changing imports, equivalent
 bookkeeping and current-source provenance. It does not authorize execution, approve
@@ -42,11 +46,11 @@ The diagram's endpoint/cue → full-trial arrows are real coupling, not merely r
 to an independent helper layer. Imports bring in its scientific runtime too.
 
 Purpose-specific `raw_io`, `neural_inputs`, `cebra_solver`, `geometry`, split access,
-execution and provenance are the factored helper seams. A cleaner separation of shared
-algorithms from study orchestration would be future work, **not an implemented change**.
-Do not merge distinct binary/endpoint labels, cohort or lineage objects to obtain that
-separation. There is no notebook yet; whether/how a future notebook uses the package
-remains open and does not define current scope.
+execution and provenance remain helper seams. Shared CEBRA dataset/samplers now live
+in `_cebra_sampling`, with full-trial re-exports preserving callers and exact extracted
+AST checks. Study-specific training/cohort/readout coupling remains; distinct binary/
+endpoint labels and lineage objects have not been merged. The new public APIs are
+independent of these study modules.
 
 Diagrams below describe implemented source, not a proposed target architecture.
 Dependency arrows mean “imports/uses,” not data movement. In the UML, composition denotes
@@ -55,7 +59,64 @@ Sequence diagrams show successful paths; any failed gate raises and stops that p
 “FS” means local filesystem, including protected private artifacts only when explicitly
 called with authorization. Counts are protocol expectations, not fresh execution evidence.
 
-## Module ownership and component dependencies
+## Fresh supplied-input layer — implemented October23
+
+```mermaid
+flowchart TD
+    NB[Three visible experiment notebooks] --> AD[notebook_inputs: invented / compact cue_source / place195]
+    AD --> SD[SourceData: sources, units, targets, splits, values, masks, exposure]
+    NB --> PP[pseudopopulation: support, plans, intact blocks, source ablation]
+    PP --> SD
+    NB --> PCA[pca_lda: training-only scaling, PCA, supervised LDA]
+    NB --> CE[cebra: fresh fit and frozen transform]
+    CE --> SAM[_cebra_sampling: maintained dataset and adjacent-bin sampler]
+    CE --> SOLV[cebra_solver: maintained model and optimizer]
+    NB --> EV[evaluation: explicit classes and metrics]
+    NB --> AR[notebook_artifacts: kernel identity, fit counts, trusted replay]
+```
+
+`SourceData` validates explicit timing/units/provenance and source×unit×bin arrays.
+Unavailable measurements remain masked/NaN, not zeros. Masks currently represent
+complete observed bins per source/unit; unsupported dropout fails. Plans bind source
+content, split and effective condition identities; materialization validates lineage.
+Training-source ablations preserve the evaluation plan and refit all learned stages.
+
+The place195 adapter authenticates six named inputs, derives provisional endpoints,
+regenerates frozen assignments and selects a directly contributor-disjoint panel
+before interpreting neural numbers. Reconstruction independently recomputes canonical
+metadata before numeric traversal; mutable/forged selections cannot replace the gate.
+The compact `cue_source` route derives trial metadata and fresh native-precision bins
+from the committed unbinned view, reusing that historical selection policy and frozen
+assignments. Both routes bind the inspection-time configuration fingerprint and
+reinspect canonical metadata before consumption. Compact NPZ headers and payloads
+are bounded before allocation; selected units' whole timestamp vectors are scanned
+to find cue windows. No historical neural tables or fitted results are required.
+This dataset policy is not hidden in the general model/assembly APIs.
+
+Raw normalization is training-only with unit-major flattening. PCA uses full SVD and
+explicit numerical-rank refusal, not historical padding. Latent layouts are time-major.
+LDA remains a supervised classifier. CEBRA reuses the maintained sampler/solver,
+reports native pairs/exposure and enforces cooperative update deadlines; external
+containment supplies the hard process/memory limit. Notebook cells expose all fit loops,
+targets, seeds and budget comparisons—no hidden whole-study invocation.
+
+The bounded executor runs fresh sequential kernels, identifies their actual installed
+code before inputs/fitting, rejects identity drift and counts actual fits/updates.
+Authenticated new states are transformed/predicted again with fitting/updates blocked.
+Manifest authentication is not safe loading of arbitrary external pickles: only trusted
+fresh artifacts with a separately retained expected manifest hash are supported.
+Private output and final disk/deadline checks complement, not replace, independent
+privacy/scientific review. Current source-notebook outputs are cleared, not stale
+invented outputs. The [October26 ledger](compact-cue-source-20261026.md) records the
+non-fitting compact-source A execution; B/C were not executed for this update.
+
+One setuptools distribution supplies optional `cebra` and `notebooks` extras. Public
+construction/PCA use does not import CEBRA/torch/studies or require Git/private roots.
+Installed-wheel runs were validated outside the checkout; retained dependencies were
+borrowed read-only rather than freshly resolved. No stable API or licensing grant is
+implied. [Notebook usage](../notebooks/README.md) and [API reference](../src/neuro/README.md#independent-public-workflow).
+
+## Concrete study ownership and component dependencies
 
 ```mermaid
 flowchart TD
@@ -127,7 +188,9 @@ Use `PYTHONPATH=src` (absolute checkout `src` when elsewhere). Package imports d
 bootstrap the checkout root or load historical scripts. External aliases alone own
 path bootstrapping. `pyproject.toml` supplies a
 Pyright source path and general dependencies, not a complete historical replay environment.
-**Standalone wheel use is unsupported/unverified**; these are checkout-backed imports.
+The new independent public APIs have installed-wheel validation. The concrete study
+commands below remain checkout/private-input workflows; their full historical runtime
+and arbitrary old artifact portability are not thereby certified.
 
 ```mermaid
 sequenceDiagram
@@ -523,13 +586,15 @@ included. Synthetic-smoke/benchmark tests can fit, even on invented arrays; fits
 outside documentation scope. Forward replay is no-fit but private-data access and runtime
 certification are separate authorization/validation layers. Preserved frozen-HTML integrity
 failure is not a green test. CUDA probes previously emitted error804 warnings; there is
-**no new GPU readiness, private replay, full runtime or wheel certification** here.
+no new GPU or historical-private-replay certification from those historical checks.
+October23 adds the scoped CPU installed-wheel/notebook checks recorded in the execution
+ledger; it does not certify every dependency/platform combination.
 
 Engineering assessment: source ownership, real object boundaries, import compatibility,
 entry/config behavior, lineage, preflight ordering and failure artifacts now have a
 maintained reference and diagrams. Remaining gaps are explicit: no complete per-function
 API catalog, formal machine-readable schema/version policy for every artifact, supported
-wheel/build/install contract, cross-host portability matrix, restart/resume implementation
+cross-host portability matrix, stable public artifact schemas, restart/resume implementation
 or deployment certification. Current source closure is manually audited, not automatic
 arbitrary dynamic dependency discovery. Those gaps are not reasons to invent a Runner.
 
@@ -540,9 +605,9 @@ distinguish supported current helpers from unchanged historical script implement
 No historical snapshot, hash or approval is rewritten. Current approval/source hashes
 intentionally change. No old scientific body is declared safely deletable.
 
-**Notebook integration remains OPEN:** decide target/cohort, input contract and complexity
-first. A tracked-aggregate presentation notebook need not import scientific workflows.
-If reusable algorithms are needed, import existing helpers rather than copy them; avoid
-calling process-global verification patches in a long-lived kernel. Restart-and-run-all,
-private input authority and any numerical replay checks require a separately scoped task.
-No notebook, fit, private replay, installation, server or PR merge is part of this design.
+**Notebook integration is implemented:** the three fresh-input notebooks use independent
+public operations rather than study runners; source/target/assembly/model choices remain
+visible. Temporary replay monkeypatches are restored. The October19 historical saved-model
+notebook remains separate and unchanged. Restart-and-run-all evidence and the separately
+authorized real execution are recorded in the [execution ledger](shareable-notebooks-execution-20261023.md).
+No permanent server, new public data/license grant or PR merge is implied.

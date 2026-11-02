@@ -35,6 +35,17 @@ videos/
 *.tar.gz
 *.zip
 
+# Owner-approved compact unbinned source view only (ordinary Git, no LFS).
+!data/cue-source-v1/
+data/cue-source-v1/*
+!data/cue-source-v1/manifest.json
+!data/cue-source-v1/manifest.sha256
+!data/cue-source-v1/notebook-config.json
+!data/cue-source-v1/spikes.npz
+!data/cue-source-v1/2018????_session01.npz
+!data/cue-source-v1/outer_splits.csv.gz
+!data/cue-source-v1/inner_splits.csv.gz
+
 # Python and agent-generated caches
 __pycache__/
 *.py[cod]
