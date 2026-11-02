@@ -39,8 +39,11 @@ route reconstructs fresh native-precision bins without old private imports/resul
 [Non-fitting validation and historical reconciliation](docs/compact-cue-source-20261026.md).
 
 The separately authorized real run has a new27-unit/10-session contributor-disjoint
-panel, not the historical195-unit cohort. Its [protocol](docs/shareable-notebooks-protocol-20261023.md)
-and [execution ledger](docs/shareable-notebooks-execution-20261023.md) own status and limits.
+panel, not the historical195-unit cohort. The [27-unit results report](docs/reports/cebra-27unit-notebooks-20261023/README.md)
+provides seed-level scores, source-pool comparisons, learning curves and confusions
+([offline HTML](docs/reports/cebra-27unit-notebooks-20261023/report.html)). Its
+[protocol](docs/shareable-notebooks-protocol-20261023.md) and
+[execution ledger](docs/shareable-notebooks-execution-20261023.md) own status and limits.
 No biological independence, pristine test set or matched historical score comparison
 follows from this change. Historical notebooks/results remain intact.
 

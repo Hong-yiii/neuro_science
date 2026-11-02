@@ -1,10 +1,22 @@
 # Workspace and recovery
 
-Updated October27, 2026. Canonical checkout: **`~/neuro_science`**. Owner: Hongyi.
+Updated November2, 2026. Canonical checkout: **`~/neuro_science`**. Owner: Hongyi.
 Read [agent instructions](../AGENTS.md) before changing scientific code or artifacts.
 
 ## Current state
 
+- **November2 report request:** the owner requested a dedicated report of the
+  completed October23 27-unit study, similar in presentation to the historical195-unit
+  endpoint report. [New report](reports/cebra-27unit-notebooks-20261023/README.md)
+  and [offline HTML](reports/cebra-27unit-notebooks-20261023/report.html) extract
+  authenticated saved scalar outputs/PNG figures only, with no new fitting, model
+  loading, private raw-input access or biological replay. Full/reduced source-pool
+  comparisons, two computational seeds and one permutation remain distinct from
+  the historical joint/time-resolved study. Current notebook cells are not rerun.
+  The owner subsequently requested a new PR to `main` for this report and reviewed
+  aggregate artifacts, without merge. PR22 was already merged November2 at
+  `6eb27cfd4135b9d3df1005ddc9da098172ae9d36`; the report is a separate follow-up.
+  Unrelated sampling-code changes and current-state notes remain excluded.
 - **October27 standalone research course:** the owner requested deeper foundations
   and implementation teaching and allowed multiple notebooks. The
   [seven-chapter course](../notebooks/README.md) now adds task/measurement foundations,

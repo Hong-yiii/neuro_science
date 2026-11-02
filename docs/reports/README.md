@@ -1,6 +1,6 @@
 # Report and supporting evidence
 
-Updated 2026-10-12. This is the evidence catalog, not an experiment queue.
+Updated 2026-11-02. This is the evidence catalog, not an experiment queue.
 Use [weekly history](../../history/README.md) for the main historical reading flow;
 source packages below stay in place during the first physical migration slice.
 
@@ -13,6 +13,18 @@ source packages below stay in place during the first physical migration slice.
    GitHub and open locally; source view is not the rendered report.
 3. **[Editable source](../../report/manuscript.html)**:
    revision 03; `outline.html` is the older frozen revision 02, not the current draft.
+
+## Separate later notebook study
+
+**[27-unit cue-only comparison — October23](cebra-27unit-notebooks-20261023/README.md)**
+([offline HTML](cebra-27unit-notebooks-20261023/report.html)) summarizes the completed
+27-unit/10-session fresh-notebook run: seed-level whole-cue results, full/reduced
+source pools, one permutation diagnostic, learning curves and count/normalized
+confusions. Prepared November2 from authenticated saved notebook outputs only;
+no new fitting, model loading or biological replay. It is not a matched rerun of
+the historical195-unit study and is not silently incorporated into the retrospective.
+[Protocol](../shareable-notebooks-protocol-20261023.md) and
+[execution/review ledger](../shareable-notebooks-execution-20261023.md) retain authority.
 
 ## Evidence used in the manuscript
 
