@@ -8,16 +8,23 @@ CEBRA is a central tool, not a required winner. The repository brings together
 [editable retrospective](report/README.md), accepted exploratory evidence and an
 [installable Python package](src/neuro/README.md).
 
-## Latest experiment: source support and learning
+## Latest experiment: class requirements × session rosters
 
-The [November10 results](docs/reports/source-support-ablation-20261110/README.md)
-test the requested **3 × 3 start–goal panel**, populations up to144recorded columns,
-balanced source allocation and training assembly without repeated source draws.
-All39new biological model cases completed, with three observed seeds, source-label
-controls, all cue-time trajectory plots and an executed evidence notebook. Endpoint
-recovery survives once-only assembly, while model choice and allocation matter.
-The report links the complete local artifacts and explains the limits imposed by
-condition matching and historically exposed/reused development.
+The [November11 results](docs/reports/population-grid-20261111/README.md) implement
+Hongyi's corrected **3 class requirements × 3 session rosters**: nine populations
+with 8–138 recorded columns, three source-use policies and three observed seeds.
+All 111 new cases completed, including source-label controls, CEBRA-Time and
+native multisession CEBRA, with logistic, RBF-SVM, kNN and LDA readouts.
+The [executed evidence notebook](outputs/population-grid-20261111/deliverables/population_grid.executed.ipynb)
+and [complete local report](outputs/population-grid-20261111/deliverables/report.html)
+retain 246 distinct figures and all numerical results.
+
+Endpoint recovery survives once-only training assembly for raw/PCA/Time with SVM.
+Wider rosters and repeated rows have mixed effects; native multisession does not
+show an advantage under this configuration. Class changes define different tasks,
+and exposed, label-conditioned development limits the claim. The previous
+[November10 experiment](docs/reports/source-support-ablation-20261110/README.md)
+is preserved as history and is not pooled with the replacement study.
 
 ## Start here: the research course
 

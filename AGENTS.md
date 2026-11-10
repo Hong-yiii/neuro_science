@@ -12,21 +12,24 @@ PR status, recovery records and safe verification commands. Do not recreate old
 sibling worktrees or restart experiments from historical pending-work flags.
 Keep new durable decisions in Git-backed notes, not only in a chat transcript.
 
-**November11 replacement class × session study — current:** the owner corrected
-3×3 to mean three class requirements × three session rosters, requested a fresh
-experiment, all results/report/trajectories/executed notebook and `/teach max`,
-then explicitly added non-logistic readouts including RBF-SVM and native
-multisession CEBRA. The previous November10 design is history, not this study's
-result basis. Read `docs/population-grid-protocol-20261111.md` and its frozen
-metadata design. Nine populations span8–138columns; all111cases use raw/PCA7/
-CEBRA-Time7/native pair-supervised multisession7 with logistic/SVM/kNN5/SVD-LDA.
-Prefit code/scientific review passed; all216plans passed rank7/source checks.
-Preserved failed rank8 check and invented3h budget gates have zero biological
-fits. The independently reviewed resource amendment permits one fresh run under
-4GiB/no-swap/two-core/six-hour hard limits,5661fit calls and222000updates.
-New outputs: `outputs/population-grid-20261111/`; old results/runtimes/unrelated
-sampling edits remain untouched. No automatic biological retry, push or merge.
-Final execution/result status belongs to `docs/workspace.md`.
+**November11 replacement class × session study — completed/current:** the owner
+corrected 3×3 to mean three class requirements × three session rosters, requested
+fresh fits/results/report/trajectories/executed notebook and `/teach max`, and added
+RBF-SVM/other readouts plus native multisession CEBRA. Start at
+`docs/reports/population-grid-20261111/README.md` and `validation.md`; the frozen
+protocol/design retain prospective decisions. All 111 cases completed with
+5,661 fit calls and 222,000 updates: raw/PCA7/CEBRA-Time7/native multisession7,
+logistic/SVM/kNN5/SVD-LDA and pair/start/goal heads. Nine populations span8–138
+columns; all keep the two-source training bottleneck. Once-only assembly retains
+raw/PCA/Time endpoint association with SVM; roster/reuse effects vary and native
+results are weaker/mixed. No natural-trial or biological independence claim.
+Immutable run: `outputs/population-grid-20261111/real-01/`; interpreted artifacts:
+sibling `deliverables/`; source Notebook06 remains unexecuted in Git. All7,210
+receipt files and complete metrics/source errors passed audit; independent
+scientific/results/privacy reviews passed. Preserve failed rank8/invented-budget
+receipts and all older results/runtimes/unrelated edits. The November10 design is
+history, not this run's evidence. No further fit, automatic retry, push or merge
+is queued. See `docs/workspace.md` for delivery and review details.
 
 **November10 completed source-support experiment:** the owner explicitly requested
 fresh biological model training, smaller start–goal panels (including a3×3 design),

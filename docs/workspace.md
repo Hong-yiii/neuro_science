@@ -5,21 +5,26 @@ Read [agent instructions](../AGENTS.md) before changing scientific code or artif
 
 ## Current state
 
-- **November11 replacement study — ready for bounded execution:** user clarified
-  three class requirements × three session rosters and requested new training,
-  report/notebook/trajectories and teach-max, then added SVM/other decoders and native
-  multisession CEBRA. [Frozen protocol](population-grid-protocol-20261111.md) and
-  [exact metadata design](population-grid-design-20261111.json) define9populations,
-  3sampling policies,3observed seeds and30null cases. Expected5661fit calls,
-  222,000updates. Independent expanded-code review, nine invented regression tests,
-  216native no-fit plan/rank checks and29invented renderer figures passed. An
-  authenticated resource-only amendment accepts a six-hour/4GiB/no-swap/two-core
-  ceiling after complete invented fits exceeded the earlier three-hour estimate.
-  Preserve the failed rank8/budget receipts. No biological results exist yet.
-  New source notebook: `notebooks/06_population_grid.ipynb`; output root
-  `outputs/population-grid-20261111/`. No push or merge is authorized.
+- **November11 replacement study — completed:** the corrected design is three
+  class requirements × three session rosters, with U2/R16/F16 source-use policies,
+  CEBRA-Time/native multisession and logistic/RBF-SVM/kNN/LDA. All 111 cases
+  completed: 5,661 model-fit calls and 222,000 updates, with no biological failure
+  or retry. Run time 117.58 minutes, peak 2,648.25 MiB under 4-GiB/no-swap/two-core/
+  six-hour limits; memory-event counters were zero. All 12 notebook cells completed.
+  The no-fit audit authenticated 7,210 files, all 5,328 metric/confusion records and
+  3,666,288 source-error records; independent scientific/results/privacy reviews
+  passed. [Interpreted results and artifact links](reports/population-grid-20261111/README.md)
+  and [validation ledger](reports/population-grid-20261111/validation.md) own the
+  conclusions, exact hashes and presentation limits. Immutable run:
+  `outputs/population-grid-20261111/real-01/`; complete report and executed notebook:
+  sibling `deliverables/`. Notebook06's source outputs stay empty. Raw/PCA/Time
+  endpoint association survives once-only assembly with SVM; width/reuse effects
+  vary by task/model, and the configured native comparator is weaker. Exposed,
+  known-label development limits all claims. Preserve failed rank8/budget receipts,
+  prior experiments, runtimes and unrelated sampling edits. No further fit,
+  automatic retry, push or merge is queued.
 
-- **November10 source-support experiment — completed:** after the issue assessment,
+- **November10 source-support experiment — completed, replaced as current design:** after the issue assessment,
   the owner explicitly requested new model training, a smaller start–goal panel,
   wider populations and reuse controls, with an executed notebook/report and
   trajectories. The [frozen protocol](source-support-protocol-20261110.md) defines

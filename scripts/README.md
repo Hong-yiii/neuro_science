@@ -4,6 +4,20 @@ Updated 2026-10-12. Current focus is the
 [retrospective and its evidence](../docs/reports/README.md), not restarting runs.
 This map classifies existing entry points; it is not execution authorization.
 
+**November11 addition — completed class × session study:**
+`run_population_grid_study.py` guards the complete new fit grid;
+`build_population_grid_notebook.py` generates Notebook06;
+`population_grid_report.py` builds all aggregate figures/tables.
+`verify_population_grid_results.py` authenticates the completed run and checks
+saved arrays, predictions, metric/error accounting and exact assembly relationships
+without fitting or loading models. `collate_population_grid_deliverables.py` adds
+reviewed interpretation while preserving every executed notebook cell/output.
+Implementation: `neuro.studies.population_grid` and `population_models`;
+invented checks: `test_population_grid.py`. See the
+[frozen protocol](../docs/population-grid-protocol-20261111.md) and
+[completed results/validation](../docs/reports/population-grid-20261111/README.md).
+All 111 cases finished; no fit or automatic retry is queued.
+
 **November10 addition — completed source-support study:**
 `run_source_support_study.py` runs the separately guarded benchmark or biological
 notebook under hard cgroup limits; `build_source_support_notebook.py` generates

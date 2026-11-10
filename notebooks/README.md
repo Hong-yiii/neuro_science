@@ -8,16 +8,22 @@ the retrospective explains what each experiment changed in our understanding.
 Fourteen historical figures and the invented example's outputs are embedded for
 reading without private files or model execution.
 
-The separate [05 — Source support and learning](05_source_support_ablation.ipynb)
-is the November10 experiment, with **39 freshly trained biological cases**:
-nine-class panels, added recorded columns, balanced/once-only/recombined source
-assembly, and source-label controls. Its source file has empty outputs; read the
-[executed evidence notebook](../outputs/source-support-20261110/deliverables/source_support.executed.ipynb)
-and [interpreted report](../docs/reports/source-support-ablation-20261110/README.md)
-for all saved results, 24 cue-time trajectory figures and the scientific limits.
-That completed study is separate from the teaching chapters' historical execution
-status below. The guarded study runner, frozen protocol and exact source snapshot
-identify its execution; do not rerun training merely to read the notebook.
+The latest separate [06 — Class requirements × session rosters](06_population_grid.ipynb)
+is the November11 replacement experiment: nine populations, U2/R16/F16 source-use
+policies, CEBRA-Time and native multisession CEBRA, with logistic/RBF-SVM/kNN/LDA.
+All **111 cases completed**. Read the
+[executed evidence notebook](../outputs/population-grid-20261111/deliverables/population_grid.executed.ipynb)
+and [interpreted results](../docs/reports/population-grid-20261111/README.md) for
+saved outputs, 81 cue-trajectory pages, every decoder and control, and claim limits.
+The source notebook has empty outputs; its guarded runner and frozen source
+snapshot identify the completed execution. Do not rerun training merely to read it.
+
+The previous [05 — Source support and learning](05_source_support_ablation.ipynb)
+retains the completed November10 experiment and its
+[executed notebook](../outputs/source-support-20261110/deliverables/source_support.executed.ipynb).
+The owner replaced its nine-pair interpretation with the class × session design;
+its results are preserved separately, not reused as evidence for Notebook06.
+Both studies are distinct from the teaching chapters' historical execution status.
 
 The practical chapters follow **question → design decision → calculation →
 diagnostic → interpretation**. Each independently reconstructs its declared inputs.

@@ -1,6 +1,6 @@
 # Report and supporting evidence
 
-Updated 2026-11-10. This is the evidence catalog, not an experiment queue.
+Updated 2026-11-11. This is the evidence catalog, not an experiment queue.
 Use [weekly history](../../history/README.md) for the main historical reading flow;
 source packages below stay in place during the first physical migration slice.
 
@@ -15,6 +15,17 @@ source packages below stay in place during the first physical migration slice.
    revision 03; `outline.html` is the older frozen revision 02, not the current draft.
 
 ## Separate later notebook studies
+
+**[Class requirements × session rosters — November11](population-grid-20261111/README.md)**
+replaces the previous nine-pair interpretation with nine metadata-selected population
+configurations, spanning 8–138 columns. All 111 cases completed: three sampling
+policies, three observed seeds, five source-label worlds on full-roster U2/F16,
+PCA/Time/native multisession and four readouts including RBF-SVM. The complete
+report and executed notebook retain 246 distinct figures, source/error audits and
+all scores. Repeated training blocks are not necessary for raw/PCA/Time endpoint
+recovery; wider rosters, added sources and recombination have model-specific effects.
+Native controls are mixed. Exposed, label-conditioned development remains a limit.
+[Independent validation and artifact identities](population-grid-20261111/validation.md).
 
 **[Source support, population width and reuse — November10](source-support-ablation-20261110/README.md)**
 reports39new biological model cases on the requested nine-class design and a fresh
