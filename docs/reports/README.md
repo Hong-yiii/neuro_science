@@ -1,6 +1,6 @@
 # Report and supporting evidence
 
-Updated 2026-11-02. This is the evidence catalog, not an experiment queue.
+Updated 2026-11-10. This is the evidence catalog, not an experiment queue.
 Use [weekly history](../../history/README.md) for the main historical reading flow;
 source packages below stay in place during the first physical migration slice.
 
@@ -14,7 +14,17 @@ source packages below stay in place during the first physical migration slice.
 3. **[Editable source](../../report/manuscript.html)**:
    revision 03; `outline.html` is the older frozen revision 02, not the current draft.
 
-## Separate later notebook study
+## Separate later notebook studies
+
+**[Source support, population width and reuse — November10](source-support-ablation-20261110/README.md)**
+reports39new biological model cases on the requested nine-class design and a fresh
+30-class reference: three observed seeds, five source-label diagnostic worlds on
+three arms, matched column/allocation/recombination contrasts, full source/error
+audits, trajectories and an executed notebook. Once-only training assembly retains
+endpoint information; wider panels and balanced allocation help several readouts,
+while recombination is mixed and CEBRA is not uniformly strongest. Development
+remains exposed, condition-matched and reused. Large report/notebook/figure/table
+artifacts stay local; the result note links them and the immutable run receipt.
 
 **[27-unit cue-only comparison — October23](cebra-27unit-notebooks-20261023/README.md)**
 ([offline HTML](cebra-27unit-notebooks-20261023/report.html)) summarizes the completed

@@ -12,6 +12,24 @@ PR status, recovery records and safe verification commands. Do not recreate old
 sibling worktrees or restart experiments from historical pending-work flags.
 Keep new durable decisions in Git-backed notes, not only in a chat transcript.
 
+**November10 completed source-support experiment:** the owner explicitly requested
+fresh biological model training, smaller start–goal panels (including a3×3 design),
+larger populations and source-reuse controls, followed by all results, a report,
+cue-time trajectories and an executed notebook. The bounded exploratory protocol is
+`docs/source-support-protocol-20261110.md`: eight observed arms ×three computational
+seeds and five pair-label diagnostic worlds for three arms;39CEBRA/39PCA/351logistic/
+117LDA fits,39,000updates. Use frozen splits/global predecessor embargo and public
+compact sources only. All39cases completed, with936 composed saved-pipeline checks,
+12successful notebook cells and157figures; independent protocol/code/results/privacy
+reviews passed. Run: `outputs/source-support-20261110/real-01/`; interpreted report
+and executed notebook: sibling `deliverables/`. Start with
+`docs/reports/source-support-ablation-20261110/README.md`. Learning survived once-only
+training assembly; source allocation and recorded width matter, but exposed/reused
+development and condition matching limit generalization. No further fit or retry
+is queued. Prior no-new-fit statements below are historical for this explicitly
+authorized study. Preserve all prior results/runtimes and unrelated edits. No push,
+merge or unrelated model sweep is authorized by this request.
+
 **October27 standalone course:** the owner requested deeper foundations and visible
 implementation and allowed splitting into multiple notebooks. Start with the seven
 chapters in `notebooks/README.md`: overview, experiment foundations, executed invented

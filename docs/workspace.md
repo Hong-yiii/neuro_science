@@ -1,10 +1,41 @@
 # Workspace and recovery
 
-Updated November2, 2026. Canonical checkout: **`~/neuro_science`**. Owner: Hongyi.
+Updated November10, 2026. Canonical checkout: **`~/neuro_science`**. Owner: Hongyi.
 Read [agent instructions](../AGENTS.md) before changing scientific code or artifacts.
 
 ## Current state
 
+- **November10 source-support experiment — completed:** after the issue assessment,
+  the owner explicitly requested new model training, a smaller start–goal panel,
+  wider populations and reuse controls, with an executed notebook/report and
+  trajectories. The [frozen protocol](source-support-protocol-20261110.md) defines
+  eight observed arms ×three seeds plus15source-label diagnostic cases. All39cases
+  completed:39CEBRA/39PCA/351logistic/117LDA,39,000updates. Newly saved pipelines
+  passed936 composed train/development checks with fitting blocked. Independent
+  protocol/code/results/privacy reviews passed, including all1,167receipt-bound
+  files and157figures. The complete run took452.55s, peak1,218.6MiB under4GiB,
+  zero swap/two-core limits, no OOM or biological failures. Read the
+  [interpreted results and artifact links](reports/source-support-ablation-20261110/README.md).
+  The [independent validation record](reports/source-support-ablation-20261110/validation.md)
+  binds the final report/notebook hashes and confirms their unchanged executed cells.
+  Immutable biological output: `outputs/source-support-20261110/real-01/`;
+  interpreted report/executed notebook: sibling `deliverables/`. Repeated assembly
+  draws are not necessary for endpoint recovery; balancing and added columns
+  matter, while exposed/reused development limits the claim. No further fit,
+  automatic retry, historical replay, push or merge is queued.
+- **November10 research-group issue assessment:** the owner requested a review of
+  the latest notebook evidence and the November2 issue batch. The
+  [assessment and proposed sequence](research-group-tests-20261110.md) maps #25
+  source reuse, #26 errors/exclusions and #24 panel/support ablations; #23 remains
+  deferred. Public metadata checks reproduced the fixed 30/27, 20/108 and 15/140
+  class/unit panels and their infeasibility under a five-training-source minimum.
+  Public report consistency and its invented self-test passed. No private artifacts,
+  neural arrays, model replay or new fits were accessed/run; no GitHub issue changed.
+  That assessment's proposed work was subsequently superseded by the authorized
+  execution above. All20nine-class rectangles proved infeasible at minimum five;
+  the study instead reported minimum-two and minimum-three panels without changing
+  the frozen splits. GitHub inspection at assessment time found PR22 merged and
+  PR27 open; neither was changed by this study.
 - **November2 report request:** the owner requested a dedicated report of the
   completed October23 27-unit study, similar in presentation to the historical195-unit
   endpoint report. [New report](reports/cebra-27unit-notebooks-20261023/README.md)

@@ -17,7 +17,7 @@ from pathlib import Path
 import numpy as np
 
 from neuro.cue_source_export import SCHEMA, regular
-from neuro.place195 import _index, _rows, file_hash, select_tables
+from neuro.place195 import _index, _rows, file_hash, panel_policy, select_tables
 from neuro.source_data import Source, SourceData, Split, Target, TargetDefinition, Unit
 
 
@@ -398,12 +398,7 @@ def reconstruct_compact(selection, *, interpret_neural=False):
             "previous/current marker digits; provisional",
             ("previous_marker_minor_digit", "marker_minor_digit"),
             "derived",
-            tuple(
-                (f"{a}->{b}", f"{a}->{b}")
-                for a in range(1, 7)
-                for b in range(1, 7)
-                if a != b
-            ),
+            tuple((pair, pair) for pair in panel_policy(canonical.manifest)[0]),
         ),
         edges,
         "s",

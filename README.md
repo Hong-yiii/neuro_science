@@ -8,6 +8,17 @@ CEBRA is a central tool, not a required winner. The repository brings together
 [editable retrospective](report/README.md), accepted exploratory evidence and an
 [installable Python package](src/neuro/README.md).
 
+## Latest experiment: source support and learning
+
+The [November10 results](docs/reports/source-support-ablation-20261110/README.md)
+test the requested **3 × 3 start–goal panel**, populations up to144recorded columns,
+balanced source allocation and training assembly without repeated source draws.
+All39new biological model cases completed, with three observed seeds, source-label
+controls, all cue-time trajectory plots and an executed evidence notebook. Endpoint
+recovery survives once-only assembly, while model choice and allocation matter.
+The report links the complete local artifacts and explains the limits imposed by
+condition matching and historically exposed/reused development.
+
 ## Start here: the research course
 
 Begin with the [standalone research guide](notebooks/00_research_guide.ipynb): the

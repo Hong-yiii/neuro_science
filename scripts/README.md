@@ -4,6 +4,19 @@ Updated 2026-10-12. Current focus is the
 [retrospective and its evidence](../docs/reports/README.md), not restarting runs.
 This map classifies existing entry points; it is not execution authorization.
 
+**November10 addition — completed source-support study:**
+`run_source_support_study.py` runs the separately guarded benchmark or biological
+notebook under hard cgroup limits; `build_source_support_notebook.py` generates
+Notebook05; `source_support_report.py` renders new numeric results;
+`collate_source_support_deliverables.py` authenticates a completed run and adds
+reviewed interpretation without importing/fitting/replaying models. The scientific
+implementation lives in `neuro.studies.source_support_ablation`, with invented
+checks in `test_source_support_ablation.py`. See the
+[frozen protocol](../docs/source-support-protocol-20261110.md) and
+[completed results](../docs/reports/source-support-ablation-20261110/README.md).
+All39cases finished; these entry points are not a pending run queue. The older
+family map below retains its historical scope.
+
 **Three-study package implemented:** full-trial transfer, endpoint-time and cue-time
 scientific bodies now live in [`neuro.studies`](../src/neuro/README.md), beside the
 shared split gate and equivalent execution/provenance seams. Their `cebra_*.py`

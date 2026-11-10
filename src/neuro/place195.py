@@ -72,6 +72,48 @@ def _index(rows, field):
     return result
 
 
+def panel_policy(manifest):
+    """Explicit post-embargo restriction; never changes eligibility or frozen splits."""
+    pairs = tuple(
+        f"{a}->{b}"
+        for a in manifest["landmarks"]
+        for b in manifest["landmarks"]
+        if a != b
+    )
+    panel = manifest.get("analysis_panel")
+    if panel is None:
+        return pairs, 2, 1
+    if set(panel) != {
+        "conditions",
+        "minimum_train_sources",
+        "minimum_development_sources",
+    }:
+        raise ValueError(
+            "analysis panel must declare conditions and both support minima"
+        )
+    conditions = panel["conditions"]
+    if (
+        not isinstance(conditions, list)
+        or not conditions
+        or any(not isinstance(c, str) for c in conditions)
+        or len(set(conditions)) != len(conditions)
+        or not set(conditions) <= set(pairs)
+    ):
+        raise ValueError("invalid explicit panel conditions")
+    train, development = (
+        panel["minimum_train_sources"],
+        panel["minimum_development_sources"],
+    )
+    if (
+        type(train) is not int
+        or train < 2
+        or type(development) is not int
+        or development < 1
+    ):
+        raise ValueError("panel requires >=2 training and >=1 development sources")
+    return tuple(p for p in pairs if p in conditions), train, development
+
+
 @dataclass(frozen=True)
 class MetadataSelection:
     paths: dict[str, Path]
@@ -240,18 +282,24 @@ def select_tables(manifest, *, paths, outer, trials_all, units_by_id, frozen):
         or not {s["source_id"], s["previous_id"]} & development_contributors
     ]
     support = Counter((s["block_id"], s["condition"], s["split_id"]) for s in surviving)
+    selected_pairs, minimum_train, minimum_development = panel_policy(manifest)
     selected_sessions = {
         session
         for session in sessions
         if all(
-            support[session, pair, "train"] >= 2
-            and support[session, pair, "development"] >= 1
-            for pair in pairs
+            support[session, pair, "train"] >= minimum_train
+            and support[session, pair, "development"] >= minimum_development
+            for pair in selected_pairs
         )
     }
     selected = tuple(
         sorted(
-            (s for s in surviving if s["block_id"] in selected_sessions),
+            (
+                s
+                for s in surviving
+                if s["block_id"] in selected_sessions
+                and s["condition"] in selected_pairs
+            ),
             key=lambda s: s["source_id"],
         )
     )
@@ -296,6 +344,13 @@ def select_tables(manifest, *, paths, outer, trials_all, units_by_id, frozen):
         "exclusion_counts": dict(Counter(e["reason"] for e in exclusions)),
         "access": "six explicit input files; whole-file hashes; metadata only, no neural numeric interpretation",
     }
+    if "analysis_panel" in manifest:
+        audit["analysis_panel"] = {
+            "conditions": list(selected_pairs),
+            "minimum_train_sources": minimum_train,
+            "minimum_development_sources": minimum_development,
+            "selection_stage": "after unchanged global development-contributor embargo",
+        }
     for key, expected in manifest.get("expected_metadata", {}).items():
         if audit.get(key) != expected:
             raise ValueError(f"frozen metadata total mismatch: {key}")
@@ -530,12 +585,7 @@ def reconstruct_neural(
             "previous/current marker digits; provisional biological meaning",
             ("previous_marker_minor_digit", "marker_minor_digit"),
             "derived",
-            tuple(
-                (f"{a}->{b}", f"{a}->{b}")
-                for a in selection.manifest["landmarks"]
-                for b in selection.manifest["landmarks"]
-                if a != b
-            ),
+            tuple((pair, pair) for pair in panel_policy(selection.manifest)[0]),
         ),
         np.arange(n_bins + 1) * width,
         "s",

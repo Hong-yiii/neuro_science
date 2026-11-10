@@ -174,7 +174,15 @@ def materialize(
         or len(plan.rows) > max_rows
     ):
         raise ValueError("invalid or exceeded max_rows")
-    if plan.policy != "sample-with-replacement" or not plan.rows:
+    if (
+        plan.policy
+        not in {
+            "sample-with-replacement",
+            "balanced-cycle",
+            "sample-without-replacement",
+        }
+        or not plan.rows
+    ):
         raise ValueError("unsupported or empty assembly plan")
     if isinstance(plan.seed, bool) or not isinstance(plan.seed, int) or plan.seed < 0:
         raise ValueError("invalid plan seed")
@@ -232,6 +240,24 @@ def materialize(
             exposure[row_index, block_index] = data.exposure[si]
     if {r.condition for r in plan.rows} != set(target_map):
         raise ValueError("plan omits declared conditions")
+    if plan.policy != "sample-with-replacement":
+        uses = Counter(sid for row in plan.rows for sid in row.source_ids)
+        if plan.policy == "sample-without-replacement" and max(uses.values()) > 1:
+            raise ValueError("without-replacement plan repeats a source")
+        if plan.policy == "balanced-cycle":
+            for block in data.block_ids:
+                for condition in target_map:
+                    frequencies = [
+                        uses[s.source_id]
+                        for s in data.sources
+                        if s.split_id == plan.split_id
+                        and s.block_id == block
+                        and effective[s.source_id] == condition
+                    ]
+                    if not frequencies or max(frequencies) - min(frequencies) > 1:
+                        raise ValueError(
+                            "balanced plan has unequal per-pool source use"
+                        )
     targets = np.asarray([r.target for r in plan.rows])
     for arr in (values, exposure, targets):
         arr.setflags(write=False)

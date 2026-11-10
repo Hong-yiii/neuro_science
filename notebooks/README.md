@@ -8,6 +8,17 @@ the retrospective explains what each experiment changed in our understanding.
 Fourteen historical figures and the invented example's outputs are embedded for
 reading without private files or model execution.
 
+The separate [05 — Source support and learning](05_source_support_ablation.ipynb)
+is the November10 experiment, with **39 freshly trained biological cases**:
+nine-class panels, added recorded columns, balanced/once-only/recombined source
+assembly, and source-label controls. Its source file has empty outputs; read the
+[executed evidence notebook](../outputs/source-support-20261110/deliverables/source_support.executed.ipynb)
+and [interpreted report](../docs/reports/source-support-ablation-20261110/README.md)
+for all saved results, 24 cue-time trajectory figures and the scientific limits.
+That completed study is separate from the teaching chapters' historical execution
+status below. The guarded study runner, frozen protocol and exact source snapshot
+identify its execution; do not rerun training merely to read the notebook.
+
 The practical chapters follow **question → design decision → calculation →
 diagnostic → interpretation**. Each independently reconstructs its declared inputs.
 B/C walk the first planned case through assembly, normalization, representation,
