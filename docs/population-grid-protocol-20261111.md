@@ -107,7 +107,11 @@ native multisession CEBRA. This amendment replaces the earlier logistic-focused
 model matrix; no biological model had been fitted. The first invented benchmark
 passed but does not authorize this expanded matrix. The rank-eight native-input
 preflight stopped on K30/S33/U2 in permutation60002; zero model fits. A complete
-216-plan training-only float32 rank inventory found minimum7. Freeze **seven**
+216-plan training-only float32 rank inventory found minimum7. The only rank7
+plans are K30/S33 U2/R16 in null60002; those smaller-roster nulls are NOT among
+the111fitted cases. D7 is therefore conservative across the broader preflight
+family, not evidence that8D is infeasible for an actually scheduled fitted case.
+Freeze **seven**
 latent coordinates for all representations/cases, the largest common feasible
 rank across this preflight. Do not pad, alter the nine rosters, or select dimensions
 from decoder scores. Preserve both the failed preflight and rank inventory.
