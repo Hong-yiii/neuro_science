@@ -12,6 +12,22 @@ PR status, recovery records and safe verification commands. Do not recreate old
 sibling worktrees or restart experiments from historical pending-work flags.
 Keep new durable decisions in Git-backed notes, not only in a chat transcript.
 
+**November11 replacement class × session study — current:** the owner corrected
+3×3 to mean three class requirements × three session rosters, requested a fresh
+experiment, all results/report/trajectories/executed notebook and `/teach max`,
+then explicitly added non-logistic readouts including RBF-SVM and native
+multisession CEBRA. The previous November10 design is history, not this study's
+result basis. Read `docs/population-grid-protocol-20261111.md` and its frozen
+metadata design. Nine populations span8–138columns; all111cases use raw/PCA7/
+CEBRA-Time7/native pair-supervised multisession7 with logistic/SVM/kNN5/SVD-LDA.
+Prefit code/scientific review passed; all216plans passed rank7/source checks.
+Preserved failed rank8 check and invented3h budget gates have zero biological
+fits. The independently reviewed resource amendment permits one fresh run under
+4GiB/no-swap/two-core/six-hour hard limits,5661fit calls and222000updates.
+New outputs: `outputs/population-grid-20261111/`; old results/runtimes/unrelated
+sampling edits remain untouched. No automatic biological retry, push or merge.
+Final execution/result status belongs to `docs/workspace.md`.
+
 **November10 completed source-support experiment:** the owner explicitly requested
 fresh biological model training, smaller start–goal panels (including a3×3 design),
 larger populations and source-reuse controls, followed by all results, a report,

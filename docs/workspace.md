@@ -1,9 +1,23 @@
 # Workspace and recovery
 
-Updated November10, 2026. Canonical checkout: **`~/neuro_science`**. Owner: Hongyi.
+Updated November11, 2026. Canonical checkout: **`~/neuro_science`**. Owner: Hongyi.
 Read [agent instructions](../AGENTS.md) before changing scientific code or artifacts.
 
 ## Current state
+
+- **November11 replacement study — ready for bounded execution:** user clarified
+  three class requirements × three session rosters and requested new training,
+  report/notebook/trajectories and teach-max, then added SVM/other decoders and native
+  multisession CEBRA. [Frozen protocol](population-grid-protocol-20261111.md) and
+  [exact metadata design](population-grid-design-20261111.json) define9populations,
+  3sampling policies,3observed seeds and30null cases. Expected5661fit calls,
+  222,000updates. Independent expanded-code review, nine invented regression tests,
+  216native no-fit plan/rank checks and29invented renderer figures passed. An
+  authenticated resource-only amendment accepts a six-hour/4GiB/no-swap/two-core
+  ceiling after complete invented fits exceeded the earlier three-hour estimate.
+  Preserve the failed rank8/budget receipts. No biological results exist yet.
+  New source notebook: `notebooks/06_population_grid.ipynb`; output root
+  `outputs/population-grid-20261111/`. No push or merge is authorized.
 
 - **November10 source-support experiment — completed:** after the issue assessment,
   the owner explicitly requested new model training, a smaller start–goal panel,
