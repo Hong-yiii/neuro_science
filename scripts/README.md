@@ -17,6 +17,13 @@ invented checks: `test_population_grid.py`. See the
 [frozen protocol](../docs/population-grid-protocol-20261111.md) and
 [completed results/validation](../docs/reports/population-grid-20261111/README.md).
 All 111 cases finished; no fit or automatic retry is queued.
+The saved-result follow-up uses `population_grid_error_analysis.py` to authenticate
+and summarize truth/prediction members without reading neural feature arrays or
+loading models. `population_grid_error_handoff.py` and
+`population_grid_error_explorer.js` add reviewed confusion/selection/reuse views to
+a new report/notebook and temporary teaching artifact. The
+[error-analysis ledger](../docs/reports/population-grid-20261111/error-analysis-validation.md)
+identifies accepted analysis02 and its superseded first descriptive calculation.
 
 **November10 addition — completed source-support study:**
 `run_source_support_study.py` runs the separately guarded benchmark or biological

@@ -5,6 +5,24 @@ Read [agent instructions](../AGENTS.md) before changing scientific code or artif
 
 ## Current state
 
+- **November11 confusion/error follow-up — completed:** the owner requested
+  confusion matrices inside the handoff and relationships between removed classes/
+  sessions, source reuse and mistakes. The [new interpretation](reports/population-grid-20261111/error-analysis.md)
+  and [validation](reports/population-grid-20261111/error-analysis-validation.md)
+  describe a saved-result-only, post-hoc analysis: no new fits, model loading,
+  biological replay or neural value/feature-array reads. Accepted
+  `outputs/population-grid-20261111/error-analysis-02/` passed independent checks
+  of169inputs,7outputs,9,216included matrices,6,480correlations and56,160paired
+  change records. Preserve superseded01, whose harmonic ties were corrected using
+  exact rational arithmetic. Updated `handoff-errors-01/` contains the complete
+  report, interactive confusions and notebook with17newfigures, preserving all25
+  earlier cells/12executed code cells. Original run/first deliverables remain intact.
+  Removed classes were not uniformly difficult; reuse/lower coverage often
+  accompanies errors but cannot be separated causally here. Roster changes do
+  not identify individually bad sessions. The disposable teaching HTML is recorded
+  in the validation ledger; native Mac rendering is unverified because no unique
+  owning cmux pane was available. No new fitting, push, merge or issue edit is queued.
+
 - **November11 replacement study — completed:** the corrected design is three
   class requirements × three session rosters, with U2/R16/F16 source-use policies,
   CEBRA-Time/native multisession and logistic/RBF-SVM/kNN/LDA. All 111 cases

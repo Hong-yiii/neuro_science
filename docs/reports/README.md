@@ -26,6 +26,12 @@ all scores. Repeated training blocks are not necessary for raw/PCA/Time endpoint
 recovery; wider rosters, added sources and recombination have model-specific effects.
 Native controls are mixed. Exposed, label-conditioned development remains a limit.
 [Independent validation and artifact identities](population-grid-20261111/validation.md).
+The subsequent [error-analysis handoff](population-grid-20261111/error-analysis.md)
+adds all observed training/development matrices and existing development controls,
+class-deletion comparisons, source-coverage/reuse associations and lineage-matched
+prediction switches. Its [validation](population-grid-20261111/error-analysis-validation.md)
+records the corrected arithmetic, preserved original cells and updated artifacts.
+No new fitting or model replay accompanied that follow-up.
 
 **[Source support, population width and reuse — November10](source-support-ablation-20261110/README.md)**
 reports39new biological model cases on the requested nine-class design and a fresh

@@ -12,9 +12,15 @@ The latest separate [06 — Class requirements × session rosters](06_population
 is the November11 replacement experiment: nine populations, U2/R16/F16 source-use
 policies, CEBRA-Time and native multisession CEBRA, with logistic/RBF-SVM/kNN/LDA.
 All **111 cases completed**. Read the
-[executed evidence notebook](../outputs/population-grid-20261111/deliverables/population_grid.executed.ipynb)
+[executed evidence notebook](../outputs/population-grid-20261111/handoff-errors-01/population_grid.executed.ipynb)
 and [interpreted results](../docs/reports/population-grid-20261111/README.md) for
 saved outputs, 81 cue-trajectory pages, every decoder and control, and claim limits.
+The [saved-result error follow-up](../docs/reports/population-grid-20261111/error-analysis.md)
+adds17comparison figures and a post-execution notebook section while preserving
+all25prior cells and12executed code cells. The
+[interactive handoff](../outputs/population-grid-20261111/handoff-errors-01/report.html#error-explorer)
+contains9,216included training/development confusion matrices plus class-deletion,
+source-reuse and matched error-switch views; no new model fit or replay.
 The source notebook has empty outputs; its guarded runner and frozen source
 snapshot identify the completed execution. Do not rerun training merely to read it.
 

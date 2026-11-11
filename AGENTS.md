@@ -12,6 +12,20 @@ PR status, recovery records and safe verification commands. Do not recreate old
 sibling worktrees or restart experiments from historical pending-work flags.
 Keep new durable decisions in Git-backed notes, not only in a chat transcript.
 
+**November11 saved-result error follow-up — latest handoff:** the owner requested
+confusion matrices and associations between removed classes/sessions, source reuse
+and errors. Start at `docs/reports/population-grid-20261111/error-analysis.md` and
+`error-analysis-validation.md`. Accepted `outputs/population-grid-20261111/error-analysis-02/`
+uses authenticated saved predictions only: no fits, model loads, biological replay
+or neural feature/value-array reads. It includes9,216confusion matrices and verified
+class-deletion/source-reuse/paired-error tables. Independent code/numeric/claim
+reviews passed. `handoff-errors-01/` adds17figures and one labelled post-execution
+notebook cell while preserving all25prior cells and12executed code cells. Preserve
+superseded error-analysis01 (corrected exact harmonic ties), original run/first
+deliverables and the earlier teaching artifact. Deleted classes are unevaluated in
+reduced tasks; F16 reuse is algebraically inverse to source coverage; session-group
+changes do not identify individually bad sessions. No new fitting, push or merge.
+
 **November11 replacement class × session study — completed/current:** the owner
 corrected 3×3 to mean three class requirements × three session rosters, requested
 fresh fits/results/report/trajectories/executed notebook and `/teach max`, and added
