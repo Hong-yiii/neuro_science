@@ -237,23 +237,6 @@ def execute(out, config, args):
         "NEURO_REUSE_RUN": str(out),
         "NEURO_REUSE_ALLOW_BIOLOGICAL": "1",
     }
-    kernel = out / "jupyter/kernels/source-reuse-width"
-    kernel.mkdir(parents=True)
-    study.write_json(
-        kernel / "kernel.json",
-        dict(
-            argv=[
-                sys.executable,
-                "-m",
-                "ipykernel_launcher",
-                "-f",
-                "{connection_file}",
-            ],
-            display_name="Bounded source reuse / width",
-            language="python",
-            env=env,
-        ),
-    )
     os.environ["JUPYTER_PATH"] = os.pathsep.join(
         (
             str(out / "jupyter"),
@@ -265,9 +248,24 @@ def execute(out, config, args):
     for part in ("reuse", "width"):
         if part == "width":
             env["NEURO_BRIDGE_SHA256"] = study.sha(out / "bridge-receipt.json")
-            spec = json.loads((kernel / "kernel.json").read_text())
-            spec["env"] = env
-            study.write_json(kernel / "kernel.json", spec)
+        kernel_name = "source-reuse-width-" + part
+        kernel = out / "jupyter/kernels" / kernel_name
+        kernel.mkdir(parents=True, exist_ok=False)
+        study.write_json(
+            kernel / "kernel.json",
+            dict(
+                argv=[
+                    sys.executable,
+                    "-m",
+                    "ipykernel_launcher",
+                    "-f",
+                    "{connection_file}",
+                ],
+                display_name="Bounded source reuse / width: " + part,
+                language="python",
+                env=env,
+            ),
+        )
         notebook = make_notebook(part)
         destination = out / (
             {"reuse": "source_reuse_20261114", "width": "population_width_20261114"}[
@@ -279,7 +277,7 @@ def execute(out, config, args):
             NotebookClient(
                 notebook,
                 timeout=config["limits"]["run_seconds"],
-                kernel_name="source-reuse-width",
+                kernel_name=kernel_name,
                 resources={"metadata": {"path": str(ROOT)}},
             ).execute()
         finally:

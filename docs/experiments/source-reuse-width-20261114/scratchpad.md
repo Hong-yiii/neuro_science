@@ -2,6 +2,11 @@
 
 Started November 14, 2026. Classification: **exploratory analysis**.
 
+**Current status — November 15: completed.** All48unique cases trained, all numeric
+evidence independently checked, both dated notebooks/reports delivered. Start with
+[results and artifact links](README.md) and [validation](validation.md). The entries
+below preserve intermediate states; old pending flags are not a new run queue.
+
 ## Owner's goal and scope
 
 Use the existing recordings to construct new pseudopopulations, train fresh models
@@ -74,6 +79,38 @@ not independent biological replicates; the development set is historically expos
   with32inherited cases distinguished from new execution. An invented two-kernel
   handoff smoke passed with separate immutable specs and no biological reads/fits.
   Independent continuation review is pending; no automatic biological retry.
+- Independent review cleared the completed continuation implementation and exact
+  parent boundary. Launched the16unattempted width cases once under hard7,200-second,
+  4-GiB/zero-swap/two-CPU limits. Accepted output is being assembled separately at
+  `outputs/source-reuse-width-20261114/complete-01/`; original `real-01` remains
+  failed and immutable, with its32successful biological cases preserved byte-for-byte.
+- The continuation completed all16new cases and the second notebook, with no case
+  failure/retry. Combined48cases used2,448fits and96,000updates in22.90minutes;
+  maximum1,321.11MiB, all memory-event counters zero. Both notebooks have9executed
+  code cells. The8B3cases are authenticated shared evidence, not refits.
+- Full numeric audit passed all3,155files,4,608split metrics,5,376report matrix views,
+  all source/pool/error/paired tables,96learning curves and1,296latent class means.
+  Independent review separately reproduced metrics with count-based formulas,
+  verified exact best/worst ties and authenticated every inherited parent byte.
+- Results are mixed by pipeline: Raw/PCA SVM pair association survives once-only
+  assembly; broader source support helps Raw/Time SVM. PCA mean pair performance
+  rises at both width steps across all4readouts. Repetition and native width effects
+  are not uniformly beneficial. Best/worst class errors were collated; missing
+  spatial maps remain unknown and do not establish the#29place-field explanation.
+- Fixed the normal runner's future handoff using separate immutable kernel specs;
+  complete two-notebook no-fit regression passed. Independent review accepted the
+  repair and narrow auditor handling of unused historical run.py drift. Old launch
+  gates still reject changed source. This repair produced no biological evidence.
+  A second full audit passed and preserves the first audit.
+- Dated delivery adds one labelled interpretation cell per notebook while preserving
+  all18original cells each, and adds4paired-change figures. Independent review caught
+  a missing SVM/pair qualifier in U3 prose and unused nbconvert CDN loaders; corrected
+  copies are `deliverables-20261115-03/`, with01/02preserved. All102delivery files,
+  336score/336contrast summaries, local links, static/offline rendering dependencies
+  and all eight SVM best/worst error summaries passed independent review.
+- Durable results/validation and workspace pointers now identify the completed
+  study. Source notebook outputs stay empty; generated neural evidence stays local.
+  No new model sweep, fitting, retry, publication or issue modification is queued.
 
 ## Preservation
 

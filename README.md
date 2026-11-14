@@ -8,7 +8,32 @@ CEBRA is a central tool, not a required winner. The repository brings together
 [editable retrospective](report/README.md), accepted exploratory evidence and an
 [installable Python package](src/neuro/README.md).
 
-## Latest experiment: class requirements × session rosters
+## Latest experiments: source reuse, then population width
+
+The [November15 results](docs/experiments/source-reuse-width-20261114/README.md)
+test 2/3/5 distinct training sources at a fixed 17-column population, then 17/49/83
+columns at three sources per session–class pool. All 48 fresh cases completed using
+existing recordings: 2,448 fits and 96,000 updates, with raw/PCA/CEBRA-Time/native
+multisession, logistic/RBF-SVM/kNN/LDA and bounded source-label controls.
+
+Read the [source-reuse notebook](outputs/source-reuse-width-20261114/deliverables-20261115-03/source_reuse_20261115.executed.ipynb)
+and [population-width notebook](outputs/source-reuse-width-20261114/deliverables-20261115-03/population_width_20261115.executed.ipynb),
+or their [source-reuse](outputs/source-reuse-width-20261114/deliverables-20261115-03/source_reuse/report.html)
+and [width](outputs/source-reuse-width-20261114/deliverables-20261115-03/population_width/report.html)
+offline reports. Both include training curves, cue trajectories, all confusion
+matrices and best/worst class errors. [Independent validation](docs/experiments/source-reuse-width-20261114/validation.md)
+and the [progress scratchpad](docs/experiments/source-reuse-width-20261114/scratchpad.md)
+preserve the complete execution history.
+
+Raw/PCA SVM pair association survives once-only assembly. More distinct sources
+help some pipelines; repeating the same sources is not consistently helpful. PCA
+mean accuracy increases across both width steps for every readout, while raw/native
+effects depend on the pipeline. Development remains exposed and label-conditioned;
+source reuse is not independent sample size. The spatial-field explanation in #29
+awaits authenticated maps. Implementation stays under
+[`experiments/source_reuse_width_20261114/`](experiments/source_reuse_width_20261114/README.md).
+
+## Previous experiment: class requirements × session rosters
 
 The [November11 results](docs/reports/population-grid-20261111/README.md) implement
 Hongyi's corrected **3 class requirements × 3 session rosters**: nine populations

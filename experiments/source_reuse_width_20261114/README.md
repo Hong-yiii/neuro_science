@@ -1,5 +1,10 @@
 # Two experiments — November 14, 2026
 
+**Completed and delivered November 15, 2026.**
+[Results and both dated executed notebooks](../../docs/experiments/source-reuse-width-20261114/README.md)
+are the reading entry point. The names here retain the prospective study date;
+the delivered notebooks record the actual execution/delivery date.
+
 One fixed endpoint task, two focused questions, fresh training on existing recordings:
 
 1. [Source reuse](source_reuse_20261114.ipynb): nested 2/3/5 distinct training sources
@@ -29,6 +34,17 @@ schedule; it consumes maintained package helpers without changing package APIs.
 predictions and makes all-matrix explorers. `build_notebooks.py` builds the two
 source notebooks. `test_study.py` and `self_test_report.py` verify invented inputs
 with fitting blocked. The renderer smoke produces invented results only.
+`audit/verify.py` and `audit/tables.py` reconcile saved numerical evidence without
+fits or model loads; `audit/deliver.py` creates dated interpreted copies.
+`audit/continue_width.py` preserves the exact reviewed32-case failure boundary;
+it is an execution record, not a general resume command.
+
+The accepted scientific run is `outputs/source-reuse-width-20261114/complete-01/`;
+current delivery is its sibling `deliverables-20261115-03/`. The original `real-01/`
+failed only at the notebook handoff after32successful cases. The continuation ran
+only16unattempted cases. Current `run.py` fixes future handoffs with separate
+immutable kernel specifications; its no-fit regression is
+`audit/test_orchestration.py`. It was not used to produce this study's results.
 
 ## Execution contract
 
@@ -55,3 +71,9 @@ Distinct source IDs, added columns and repeated synthetic rows are not independe
 biological replications. Width adds sessions and measured sources together. The
 development set is historically exposed and label-conditioned. Spatial-field
 coverage remains unknown; #29's place-field explanation needs authenticated maps.
+
+No further training is queued. The post-execution orchestration repair changes
+source pins, so old benchmark/preflight receipts correctly fail any future launch.
+Use the ledger's non-fitting audit command to verify results; do not rerun training
+notebooks just to inspect them. All executed source snapshots and earlier failures
+remain preserved.

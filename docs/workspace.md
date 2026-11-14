@@ -1,22 +1,33 @@
 # Workspace and recovery
 
-Updated November14, 2026. Canonical checkout: **`~/neuro_science`**. Owner: Hongyi.
+Updated November15, 2026. Canonical checkout: **`~/neuro_science`**. Owner: Hongyi.
 Read [agent instructions](../AGENTS.md) before changing scientific code or artifacts.
 
 ## Current state
 
-- **November14 focused source-reuse/width study — authorized, in progress:** the
-  owner narrowed the wide proposal and requested actual fresh training, a scratchpad
-  and two dated experiment files with documentation. The
-  [protocol](experiments/source-reuse-width-20261114/protocol.md) freezes one
-  nine-class task: 2/3/5 training sources at fixed17columns, then17/49/83columns at
-  three sources, plus one once-only control and the established model/readout/null
-  comparisons. [Progress scratchpad](experiments/source-reuse-width-20261114/scratchpad.md).
-  Existing recordings only; no new biological observations. Metadata design is
-  complete; code/review/resource gates precede new fits. The coverage-first knob
-  draft below is superseded. Preserve all old evidence and unrelated edits.
+- **November15 focused source-reuse/width study — completed:** the owner narrowed
+  the proposal to two tests with fresh training on existing recordings. The
+  [results and two dated notebooks](experiments/source-reuse-width-20261114/README.md)
+  compare2/3/5distinct sources at17columns, then17/49/83columns at three sources,
+  with once-only, raw/PCA/Time/native, four readouts and source-label controls.
+  All48unique cases completed:2,448fits excluding scalers,96,000updates,
+  18executed code cells,61original figures plus4supplements. Raw/PCA SVM pair
+  association survives once-only assembly; repetition effects vary. PCA mean
+  width gains occur across all four readouts; raw/native effects vary by pipeline.
+  Spatial-field attribution remains unavailable; class errors and retained-column
+  evidence are included. The [validation ledger](experiments/source-reuse-width-20261114/validation.md)
+  records all3,155receipt-bound files and complete independent numeric/claim/privacy
+  review, with safe non-fitting verification. Actual phases took22.90minutes,
+  peak1,321.11MiB, no memory events. Accepted `complete-01/` inherits32cases from
+  failed `real-01/` and adds16previously unattempted width cases; the parent kernel
+  handoff failure is preserved, no biological case refitted. Current artifacts:
+  `outputs/source-reuse-width-20261114/deliverables-20261115-03/`. Current normal
+  runner repair has a no-fit regression and intentionally invalidates old launch
+  gate pins; it did not produce the accepted results. Keep the [scratchpad](experiments/source-reuse-width-20261114/scratchpad.md),
+  source snapshots, failures, superseded deliveries, old studies and unrelated
+  sampling-code/current-state edits. No fit, retry, publication or issue edit queued.
 
-- **November14 next-experiment knobs — draft:** the owner clarified that there are
+- **November14 next-experiment knobs — superseded broad draft:** the owner clarified that there are
   no new recordings; the next work should construct new pseudopopulations from the
   existing recordings, train fresh models and evaluate them. The
   [knob/analysis draft](experiments/population-coverage-20261114/README.md) separates
