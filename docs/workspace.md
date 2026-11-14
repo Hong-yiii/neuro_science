@@ -1,9 +1,21 @@
 # Workspace and recovery
 
-Updated November11, 2026. Canonical checkout: **`~/neuro_science`**. Owner: Hongyi.
+Updated November14, 2026. Canonical checkout: **`~/neuro_science`**. Owner: Hongyi.
 Read [agent instructions](../AGENTS.md) before changing scientific code or artifacts.
 
 ## Current state
+
+- **November14 professor-feedback assessment — proposed next work:** GitHub's
+  newest issues are #29 (lost place-field coverage versus errors) and #30 (minimum
+  selectivity/coverage in population selection), both opened November11 and still
+  open. The [assessment and recommended sequence](professor-feedback-next-steps-20261114.md)
+  prioritizes authenticated field maps and a retrospective coverage/error atlas,
+  then fixed-class coverage/support feasibility, then one matched learning comparison.
+  Unit tuning quality and coverage of every required region are distinct; navigation
+  tuning is not automatically cue-goal selectivity. This is a recommendation, not a
+  frozen protocol or new run. Only issues, source and existing reports were read;
+  no neural analysis, model fit/replay or GitHub issue change occurred. Preserve the
+  completed evidence and unrelated working changes.
 
 - **November11 confusion/error follow-up — completed:** the owner requested
   confusion matrices inside the handoff and relationships between removed classes/
