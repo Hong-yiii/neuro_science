@@ -5,6 +5,16 @@ Read [agent instructions](../AGENTS.md) before changing scientific code or artif
 
 ## Current state
 
+- **November14 next-experiment knobs — draft:** the owner clarified that there are
+  no new recordings; the next work should construct new pseudopopulations from the
+  existing recordings, train fresh models and evaluate them. The
+  [knob/analysis draft](experiments/population-coverage-20261114/README.md) separates
+  a matched coverage-selection study from source-diversity and model sensitivities.
+  It retains raw/PCA/Time/native models and SVM/other readouts, with explicit map,
+  cohort and budget questions still open. This turn defines the study; no new
+  construction, fit or evaluation has run. Preserve the completed November11
+  artifacts and the unrelated sampling-code/current-state edits.
+
 - **November14 experiment closure / publication:** the owner authorized merging
   [PR28](https://github.com/Hong-yiii/neuro_science/pull/28) and its report-only
   [PR27 dependency](https://github.com/Hong-yiii/neuro_science/pull/27) into `main`;
