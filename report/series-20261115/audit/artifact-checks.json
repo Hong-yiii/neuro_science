@@ -1,33 +1,45 @@
 {
-  "classification": "presentation and aggregate-evidence verification; no new study",
-  "evidence_revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
-  "paper_pdf_sha256": "dc6ea8e5e2d422657b32ca8001eb706428bb329025fa473c9f75121bda05ba02",
-  "paper_tex_sha256": "2f1630251df8d445e1242b028a72f94e17ce140d9dcae7164f9576c203eb6b1a",
-  "pages": 10,
-  "figures": 6,
-  "tables": 3,
-  "pinned_repository_reference_targets": 23,
-  "tex_compiler": "Tectonic 0.17.0",
+  "status": "passed",
+  "source_tree": "020f20436acdf503eb6fd2fe79131b1524e27202",
+  "pages": 18,
+  "figures": 12,
+  "tables": 9,
   "tex_warnings": 0,
-  "unresolved_references": 0,
-  "missing_figure_placeholders": 0,
-  "generated_outputs_authenticated": 13,
-  "fonts_embedded": true,
-  "paper_execution": {
-    "model_fits": 0,
-    "model_loads": 0,
-    "notebook_cells_executed": 0,
-    "new_literature_searches": 0
+  "pinned_repository_links": 30,
+  "all_pinned_links_resolve": true,
+  "generated_files_authenticated": 32,
+  "text_identical_to_delivered_pdf": true,
+  "source_and_figure_files_identical": true,
+  "scientific_runtime_required": false,
+  "notebook_sources_required": false,
+  "delivered_pdf_sha256": "a12d4936438baa79322a8c615db2112d8d0980f621a94c0fbbb45cb541812956",
+  "compiled_pdf_sha256": "9c18526154e96bdc46df8603275c11daae8453967727848ad5bf24acc0ae6251",
+  "tex_sha256": "ee2027cac9a0d9c2ae911a6355a74016c5a76fe519f3221888e1e0f6aa740923",
+  "figure_provenance_sha256": "1e9503f18f3f67804feb1db02ab3f60d70076e8fe16cd0670524062686002eb4",
+  "all_pages_visually_inspected": true,
+  "all_final_reviewers_confirmed": {
+    "newcomer": {
+      "verdict": "PASS \u2014 APPROVED and UNDERSTANDABLE",
+      "file": "audit/methods-newcomer.md",
+      "sha256": "d9c02cb1ad2541a0741ce60017dd6fa72076566520b690e755f8f3fce53fb4f5"
+    },
+    "researcher": {
+      "verdict": "PASS \u2014 APPROVED and UNDERSTANDABLE",
+      "file": "audit/methods-researcher.md",
+      "sha256": "5e80b87f42448f2f40b3cf746f89aec6413e96b407225ff4fe39a107a89daf78"
+    },
+    "quantitative": {
+      "verdict": "PASS \u2014 APPROVED and UNDERSTANDABLE",
+      "file": "audit/methods-quantitative.md",
+      "sha256": "24ff4c55d375f42b8b0fdd2f71447ec94ff2d8f6d18d537fa1b66681e271e4d5"
+    }
   },
-  "unrelated_sampling_file_sha256": "63489315c5a21257ed037edd77161f639beb23199321719d8fe22a562c1659f5",
-  "blind_manuscript_audits": "all three PASS and UNDERSTANDABLE for the final hashes",
-  "initial_audited_version_commit": "cd31986",
-  "isolated_package_build": {
-    "tree": "ddfec059a60c36109fc3b417dea1777f1c8b929f",
-    "pages": 10,
-    "tex_warnings": 0,
-    "pdf_extracted_text_identical": true,
-    "scientific_runtime_used": false,
-    "manuscript_and_figure_files_identical": 8
-  }
+  "numerical_tables_and_original_figures_changed_by_final_clarity_pass": false,
+  "build_command_template": [
+    "make",
+    "-B",
+    "TECTONIC=/path/to/tectonic"
+  ],
+  "tectonic_version": "0.17.0",
+  "fonts_embedded": true
 }

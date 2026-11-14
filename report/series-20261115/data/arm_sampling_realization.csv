@@ -1,0 +1,7 @@
+arm,world,seed,roster,columns,sessions,eligible_train_sources,selected_train_sources,constructed_train_rows,training_source_block_uses,minimum_uses_per_selected_source,maximum_uses_per_selected_source,unique_whole_source_tuples,repeated_whole_source_tuples,source_extra_draw_fraction,eligible_development_sources,development_session_class_pools,development_singleton_pools
+B2,observed,0,core,17,3,160,54,144,432,8,8,67,77,0.875,56,27,5
+B3,observed,0,core,17,3,160,81,144,432,5,6,121,23,0.8125,56,27,5
+B5,observed,0,core,17,3,160,135,144,432,3,4,138,6,0.6875,56,27,5
+U3,observed,0,core,17,3,160,81,27,81,1,1,27,0,0,56,27,5
+Wmid,observed,0,middle,49,11,543,297,144,1584,5,6,144,0,0.8125,210,99,18
+Wfull,observed,0,full,83,20,912,540,144,2880,5,6,144,0,0.8125,365,180,41

@@ -33,6 +33,60 @@
           "table": "Arm construction summary",
           "rows": 4,
           "html_sha256": "037ba95f1dc71ab92ff66494286d6400163856c147d6f06b760ce3f685399239"
+        },
+        {
+          "cell_index_zero_based": 3,
+          "output_index_zero_based": 1,
+          "mime_type": "text/html",
+          "table": "Eligible current-source pools by frozen roster",
+          "rows": 3,
+          "html_sha256": "bf6f65329a9386a21bcb6d726debfbfdf248cbeb075a1134b170e5829dce408e"
+        },
+        {
+          "cell_index_zero_based": 7,
+          "output_index_zero_based": 1,
+          "mime_type": "text/html",
+          "table": "Observed seed0 sampling realization",
+          "rows": 4,
+          "html_sha256": "832e4eacc704f714a7fb7dcd2cdef00fff9e682fa4089d26e88507301d8971c0"
+        },
+        {
+          "cell_index_zero_based": 5,
+          "output_index_zero_based": 1,
+          "mime_type": "text/html",
+          "table": "Observed seed0 prefit checks",
+          "rows": 6,
+          "html_sha256": "a10d08ec5f6bdedaaa53c2a31fda2edbf9afefa07eee6e61c578925cea524709"
+        },
+        {
+          "cell_index_zero_based": 9,
+          "output_index_zero_based": 2,
+          "mime_type": "text/html",
+          "table": "First-case columns per session block",
+          "rows": 3,
+          "html_sha256": "67bc174d37a6c053f85e8a4edad7434b0e569c6d4c66b6f45901f228cf117896"
+        },
+        {
+          "cell_index_zero_based": 9,
+          "output_index_zero_based": 4,
+          "mime_type": "text/html",
+          "table": "All displayed first-two-row source-choice ordinals",
+          "rows": 6,
+          "html_sha256": "bbe70e69e8471fac5407d177e49c60cbdafc0858844d1a48fc1c826e2daba60e"
+        },
+        {
+          "cell_index_zero_based": 5,
+          "output_index_zero_based": 0,
+          "mime_type": "stream/text",
+          "purpose": "Published tensor dimensions and observed-mask scalar",
+          "text_sha256": "e3d4d562001eee30875d6bf8c6a9c3da51760516fb9fb159971147bc58fb6682"
+        },
+        {
+          "cell_index_zero_based": 5,
+          "output_index_zero_based": 2,
+          "mime_type": "stream/text",
+          "purpose": "Published tensor dimensions and observed-mask scalar",
+          "text_sha256": "f8691586524f3c3e84117445f1ac3021b7b9f44f568bf932ef429ae8c77c762e"
         }
       ]
     },
@@ -73,10 +127,134 @@
           "html_sha256": "317900f436d4ac5db9766e8f20c4c1eccdfc3eb72c17c1115aad74270ccbbde3",
           "srcdoc_sha256": "ef44d733b6d6acfe5fe3a18a242d23c682def53a7bee27f58f24af3ed1aa7e41",
           "retained_selection": "observed seed0, PCA/SVM, pair, development; B3/Wmid/Wfull"
+        },
+        {
+          "cell_index_zero_based": 3,
+          "output_index_zero_based": 1,
+          "mime_type": "text/html",
+          "table": "Eligible current-source pools by frozen roster",
+          "rows": 3,
+          "html_sha256": "bf6f65329a9386a21bcb6d726debfbfdf248cbeb075a1134b170e5829dce408e"
+        },
+        {
+          "cell_index_zero_based": 7,
+          "output_index_zero_based": 1,
+          "mime_type": "text/html",
+          "table": "Observed seed0 sampling realization",
+          "rows": 3,
+          "html_sha256": "b64cde80576f45f5833272d913f150493fcd4f1aa434de450a409ea7209c75c0"
+        },
+        {
+          "cell_index_zero_based": 5,
+          "output_index_zero_based": 1,
+          "mime_type": "text/html",
+          "table": "Observed seed0 prefit checks",
+          "rows": 6,
+          "html_sha256": "a10d08ec5f6bdedaaa53c2a31fda2edbf9afefa07eee6e61c578925cea524709"
+        },
+        {
+          "cell_index_zero_based": 9,
+          "output_index_zero_based": 2,
+          "mime_type": "text/html",
+          "table": "First-case columns per session block",
+          "rows": 11,
+          "html_sha256": "b5908165b7f34d268804cdcee668e04056388e90ceb36204ce9d96c7df1b28ff"
+        },
+        {
+          "cell_index_zero_based": 9,
+          "output_index_zero_based": 4,
+          "mime_type": "text/html",
+          "table": "All displayed first-two-row source-choice ordinals",
+          "rows": 22,
+          "html_sha256": "f25c11be3e006a69afb731fb83d3e68c83e39e2b9fc02b88ffc21127e811638a"
+        },
+        {
+          "cell_index_zero_based": 5,
+          "output_index_zero_based": 0,
+          "mime_type": "stream/text",
+          "purpose": "Published tensor dimensions and observed-mask scalar",
+          "text_sha256": "e3d4d562001eee30875d6bf8c6a9c3da51760516fb9fb159971147bc58fb6682"
+        },
+        {
+          "cell_index_zero_based": 5,
+          "output_index_zero_based": 2,
+          "mime_type": "stream/text",
+          "purpose": "Published tensor dimensions and observed-mask scalar",
+          "text_sha256": "f8691586524f3c3e84117445f1ac3021b7b9f44f568bf932ef429ae8c77c762e"
         }
       ]
     }
   ],
+  "regenerated_metadata_distributions": {
+    "classification": "Regenerated metadata distribution of the unchanged accepted design, not a new study or neural-mask read",
+    "input_files_sha256": {
+      "docs/experiments/source-reuse-width-20261114/design.json": "f35f91ae6936956d5c9e99550267eeabae213347f3b07ff22fac8bd3a6a23c29",
+      "data/cue-source-v1/inner_splits.csv.gz": "34fa1c5a0f5c6d9443d435c98ba64830c68f2792306172c12d53ad60792f219f",
+      "data/cue-source-v1/manifest.json": "8af267ca189a98a3bcc3c24e498259d36079e41402a6cf2fdb9a0d9e5291ed11",
+      "data/cue-source-v1/outer_splits.csv.gz": "c42b2dd2bf184dca8f9ed86908d35f16caf40bd52b4221d17380a2156d1eee56"
+    },
+    "rule_reference": "src/neuro/studies/population_grid.py:44–120, inspected but not imported",
+    "embargo": "Before selecting fixed rosters/classes, exclude training current rows if current or predecessor ID overlaps the union of development current and predecessor IDs",
+    "global_counts": {
+      "outer_assignment_records": 23901,
+      "inner_records": 15553,
+      "inner_train_before_embargo": 12288,
+      "inner_development_records": 3265,
+      "protected_current_or_predecessor_ids": 5872,
+      "embargoed_training_records": 4427,
+      "training_records_after_embargo": 7861
+    },
+    "fixed_roster_totals": [
+      {
+        "roster": "core",
+        "sessions": 3,
+        "columns": 17,
+        "session_class_pools": 27,
+        "available_train_sources": 160,
+        "available_development_sources": 56,
+        "minimum_train_sources": 5,
+        "minimum_development_sources": 1,
+        "development_singleton_pools": 5
+      },
+      {
+        "roster": "middle",
+        "sessions": 11,
+        "columns": 49,
+        "session_class_pools": 99,
+        "available_train_sources": 543,
+        "available_development_sources": 210,
+        "minimum_train_sources": 3,
+        "minimum_development_sources": 1,
+        "development_singleton_pools": 18
+      },
+      {
+        "roster": "full",
+        "sessions": 20,
+        "columns": 83,
+        "session_class_pools": 180,
+        "available_train_sources": 912,
+        "available_development_sources": 365,
+        "minimum_train_sources": 3,
+        "minimum_development_sources": 1,
+        "development_singleton_pools": 41
+      }
+    ],
+    "roster_totals_match_design_and_both_notebooks": true,
+    "source_column_membership_count_matches_published_observed_mask_scalar": true,
+    "public_assignment_ids_exported": false,
+    "new_panel_or_source_selection": false
+  },
+  "first_case_figure_copy": {
+    "source": "experiments/source_reuse_width_20261114/walkthrough_20261115/published/figures/first_case_width.png",
+    "source_sha256": "d7ff2a209eee470b0a5380c0dac754151d95af4db561f8fc6d0344d0a80d2e44",
+    "destination": "report/series-20261115/figures/first_case_width.png",
+    "byte_identical": true,
+    "manifest_authenticated": true,
+    "width_pixels": 2068,
+    "height_pixels": 579,
+    "operation": "Byte-for-byte copy of published first-case training curves and confusion; no re-render or model access",
+    "selection": "Predetermined first width case, observed seed0 Wmid; not selected by model performance"
+  },
   "historical_figure_copy": {
     "source": "docs/reports/cebra-endpoint-time-readout-20261006/figures/time_balanced_accuracy.png",
     "source_sha256": "7d7696d8e8883cfefdeaa88a039d0c8fc317f8767dddda44fb06c6a2443d7e04",
@@ -196,7 +374,71 @@
       "selection_caveat": "Seed0 happens to be the highest of the three Wfull PCA/SVM repeats; all three appear in recent_svm",
       "left": "Constructed-row counts",
       "right": "Counts divided by true-class row total, as percent"
+    },
+    "source_support": {
+      "width_inches": 7.0,
+      "height_inches": 6.4,
+      "png_dpi": 220,
+      "pdf_raster_image_objects": 0,
+      "selection": "All180 session×class pools of the fixed full roster, each split shown separately",
+      "meaning": "Eligible current-source IDs after global contributor embargo, before budget selection/assembly",
+      "order": "Core, added-to-middle, added-to-full; aliases sorted within each group",
+      "color_scale": [
+        0,
+        9
+      ],
+      "outlined_cells": "Development pools with exactly one eligible current source"
+    },
+    "source_structure": {
+      "width_inches": 7.0,
+      "height_inches": 2.6,
+      "png_dpi": 220,
+      "pdf_raster_image_objects": 0,
+      "meaning": "Metadata-derived session membership layout; not a neural-value plot or inspected elementwise neural mask",
+      "row_heights": "Eligible training plus development current sources in each session",
+      "column_widths": "Manifest unit count per retained session",
+      "aggregate_crosscheck": {
+        "source_rows": 1277,
+        "columns": 83,
+        "cue_bins": 10,
+        "observed_source_column_entries": 5375,
+        "possible_source_column_entries": 105991
+      },
+      "unavailable_entries_are_not_observed_zeros": true
+    },
+    "assembly_recipe": {
+      "width_inches": 7.0,
+      "height_inches": 3.1,
+      "png_dpi": 220,
+      "pdf_raster_image_objects": 0,
+      "selection": "All published entries for rows0/1 of predetermined observed seed0 B2/Wmid first cases",
+      "pair": "1->2",
+      "source_choice": "Ordinal alias local to each session×class pool",
+      "display_width": "Equal per-session display cells; actual recorded column counts are printed",
+      "neural_values_shown": false
+    },
+    "sampling_realization": {
+      "width_inches": 7.0,
+      "height_inches": 4.7,
+      "png_dpi": 220,
+      "pdf_raster_image_objects": 0,
+      "selection": "All six arms, observed seed0 published realizations; development availability by fixed roster",
+      "tuple_repetitions": "Rows beyond the first identical whole source-ID tuple; not pairwise collisions or neural-vector equality",
+      "use_ranges": "Minimum/maximum realized assembly uses over selected training IDs, not uncertainty intervals",
+      "development_counts": "Eligible pools, not selected/used development IDs or independent trials"
     }
+  },
+  "separately_fitted_head_diagnostics": {
+    "per_seed_rows": 216,
+    "mean_range_rows": 72,
+    "selection": "All six arms, four representations, observed seeds0/1/2, separately fitted SVM pair/start/goal heads",
+    "source_fields": [
+      "train_BA",
+      "balanced_accuracy",
+      "train_development_gap"
+    ],
+    "gap_definition": "Training balanced accuracy minus exposed-development balanced accuracy, same fitted head",
+    "endpoint_heads_are_not_pair_confusion_marginals": true
   },
   "data_precision": "case_scores.csv and matched_contrasts.csv preserve the exact published numeric strings; derived summaries use Python float representations",
   "limitations": [
@@ -216,22 +458,43 @@
     "notebook_cells_executed": 0,
     "model_fits": 0,
     "model_loads": 0,
-    "predictions_or_neural_arrays_read": 0
+    "predictions_or_neural_arrays_read": 0,
+    "public_assignment_metadata_read": true,
+    "public_assignment_ids_exported": false
   },
-  "script_sha256": "21ce256d8c038493e07a037a1557fdf10a0242e5aebdc45592e3cf5f818f79f9",
+  "script_sha256": "38d2259906abacd351e9d0a2c3683b40a55d7e2c0e51875bb03449018d4527e7",
   "generated_files_sha256": {
     "report/series-20261115/data/case_scores.csv": "1661ff9d7b55644d586ad8efb21a440032c23d18f0121767100fd162acb89249",
     "report/series-20261115/data/matched_contrasts.csv": "c66d7eac5aea706ccd4c4b90cd30012ca4e241047cc0f966d74dc418e820ec42",
     "report/series-20261115/data/arm_design.csv": "1bcdf75e45452338f376c031b9502f2f430ea3039403a83e4d30a2e41a4a62bc",
     "report/series-20261115/data/pca_svm_seed0_confusions.csv": "f9f98e621bf85c3c2f1f43c8762acee0503be12c6ad9b1c7610a5d0377979258",
     "report/series-20261115/data/pca_svm_seed0_class_recalls.csv": "5bef619d95b7162f2f9246fa666312eb7961f60edc04757d141e32b11a0e2467",
+    "report/series-20261115/data/session_class_source_counts.csv": "05d1d5f4ff6d035795563386e9c6f4d94ef6e8c04e84ad55d2d774da9159b276",
+    "report/series-20261115/data/source_session_structure.csv": "297755a8bd45bb2095988627f04cbef8cbfeae57278f1b5e5658a16e5222adf5",
+    "report/series-20261115/data/roster_support_summary.csv": "2b001ec47f784fa324cd44b468d2ec0b08d5cc43df4e64ad304742e3456edbc2",
+    "report/series-20261115/data/published_assembly_recipes.csv": "565d19d186dd98b5710072248e7fa4c96d055c458f04424d7518f86bab7134ae",
+    "report/series-20261115/data/published_recipe_block_columns.csv": "f05617ac5856db53745339b1a5cb094679d95d843ae09c1da6c5ed1059620046",
+    "report/series-20261115/data/published_source_observation.csv": "9ebcf7656e187bb7eee98a7577612c031e90cca98ffb53cdd94a5faa16e568bc",
+    "report/series-20261115/data/published_prefit_arm_checks.csv": "85a88b84633dd48827f1a2a9669c9be41cbf0cb734ce9bda8abb3c5ca89554fb",
+    "report/series-20261115/data/svm_head_diagnostics.csv": "2f1664c725de9cce9baf681754e9f6950738d9357980d88d98426b32ae2d0477",
+    "report/series-20261115/data/svm_head_diagnostic_means.csv": "1e578729dd64c4fa412653aa7879aa472f4634fda4115ba808b8faffdad03729",
     "report/series-20261115/data/width_pair_changes.csv": "5f21761ce276a0d6a82b4627f7e7c2280a1bd98b975cce292f5f06141c0b75d4",
+    "report/series-20261115/data/arm_sampling_realization.csv": "9bc2dcccac189fa4ff889f365433ae0ac9f06b4ce8cfdde4472fe5d724a3d8fe",
     "report/series-20261115/figures/recent_svm.pdf": "8df14b3a0e93fff3ac7430af5b3f0eb3f51834c8bcfd1c3193cf3933d4c4cd03",
     "report/series-20261115/figures/recent_svm.png": "01e0d5a928a720c646126b2900fbb5e673e301d8faaf2130ee2ff328fef4e63f",
     "report/series-20261115/figures/width_readouts.pdf": "3afd4b16d48ce783aa3764aa3035455580a41f8bdafa13b765007788f6948244",
     "report/series-20261115/figures/width_readouts.png": "7c37e06eb0691e0804a7f1857ab1723350358d26a5d152c08ca2e8b1cde30983",
     "report/series-20261115/figures/errors.pdf": "faee37863675e77c7f1bc6e50d48d0d91acb1ba01afe9b3a5eb1c2bfd599ff57",
     "report/series-20261115/figures/errors.png": "248bb246e836ef9021474665c6736666029e19a9327527df41b497d96508ccc0",
-    "report/series-20261115/figures/historical_time.png": "7d7696d8e8883cfefdeaa88a039d0c8fc317f8767dddda44fb06c6a2443d7e04"
+    "report/series-20261115/figures/source_support.pdf": "6f74088c0542925e0fbcca2457c0105f164b301dfae54fff7a4314a54cd0551a",
+    "report/series-20261115/figures/source_support.png": "2aa5fdab8ff9ec84ac82ef5cc3c398e0029f9f9fcd680ed9245abb1c51a4e3e3",
+    "report/series-20261115/figures/source_structure.pdf": "92095b8c160953cb88c8e04a817d7a2632f3b74404fd48bab2108a9dda2a796c",
+    "report/series-20261115/figures/source_structure.png": "5feae95644909c559479a0b08cb3cdb1e1b8651678a24a7bcf600121fa29b357",
+    "report/series-20261115/figures/assembly_recipe.pdf": "f35928a6e94ea4470265bb26c97e4a185b04a3f5ea8f906aba28aebd8e67af46",
+    "report/series-20261115/figures/assembly_recipe.png": "529a7d1d38b3f333dfdf9e3ab8f197d6a105870caa89c61f613d85d3563137e6",
+    "report/series-20261115/figures/sampling_realization.pdf": "fc6ba03e7c1af45444a99459e796fcc6d2d9bf9c0958db547e5705903e4391a7",
+    "report/series-20261115/figures/sampling_realization.png": "333da1066d45277ca20c1b696ad79040952e3bf49a41357f3150c59a29f8329b",
+    "report/series-20261115/figures/historical_time.png": "7d7696d8e8883cfefdeaa88a039d0c8fc317f8767dddda44fb06c6a2443d7e04",
+    "report/series-20261115/figures/first_case_width.png": "d7ff2a209eee470b0a5380c0dac754151d95af4db561f8fc6d0344d0a80d2e44"
   }
 }

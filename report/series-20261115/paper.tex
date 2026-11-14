@@ -48,37 +48,50 @@ The original ambition was to ask whether activity during the cue predicts the su
 
 The central object is a \emph{pseudopopulation}: a vector assembled from recordings made in different sessions, choosing contributions that share a known task condition. Such an object can test condition-level response differences. It is not a population measured during one natural trial. The label is used to build the vector before a decoder predicts that label; consequently, a successful decoder evaluates a conditional assay, not an operational system that receives an unknown trial and discovers its condition. Source separation is necessary for this assay, but does not remove that distinction.
 
-This paper integrates the completed series rather than reporting a new experiment. Older work supplies the reasons for the current design; November's support, reuse and width studies supply the main quantitative evidence. The source cutoff is the completed experiment in PR~31, revision \texttt{a0ca801} \cite{latest}. All numerical displays are extracted or replotted from existing published aggregate outputs. No fitting, raw-data reconstruction, model replay, new literature search or additional biological analysis was performed for this synthesis.
+This paper integrates the completed series rather than reporting a new experiment. Older work supplies the reasons for the current design; November's support, reuse and width studies supply the main quantitative evidence. The source cutoff is the completed experiment in PR~31, revision \texttt{a0ca801} \cite{latest}. Displays use existing published aggregates and authenticated frozen metadata; new source-count displays reproduce the accepted design. No fitting, raw-neural reconstruction, model replay, new literature search or new biological experiment was performed for this synthesis.
 
 \key{\textbf{Reading rule.} Recorded spikes are measurements. Counts, constructed populations and embeddings are derived objects. Decoding is an association under a declared evaluation procedure. Each step needs its own justification.}
 
 \clearpage
-\section{From recorded events to a conditional population assay}
-The archive contains sorted-unit spike timestamps, Ripple neural-clock task events, Eyelink events and Unity task records. The compact source release contains 195 selected units and 58 sessions; this is an archive inventory, not the size of every analyzed population. A sorted unit is a curated extracellular spike source, not a verified anatomical cell identity. Selection was place-oriented, so this is not an unbiased sample of hippocampal neurons. Species, subject count, session-to-subject mapping, recording subfields and definitive simultaneity groups remain insufficiently documented for population-level biological generalization \cite{data}.
+\section{What data exist, and what enters the assay}
+The public compact source contains 195 selected sorted units from 58 sessions. This is an archive inventory, not the size of each analyzed population. A sorted unit is a curated extracellular spike source, not a verified anatomical cell identity. The list was place-oriented; it is not an unbiased sample of hippocampal neurons. Species, subject count, session-to-subject mapping, recording subfields and definitive simultaneity groups remain insufficiently documented for population-level biological generalization \cite{data}.
 
-The task has six start/goal categories, normally yielding 30 distinct ordered pairs when start and goal differ. Marker semantics and the previous-goal/current-start rule provide provisional endpoint labels; this is not a direct measurement of intention. A \emph{source trial} here is one recorded current trial within a session. The successful-after-successful subset retains a trial only when both it and its immediate predecessor succeeded; the predecessor's goal supplies the operational start label. Thus different current-trial IDs can still share contributing information. Cue identity, visual input, gaze and preceding-trial state may covary with endpoints; these assays do not separate all such explanations \cite{contract,data}.
+\begin{table}[h!]
+\caption{Measurement inventory and its use. Counts describe the compact archive, before the latest study's eligibility and source-budget restrictions. Export conservation is documented in the October 26 validation ledger \cite{compact}; these are not independent sample sizes.}
+\label{tab:inventory}\small
+\begin{tabularx}{\linewidth}{L{29mm}L{44mm}Y}
+\toprule
+Stream / object & Available information & Role and boundary \\
+\midrule
+Sorted spikes & 5,576,459 unbinned timestamps; 195 units, 58 sessions; native milliseconds. & Convert to seconds and count relative to Ripple cue onset. Timestamp order, duplicates and precision are preserved; extracellular waveforms and new sorting validation are not supplied. \\
+Ripple events & Neural-clock marker codes and times, trial references and clock metadata. & Cue onset/offset and outcome; count spikes in this clock. Event semantics are code-based, not independent behavioral ground truth. \\
+Eye and Unity events & Eye codes/times/missingness; all 7,761,853 Unity marker/delta rows. & Cross-stream trial/QC checks. Dense gaze, position, heading and occupancy are omitted from this compact view. \\
+Trial / split metadata & 23,901 ordinal-joined records: 23,200 successful, 701 timeout; frozen IDs, predecessors, labels and assignments. & Retain failures and QC evidence in the archive; only eligible outer-training sources enter this assay. \\
+Acquisition metadata & Session and selected-unit identities and source hashes. & No verified animal-level replication structure or authenticated spatial-field maps for the present roster. \\
+\bottomrule
+\end{tabularx}
+\end{table}
 
 \begin{figure}[h!]
 \centering
-\begin{tikzpicture}[font=\small,>=Latex,
- box/.style={draw=accent,rounded corners=2pt,fill=wash,align=center,inner sep=7pt,text width=43mm},
- lab/.style={font=\scriptsize,text=muted,align=center}]
-\node[box] (raw) {\textbf{Recorded}\par spikes + event times\par session / trial identity};
-\node[box,right=9mm of raw] (source) {\textbf{Derived source tensor}\par source $\times$ unit $\times$ bin\par counts + observation mask};
-\node[box,right=9mm of source] (split) {\textbf{Contributor separation}\par frozen train / development\par current + predecessor embargo};
-\node[box,below=15mm of split] (assembly) {\textbf{Known-label assembly}\par choose one source per\par session--class block};
-\node[box,left=9mm of assembly] (model) {\textbf{Train-only learning}\par scale $\to$ representation\par $\to$ supervised readout};
-\node[box,left=9mm of model] (score) {\textbf{Conditional evaluation}\par fixed development recipes\par scores, controls, confusions};
-\draw[->,thick] (raw)--(source);
-\draw[->,thick] (source)--(split);
-\draw[->,thick] (split)--(assembly);
-\draw[->,thick] (assembly)--(model);
-\draw[->,thick] (model)--(score);
-\node[lab] at ($(source.south)+(0,-7mm)$) {Missing/unrecorded is not zero};
-\node[lab,below=5mm of model] {Development labels define recipes; development values do not fit model parameters.};
+\begin{tikzpicture}[font=\small,>=Latex,x=1cm,y=1cm]
+\node[anchor=west,font=\small\bfseries,text=ink] at (0,2.15) {A. Operational label uses two recorded trials};
+\node[draw=accent,fill=wash,rounded corners,align=center,text width=55mm] (prev) at (3,1.35) {Immediately preceding trial\par required to succeed\par goal marker digit $a$};
+\node[draw=accent,fill=wash,rounded corners,align=center,text width=60mm] (curr) at (11,1.35) {Current successful trial\par goal marker digit $b$};
+\draw[->,thick] (prev)--node[above,font=\scriptsize]{start $:=a$}(curr);
+\node[font=\small,text=accent] at (7,0.55) {Derived endpoint class $a\to b$; no ordered path is measured here};
+\node[anchor=west,font=\small\bfseries,text=ink] at (0,-0.15) {B. Fixed cue-count window in the neural clock};
+\draw[->,thick] (1,-0.9)--(15,-0.9);
+\foreach \j in {0,...,9} {\fill[accent!18] (1+\j,-0.85) rectangle (1.98+\j,-0.35);}
+\foreach \j in {0,...,10} {\draw (1+\j,-1.02)--(1+\j,-0.30);}
+\node[below,align=center] at (1,-1.05) {$t_i$\\cue onset};
+\node[below,align=center] at (6,-1.05) {$t_i+0.5$ s};
+\node[below,align=center] at (11,-1.05) {$t_i+1$ s};
+\node[align=center,text width=34mm,font=\scriptsize,text=muted] at (13.3,-0.05) {Navigation follows\\cue offset; not fitted\\in this latest study};
+\node[align=center,font=\scriptsize] at (6,-1.95) {Ten half-open 100-ms bins; centers 0.05, 0.15, \ldots, 0.95 s};
 \end{tikzpicture}
-\caption{Measurement-to-assay schematic for the latest study, not a data plot. The global contributor embargo is applied before panel selection. Within a selected session block, all retained columns and all ten cue bins follow the same source trial. Grouping preserves recorded source identity; it does not independently verify simultaneity. Sources: the analysis contract and frozen latest protocol \cite{contract,latest}.}
-\label{fig:pipeline}
+\caption{Label and time construction, schematic rather than a recorded trace. Marker code families are $1x$ (cue onset), $2x$ (cue offset/navigation onset), $3x$ (success) and $4x$ (timeout), with minor digit $x$ the operational goal label. Current cue spikes supply features; the immediate predecessor contributes the start label. Both must succeed. Cue offset is nominally one second after onset; the fixed bin window and native duration checks remain distinct \cite{contract,compact,latest}.}
+\label{fig:measurement}
 \end{figure}
 
 For source $i$, unit $u$ and cue bin $b$, the observed count is
@@ -86,14 +99,56 @@ For source $i$, unit $u$ and cue bin $b$, the observed count is
  x_{iub}=\sum_{t\in\mathcal T_u}\mathbf 1\{t_i+0.1b\leq t<t_i+0.1(b+1)\},\qquad b=0,\ldots,9,
 \label{eq:count}
 \end{equation}
-where $\mathcal T_u$ contains spike times in seconds and $t_i$ is cue onset in the neural clock. An observation mask distinguishes unavailable source--unit entries from measured zero spikes. The one-second cue becomes ten half-open 100-ms bins; matching array dimensions alone is not evidence of clock alignment.
+where $\mathcal T_u$ contains spike times in seconds and $t_i$ is Ripple cue onset. No epsilon or rounding to historical CSV precision moves a spike across a boundary. Unrecorded source--unit entries have an explicit mask; they are not observed zero counts. The ordinal Ripple/Unity/Eye join and marker interpretation remain provisional. Cue identity, visual input, gaze and preceding-trial state can covary with endpoints; matching codes and clocks does not separate those explanations.
 
-For class $c$, a recipe selects source $i(r,s,c)$ for each session block $s$ of constructed row $r$. Its columns are concatenated as
+\clearpage
+\section{Eligibility and contributor separation precede construction}
+A source is a recorded current trial within a session. Its contributor set is $C_i=\{i,p(i)\}$, where $p(i)$ is the predecessor used for the start label. All current sources remain inside original outer training; the frozen inner development assignment has already been exposed during this research series. The latest study introduces neither a fresh outer-test evaluation nor held-out sessions. Training and development use different contributing trials from the same admitted sessions.
+
+If $D$ denotes frozen development sources, define the protected union and admissible training set by
 \begin{equation}
- \widetilde X_{r,:,b}=\bigoplus_{s=1}^{S}X_{i(r,s,c),U_s,b},
-\label{eq:assembly}
+ P_D=\bigcup_{i\in D} C_i,\qquad T^*=\{i\in T:C_i\cap P_D=\varnothing\}.
+\label{eq:embargo}
 \end{equation}
-with $U_s$ the recorded columns retained from session $s$. This preserves within-source structure while creating cross-session combinations. It cannot reconstruct missing cross-session noise covariance or the trajectory of one simultaneous neural population. Sources, sessions, bins, constructed rows and computational seeds are therefore different counting units.
+This protection is global: it is computed before reducing endpoint classes or session rosters. Removing a development class later cannot make one of its contributors eligible for training. A split on current IDs alone would miss predecessor overlap.
+
+\begin{figure}[h!]
+\centering
+\begin{tikzpicture}[font=\small,>=Latex,
+ b/.style={draw=accent,rounded corners,fill=wash,align=center,inner sep=6pt,text width=64mm}]
+\node[b] (d) {Development source: current trial $j$\par contributors $\{j-1,\mathbf j\}$};
+\node[b,right=12mm of d] (t) {Candidate training source: trial $j+1$\par contributors $\{\mathbf j,j+1\}$};
+\draw[<->,thick] (d)--node[above,font=\scriptsize]{overlap}(t);
+\node[below=4mm of t,align=center,text width=64mm,text=muted] {Exclude this training candidate\\even though its current ID differs};
+\node[below=4mm of d,align=center,text width=64mm,text=muted] {Protect current and predecessor\\across all frozen development sources};
+\end{tikzpicture}
+\caption{Why contributor identity matters. The adjacent-trial example is illustrative, not an observed failure count. The implemented check finds zero final train/development contributor overlap, but does not establish independence among the retained trials or remove longer serial dependence \cite{contract,latest,reproduction}.}
+\label{fig:embargo}
+\end{figure}
+
+\begin{table}[h!]
+\caption{Accounting from archive to latest eligible pools. Each row names its denominator. Exclusions are sequential first-failure categories in the inherited eligibility ledger, so they sum to 1,306; QC flag counts elsewhere can overlap. The 5,872 protected IDs are a contributor union, not another count of current development sources \cite{compact,selection,latest}.}
+\label{tab:eligibility}\small
+\begin{tabularx}{\linewidth}{L{59mm}L{38mm}Y}
+\toprule
+Stage / object & Recorded total & Meaning \\
+\midrule
+Archive ordinal-joined trial records & 23,901 & Includes failures and mismatches. \\
+Original outer-training records & 16,859 & Outer validation/test (7,042 records) do not enter fitting or evaluation here. \\
+Inherited eligibility exclusions & 464 current failure; 562 predecessor unavailable/failure; 32 current/predecessor QC; 248 incomplete nominal cue & $16{,}859-1{,}306=15{,}553$. Retained cue duration policy: 1--1.5 seconds. \\
+Eligible original outer-training sources with frozen inner assignments & 15,553 = 12,288 train + 3,265 development & Before the global predecessor embargo. \\
+Global protected development contributor union & 5,872 distinct IDs & Current and predecessor information. \\
+Global training after embargo & 7,861 = 12,288 $-$ 4,427 & Removal precedes panel selection. \\
+Latest core: 9 classes, 3 sessions & 160 train; 56 development & 17 recorded columns; minimum 5 train/pool. \\
+Latest middle: same 9 classes, 11 sessions & 543 train; 210 development & 49 columns; minimum 3 train/pool. \\
+Latest full: same 9 classes, 20 sessions & 912 train; 365 development & 83 columns; minimum 3 train/pool. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Panel selection uses only these source-availability and column metadata. It retains all selected units of admitted sessions, without ranking their decoding scores or spatial tuning in this study. Complete support means every retained session has the required sources for every selected class. It prevents constructing a row from a missing session--class block; it does not establish that included sessions are representative of the archive or biology.
+
+\key{\textbf{What source separation establishes.} No current/predecessor contributor is shared between the two analyzed splits. It does not make the split pristine after historical exposure, make within-session trials independent, or turn a label-conditioned pseudopopulation into a natural trial.}
 
 \clearpage
 \section{How the series reached the current experiment}
@@ -104,14 +159,14 @@ The research trajectory is a succession of more precise questions, not a monoton
 \label{tab:history}\small
 \begin{tabularx}{\linewidth}{L{23mm}Y Y}
 \toprule
-Stage & Completed contribution & Consequence for interpretation \\
+Stage & Data / completed evaluation & Consequence for interpretation \\
 \midrule
-July--August & Lab-code onboarding; navigation export, marker and source-identity audits; review of earlier student analyses. & A spatial-bin export and a cue-period population are different inputs. The prior 233-cell pseudopopulation is distinct from the 195-unit archive. \\
-September & Source-declared graph-component assays, source-transfer tests and preprocessing/readout controls. & Recombining known sources can look much stronger than transfer to held-out sources. Attractive embeddings do not establish path information. \\
-Late September--October & Matched raw/PCA/CEBRA and decoder comparisons; cue-only versus cue/navigation training; cue-window and endpoint readouts. & Endpoint association is clearer than robust path evidence; representation, decoder and evaluation window must be distinguished. \\
-October 23--27 & Independent source reconstruction, a 27-unit/10-session panel, reusable APIs and teaching notebooks. & Stronger contributor accounting and support restrictions change the cohort; historical scores are not portable accuracy guarantees. \\
-November 10--11 & Explicit source-use controls, then three class sets $\times$ three rosters and four readouts; saved-result error analysis. & Learning can survive once-only assembly. Class deletion changes the task; reuse is entangled with available source coverage. \\
-November 14--15 & Fixed nine-class source-budget and nested-width study; full executed notebook reproduction. & Sampling effects can be compared within one task, while repeated rows, added sessions and computational replication remain distinct. \\
+July--August & Navigation exports and marker/source audits; 195-unit/58-session archive. Earlier student's 233-cell population is a separate object. & Spatial-bin exports, cue sources and earlier student results cannot be silently pooled. \\
+September & A 29-unit/7-session fixed-$4\to3$ binary path-component assay; source-transfer and preprocessing controls. & New mixtures of known sources and transfer to development sources are different evaluations. \\
+Late September--October & 195 units/58 sessions; 30 endpoint pairs; raw/PCA/CEBRA, cue versus joint training and same-window readouts. & Endpoint recovery is not ordered-path recovery; encoder, decoder and evaluation window must be separated. \\
+October 23--27 & 27 units/10 sessions, all 30 pairs; fresh source reconstruction and global embargo; reusable teaching notebooks. & Stronger protection and complete support select another cohort. Scores are not portable across these changes. \\
+November 10--11 & Nine-pair source controls, then 15/20/30-class tasks $\times$ three rosters (8--138 columns); saved-error analysis. & Once-only association survives in some pipelines. Class deletion and roster changes alter task and source coverage. \\
+November 14--15 & Nine fixed pairs; 17/49/83 columns, 3/11/20 sessions; 2/3/5-source budgets and full notebook reproduction. & Within-task contrasts expose construction effects. Additional rows and repeated execution are not new biological evidence. \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -158,6 +213,61 @@ Training source sets are nested $2\subset3\subset5$ on the core. U3 uses exactly
 \key{\textbf{What each contrast estimates.} B2/B3/B5 changes response diversity, repetitions, weights and combinations at fixed row count. B3/U3 holds source identities fixed but changes rows, combinations and exposure. Width adds sessions and measured sources as well as columns. These are controlled \emph{pipeline} contrasts, not isolated causal effects of duplication or neuron count.}
 
 \clearpage
+\section{The available responses are unevenly distributed}
+Figure~\ref{fig:support} makes the latest cohort's complete support requirement visible. Each cell counts distinct eligible recorded current sources in one session--class pool, after the global embargo and before the fixed training-source budget is sampled. These are measurements available to the construction, unlike its balanced row counts. The figure is a new display of already public frozen metadata: it reproduces the accepted roster totals, singleton counts and source-mask total without reading spike arrays or rerunning the experiment.
+
+\begin{figure}[h!]
+\centering
+\figurefile[width=\linewidth]{source_support.pdf}
+\caption{Source support for the fixed nine-pair task, by session and split. Session aliases identify the same recorded blocks throughout this paper; column counts refer to retained units, not trial counts. Core, middle and full are nested rosters, not disjoint groups. Every full-roster training pool has at least three sources; the three core sessions each have at least five. Development has only one available source in 41 of 180 full-roster pools (5 of 27 core pools, 18 of 99 middle pools). All development pools nevertheless contribute eight constructed rows per class. Counts are exact metadata tallies, with no uncertainty interval or neural values. Sources: authenticated frozen split tables and the accepted design \cite{compact,latest,reproduction}.}
+\label{fig:support}
+\end{figure}
+
+Balancing creates 16 training rows and eight development rows for every pair in the primary arms. It does not create equal biological support. A class with more eligible responses can still receive the same row count as one whose development blocks repeatedly use a single response. Conversely, a wider roster adds more measured responses but not more constructed development rows. The same 72-row denominator therefore describes different recorded support at 17, 49 and 83 columns.
+
+\clearpage
+\section{How a pseudopopulation row is actually made}
+The source tensor has shape $1{,}277\times83\times10$: 912 training plus 365 development sources, 83 columns and ten bins. A source observes only its own session's columns. The 100,616 unavailable source--unit entries belong to other sessions; they are not failed measurements from a simultaneous recording.
+
+\begin{figure}[h!]
+\centering
+\figurefile[width=\linewidth]{source_structure.pdf}
+\caption{Recorded membership before assembly, from frozen source/session and unit metadata. The implied 5,375 observed entries (5.07\%) agree with the executed mask; each has ten bins and can contain zero counts. Gray entries are unavailable, not zero spikes. This displays membership, not neural values or verified simultaneity \cite{latest,reproduction}.}
+\label{fig:structure}
+\end{figure}
+
+For class $c$, row $r$ chooses one source $i(r,s,c)$ per session $s$, retaining its columns $U_s$:
+\begin{equation}
+ \widetilde X_{r,:,b}=\bigoplus_{s=1}^{S}X_{i(r,s,c),U_s,b},\qquad b=0,\ldots,9.
+\label{eq:assembly}
+\end{equation}
+All columns and bins in a block travel together. Concatenation makes a complete vector without filling unavailable entries. Figure~\ref{fig:recipe} shows actual published recipes.
+
+\begin{figure}[h!]
+\centering
+\figurefile[width=\linewidth]{assembly_recipe.pdf}
+\caption{Actual first two training recipes, predetermined observed seed-0 B2 and Wmid, class $1\to2$. Choice numbers are local to each session--class pool; equal numbers across pools are different sources. Repeating a choice within a block reuses all its columns and ten bins. Labels give column counts; display cells have equal width. These rows were not selected for accuracy and are not natural trials \cite{reproduction}.}
+\label{fig:recipe}
+\end{figure}
+
+\clearpage
+\section{Reuse is a property of the recipe, not extra recorded evidence}
+Within each session--class pool, deterministic seed-based ranking chooses nested source sets. Balanced cycles allocate the 16 primary training draws: two sources are each used eight times; three receive five or six uses; five receive three or four. U3 takes exactly B3's three selected sources but uses each once, yielding three rows per class. In all arms the number of selected training IDs is $9SB$, where $S$ is sessions and $B$ the source budget. This explains why Wfull has 540 selected IDs but only 144 constructed rows.
+
+\begin{figure}[h!]
+\centering
+\figurefile[width=\linewidth]{sampling_realization.pdf}
+\caption{Realized construction accounting for observed seed 0, before any model comparison. Available and selected IDs count recorded current trials; constructed and repeated-tuple rows count recipes. A whole-tuple repetition is a row beyond the first identical combination of source IDs, not a pairwise collision or numerical-vector equality. The per-source reuse ranges count block assignments. Development singleton pools expose dependence even when whole tuples differ. These exact counts have no biological confidence intervals; other seeds can change combinations, and full score plots retain all seeds. Sources: published notebook availability, plan and source-use outputs \cite{reproduction}.}
+\label{fig:reuse}
+\end{figure}
+
+These are distinct forms of dependence. Two rows can share some source blocks without sharing the whole tuple. A larger roster can make exact tuple repeats rare while many constituent measurements remain reused. For the core seed-0 training plan, B2/B3/B5 have 77/23/6 repeated whole tuples beyond the first occurrences, respectively, out of 144 rows; U3 has none among its 27 rows. Zero full-row repetition therefore cannot certify independent samples.
+
+The extra-draw fraction is $1-B/R$ for $R$ training draws per pool: 87.5\%, 81.25\% and 68.75\% for B2/B3/B5, and zero for U3. It describes reuse of block sources, not the fraction of identical full population vectors. The final decoder's row count, total distinct source IDs and per-source reuse must all be reported to understand the effective construction.
+
+One development recipe is generated per label world on the full roster, then projected to smaller rosters. Its eight rows per class each draw one source uniformly \emph{with replacement} from each eligible session--class pool, using seed 0. Some available IDs may be unused; Figure~\ref{fig:support} reports eligibility, not realized development use \cite{latest}. All observed seeds share the same development arrays; shared width blocks are identical. Development reuse remains in U3, as do repeated optimizer draws: ``once-only'' applies to training assembly.
+
+\clearpage
 \section{What the models learn, and how success is measured}
 All learned preprocessing uses training data. Raw features standardize each recorded column using pooled training cue bins. Principal component analysis (PCA) learns seven principal directions from standardized training bins \cite{dimred}. Its variance objective does not use endpoint labels; its input construction already does. Each pointwise encoder receives one bin, so a seven-coordinate representation produces 70 features when ten bins are concatenated. Raw whole-cue features have $10U=170$, 490 or 830 coordinates. These are different feature spaces, not dimension-matched raw baselines.
 
@@ -197,6 +307,91 @@ The primary metric is mean class recall,
 where confusion rows are true classes and columns predictions. Uniform references are $1/9$ for pairs and $1/6$ for endpoint heads. Five matched source-label worlds permute whole-pair labels within session and split \emph{before} assembly and fitting. They test alignment descriptively; five worlds and three computational seeds are not a calibrated significance test or biological confidence interval.
 
 \clearpage
+\section{Validity evidence I: measurements and population construction}
+The study's safeguards were executed and checked, not merely proposed. Table~\ref{tab:measurementchecks} separates historical measurement checks from the latest construction checks. These results make the conditional assay inspectable, while keeping their evidential scope explicit. They are inherited completed analyses, not checks newly run on recordings for this paper.
+
+\begin{table}[h!]
+\caption{Completed measurement and construction checks. Counts within a row refer to that check's own cohort or objects; rows are not additive. A matching implementation or label rule is narrower than biological validity. Exact source records are linked in the references.}
+\label{tab:measurementchecks}\small
+\begin{tabularx}{\linewidth}{L{30mm}L{67mm}Y}
+\toprule
+Check & Recorded evidence & What it establishes / leaves open \\
+\midrule
+Goal-marker interpretation (September 1) & Nearest Unity end poster matched the current marker digit in 23,200/23,200 successful trials. & Behavioral corroboration on these records; not formal task-protocol provenance or independent cue-identity validation \cite{markers}. \\
+Predecessor-start interpretation (September 1) & Nearest navigation-start poster matched the previous marker in 22,740/22,740 successful-after-successful trials; no equal start/goal marker pairs. Without requiring predecessor success: 22,856/23,144 matched. & Supports the inclusion rule and contributor accounting. The check used dense Unity positions absent from the compact copy; it is not repeated here \cite{markers}. \\
+Cross-stream event/QC audit (August 30) & Among 23,901 records: 24 Ripple/Unity navigation-duration discrepancy flags, one cue-duration outlier, one Eye marker mismatch and one Eye nonmonotonic-time flag. Flags may overlap. & Anomalies were retained and flagged, not silently repaired. Coarse duration/marker checks do not guarantee fine clock alignment \cite{importqc}. \\
+Compact export conservation (October 26) & All 370 native inputs checked before/after export; 1,098 session arrays compared bit-exact; all spike/Unity values preserved. All 23,901 metadata records and 195 unit identities reconciled. & Supports fidelity to the received inputs. Largest native-versus-CSV cue-duration difference was $3.33\times10^{-9}$ s; historical rounded bins/scores were not asserted identical \cite{compact}. \\
+Latest real-data preflight (November 15) & All 48 scheduled plans passed source nesting, projected values, budgets, quotas and contributor checks with fitting blocked. Minimum training rank 17 (required $\geq7$). & Confirms feasibility and declared construction. Zero split overlap and finite values do not prove independent trials, clean biological labels or absence of confounds \cite{reproduction}. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The reconstruction also distinguishes native observation from inherited QC policy. Three native Eye events from one trial are masked as missing; none is a selected contributor in the compact validation. Missing events cannot become observed zeros. Half-open spike-bin boundaries, explicit event axes and preserved timestamp precision were covered by invented software checks and the compact reconstruction audit. The final compact-source test suite passed 25 tests; that count describes software contracts, not 25 biological replications \cite{compact}.
+
+For the latest observed seed-0 arms, the published preflight table reports zero constant columns and zero overlapping contributors throughout; ranks are 17 for B2/B3/B5/U3, 49 for Wmid and 83 for Wfull. The source-mask total and complete pool support agree with Figures~\ref{fig:support}--\ref{fig:structure}. Rank is measured on training bin vectors; U3's 27 whole-cue rows are not a limit of 27 on this separate bin-level matrix. Rank feasibility is not evidence that seven latent coordinates capture the relevant biology.
+
+These checks justify specific implementation statements: events and labels are reconciled under a declared rule; unavailable responses are masked; contributors are separated; and the construction obeys its frozen budgets. They do not certify a generally valid sampling distribution. A calibration experiment on genuinely independent natural trials or a representative acquisition design is absent from this series.
+
+\clearpage
+\section{Validity evidence II: fitted operations and reproduced outputs}
+The fuller notebooks execute the first B2 and Wmid cases stage by stage, then complete the unchanged schedule. This exposes the numerical operations behind the pipeline diagram. A feature scaler uses $\mu_u$ and $\sigma_u$ estimated on $10N$ training bin vectors, forming $z_{rub}=(x_{rub}-\mu_u)/\sigma_u$. PCA applies its training mean and seven fitted directions to each standardized bin. Each classifier has a separate training-fitted input scaler. Development values enter transformations and scoring, not parameter estimation.
+
+\begin{table}[h!]
+\caption{Actual first-case arithmetic checks from the executed notebooks, observed seed 0. Residuals are maximum absolute manual-versus-library differences, not prediction errors or statistical uncertainty. The two cases were fixed by execution order \cite{reproduction}.}
+\label{tab:arithmetic}\small
+\begin{tabularx}{\linewidth}{Yrr}
+\toprule
+Operation / shape & B2 (17 columns) & Wmid (49 columns) \\
+\midrule
+Training bin vectors used by scaler & 1,440 & 1,440 \\
+Raw whole-cue feature count & 170 & 490 \\
+PCA whole-cue feature count & 70 & 70 \\
+Standardization residual & $4.77\times10^{-7}$ & $9.54\times10^{-7}$ \\
+PCA projection residual & $7.15\times10^{-7}$ & $9.54\times10^{-7}$ \\
+Raw/logistic forward-probability residual & 0 & 0 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{figure}[h!]
+\centering
+\figurefile[width=\linewidth,trim=0 0 349bp 26bp,clip]{first_case_width.png}
+\caption{Recorded first-case learning curves: the two loss panels from the unchanged published image, cropped here for legibility. Wmid observed seed 0: 49 columns/11 sessions, 297 selected training IDs, 144 constructed training rows, nine pair classes, cue $[0,1)$ s. Each shows 1,000 updates on its own objective/axis, with no uncertainty interval. The different loss magnitudes cannot rank the models or prove convergence. This predetermined case illustrates execution; the full image, including its Raw/logistic confusion on 72 development rows, remains in the source package \cite{reproduction}.}
+\label{fig:firstcase}
+\end{figure}
+
+Wmid Time has 3,303 trainable parameters and 256,000 sampled reference draws over 1,000 updates; its 144 training rows receive between 1,672 and 1,890 reference draws. Native has eleven encoders, 20,653 total parameters, 23 references per session and 253 total references per update. Its aligned bin outputs are equally averaged across sessions. These observed operations explain why once-only assembly would still permit repeated optimizer exposure and why native-versus-Time is not a parameter- or supervision-matched comparison.
+
+Before the biological reproduction, a successful invented-data equivalence check compared 298 numeric arrays across the original and staged implementations and passed 192 composed split reload checks. An earlier serializer-order failure was retained even though its arrays matched. The biological run then completed all 48 unique cases, 2,448 fits excluding scalers and 96,000 updates across 38 executed code cells. Every fitted pipeline was checked during execution: 192 encoder reloads, 2,304 readout reloads and 4,608 composed train/development checks, with fitting blocked for replay \cite{reproduction}.
+
+\clearpage
+\section{Validity evidence III: what the controls can falsify}
+All three observed repeats are computational repeats on the same recordings. Five diagnostic worlds shuffle whole endpoint-pair labels within session and split, before source selection and assembly. The same effective source-label map is reused across arms. This disrupts the original response--label relation while retaining pool sizes and the construction procedure; shuffling already-constructed rows would ignore their shared sources. The controls probe alignment under this assay, not every correlated behavioral variable.
+
+\begin{table}[h!]
+\caption{Interpretation of completed controls and checks. The result column reports observed outcomes or scope; it does not imply a confirmatory test. Results are detailed in the following sections.}
+\label{tab:controls}\small
+\begin{tabularx}{\linewidth}{L{31mm}Y Y}
+\toprule
+Control / check & What it interrogates; completed evidence & What remains unresolved \\
+\midrule
+Source-label worlds & All five worlds for each arm at model seed 0; every U3 Raw/PCA SVM pair repeat exceeds its five diagnostic scores. & Five worlds are not a calibrated randomization test; no biological p-values, multiplicity correction or cue/gaze/previous-state isolation. \\
+Once-only U3 & Same selected IDs as B3, each once in training assembly; favorable Raw/PCA pair association remains. & Row count, combinations and exposure change; development and optimization still reuse responses. \\
+Nested budgets and width & Exact source-set nesting; exact common-column development recipes and targets. Each B3 bridge case fitted only once. & Added sources change diversity and weights; width adds sessions, responses and native parameterization. \\
+Raw/PCA and four readouts & Every case has four representations, four readouts and three heads; all results retained. & No universal representation ranking, matched pair-supervised concatenation control, or optimizer-convergence demonstration. \\
+Saved-pipeline and metric checks & Every pipeline reloaded; 4,608 split metrics and all confusion views checked. Independent recomputation of metrics, recalls and contrasts agreed within $10^{-12}$. & Correctly repeated computation can still share the same measurement or scientific-design limitation. \\
+Fresh computational reproduction & 3,188 new run files authenticated; all 14,304 saved numerical arrays exactly match the accepted execution, maximum difference 0. & Same recordings and seeds: no additional biological sample or independent statistical evidence. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The numerical audit also checked 71,496 saved source-block joins, 299,904 source-error records, 96 learning curves and 1,296 trajectory class means. The 14,304-array comparison comprises 9,312 exact-label/prediction/raw-tensor arrays and 4,992 continuous score/feature arrays. All 96 learning records match apart from wall time. An independent reviewer regenerated the five source-label maps and all 48 source subsets from public metadata without loading models or neural feature arrays \cite{reproduction}. These are prior execution/audit facts, not neural replays performed for this manuscript.
+
+The failure record matters to this interpretation. The original accepted study inherits 32 successful cases from a run stopped by a kernel-file handoff error and adds only 16 previously unattempted width cases. That continuation did not retry failed biological cases. The later notebook reproduction reran the complete frozen schedule once under separate authorization; it is not pooled with the original to make six apparent biological repeats. Failed gates, source snapshots and superseded artifacts remain preserved.
+
+\key{\textbf{Validity is layered.} Measurement corroboration, source accounting, executable software checks and numerical reproduction support a reproducible conditional assay. Unknown-label natural-trial prediction, formal neural-state observability, biological independence and authenticated spatial-field attribution have not been demonstrated. Those absent checks are not replaced by a checksum, high score or attractive embedding.}
+
+\clearpage
 \section{Results I: distinct sources help some pipelines; repetition is not necessary}
 Figure~\ref{fig:scores} shows every observed repeat and label-world score for the SVM pair readout. This is a fixed readable slice across all four representations; the full published tables include every readout and target, and Figure~\ref{fig:width} checks all readouts for the width claim. Uncertainty in these plots is computational variation on an exposed construction, not variation across new animals, sessions or held-out cohorts.
 
@@ -233,6 +428,38 @@ Why might PCA benefit? Its seven-dimensional projection can aggregate structured
 These width effects and errors cannot yet be attributed to lost place-field coverage. Compact cue sources omit authenticated spatial rate maps and occupancy, with no validated join to these exact retained units and a common maze coordinate system. Coverage is \emph{unknown}, not zero. The saved retained-column and error tables make the missing evidence explicit, but issues 29/30's spatial interpretation and selectivity criterion remain untested. No spatial analysis is added here.
 
 \clearpage
+\section{Results III: training gaps and endpoint heads qualify pair decoding}
+Once-only association and improved width means do not imply that training performance transfers intact. Table~\ref{tab:gaps} reports two scientifically motivated construction endpoints: U3 removes training assembly reuse; Wfull is the widest roster. Every SVM pair pipeline in these two arms has 100\% training BA, yet their mean development scores range from 24.54\% to 72.22\%. The resulting gaps are substantial even where observed development scores exceed the sampled label worlds.
+
+\begin{table}[h!]
+\caption{SVM diagnostic slice: three-observed-seed means in percent, with pair training--development gaps in percentage points. Pair, start and goal are separately fitted heads; endpoint predictions are not collapsed pair predictions. U3: 17 columns/3 sessions, 81 selected training IDs, 27 training rows. Wfull: 83 columns/20 sessions, 540 IDs, 144 training rows. Both have 72 exposed-development constructed rows from the fixed nine-pair task. No row-IID or biological uncertainty interval is implied; all pair repeats/controls appear in Figure~\ref{fig:scores}, and complete per-head seed tables accompany the paper \cite{latest,reproduction}.}
+\label{tab:gaps}\small
+\begin{tabularx}{\linewidth}{lYrrrrr}
+\toprule
+Arm & Representation & Train pair & Dev pair & Dev start & Dev goal & Pair gap \\
+\midrule
+U3 & Raw & 100.00 & 40.74 & 29.86 & 22.22 & 59.26 \\
+ & PCA7 & 100.00 & 40.28 & 38.54 & 31.94 & 59.72 \\
+ & Time7 & 100.00 & 24.54 & 26.74 & 23.96 & 75.46 \\
+ & Native7 & 100.00 & 26.39 & 36.81 & 26.39 & 73.61 \\
+\midrule
+Wfull & Raw & 100.00 & 46.30 & 28.82 & 23.96 & 53.70 \\
+ & PCA7 & 100.00 & 72.22 & 56.94 & 78.47 & 27.78 \\
+ & Time7 & 100.00 & 48.61 & 55.21 & 59.38 & 51.39 \\
+ & Native7 & 100.00 & 27.78 & 35.07 & 34.38 & 72.22 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+These gaps demonstrate incomplete transfer from the fitted training constructions to the declared development constructions. They cannot, by themselves, isolate model overfitting, limited source support, distribution shift, visual-cue effects or biological absence. High training accuracy is neither an independent validation set nor evidence that additional optimizer updates would solve the development gap. The full case table retains train BA and gaps for every representation, readout, target, seed and diagnostic world.
+
+Endpoint heads further constrain interpretation. Wfull PCA/SVM has mean pair, start and goal BA of 72.22\%, 56.94\% and 78.47\%, respectively; Raw/SVM gives 46.30\%, 28.82\% and 23.96\%. Each endpoint appears in one or two selected pairs, giving 8 or 16 development rows per endpoint. The separately fitted heads need not agree and their balanced metrics weight different classes. Uniform references are 11.11\% for nine pairs and 16.67\% for six starts or goals: task arithmetic, not empirical null distributions.
+
+The sparse panel also has a more informative mathematical reference. A hypothetical decoder given perfect knowledge of just one endpoint can attain pair BA $6/9=66.67\%$: distributing predictions among the pair classes associated with each of six endpoints contributes six total class recalls. This is not a fitted neural baseline. Exceeding $1/9$ therefore does not isolate conjunction or information beyond endpoints; even exceeding $6/9$ does not establish a biological conjunction mechanism or ordered-path coding. The study did not fit a conditional path-information test for these newest results.
+
+\key{\textbf{Interpretation of success.} The latest results establish endpoint association in particular source-separated, known-label constructions. The size of that association, training gap and endpoint-head behavior all depend on the pipeline. A favorable mean should be read alongside its source support, repeated blocks, individual seeds and diagnostic worlds.}
+
+\clearpage
 \section{Errors, temporal views and what the averages conceal}
 \begin{figure}[h!]
 \centering
@@ -248,6 +475,14 @@ Time has three meanings here: concatenated \emph{whole-cue} prediction, separate
 \begin{figure}[h!]
 \centering
 \figurefile[width=\linewidth]{historical_time.png}
+\par\vspace{2pt}
+{\small
+\textcolor[HTML]{0072B2}{\rule{4mm}{1.2pt}} Raw + logistic\quad
+\textcolor[HTML]{56B4E9}{\rule{4mm}{1.2pt}} PCA-8 + logistic\quad
+\textcolor[HTML]{E69F00}{\rule{4mm}{1.2pt}} Cue CEBRA + logistic\\[2pt]
+\textcolor[HTML]{009E73}{\rule{4mm}{1.2pt}} Joint CEBRA + logistic\quad
+\textcolor[HTML]{CC79A7}{\rule{4mm}{1.2pt}} Raw SVD-LDA\quad
+Black dotted: uniform reference\par}
 \caption{Historical October endpoint same-window decoding, reproduced unchanged \cite{endpoint}. Distinct cohort: 195 units/58 sessions, 12,288/3,265 train/development sources, 480/240 label-conditioned pseudorows. Each 100-ms cue bin has its own logistic or raw-LDA readout; horizontal position is cue-relative bin midpoint. Curves show three-seed means and min--max ranges; dotted lines are uniform references, not null distributions. These are computational ranges, not biological intervals or a frozen-decoder transfer matrix. \repo{docs/reports/cebra-endpoint-time-readout-20261006/figures/time_balanced_accuracy.png}{Full-size figure and legend}.}
 \label{fig:time}
 \end{figure}
@@ -278,15 +513,13 @@ Repeatable execution and authenticated saved results. & Independent biological r
 \end{tabularx}
 \end{table}
 
-For the sparse nine-class task, even hypothetical perfect knowledge of only one endpoint permits pair balanced accuracy $6/9=66.67\%$: each of six endpoint categories can identify or distribute predictions over its associated pair classes, contributing a total recall of six. This is a mathematical reference, not a fitted neural baseline. Exceeding the uniform $1/9$ reference therefore does not isolate conjunctive coding or path information beyond endpoints. Even exceeding $6/9$ would not by itself establish biological conjunction, mechanism or route coding.
-
-The recent reproduction strengthens the computational record. The six arms, three observed seeds and five diagnostic worlds make 48 unique cases: 2,448 model-fit calls excluding scalers and 96,000 CEBRA updates per complete execution. The fuller notebooks expose first-case training and complete 38 code cells. Independent checks authenticate 3,188 run files; 14,304 saved numerical arrays exactly match the accepted execution, and all 96 learning records agree apart from wall time. The earlier kernel-handoff failure, reviewed continuation and failed software checks remain preserved \cite{reproduction}. Matching this computation on the same recordings and seeds is reproduction, not another sample from biology.
+The validation evidence supports fidelity, contributor separation and reproducibility at their stated levels. Behavioral marker corroboration is stronger than merely assuming a label, and the explicit source-mask, quota and replay checks are stronger than observing that a notebook ran. Neither removes the need for acquisition metadata, nuisance controls and a fresh evaluation object before stronger scientific claims. Missing evidence should remain visible as a boundary, rather than being inferred from the number of successful checks.
 
 The series has progressed toward a more inspectable conditional assay. A reusable hippocampal task-state representation remains an ambition, not a delivered model. Formal observability asks whether a specified dynamical model's state can be recovered from its measurements; readable computation and successful label prediction do not establish it. The present contribution is an explicit link from measurements and construction to prediction and claim, retaining positive and negative results. This synthesis initiates no new study.
 
 \clearpage
 \section*{Evidence, reproducibility and references}
-The accompanying source package contains this LaTeX manuscript, vector figures, full-precision extracted aggregate score/contrast tables, a figure-building script and a source-hash manifest. Figures are presentation-level recomputations from public notebook tables, with shared B3 records deduplicated by identity; no fitted objects or trial-level neural arrays are required. The source revision is pinned in the repository links below. Detailed methods, complete controls and original provenance remain in their owning study records rather than being silently harmonized across cohorts.
+The source package contains this LaTeX manuscript, vector figures, full-precision aggregate score/contrast tables, source-support and recipe tables, a figure-building script and a source-hash manifest. Figures re-present public notebook outputs and frozen metadata, with shared B3 records deduplicated. The metadata-only count implementation independently repeats the global contributor embargo and fixed-panel projection, reconciling all roster totals and mask membership with the published record. It does not inspect spike/event values, run model code or optimize another panel. Repository links below pin the evidence revision; unlike cohorts are not silently harmonized.
 
 The three requested manuscript audits are recorded separately with the exact reviewed PDF/source hashes. They are independent AI-agent reading and evidence audits (newcomer, experienced researcher and quantitative/provenance reviewer), not journal peer review or external biological replication. The paper's source tables permit independent checking of the latest displayed numbers without accepting its narrative on authority.
 
@@ -297,12 +530,16 @@ The three requested manuscript audits are recorded separately with the exact rev
 \bibitem{path} Neuroscience workspace. \repo{docs/reports/path-generalization-completed-state-20260907.md}{Completed path-generalization study}; \repo{docs/professor_updates/path_generalization_20260907/CORRECTIONS.md}{correction ledger}. Source-recombination and exact development-product evaluations are distinct.
 \bibitem{contract} Neuroscience workspace. \repo{docs/analysis-contract.md}{Analysis contract}; \repo{docs/project-direction.md}{agreed project direction}. Source identity, contributor separation, target distinctions and condition-level claim boundaries.
 \bibitem{data} Neuroscience workspace. \repo{docs/dataset-card.md}{Dataset and experimental-setup reference}; \repo{data/README.md}{compact cue-source contract}; \repo{context/previous-student-analysis.md}{prior-student analysis summary}. Dated evidence labels distinguish observed, code-established and unresolved acquisition details.
+\bibitem{compact} Neuroscience workspace. \repo{docs/compact-cue-source-20261026.md}{Compact unbinned source: export conservation, metadata reconciliation and reconstruction validation}, October 26, 2026. Historical validation of source fidelity and software contracts; no new measurement analysis for this paper.
+\bibitem{selection} Neuroscience workspace. \repo{notes/data_inspection/place195_split_behavior_audit_20260830.md}{Frozen outer split and behavior-QC audit}; \repo{docs/reports/cebra-27unit-notebooks-20261023/tables/source_accounting.json}{Public eligibility and global embargo ledger}. Only global counts are inherited here; the later 27-unit and latest 83-unit panels are different selections.
+\bibitem{markers} Neuroscience workspace. \repo{notes/data_inspection/place195_marker_semantics_probe_20260901.md}{Marker-semantics and Unity endpoint probe}, September 1, 2026. Existing exploratory all-record check, not formal task-protocol provenance or held-out confirmation.
+\bibitem{importqc} Neuroscience workspace. \repo{notes/data_inspection/place195_all_sessions_import_20260830.md}{All-session importer and event/QC audit}, August 30, 2026. Failed attempts and flagged records retained.
 \bibitem{endpoint} Neuroscience workspace. \repo{docs/reports/cebra-endpoint-time-readout-20261006/README.md}{Endpoint and cue-time readout report}, accepted October 7, 2026; \repo{report/README.md}{saved-artifact review notebook and replay boundaries}, October 19.
 \bibitem{fresh} Neuroscience workspace. \repo{docs/reports/cebra-27unit-notebooks-20261023/README.md}{27-unit cue-only notebook study}, executed October 23, 2026; report published November 2. Two computational seeds and one permutation diagnostic.
 \bibitem{support} Neuroscience workspace. \repo{docs/reports/source-support-ablation-20261110/README.md}{Endpoint learning after reducing classes and source reuse}, November 10, 2026; \repo{docs/source-support-protocol-20261110.md}{frozen protocol}.
 \bibitem{grid} Neuroscience workspace. \repo{docs/reports/population-grid-20261111/README.md}{Class requirements, session rosters and learning}, November 11, 2026; \repo{docs/population-grid-protocol-20261111.md}{protocol}. 111 cases, 5,661 model fits and 222,000 updates; distinct from the latest 48-case design.
 \bibitem{errors} Neuroscience workspace. \repo{docs/reports/population-grid-20261111/error-analysis.md}{Saved-result confusion, class-deletion and source-reuse analysis}; \repo{docs/reports/population-grid-20261111/error-analysis-validation.md}{validation}. Prediction-only follow-up; no new fitting.
-\bibitem{latest} Neuroscience workspace. \repo{docs/experiments/source-reuse-width-20261114/README.md}{Source reuse, then population width: results}; \repo{docs/experiments/source-reuse-width-20261114/protocol.md}{frozen protocol}; \href{https://github.com/Hong-yiii/neuro_science/pull/31}{PR 31}. Defined November 14; executed and delivered November 15, 2026.
+\bibitem{latest} Neuroscience workspace. \repo{docs/experiments/source-reuse-width-20261114/README.md}{Source reuse, then population width: results}; \repo{docs/experiments/source-reuse-width-20261114/protocol.md}{frozen protocol}; \repo{experiments/source_reuse_width_20261114/study.py}{matched-plan implementation}; \repo{src/neuro/pseudopopulation.py}{source sampler}; \href{https://github.com/Hong-yiii/neuro_science/pull/31}{PR 31}. Defined November 14; executed and delivered November 15, 2026.
 \bibitem{reproduction} Neuroscience workspace. \repo{docs/experiments/source-reuse-width-20261114/notebook-validation-20261115.md}{Complete notebook reproduction and validation}; \repo{experiments/source_reuse_width_20261114/walkthrough_20261115/published/manifest.json}{published artifact manifest}. Two complete executed notebooks; explicit post-execution editorial correction and saved-figure supplement.
 \bibitem{cebra} Schneider, S., Lee, J. H. and Mathis, M. W. Learnable latent embeddings for joint behavioural and neural analysis. \emph{Nature} \textbf{617}, 360--368 (2023). \href{https://doi.org/10.1038/s41586-023-06031-6}{doi:10.1038/s41586-023-06031-6}. Method reference inherited from the existing manuscript, not evidence for this dataset's biological claims.
 \bibitem{dimred} Cunningham, J. P. and Yu, B. M. Dimensionality reduction for large-scale neural recordings. \emph{Nature Neuroscience} \textbf{17}, 1500--1509 (2014). \href{https://doi.org/10.1038/nn.3776}{doi:10.1038/nn.3776}. Existing methodological context for interpreting derived coordinates.
