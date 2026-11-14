@@ -5,6 +5,22 @@ Read [agent instructions](../AGENTS.md) before changing scientific code or artif
 
 ## Current state
 
+- **November14 experiment closure / publication:** the owner authorized merging
+  [PR28](https://github.com/Hong-yiii/neuro_science/pull/28) and its report-only
+  [PR27 dependency](https://github.com/Hong-yiii/neuro_science/pull/27) into `main`;
+  those PRs own the authoritative merge status. The experiment lives mainly under
+  `src/neuro/studies/`, with dedicated scripts, notebooks and reports. Shared changes
+  in `place195.py`, `cue_source.py` and `pseudopopulation.py` add explicit class/support
+  panels and validated balanced/without-replacement plans while preserving defaults.
+  Merge preparation tested committed revision `2f4f81b` in an isolated source archive:
+  24 invented-data tests passed with fitting blocked, the report renderer's invented
+  self-test passed, and the complete range passed whitespace checks. Subsequent
+  closure edits are documentation only. No GitHub checks or review threads were
+  registered at inspection; earlier independent scientific/artifact reviews remain
+  recorded in the validation ledgers. Unrelated sampling-code and current-state
+  notes are excluded. The next experiment's knobs and analyses will be discussed
+  later; this merge does not start a new study or implement #29/#30.
+
 - **November14 professor-feedback assessment — proposed next work:** GitHub's
   newest issues are #29 (lost place-field coverage versus errors) and #30 (minimum
   selectivity/coverage in population selection), both opened November11 and still

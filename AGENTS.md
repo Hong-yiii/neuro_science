@@ -12,6 +12,19 @@ PR status, recovery records and safe verification commands. Do not recreate old
 sibling worktrees or restart experiments from historical pending-work flags.
 Keep new durable decisions in Git-backed notes, not only in a chat transcript.
 
+**November14 experiment closure / publication:** the owner authorized landing
+the completed experiment unit in [PR28](https://github.com/Hong-yiii/neuro_science/pull/28),
+including its report-only [PR27](https://github.com/Hong-yiii/neuro_science/pull/27)
+dependency. GitHub records the authoritative merge result. This supersedes older
+no-push/no-merge checkpoints for those PRs. The change is chiefly study modules,
+runners, notebooks and reports, with three small shared-helper extensions for
+explicit panels and validated sampling policies; existing defaults are preserved.
+Merge preparation passed 24 invented-data tests with fitting blocked in a clean
+committed-source archive and the report renderer's invented self-test. Preserve
+all results and unrelated sampling/current-state edits. The owner intends another
+experiment set but will discuss its knobs and analyses later: #29/#30 and
+`docs/professor-feedback-next-steps-20261114.md` remain proposals, not a run queue.
+
 **November11 saved-result error follow-up — latest handoff:** the owner requested
 confusion matrices and associations between removed classes/sessions, source reuse
 and errors. Start at `docs/reports/population-grid-20261111/error-analysis.md` and
