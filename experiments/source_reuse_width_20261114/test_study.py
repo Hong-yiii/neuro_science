@@ -60,6 +60,12 @@ def fixture(units=24, blocks=6):
 
 
 class DesignTests(unittest.TestCase):
+    def test_notebook_and_runner_accounting_entrypoint(self):
+        accounting = study.GridFitAccounting(cebra=True).start()
+        counts = accounting.stop()
+        self.assertEqual(set(counts), set(study.configuration({})["expected_fit_counts"]))
+        self.assertTrue(all(v == 0 for v in counts.values()))
+
     def test_optimizer_both_support_objectives_and_lex_against_enumeration(self):
         pairs = [f"{a}->{b}" for a in range(1, 7) for b in range(1, 7) if a != b]
         rng = np.random.default_rng(6)

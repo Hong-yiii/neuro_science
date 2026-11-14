@@ -41,5 +41,13 @@ Conservative duration gate: 48 × full-width invented case seconds ×1.25 +900 <
 
 ## Biological execution and result review
 
+Gate attempt02 failed before fitting with an `AttributeError`: unused-import cleanup
+removed the accounting class re-export used by the runner and notebook cells. Its
+failed receipt/log are preserved (`invented-02`, `work/.../benchmark-02.log`). An
+explicit re-export and focused entry-point test fix the software issue. No biological
+case was attempted. The source change invalidates old gate pins; use new preflight
+and benchmark receipts. The earlier preflight passed all48 cases with minimum
+rank17,648.63MiB peak and13.87s elapsed, but is not substituted for the refreshed gate.
+
 Pending. No biological model fitting has occurred at this checkpoint. All source,
 rank, fit, numeric-artifact and final review receipts will be recorded here.

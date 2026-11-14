@@ -18,6 +18,7 @@ from neuro.notebook_inputs import effective_pair_map
 from neuro.pseudopopulation import materialize, sample_plan
 from neuro.studies.population_grid import metadata
 from neuro.studies.population_models import train_case
+from neuro.studies.population_models import GridFitAccounting as GridFitAccounting
 from neuro.studies.source_support_ablation import (
     HASHES,
     allocation_plan,

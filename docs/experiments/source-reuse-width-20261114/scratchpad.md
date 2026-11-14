@@ -44,6 +44,14 @@ not independent biological replicates; the development set is historically expos
 - Independent preliminary scientific review confirmed the two-part design and
   requested explicit distinct-not-independent wording, source-budget/weighting
   coupling, width/session confounding, sparse-endpoint baseline and map limitations.
+- Frozen code/design committed as `4db1152`. All48 biological plans passed a
+  non-fitting preflight (minimum training rank17,648.63MiB,13.87s). Invented report
+  smoke passed both notebooks' collation paths,34+27figures and all confusion data.
+- Final benchmark attempt02 stopped before any fit: automatic unused-import cleanup
+  had removed the fit-accounting class exposed to the runner/notebooks. Preserved
+  its failed receipt; restored an explicit re-export and added an entry-point check.
+  Refreshed source-bound preflight/benchmark gates are required after this fix.
+  No biological training case was attempted or retried.
 
 ## Preservation
 
