@@ -178,3 +178,12 @@ merge, issue modification or old-experiment retry is part of this run.
 - Fresh reproduction completed all12observed reuse cases and is finishing its
   20source-label control cases without fitting failures. Numerical interpretation
   and publication remain pending the completed-run audit.
+
+- Source-reuse notebook completed all19code cells and32cases; width authenticated
+  the eight B3 cases and started its16new cases. All18observed cases across both
+  parts have now completed; width source-label controls remain in progress.
+- Independent actual reuse-output review found no source IDs/neural arrays/weights/
+  credentials/private-input paths. Generic execution-host output/runtime paths are
+  retained as local provenance, not public links. The original first-case Agg
+  figure output is text-only; a labelled saved-aggregate rendering supplement will
+  be inserted after that cell without altering its executed code/output.

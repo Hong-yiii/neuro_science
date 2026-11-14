@@ -5,7 +5,15 @@ training and interpretation. It is a fresh computational reproduction on the sam
 recordings and seeds, not another biological replicate. The accepted earlier run
 and all failure records are preserved.
 
-The two clean notebook sources are:
+The two source notebooks below are frozen execution provenance. A methods
+sentence in their original Markdown overstates simultaneity: assigning columns
+to the same session/source trial does **not** verify simultaneous recording.
+The reviewed executed publication copies will explicitly correct that sentence,
+preserve every executed code cell/output, and carry the editorial provenance.
+Use those reviewed copies for scientific reading; retain these source versions
+to authenticate the actual execution.
+
+The two frozen notebook sources are:
 
 - [Source reuse at fixed width](source_reuse_20261115.ipynb): B2/B3/B5 and once-only U3.
 - [Population width at fixed source budget](population_width_20261115.ipynb): B3/Wmid/Wfull.
