@@ -1,8 +1,9 @@
 # Synthesis validation — November 15, 2026
 
-Status: manuscript and figures implemented; rendered-page checks and the three
-blind manuscript audits are in progress. No publication or merge has occurred
-for this paper yet.
+Status: **completed — all three blind auditors pass the final ten-page PDF and
+explicitly find it understandable**. The publication package also passes an
+isolated Git-tree build. GitHub owns the PR publication status; no merge is
+authorized or performed.
 
 ## Authority and evidence boundary
 
@@ -50,19 +51,67 @@ The three new quantitative figures are vector PDFs with embedded TrueType fonts.
 The historical time-decoding PNG is byte-identical to the tracked source. Exact
 inputs/outputs, extraction locations and plot-selection caveats are recorded in
 `figure-provenance.json`. Two builds produced identical figure/table hashes;
-Ruff passed for the figure builder. The paper PDF will additionally receive page,
-cross-reference, text and visual checks before audit.
+Ruff passed for the figure builder. The final PDF has ten A4 pages, six labeled
+figures, three tables, embedded fonts, 23 valid pinned repository links and no
+unresolved references or missing figures. The final TeX log has no warnings,
+overfull/underfull boxes or undefined references. All ten rendered pages were
+inspected independently; changed pages were inspected again after the clarity pass.
+
+## Blind manuscript panel and final identity
+
+Each reviewer started in a separate context without the drafting discussion,
+author probe memos or other reviewers' findings. The roles are AI-agent manuscript
+audits, not external human peer review or biological replication. Their full
+reports distinguish checked public aggregates from inherited private-run receipts.
+
+| Reviewer | Initial verdict | Final-version verdict | Understandable |
+| --- | --- | --- | --- |
+| [ML-literate neuroscience newcomer](audit/newcomer.md) | Pass | Pass | Yes |
+| [Experienced neuroscience researcher](audit/researcher.md) | Pass | Pass | Yes |
+| [Quantitative/provenance auditor](audit/quantitative.md) | Pass | Pass | Yes |
+
+The newcomer independently reconstructed the question, construction, counting
+units, evaluation, results and claim ceiling from the paper. The researcher checked
+scientific assumptions, implementation semantics, historical comparability and
+all 2,304 published score rows. The quantitative reviewer independently parsed
+the source tables, reconciled every contrast, recomputed metrics from all 4,608
+unique published aggregate confusions, checked historical numbers from pinned
+tables, and reproduced all13 CSV/figure outputs byte-for-byte in an isolated
+renderer invocation. None of these reviews fitted or loaded a model.
+
+The first reviewed manuscript is preserved at commit `cd31986`. The final clarity
+pass names PCA/SVM in the abstract, defines source trials and the successful-after-
+successful subset directly, names possible sensory/behavioral confounds, and links
+the inherited time figure at full size. Numerical results and figure bytes did
+not change. All three reviewers confirmed the new exact PDF/source identities
+and retained **PASS / UNDERSTANDABLE**. Review Markdown whitespace was normalized
+without changing its wording or conclusions.
+
+| Final artifact | SHA256 |
+| --- | --- |
+| `paper.pdf` | `dc6ea8e5e2d422657b32ca8001eb706428bb329025fa473c9f75121bda05ba02` |
+| `paper.tex` | `2f1630251df8d445e1242b028a72f94e17ce140d9dcae7164f9576c203eb6b1a` |
+
+An isolated archive of Git tree `ddfec059a60c36109fc3b417dea1777f1c8b929f`
+compiled successfully with `make -B` and Tectonic0.17.0, without the scientific
+runtime or notebook sources. Its manuscript and seven figure files match the
+publication bytes, and its ten-page PDF has identical extracted text and zero
+TeX warnings. Only audit/administrative documentation changed after that check.
+The package-local ignore exception includes the seven reviewed figure files;
+unrelated generated figures remain ignored. Missing figure inputs now fail the
+LaTeX build rather than producing a draft placeholder. Exact presentation checks
+are recorded in [artifact-checks.json](audit/artifact-checks.json).
 
 ## Preservation and publication
 
-Work is isolated to the new `report/series-20261115/` package on
-`docs/series-paper-20261115`, based on PR31's completed head. Existing accepted
+Work is isolated to the new `report/series-20261115/` package and a link from
+`report/README.md`, on `docs/series-paper-20261115`, based on PR31's completed head. Existing accepted
 executions, source notebooks, prior reports, private artifacts and runtimes are
 unchanged. The unrelated `src/neuro/_cebra_sampling.py` working edit and untracked
 `docs/reports/current-state-20260927/` are excluded. A task-local Tectonic binary
 was downloaded under ignored `work/series-paper-20261115/runtime/`; no scientific
 environment was modified.
 
-The manuscript PR will follow the three audit passes. If PR31 remains open, it
-will be stacked on that branch to keep the review diff limited to the paper.
-Neither PR will be merged by this task.
+The manuscript PR follows the three final audit passes. With PR31 open, it is
+stacked on that branch to keep the review diff limited to the paper. Neither PR
+is merged by this task.

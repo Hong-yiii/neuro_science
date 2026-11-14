@@ -1,12 +1,12 @@
 {
   "classification": "presentation and aggregate-evidence verification; no new study",
   "evidence_revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
-  "paper_pdf_sha256": "6a3848d795668a8454041da003a416568a6eaff516cd11fbea44f7197ea76c1d",
-  "paper_tex_sha256": "30feff7d23c66ce1fc4387b1318d6cecfc0a801bfcecc0f15960104380d95f3e",
+  "paper_pdf_sha256": "dc6ea8e5e2d422657b32ca8001eb706428bb329025fa473c9f75121bda05ba02",
+  "paper_tex_sha256": "2f1630251df8d445e1242b028a72f94e17ce140d9dcae7164f9576c203eb6b1a",
   "pages": 10,
   "figures": 6,
   "tables": 3,
-  "pinned_repository_reference_targets": 22,
+  "pinned_repository_reference_targets": 23,
   "tex_compiler": "Tectonic 0.17.0",
   "tex_warnings": 0,
   "unresolved_references": 0,
@@ -20,5 +20,14 @@
     "new_literature_searches": 0
   },
   "unrelated_sampling_file_sha256": "63489315c5a21257ed037edd77161f639beb23199321719d8fe22a562c1659f5",
-  "blind_manuscript_audits": "pending; separate exact-identity records"
+  "blind_manuscript_audits": "all three PASS and UNDERSTANDABLE for the final hashes",
+  "initial_audited_version_commit": "cd31986",
+  "isolated_package_build": {
+    "tree": "ddfec059a60c36109fc3b417dea1777f1c8b929f",
+    "pages": 10,
+    "tex_warnings": 0,
+    "pdf_extracted_text_identical": true,
+    "scientific_runtime_used": false,
+    "manuscript_and_figure_files_identical": 8
+  }
 }

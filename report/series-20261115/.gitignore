@@ -6,3 +6,6 @@
 *.toc
 *.fls
 *.fdb_latexmk
+!figures/
+!figures/*.pdf
+!figures/*.png

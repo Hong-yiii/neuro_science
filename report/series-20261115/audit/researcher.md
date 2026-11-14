@@ -1,8 +1,11 @@
 # Independent researcher audit
 
-Date: 15 November 2026  
-Role: experienced neuroscience research reader and evidence reviewer  
-Verdict: **PASS**  
+Date: 15 November 2026
+
+Role: experienced neuroscience research reader and evidence reviewer
+
+Verdict: **PASS**
+
 Understandable: **yes — UNDERSTANDABLE as a research synthesis for a colleague.**
 
 This is an independent AI-agent manuscript and evidence audit, not external human
@@ -122,3 +125,45 @@ No revision is required for this reviewer to accept the reviewed artifact as an
 understandable, appropriately bounded synthesis. Any material change to claims,
 figures or evidence would require checking the changed artifact and recording its
 new hashes; this verdict does not transfer automatically to a different version.
+
+## Final-version addendum — 15 November 2026
+
+Verdict: **PASS**
+
+Understandable: **yes — UNDERSTANDABLE as a research synthesis for a colleague.**
+
+I independently reviewed the complete manuscript-source diff from the previously
+audited version at commit `cd31986`, recomputed the following hashes, and inspected
+the newly rendered pages 1, 2 and 8. The PDF remains ten A4 pages. I did not read
+other manuscript audit files or other reviewers' conclusions for this follow-up.
+
+| Final artifact | SHA256 |
+| --- | --- |
+| `paper.pdf` | `dc6ea8e5e2d422657b32ca8001eb706428bb329025fa473c9f75121bda05ba02` |
+| `paper.tex` | `2f1630251df8d445e1242b028a72f94e17ce140d9dcae7164f9576c203eb6b1a` |
+
+The abstract now identifies the quoted width scores explicitly as PCA/SVM. The
+new source-trial and successful-after-successful definitions accurately explain
+the current-trial/predecessor relationship without presenting the operational
+endpoint label as directly measured intention. Naming cue identity, visual input,
+gaze and preceding-trial state makes the confound boundary concrete and resolves
+my first nonblocking suggestion.
+
+Figure 6's added full-size figure/legend link resolves my second suggestion. Its
+destination exists at the pinned evidence revision. The inherited plot remains
+small on the page, but the enlarged view is now directly available from its
+caption. Revised pages have no material overlap, clipping or caption displacement;
+the added page-2 explanation remains readable alongside the schematic and
+equations. The TeX log contains no warning/error, overfull/underfull-box or
+undefined-reference matches. Direct figure inclusion also removes the earlier
+draft-placeholder fallback.
+
+The tracked numeric tables, figures and figure-provenance manifest are unchanged
+from `cd31986`; no repeated numerical audit was needed. The initial evidence
+checks and their stated access limits therefore remain applicable. These
+revisions clarify the existing assay and do not add a biological inference.
+
+**No blocking findings or required revisions remain for this final version.**
+This remains an AI-agent reading and evidence audit, not external human peer
+review. Only this audit addendum was written; manuscript, figures and Git state
+were not modified by the reviewer.

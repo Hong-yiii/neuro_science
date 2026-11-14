@@ -5,6 +5,10 @@ decoding**. Its [LaTeX source](paper.tex) is editable. The synthesis centers the
 November source-support, reuse and width experiments and uses the earlier series
 to explain why the questions and evaluation changed.
 
+All three [blind manuscript auditors](audit/README.md) passed the final PDF and
+explicitly found it understandable. The [validation ledger](validation.md)
+records the exact reviewed hashes and isolated package build.
+
 This is an exploratory research synthesis of existing evidence, not a new
 experiment or biological replication. Work began only after the completed,
 independently reviewed experiment appeared as [PR31](https://github.com/Hong-yiii/neuro_science/pull/31).
@@ -33,8 +37,10 @@ literature research is part of this paper.
 The displayed confusion uses the predeclared seed 0. It happens to be the highest
 Wfull PCA/SVM repeat (88.89%); it is labeled as a high-score illustration. The
 main score figure retains all repeats, including the two that worsen in the final
-PCA width step. The older time-decoding image is an unchanged public figure from
-a distinct 195-unit cohort, with its own source counts and interpretation.
+PCA width step. The [full-size historical time figure](figures/historical_time.png)
+is an unchanged public image from a distinct 195-unit cohort, with its own source
+counts and interpretation. Its small printed legend is also linked directly from
+the PDF caption.
 
 ## Build
 

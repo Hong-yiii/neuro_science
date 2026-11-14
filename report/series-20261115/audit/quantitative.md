@@ -58,3 +58,18 @@ I rendered and visually inspected all **10 A4 pages**, including six figures and
 - **Scope limits:** log-loss strings were authenticated against the source tables but not recomputed from probabilities; aggregate confusions cannot determine log loss. Seed-0 identity and the disclosed high-score status were verified; the chronology of its predeclaration was not reconstructed from drafting history. Acquisition metadata, biological independence and prior run-file audits are not newly certified here.
 
 The selection disclosures are adequate for an exploratory synthesis: the SVM figure's slice is named, all readouts accompany the width claim, all seeds and diagnostic worlds remain visible, the high-score confusion is labeled, and historical evidence is not pooled as replication. **PASS; UNDERSTANDABLE.**
+
+## Final-version confirmation — November 15, 2026
+
+**Final verdict: PASS. Understandable: yes — UNDERSTANDABLE.**
+
+| Final reviewed artifact | Independently computed SHA-256 |
+| --- | --- |
+| `paper.pdf` | `dc6ea8e5e2d422657b32ca8001eb706428bb329025fa473c9f75121bda05ba02` |
+| `paper.tex` | `2f1630251df8d445e1242b028a72f94e17ce140d9dcae7164f9576c203eb6b1a` |
+
+I independently examined the entire LaTeX diff from the initially audited version preserved at `cd31986`. The changes identify PCA/SVM explicitly in the abstract, define source trial and the successful-after-successful restriction, name plausible endpoint confounds, add a pinned full-size Figure 6 link, and remove the missing-figure placeholder fallback. These changes clarify the already reviewed claims and introduce no new numerical result.
+
+The renderer and provenance hashes remain exactly those recorded above; all 13 delivered figure/CSV files still match their previously audited hashes. The final PDF remains ten A4 pages. I newly rendered and inspected the affected pages 1, 2 and 8: the added prose and link fit without clipping or overlap, and the figures remain intact. The new full-size image link is present in the page-8 PDF annotation and names the existing, previously authenticated image at the pinned evidence revision. There are now 23 distinct pinned repository links, all represented in the PDF and resolvable in that Git revision. Extracted PDF text contains no unresolved-reference markers or draft placeholders.
+
+The direct full-size link addresses the earlier nonblocking legend-size note without altering the historical image. No new finding requires broad recalculation; the original numerical audit and its stated scope limits continue to apply. I did not read other reviewers' files during this confirmation. Final publication/archive-build verification remains the publishing agent's separate check. **PASS; UNDERSTANDABLE.**

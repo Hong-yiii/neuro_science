@@ -1,8 +1,11 @@
 # Independent newcomer manuscript audit
 
-Date: 15 November 2026  
-Role: AI manuscript auditor reading as an ML-literate newcomer to neuroscience  
-Verdict: **PASS**  
+Date: 15 November 2026
+
+Role: AI manuscript auditor reading as an ML-literate newcomer to neuroscience
+
+Verdict: **PASS**
+
 Understandable: **YES**
 
 This is an independent AI-agent manuscript review, not human peer review, a user comprehension study, or biological replication. The pass concerns standalone comprehensibility and the connection between displayed evidence and written claims. It does not substitute for the separate quantitative/provenance audit.
@@ -57,3 +60,26 @@ I read the complete LaTeX manuscript and all ten PDF pages. I inspected rendered
 - Table 3 and the final prose preserve the difference between absent evidence and evidence of biological absence. The 6/9 one-endpoint reference strengthens, rather than weakens, the conditional interpretation of the results.
 
 **Final verdict: PASS. Explicit understanding verdict: UNDERSTANDABLE — YES.** The suggestions above are optional readability improvements; no revision is required to resolve a blocking newcomer misunderstanding in these exact artifacts.
+
+## Final-version confirmation addendum
+
+Date: 15 November 2026
+
+Revised-artifact verdict: **PASS**. Revised-artifact understanding verdict: **UNDERSTANDABLE — YES**.
+
+I independently computed the revised SHA-256 hashes:
+
+| Artifact | SHA-256 |
+| --- | --- |
+| `report/series-20261115/paper.pdf` | `dc6ea8e5e2d422657b32ca8001eb706428bb329025fa473c9f75121bda05ba02` |
+| `report/series-20261115/paper.tex` | `2f1630251df8d445e1242b028a72f94e17ce140d9dcae7164f9576c203eb6b1a` |
+
+I inspected the complete manuscript-source diff against the initial reviewed version at commit `cd31986`, independently confirmed the PDF remains ten pages, and visually inspected freshly rendered revised pages 1, 2, and 8. I did not read other audit files or reviewers' findings. Unchanged broad checks were not repeated.
+
+The abstract now explicitly assigns the reported PCA width means to PCA/SVM, resolving that optional ambiguity. Page 2 directly defines a source trial and explains successful-after-successful selection and the predecessor-derived start label, resolving the earlier compressed-definition concern. Its additional cue, visual-input, gaze, and preceding-state caveat names plausible alternative explanations without claiming those explanations were separately tested. The new text fits on page 2 without clipping the schematic, equations, or final paragraph.
+
+Figure 6 retains its small historical lettering, but its caption now provides a clearly rendered link to the full-size figure and legend at the pinned repository revision. This is an adequate nonblocking accommodation for the earlier suggestion; the caption still preserves the distinct cohort and same-window interpretation. I checked the link's presence and target in the source, not remote availability. Page 8 has no caption/figure collision or truncation.
+
+The figure macro now directly includes required image files rather than rendering a draft placeholder. The source diff contains no changes to numerical conclusions, equations, tables, or plotted image references. The changed pages preserve the original understanding and claim boundary. No new blocking finding arose.
+
+This final-version confirmation remains an AI manuscript readability audit, not human peer review, quantitative provenance certification, or biological replication. **Final revised version: PASS; UNDERSTANDABLE — YES.**
