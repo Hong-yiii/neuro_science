@@ -167,3 +167,14 @@ merge, issue modification or old-experiment retry is part of this run.
   20261115/real-01` after both reviews and gates, using4GiB/no swap/two CPUs/
   three-hour ceiling. The earlier accepted48cases are not used to initialize
   models and are not pooled as additional biological evidence.
+
+- Publication review caught one overstatement in a methods Markdown sentence:
+  same-session/source-trial grouping does not establish simultaneous recording.
+  Preserve running source pins and its frozen snapshot; correct that sentence
+  explicitly in publication copies, append an editorial note, and independently
+  verify that every executed code cell and output is unchanged. The main entry
+  points will link the corrected copies; frozen sources retain execution provenance.
+  No fitting changes are needed.
+- Fresh reproduction completed all12observed reuse cases and is finishing its
+  20source-label control cases without fitting failures. Numerical interpretation
+  and publication remain pending the completed-run audit.
