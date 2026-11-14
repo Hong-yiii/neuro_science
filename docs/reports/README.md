@@ -25,9 +25,13 @@ all matrices and paired/best-worst errors. Raw/PCA SVM pair association survives
 once-only assembly; PCA mean pair balanced-accuracy gains across both width steps
 extend across all four readouts, while
 other effects vary. Spatial-map attribution remains unavailable. The
-[validation ledger](../experiments/source-reuse-width-20261114/validation.md) records
-independent review, immutable evidence and the preserved orchestration failure
-followed by16unattempted width cases; no biological case was retried.
+[original validation ledger](../experiments/source-reuse-width-20261114/validation.md)
+records the first execution and its preserved orchestration failure/continuation.
+The [complete notebook reproduction](../experiments/source-reuse-width-20261114/notebook-validation-20261115.md)
+trained the same48cases afresh with38successful code cells and exactly matching
+numeric outputs. Reviewed notebooks/HTML/curated figures are versioned, with
+independent numeric/privacy review. This adds computational reproducibility,
+not biological replication.
 
 **[Class requirements × session rosters — November11](population-grid-20261111/README.md)**
 replaces the previous nine-pair interpretation with nine metadata-selected population

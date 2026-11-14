@@ -16,14 +16,21 @@ columns at three sources per session–class pool. All 48 fresh cases completed 
 existing recordings: 2,448 fits and 96,000 updates, with raw/PCA/CEBRA-Time/native
 multisession, logistic/RBF-SVM/kNN/LDA and bounded source-label controls.
 
-Read the [source-reuse notebook](outputs/source-reuse-width-20261114/deliverables-20261115-03/source_reuse_20261115.executed.ipynb)
-and [population-width notebook](outputs/source-reuse-width-20261114/deliverables-20261115-03/population_width_20261115.executed.ipynb),
-or their [source-reuse](outputs/source-reuse-width-20261114/deliverables-20261115-03/source_reuse/report.html)
-and [width](outputs/source-reuse-width-20261114/deliverables-20261115-03/population_width/report.html)
-offline reports. Both include training curves, cue trajectories, all confusion
-matrices and best/worst class errors. [Independent validation](docs/experiments/source-reuse-width-20261114/validation.md)
+Read the complete [source-reuse notebook](experiments/source_reuse_width_20261114/walkthrough_20261115/published/source_reuse_20261115.executed.ipynb)
+and [population-width notebook](experiments/source_reuse_width_20261114/walkthrough_20261115/published/population_width_20261115.executed.ipynb),
+or download their standalone [reuse HTML](experiments/source_reuse_width_20261114/walkthrough_20261115/published/source_reuse_20261115.executed.html)
+and [width HTML](experiments/source_reuse_width_20261114/walkthrough_20261115/published/population_width_20261115.executed.html) copies and open them locally.
+Each has 19 executed code cells, visible first-case training, all readouts/heads,
+loss curves, cue trajectories, complete confusion explorers and error comparisons.
+
+This richer handoff was freshly trained end to end after the first accepted study.
+All 48 cases completed again, with exactly matching saved numerical results; this
+is computational reproduction on the same recordings/seeds, not new biological
+replication. [Notebook validation](docs/experiments/source-reuse-width-20261114/notebook-validation-20261115.md)
 and the [progress scratchpad](docs/experiments/source-reuse-width-20261114/scratchpad.md)
-preserve the complete execution history.
+preserve both executions, all failed software checks and the explicit editorial
+correction. The notebooks and six curated aggregate figures are versioned; model
+states, neural feature arrays and full source lineage stay local.
 
 Raw/PCA SVM pair association survives once-only assembly. More distinct sources
 help some pipelines; repeating the same sources is not consistently helpful. PCA

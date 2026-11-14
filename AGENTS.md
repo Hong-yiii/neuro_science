@@ -12,15 +12,23 @@ PR status, recovery records and safe verification commands. Do not recreate old
 sibling worktrees or restart experiments from historical pending-work flags.
 Keep new durable decisions in Git-backed notes, not only in a chat transcript.
 
-**November15 notebook follow-up — active owner request:** `/teach max` is complete
-as a disposable HTML outside Git. The owner then requested two fuller end-to-end
-notebooks, actually executed with real data, and adding the completed work to a
-PR. Follow `docs/experiments/source-reuse-width-20261114/notebook-execution-20261115.md`.
-The same48-case study will be reproduced in a fresh output root, with the first
-case's actual training stages visible. New invented equivalence/preflight/review
-gates are required; old run gates are not reused. This is computational reproduction,
-not new biological replication. Preserve the accepted run and unrelated edits;
-publish only reviewed implementation/docs/aggregate executed notebooks. No merge.
+**November15 complete notebook reproduction — completed:** after `/teach max`,
+the owner requested full end-to-end real-data notebooks and a PR. Start with
+`experiments/source_reuse_width_20261114/walkthrough_20261115/README.md` and
+`docs/experiments/source-reuse-width-20261114/notebook-validation-20261115.md`.
+Fresh reproduction completed48cases/2,448fits/96,000updates with38executed code
+cells. All3,188files and complete numeric/source/error tables passed independent
+review; all14,304saved numeric arrays equal the accepted execution (no additional
+biological replication). The two reviewed notebooks/HTML copies and six curated
+figures are versioned under `walkthrough_20261115/published/`. Every executed code
+cell/output is unchanged; one Markdown simultaneity overstatement is explicitly
+corrected, a saved first-case figure supplement replaces no output, and an
+editorial note records the distinction. Frozen source notebooks retain execution
+provenance; use the reviewed publication copies for the corrected explanation.
+All496browser view checks and final privacy/preservation review passed. Preserve
+new `outputs/source-reuse-width-notebooks-20261115/real-01/`, all failed gate
+attempts, the original accepted run and unrelated sampling/current-state edits.
+Draft-PR publication is authorized; no merge or further fitting is queued.
 
 **November15 focused reuse/width study — completed original execution:** the owner narrowed
 the wide proposal to2/3/5distinct sources at fixed17columns, then17/49/83columns at

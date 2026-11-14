@@ -82,7 +82,7 @@ def first_case_figure(run, out, part, receipt):
                 fontsize=7,
                 color="white" if recall[y, x] > 0.5 else "black",
             )
-    fig.colorbar(image, ax=axes[2], label="True-class recall")
+    fig.colorbar(image, ax=axes[2], label="Fraction within true class")
     fig.suptitle(case_id + ": saved first-case evidence")
     fig.tight_layout()
     filename = "first_case_" + part + ".png"
@@ -95,7 +95,7 @@ def first_case_figure(run, out, part, receipt):
         "72constructed exposed-development rows, nine ordered endpoint classes, cue[0,1)s in100msbins. "
         f"Training curves have1,000updates each and different sampling objectives; compare within each curve. "
         f"Raw/logistic pair balanced accuracy={np.diag(recall).mean() * 100:.2f}%, uniform reference11.11%. "
-        "Matrix text=counts, color=true-class recall. No biological uncertainty interval. "
+        "Matrix text=counts; color=row-normalized fraction; diagonal=recall. No biological uncertainty interval. "
         "Sources: authenticated case learning.json and confusions.json; no refitting or neural-array reads."
     )
     encoded = base64.b64encode(path.read_bytes()).decode()

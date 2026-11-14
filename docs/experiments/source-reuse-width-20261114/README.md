@@ -12,24 +12,44 @@ The study was defined November 14. Training and delivery completed November 15
 96,000 optimizer updates** completed. No biological case was retried. The standard
 comparators remained fixed; there was no hyperparameter sweep.
 
-## The two delivered experiments
+## The two complete executed experiments
 
-| Experiment | Executed notebook dated November 15 | Offline evidence report |
+| Experiment | Executed notebook dated November 15 | Offline reading copy |
 | --- | --- | --- |
-| 1. Source reuse: 2/3/5 distinct sources at fixed width, plus once-only control | [Notebook](../../../outputs/source-reuse-width-20261114/deliverables-20261115-03/source_reuse_20261115.executed.ipynb) · [static HTML](../../../outputs/source-reuse-width-20261114/deliverables-20261115-03/source_reuse_20261115.executed.html) | [Source reuse report](../../../outputs/source-reuse-width-20261114/deliverables-20261115-03/source_reuse/report.html) |
-| 2. Width: 17/49/83 columns at three sources per pool | [Notebook](../../../outputs/source-reuse-width-20261114/deliverables-20261115-03/population_width_20261115.executed.ipynb) · [static HTML](../../../outputs/source-reuse-width-20261114/deliverables-20261115-03/population_width_20261115.executed.html) | [Population width report](../../../outputs/source-reuse-width-20261114/deliverables-20261115-03/population_width/report.html) |
+| 1. Source reuse: 2/3/5 distinct sources at fixed width, plus once-only U3 | [Notebook](../../../experiments/source_reuse_width_20261114/walkthrough_20261115/published/source_reuse_20261115.executed.ipynb) | [HTML](../../../experiments/source_reuse_width_20261114/walkthrough_20261115/published/source_reuse_20261115.executed.html) |
+| 2. Width: 17/49/83 columns at three sources per pool | [Notebook](../../../experiments/source_reuse_width_20261114/walkthrough_20261115/published/population_width_20261115.executed.ipynb) | [HTML](../../../experiments/source_reuse_width_20261114/walkthrough_20261115/published/population_width_20261115.executed.html) |
 
-Each notebook preserves its nine executed code cells and all original outputs, then
-adds one labelled interpretation cell. Both reports include source distributions,
-training/development scores, learning curves, cue-time latent trajectories,
-count/normalized confusion explorers and best/worst error comparisons. There are
-4,608 unique split-level confusion matrices; the reports expose 5,376 views because
-the B3 bridge appears in both. There are 61 original figures plus four supplemental
-paired-change figures. Large artifacts remain local and ignored by Git.
+Both notebooks were freshly executed from compact recordings through reconstruction,
+assembly, visible first-case training and the complete fixed schedule. Each has
+**19 executed code cells**. The new 48-case run used another 2,448 model fits and
+96,000 CEBRA updates; it is a computational reproduction on the same recordings
+and seeds, not additional biological replication. All 14,304 saved numeric arrays
+and complete metrics match the original accepted execution exactly. All 96 saved
+learning records also match apart from wall time. Results below therefore describe
+one study design, not pooled independent experiments.
 
-[Frozen protocol](protocol.md) · [metadata design](design.json) ·
-[progress scratchpad](scratchpad.md) · [validation and exact identities](validation.md) ·
-[implementation/source notebooks](../../../experiments/source_reuse_width_20261114/README.md).
+The reading copies contain 40 cells: the original 38, with one explicit Markdown
+correction to avoid claiming verified same-session simultaneity, plus a labelled
+saved-first-case figure supplement and an editorial note. Every executed code cell
+and output is unchanged. The Agg first-case figure had displayed as text; its
+supplement uses authenticated saved loss/confusion records, with no refitting.
+The notebooks embed 67 figure views and complete confusion explorers: 4,608 unique
+split-level matrices, with 5,376 views because the B3 bridge appears in both files.
+Download the HTML files to read offline; notebook source views may show the HTML
+markup rather than running the interactive explorer.
+
+[Notebook reproduction validation](notebook-validation-20261115.md) ·
+[public numeric audit](notebook-numeric-verification-20261115.json) ·
+[publication manifest](../../../experiments/source_reuse_width_20261114/walkthrough_20261115/published/manifest.json) ·
+[original execution ledger](validation.md) · [frozen protocol](protocol.md) ·
+[metadata design](design.json) · [progress scratchpad](scratchpad.md) ·
+[implementation and frozen source notebooks](../../../experiments/source_reuse_width_20261114/README.md).
+
+Original `complete-01/`, failed `real-01/`, and the earlier nine-code-cell handoffs
+remain unchanged under ignored local outputs. Fresh reproduction is separately
+recorded at `outputs/source-reuse-width-notebooks-20261115/real-01/`. Large model,
+feature and lineage files remain local; the reviewed reading copies and six
+curated aggregate figures are included in Git.
 
 ## What was held fixed and what changed
 
@@ -55,13 +75,15 @@ development rows. Five/18/41 development pools are singletons, respectively.
 Available sources, selected source IDs and synthetic rows are different quantities;
 none is a count of independent animals or simultaneous population trials.
 
-![Recorded width, available sources and constructed rows across the three rosters](../../../outputs/source-reuse-width-20261114/deliverables-20261115-03/population_width/figures/design.png)
+![Recorded columns, sessions and fixed per-pool source budget across the three rosters](../../../experiments/source_reuse_width_20261114/walkthrough_20261115/published/figures/width_design.png)
 
 *Design counts for the fixed nine endpoint classes, using the frozen outer-training
-subset after the global current/predecessor embargo. Counts distinguish recorded
-columns, available real sources and constructed rows. This is a source-availability
-figure, with no decoder, statistical interval or performance claim. Provenance:
-accepted `complete-01/report_width`, authenticated in the delivery manifest.*
+subset after the global current/predecessor embargo. Bars show recorded columns,
+sessions and the fixed three-source training budget per pool. Available sources
+and constructed rows are in the preceding table/text, not these bars. This corrects
+the earlier caption; no data changed. There is no decoder, uncertainty interval or
+performance claim in this metadata figure. The published PNG is authenticated in
+the new delivery manifest.*
 
 Train and development contributors were separated before fitting. Shared columns
 and development source assignments match exactly across width arms; training source
@@ -96,7 +118,7 @@ at +21.76 percentage points** and **Time/SVM B5−B2 at +29.63 points**. Each of
 three observed paired changes exceeds all five matched diagnostic changes. Other
 positive averages do not all have that separation; the plot retains every contrast.
 
-![Observed paired changes and source-label diagnostic changes at fixed width](../../../outputs/source-reuse-width-20261114/deliverables-20261115-03/source_reuse/paired_svm_changes.png)
+![Observed paired changes and source-label diagnostic changes at fixed width](../../../experiments/source_reuse_width_20261114/walkthrough_20261115/published/figures/reuse_paired_svm_changes.png)
 
 *Fixed 17 columns/3 sessions and nine endpoint classes; whole-cue RBF-SVM pair
 balanced accuracy on 72 constructed development rows. Dots/thin ranges show mean
@@ -137,7 +159,7 @@ Raw is decoder-dependent: logistic rises 42.13→63.43→66.20%, whereas SVM pea
 readouts. Its SVM drop is dominated by one repeat; the other two have small gains.
 Raw/SVM falls from 49 to 83 in all three repeats.
 
-![Every fixed encoder/readout's paired width changes](../../../outputs/source-reuse-width-20261114/deliverables-20261115-03/population_width/all_model_paired_changes.png)
+![Every fixed encoder/readout's paired width changes](../../../experiments/source_reuse_width_20261114/walkthrough_20261115/published/figures/width_all_model_changes.png)
 
 *Fixed nine-class pair task and three sources/session × class, 144 training and
 72 development pseudorows. Cells show mean percentage-point change across three
@@ -182,7 +204,7 @@ reduces `6→2` by 50 points. A better overall score can conceal substantial
 class-specific regressions. These are means over 24 predictions per class across
 three repeats, with the same development construction within each comparison.
 
-![Best/worst pair-class recall changes across all fixed models](../../../outputs/source-reuse-width-20261114/deliverables-20261115-03/population_width/figures/best_worst_class_changes.png)
+![Best/worst pair-class recall changes across all fixed models](../../../experiments/source_reuse_width_20261114/walkthrough_20261115/published/figures/width_class_changes.png)
 
 *Width experiment, same fixed task/split and whole-cue readouts. Each cell is mean
 class-recall change from that model's worst to best arm across three computational
@@ -219,6 +241,7 @@ assembly, historical development exposure and dependent sources bound every clai
 The hypothetical perfect-single-endpoint pair reference is 66.67% for this sparse
 task; it is a mathematical reference, not a fitted baseline or a path-coding test.
 
-The [validation ledger](validation.md) records independent numerical/claim reviews,
-all attempt boundaries, the preserved orchestration failure and its continuation.
-No further fit, retry, push, merge or issue modification is queued.
+The [original ledger](validation.md) records the first execution and preserved
+orchestration failure/continuation. The [notebook ledger](notebook-validation-20261115.md)
+records the complete fresh reproduction, independent numeric/privacy reviews,
+publication copies and draft PR. No further fitting or merge is queued.

@@ -7,7 +7,7 @@ evidence independently checked, both dated notebooks/reports delivered. Start wi
 [results and artifact links](README.md) and [validation](validation.md). The entries
 below preserve intermediate states; old pending flags are not a new run queue.
 
-**New follow-up in progress:** after `/teach max`, the owner requested fuller
+**Notebook follow-up completed; draft-PR publication next:** after `/teach max`, the owner requested fuller
 end-to-end real-data notebooks and adding the completed work to a PR. The
 [notebook execution plan](notebook-execution-20261115.md) fixes the same48-case
 scope, separate fresh execution, visible first-case stages and publication review.
@@ -187,3 +187,18 @@ merge, issue modification or old-experiment retry is part of this run.
   retained as local provenance, not public links. The original first-case Agg
   figure output is text-only; a labelled saved-aggregate rendering supplement will
   be inserted after that cell without altering its executed code/output.
+
+- Fresh real01completed all48cases and38code cells:2,448fits/96,000updates,
+  1,362.60seconds,1,388.875MiB,zero memory events. Full automated audit passed
+  all3,188files and all tables/trajectories/learning curves. All14,304saved numeric
+  arrays equal the authenticated accepted run;96learning records match except
+  wall time. Independent formulas/source reconstruction separately confirmed
+  all4,608split metrics,5,376matrices and all contrast/error/embargo checks.
+- Final publication copies passed independent privacy/preservation review:
+ 40cells/19code cells each; all original code/outputs and metadata preserved,
+  explicit methods Markdown correction, labelled first-case plot supplement and
+  editorial footer. Both self-contained HTML copies passed496interactive views,
+  all5,376matrix totals and67image loads with no network resources. Ten manifest
+  artifacts plus the manifest are copied into the Git-backed published directory.
+- Updated public entry points to tracked notebooks/HTML/curated figures, preserving
+  earlier local artifacts and ledgers. Draft PR creation remains; no merge.

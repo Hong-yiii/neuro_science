@@ -1,9 +1,10 @@
 # Complete notebook reproduction — validation, November 15, 2026
 
-Status: independent launch review passed and the bounded real-data reproduction
-is running at `outputs/source-reuse-width-notebooks-20261115/real-01/`. The original accepted
-study remains unchanged. This ledger records the separate owner-requested
-end-to-end notebook reproduction and subsequent publication.
+Status: **completed and independently reviewed**. Both complete notebooks and
+offline HTML copies are ready for the authorized draft PR. The original accepted
+study and all failed attempts remain unchanged. This ledger records the separate
+owner-requested end-to-end notebook reproduction and publication.
+
 
 ## Frozen scope and source
 
@@ -98,9 +99,102 @@ cleared under the frozen4GiB/zero-swap/two-CPU/10,800-second limits. The fresh
 run began November15at approximately02:42Singapore time. Full source/runtime/
 configuration snapshots and final exact timing are owned by the run receipt.
 
-## Post-execution acceptance
+## Completed execution and numerical audit
 
-Pending:38successful code cells, exact48case/fit/update accounting, full numeric
-and contributor audit, authenticated comparison with accepted `complete-01`,
-independent scientific/privacy review of the actual outputs, byte-preserved
-executed copies, offline HTML checks, and the authorized draft PR. No merge.
+The fresh `real-01/` completed48cases once,2,448model fits excluding scalers and
+96,000CEBRA updates. Both original notebooks have38cells/19executed code cells,
+with counts1–19 and no errors. Every instrumented stage/attempt total reconciles.
+Actual runtime was1,362.603478seconds (22.71minutes), peak1,388.875MiB; all memory
+event counters were zero under4GiB/no-swap/two-CPU limits. No failed biological
+case was retried.
+
+The [full numeric audit](notebook-numeric-verification-20261115.json) authenticates
+all3,188run files and54archived/current code pins. It reconciles71,496saved source
+block joins;299,904source-error records;4,608split metrics;96learning curves;
+1,296trajectory class means; all source/pool/overlap/error tables; and every
+reported class recall, paired switch, contrast and ranking. The report has61original
+figures and5,376matrix views (4,608unique matrices; shared B3 is shown twice).
+Every saved pipeline was checked during execution:192encoder reloads,
+2,304readout reloads,4,608composed train/development checks,344native session
+encoders across all cases.
+
+The accepted old receipt and all3,155old files were authenticated before comparison.
+All14,304numeric arrays are identical:9,312exact-label/prediction/raw-tensor arrays
+and4,992continuous score/feature arrays, maximum difference0.0. Complete case,
+lineage, metric, confusion and trajectory records match exactly. A separate saved
+JSON comparison confirmed all96learning records match apart from wall time. This
+is a computational reproduction with the same recordings/seeds; it supplies no
+additional biological independence and is not pooled as new statistical evidence.
+
+An independent read-only agent recomputed metrics without calling the project
+verification functions. It checked all4,608split evaluations from saved truth,
+predictions, probabilities or margins;2,304case metrics;5,376report matrices;
+37,632class-recall rows;18,816paired switches;2,688contrasts;336score summaries;
+336contrast summaries; and32best/worst records, all within1e-12. It independently
+regenerated the five source-label worlds and all48hashed source subsets from
+public metadata, checked all71,496joins and the5,872-contributor embargo, and
+confirmed13,824prediction-related arrays bitwise across executions. It did not
+load fitted models, read neural feature arrays/raw spikes or fit anything.
+
+The independently verified conclusions remain those in the [result report](README.md):
+U3 Raw/PCA SVM pair BA40.74%/40.28%, each observed repeat above all five diagnostic
+scores; mixed B3−U3 changes without complete contrast-range separation; PCA mean
+pair gains at both width steps for all four readouts, with only1/3positive repeats
+for the final PCA/SVM49→83step. Spatial-field attribution remains untested.
+
+## Reviewed publication copies
+
+The [published handoff](../../../experiments/source_reuse_width_20261114/walkthrough_20261115/README.md)
+contains two40-cell notebooks with19executed code cells each, two self-contained
+HTML reading copies, six curated aggregate PNGs and a hash manifest. Every
+executed code/output object and original notebook metadata is unchanged. Only
+original Markdown cell2 is corrected: same-session/source-trial grouping does
+not verify biological simultaneity. A labelled saved-aggregate figure is inserted
+after original cell22, because the Agg backend had displayed that figure as text.
+An appended editorial note records both changes and identifies generic stdout
+paths as execution-host provenance, not public links. Frozen source notebooks
+and original execution snapshots retain their historical text; the reviewed
+publication copies own the corrected scientific explanation.
+
+Each added figure uses only authenticated `learning.json` and `confusions.json`
+from the first case. It separates the two objectives' loss axes and shows count
+text with row-normalized confusion color (diagonal=recall). Their raw/logistic
+pair scores are34/72=47.22% and48/72=66.67%; each loss curve has1,000updates.
+No model was loaded or refitted, and no neural feature/value array was decoded
+for publication. Four further PNGs are byte-preserved excerpts for the result
+report; its design caption was corrected to describe columns/sessions/source
+budget, with available-source/row counts in the adjacent table/text.
+
+Independent actual-output and final-package reviews passed: all10manifest-bound
+files authenticate, all executed cells/outputs are preserved, embedded images
+match their PNGs, and no credentials/private inputs/source identities/neural
+arrays/fitted coefficients appear. Printed values are aggregates, anonymous
+aliases/ordinal recipe choices, architecture and verification residuals.
+
+The [offline browser audit](notebook-browser-verification-20261115.json) checked
+all5,376matrix totals,496interactive count/normalized views and67loaded figure
+views (37reuse,30width); no external resources loaded. Both first-case figures
+also passed visual inspection. HTML copies can be downloaded and opened locally;
+interactive output may require a trusted notebook viewer. No native cmux pane
+was opened because this terminal had no unique owning pane.
+
+| Final artifact / receipt | SHA256 |
+| --- | --- |
+| real-01/receipt.json | `717d49dc5d061be3f7933ea6684115939cfb8aa72375e1b41b6ba758957a27d3` |
+| numeric verification | `73030f75359f06fdbedab556eab12a17e2aed23ad9adb88784d7b02de35a8fe5` |
+| delivery manifest | `8ef3a28e687e657c6429632b6a2011bfaa57dfadd62ff94fc276f21bef9a9e93` |
+| source reuse executed publication notebook | `64f05b415c99b702299e735076e5c04aabd3d3194400631c63428f01a268480c` |
+| width executed publication notebook | `8fab810ce58d6bebc579d66033268b1cbca89da873e089b70f5c4886f7cc9c13` |
+| source reuse offline HTML | `9e58f73461837b55ba998afe58a649b3500f8495fa449557f3ee0e77615ede04` |
+| width offline HTML | `fc0ff3b75516c591682f32e07c15bac02d04011cefcfca355a3ebdbef65e903d` |
+| publication helper | `ba94ee7e3594339eb9955ab5ffbc8b443081d11f8df46b5b14ab8185081c8e4d` |
+
+The earlier `/teach max` lesson remains disposable outside Git at
+`/tmp/pi-teach/20261115-015340-reuse-width-max/results.html`, SHA256
+`f60c2f9d85356f29ce8641fbc56196124ce39b08ff30f23b1a4b3b2fafeafd93`.
+It describes the accepted study whose numeric results this reproduction matches.
+Independent methods/claims reviews and94UI-state checks passed before notebook
+work began. No extra teaching copy or new biological conclusion is created here.
+
+Draft-PR publication is the remaining administrative step. No merge, issue edit,
+further fit or automatic retry is queued.

@@ -5,13 +5,21 @@ Read [agent instructions](../AGENTS.md) before changing scientific code or artif
 
 ## Current state
 
-- **November15 complete notebook follow-up — in progress:** after `/teach max`, the
-  owner requested two fuller end-to-end real-data executed notebooks and adding
-  them to a PR. The [bounded plan](experiments/source-reuse-width-20261114/notebook-execution-20261115.md)
-  reproduces the same48cases with visible first-case model fitting, fresh gates,
-  independent review and a separate output root. The accepted execution below
-  remains immutable; the prior no-fit/no-publication checkpoint does not block
-  this explicit follow-up. No merge is authorized.
+- **November15 complete notebook reproduction — completed:** after `/teach max`,
+  the owner requested fuller end-to-end real-data notebooks and a PR. The
+  [reviewed executed notebooks](../experiments/source_reuse_width_20261114/walkthrough_20261115/README.md)
+  expose first-case assembly/scaling/PCA/Time/native/readout fitting and complete
+  the fixed48cases. All38code cells,2,448fits and96,000updates completed in22.71min,
+  peak1,388.875MiB, zero memory events. The [new validation ledger](experiments/source-reuse-width-20261114/notebook-validation-20261115.md)
+  records3,188authenticated files, complete independent numeric/source/privacy
+  review and14,304numeric arrays identical to the accepted run. This is computational
+  reproduction, not new biological replication. Versioned notebooks/HTML/curated
+  figures are self-contained. One explicit Markdown correction avoids asserting
+  simultaneity; two saved first-case figure supplements repair Agg's text-only
+  display while preserving every executed code cell/output. All496browser views
+  and67figure loads passed offline checks. The teaching HTML remains disposable
+  outside Git. Preserve both runs, all failed gates and unrelated edits. The
+  authorized draft PR remains the publication step; no merge/further fit queued.
 
 - **November15 focused source-reuse/width study — completed:** the owner narrowed
   the proposal to two tests with fresh training on existing recordings. The

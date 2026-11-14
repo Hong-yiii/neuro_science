@@ -5,11 +5,20 @@ training and interpretation. It is a fresh computational reproduction on the sam
 recordings and seeds, not another biological replicate. The accepted earlier run
 and all failure records are preserved.
 
+Start with the reviewed, fully executed [source-reuse notebook](published/source_reuse_20261115.executed.ipynb)
+and [population-width notebook](published/population_width_20261115.executed.ipynb).
+Standalone [reuse HTML](published/source_reuse_20261115.executed.html) and
+[width HTML](published/population_width_20261115.executed.html) can be downloaded
+and opened offline. Each contains19executed code cells; the shared B3 fits are
+authenticated once. The new48-case execution exactly reproduced the accepted
+study's saved numeric results. See the [validation ledger](../../../docs/experiments/source-reuse-width-20261114/notebook-validation-20261115.md)
+and [publication manifest](published/manifest.json).
+
 The two source notebooks below are frozen execution provenance. A methods
 sentence in their original Markdown overstates simultaneity: assigning columns
 to the same session/source trial does **not** verify simultaneous recording.
-The reviewed executed publication copies will explicitly correct that sentence,
-preserve every executed code cell/output, and carry the editorial provenance.
+The reviewed executed publication copies explicitly correct that sentence and
+preserve every executed code cell/output, with recorded editorial provenance.
 Use those reviewed copies for scientific reading; retain these source versions
 to authenticate the actual execution.
 
@@ -23,8 +32,8 @@ multisession CEBRA, readout fitting and scoring in separate cells. Manual scaler
 PCA and logistic calculations verify the fitted pipeline without extra fits.
 The remaining fixed cases then run once. Width authenticates the eight B3 cases
 from the first notebook. All four readouts and pair/start/goal heads remain in the
-results, including negative findings. Executed copies and their reviewed evidence
-will be linked here after the run and independent audit finish.
+results, including negative findings. The executed copies also include a labelled first-case figure rendered from saved
+aggregate records after the original Agg cell produced only a text representation.
 
 ## Scope and execution
 

@@ -1,5 +1,7 @@
 # Two experiments — November 14, 2026
 
+
+The complete November15 real-data walkthrough is now available in the [reviewed executed notebooks](walkthrough_20261115/README.md), including visible first-case fits, full-grid results and offline HTML. Original source files below are preserved execution history.
 **Completed and delivered November 15, 2026.**
 [Results and both dated executed notebooks](../../docs/experiments/source-reuse-width-20261114/README.md)
 are the reading entry point. The names here retain the prospective study date;
