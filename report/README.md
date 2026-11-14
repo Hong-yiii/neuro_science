@@ -1,5 +1,10 @@
 # CEBRA-Time review notebook and retrospective
 
+For the complete series through November 15, read the ten-page
+[LaTeX research synthesis](series-20261115/paper.pdf), with
+[editable source, aggregate evidence and independent audits](series-20261115/README.md).
+The October notebook and manuscript below remain preserved historical artifacts.
+
 **Start with the [executed review notebook](endpoint_walkthrough.ipynb).** It follows
 saved standardized cue → fitted PCA/CEBRA → readouts → verified evidence, with inline
 equations, tensor diagrams, source-count views, confusions and all-seed comparisons.

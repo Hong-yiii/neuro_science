@@ -1,0 +1,7 @@
+arm,units,sessions,source_budget,rows_per_class,distinct_train_sources,training_source_extra_draw_fraction,overlapping_contributors
+B2,17,3,2,16,54,0.875,0
+B3,17,3,3,16,81,0.8125,0
+B5,17,3,5,16,135,0.6875,0
+U3,17,3,3,3,81,0,0
+Wfull,83,20,3,16,540,0.8125,0
+Wmid,49,11,3,16,297,0.8125,0

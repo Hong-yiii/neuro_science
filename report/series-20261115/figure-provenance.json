@@ -1,0 +1,237 @@
+{
+  "classification": "Editorial re-presentation of existing exploratory aggregate evidence; no new fits or analysis cases",
+  "source_revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+  "source_manifest": {
+    "path": "experiments/source_reuse_width_20261114/walkthrough_20261115/published/manifest.json",
+    "sha256": "8ef3a28e687e657c6429632b6a2011bfaa57dfadd62ff94fc276f21bef9a9e93"
+  },
+  "sources": [
+    {
+      "path": "experiments/source_reuse_width_20261114/walkthrough_20261115/published/source_reuse_20261115.executed.ipynb",
+      "sha256": "64f05b415c99b702299e735076e5c04aabd3d3194400631c63428f01a268480c",
+      "extractions": [
+        {
+          "cell_index_zero_based": 33,
+          "output_index_zero_based": 6,
+          "mime_type": "text/html",
+          "table": "Every case score",
+          "rows": 1536,
+          "html_sha256": "90e5d906012df8a2594a5e2d2f6c87365df11180c8d11fbc8f23301a94d839f9"
+        },
+        {
+          "cell_index_zero_based": 33,
+          "output_index_zero_based": 7,
+          "mime_type": "text/html",
+          "table": "Every matched seed/world contrast",
+          "rows": 1536,
+          "html_sha256": "5672161225d16db3ac18a0d1f4c7eca317be4494c2997214bc39e46d2b9ad198"
+        },
+        {
+          "cell_index_zero_based": 7,
+          "output_index_zero_based": 0,
+          "mime_type": "text/html",
+          "table": "Arm construction summary",
+          "rows": 4,
+          "html_sha256": "037ba95f1dc71ab92ff66494286d6400163856c147d6f06b760ce3f685399239"
+        }
+      ]
+    },
+    {
+      "path": "experiments/source_reuse_width_20261114/walkthrough_20261115/published/population_width_20261115.executed.ipynb",
+      "sha256": "8fab810ce58d6bebc579d66033268b1cbca89da873e089b70f5c4886f7cc9c13",
+      "extractions": [
+        {
+          "cell_index_zero_based": 33,
+          "output_index_zero_based": 6,
+          "mime_type": "text/html",
+          "table": "Every case score",
+          "rows": 1152,
+          "html_sha256": "f3f0815c6ae39ed8872dbe6705ca6c6bc2800105cc10965bbae195c830ffc761"
+        },
+        {
+          "cell_index_zero_based": 33,
+          "output_index_zero_based": 7,
+          "mime_type": "text/html",
+          "table": "Every matched seed/world contrast",
+          "rows": 1152,
+          "html_sha256": "05c1181f28cdd59e975126f7470f6b2a704f1a973573d7b7f0b5ec99ee782eea"
+        },
+        {
+          "cell_index_zero_based": 7,
+          "output_index_zero_based": 0,
+          "mime_type": "text/html",
+          "table": "Arm construction summary",
+          "rows": 3,
+          "html_sha256": "2a9cc2e60799e8c0ed20e267674d965bbe8f8cac7e77874579c6f9fd9e3c7f58"
+        },
+        {
+          "cell_index_zero_based": 31,
+          "output_index_zero_based": 17,
+          "mime_type": "text/html",
+          "structure": "iframe srcdoc / literal const records JSON",
+          "available_aggregate_matrices": 2304,
+          "html_sha256": "317900f436d4ac5db9766e8f20c4c1eccdfc3eb72c17c1115aad74270ccbbde3",
+          "srcdoc_sha256": "ef44d733b6d6acfe5fe3a18a242d23c682def53a7bee27f58f24af3ed1aa7e41",
+          "retained_selection": "observed seed0, PCA/SVM, pair, development; B3/Wmid/Wfull"
+        }
+      ]
+    }
+  ],
+  "historical_figure_copy": {
+    "source": "docs/reports/cebra-endpoint-time-readout-20261006/figures/time_balanced_accuracy.png",
+    "source_sha256": "7d7696d8e8883cfefdeaa88a039d0c8fc317f8767dddda44fb06c6a2443d7e04",
+    "authenticated_against_revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+    "destination": "report/series-20261115/figures/historical_time.png",
+    "byte_identical": true,
+    "width_pixels": 2417,
+    "height_pixels": 722,
+    "operation": "Byte-for-byte copy; no reinterpretation, data extraction, or image alteration",
+    "cohort_boundary": "Historical October endpoint study, 195 units / 58 sessions; separate from the November width study",
+    "interpretation_boundary": "Same-window 100 ms decoding, not temporal generalization; seed ranges are computational variation"
+  },
+  "deduplication": {
+    "rule": "Exact identity keys; all source-text cells must agree for duplicate identities",
+    "score_identity": [
+      "world",
+      "seed",
+      "arm",
+      "encoder",
+      "decoder",
+      "head"
+    ],
+    "score_rows_read": 2688,
+    "score_rows_unique": 2304,
+    "identical_shared_B3_rows_removed": 384,
+    "contrast_identity": [
+      "world",
+      "seed",
+      "before",
+      "after",
+      "encoder",
+      "decoder",
+      "head"
+    ],
+    "contrast_rows_unique": 2688,
+    "contrast_duplicates_removed": 0,
+    "arm_rows_unique": 6,
+    "identical_shared_B3_design_rows_removed": 1
+  },
+  "validation": {
+    "unique_cases": 48,
+    "encoders": [
+      "raw",
+      "pca",
+      "cebra",
+      "native"
+    ],
+    "readouts": [
+      "logistic",
+      "svm",
+      "knn",
+      "lda"
+    ],
+    "heads": [
+      "pair",
+      "start",
+      "goal"
+    ],
+    "observed_seeds": [
+      0,
+      1,
+      2
+    ],
+    "diagnostic_worlds_at_seed0": [
+      "permuted61000",
+      "permuted61001",
+      "permuted61002",
+      "permuted61003",
+      "permuted61004"
+    ],
+    "score_identity_grid_complete": true,
+    "contrast_identity_grid_complete": true,
+    "all_published_contrasts_checked_against_scores": 2688,
+    "maximum_absolute_contrast_rounding_error": 0.0,
+    "retained_confusion_matrices": 3,
+    "confusion_rows_per_class": 8,
+    "confusion_total_constructed_rows_per_matrix": 72,
+    "matrix_balanced_accuracy_matches_published_scores": true
+  },
+  "figures": {
+    "recent_svm": {
+      "width_inches": 7.0,
+      "height_inches": 4.65,
+      "png_dpi": 220,
+      "pdf_raster_image_objects": 0,
+      "selection": "RBF-SVM pair head; all six arms, all 3 observed seeds and all 5 source-label worlds",
+      "shared_B3": "Displayed in both rows, counted once in the score CSV",
+      "jitter": "Small fixed horizontal offsets separate coincident points; no y values altered",
+      "y_axis_percent": [
+        0,
+        100
+      ],
+      "uniform_reference_percent": 11.11111111111111
+    },
+    "width_readouts": {
+      "width_inches": 7.0,
+      "height_inches": 2.55,
+      "png_dpi": 220,
+      "pdf_raster_image_objects": 0,
+      "selection": "Pair head; both adjacent width contrasts; all 16 encoder/readout combinations",
+      "aggregation": "Arithmetic mean of 3 paired computational-repeat delta_BA values, multiplied by 100",
+      "display_decimal_places": 2,
+      "units": "percentage points"
+    },
+    "errors": {
+      "width_inches": 7.0,
+      "height_inches": 3.85,
+      "png_dpi": 220,
+      "pdf_raster_image_objects": 0,
+      "case": "observed_seed0_Wfull",
+      "encoder": "pca",
+      "decoder": "svm",
+      "head": "pair",
+      "split": "development",
+      "balanced_accuracy": 0.8888888888888888,
+      "selection_reason": "Fixed seed0 identity predeclared in the figure task; not rank-selected",
+      "selection_caveat": "Seed0 happens to be the highest of the three Wfull PCA/SVM repeats; all three appear in recent_svm",
+      "left": "Constructed-row counts",
+      "right": "Counts divided by true-class row total, as percent"
+    }
+  },
+  "data_precision": "case_scores.csv and matched_contrasts.csv preserve the exact published numeric strings; derived summaries use Python float representations",
+  "limitations": [
+    "Known-label condition-matched pseudopopulations; not simultaneous recordings or natural-trial population predictions",
+    "Frozen source-disjoint, historically exposed development; 72 constructed rows are not 72 independent biological trials",
+    "Three computational seeds and five source-label worlds do not define biological confidence intervals or permutation p-values",
+    "Notebook reproduction reused the same recordings and seeds and adds no biological replication",
+    "Width also changes included sessions/units; no spatial-field coverage or independent biological-width effect is identified",
+    "Whole-cue [0,1) s inputs, 100 ms bins; these figures are not temporal-generalization or path-prediction results"
+  ],
+  "execution": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 python report/series-20261115/build_figures.py",
+    "python_version": "3.13.2",
+    "numpy_version": "2.3.4",
+    "matplotlib_version": "3.10.7",
+    "backend": "Agg",
+    "notebook_cells_executed": 0,
+    "model_fits": 0,
+    "model_loads": 0,
+    "predictions_or_neural_arrays_read": 0
+  },
+  "script_sha256": "21ce256d8c038493e07a037a1557fdf10a0242e5aebdc45592e3cf5f818f79f9",
+  "generated_files_sha256": {
+    "report/series-20261115/data/case_scores.csv": "1661ff9d7b55644d586ad8efb21a440032c23d18f0121767100fd162acb89249",
+    "report/series-20261115/data/matched_contrasts.csv": "c66d7eac5aea706ccd4c4b90cd30012ca4e241047cc0f966d74dc418e820ec42",
+    "report/series-20261115/data/arm_design.csv": "1bcdf75e45452338f376c031b9502f2f430ea3039403a83e4d30a2e41a4a62bc",
+    "report/series-20261115/data/pca_svm_seed0_confusions.csv": "f9f98e621bf85c3c2f1f43c8762acee0503be12c6ad9b1c7610a5d0377979258",
+    "report/series-20261115/data/pca_svm_seed0_class_recalls.csv": "5bef619d95b7162f2f9246fa666312eb7961f60edc04757d141e32b11a0e2467",
+    "report/series-20261115/data/width_pair_changes.csv": "5f21761ce276a0d6a82b4627f7e7c2280a1bd98b975cce292f5f06141c0b75d4",
+    "report/series-20261115/figures/recent_svm.pdf": "8df14b3a0e93fff3ac7430af5b3f0eb3f51834c8bcfd1c3193cf3933d4c4cd03",
+    "report/series-20261115/figures/recent_svm.png": "01e0d5a928a720c646126b2900fbb5e673e301d8faaf2130ee2ff328fef4e63f",
+    "report/series-20261115/figures/width_readouts.pdf": "3afd4b16d48ce783aa3764aa3035455580a41f8bdafa13b765007788f6948244",
+    "report/series-20261115/figures/width_readouts.png": "7c37e06eb0691e0804a7f1857ab1723350358d26a5d152c08ca2e8b1cde30983",
+    "report/series-20261115/figures/errors.pdf": "faee37863675e77c7f1bc6e50d48d0d91acb1ba01afe9b3a5eb1c2bfd599ff57",
+    "report/series-20261115/figures/errors.png": "248bb246e836ef9021474665c6736666029e19a9327527df41b497d96508ccc0",
+    "report/series-20261115/figures/historical_time.png": "7d7696d8e8883cfefdeaa88a039d0c8fc317f8767dddda44fb06c6a2443d7e04"
+  }
+}

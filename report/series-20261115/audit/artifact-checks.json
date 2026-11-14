@@ -1,0 +1,24 @@
+{
+  "classification": "presentation and aggregate-evidence verification; no new study",
+  "evidence_revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+  "paper_pdf_sha256": "6a3848d795668a8454041da003a416568a6eaff516cd11fbea44f7197ea76c1d",
+  "paper_tex_sha256": "30feff7d23c66ce1fc4387b1318d6cecfc0a801bfcecc0f15960104380d95f3e",
+  "pages": 10,
+  "figures": 6,
+  "tables": 3,
+  "pinned_repository_reference_targets": 22,
+  "tex_compiler": "Tectonic 0.17.0",
+  "tex_warnings": 0,
+  "unresolved_references": 0,
+  "missing_figure_placeholders": 0,
+  "generated_outputs_authenticated": 13,
+  "fonts_embedded": true,
+  "paper_execution": {
+    "model_fits": 0,
+    "model_loads": 0,
+    "notebook_cells_executed": 0,
+    "new_literature_searches": 0
+  },
+  "unrelated_sampling_file_sha256": "63489315c5a21257ed037edd77161f639beb23199321719d8fe22a562c1659f5",
+  "blind_manuscript_audits": "pending; separate exact-identity records"
+}
