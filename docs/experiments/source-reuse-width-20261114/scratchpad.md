@@ -7,7 +7,7 @@ evidence independently checked, both dated notebooks/reports delivered. Start wi
 [results and artifact links](README.md) and [validation](validation.md). The entries
 below preserve intermediate states; old pending flags are not a new run queue.
 
-**Notebook follow-up completed; draft-PR publication next:** after `/teach max`, the owner requested fuller
+**Notebook follow-up completed and published in draft PR31:** after `/teach max`, the owner requested fuller
 end-to-end real-data notebooks and adding the completed work to a PR. The
 [notebook execution plan](notebook-execution-20261115.md) fixes the same48-case
 scope, separate fresh execution, visible first-case stages and publication review.
@@ -202,3 +202,9 @@ merge, issue modification or old-experiment retry is part of this run.
   artifacts plus the manifest are copied into the Git-backed published directory.
 - Updated public entry points to tracked notebooks/HTML/curated figures, preserving
   earlier local artifacts and ledgers. Draft PR creation remains; no merge.
+
+- Published all reviewed implementation/docs/notebooks/HTML/curated figures in
+  [draft PR31](https://github.com/Hong-yiii/neuro_science/pull/31). The GitHub app's PR-create operation returned403;
+  the existing authenticated CLI completed the authorized action. Unrelated
+  sampling whitespace/current-state notes remain untouched and excluded.
+  No merge, issue edit, further fit or retry remains queued.

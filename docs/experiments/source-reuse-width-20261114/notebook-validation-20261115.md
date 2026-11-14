@@ -1,7 +1,7 @@
 # Complete notebook reproduction — validation, November 15, 2026
 
 Status: **completed and independently reviewed**. Both complete notebooks and
-offline HTML copies are ready for the authorized draft PR. The original accepted
+offline HTML copies are published in [draft PR31](https://github.com/Hong-yiii/neuro_science/pull/31). The original accepted
 study and all failed attempts remain unchanged. This ledger records the separate
 owner-requested end-to-end notebook reproduction and publication.
 
@@ -196,5 +196,9 @@ It describes the accepted study whose numeric results this reproduction matches.
 Independent methods/claims reviews and94UI-state checks passed before notebook
 work began. No extra teaching copy or new biological conclusion is created here.
 
-Draft-PR publication is the remaining administrative step. No merge, issue edit,
+Published in [draft PR31](https://github.com/Hong-yiii/neuro_science/pull/31) from
+`plan/population-coverage-knobs-20261114` into `main`, with the complete reviewed
+notebooks, offline readers, curated figures and documentation. The connected
+GitHub app returned403for PR creation; the already authenticated GitHub CLI
+created the requested draft after the branch push. No merge, issue edit,
 further fit or automatic retry is queued.

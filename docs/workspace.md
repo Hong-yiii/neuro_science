@@ -18,8 +18,8 @@ Read [agent instructions](../AGENTS.md) before changing scientific code or artif
   simultaneity; two saved first-case figure supplements repair Agg's text-only
   display while preserving every executed code cell/output. All496browser views
   and67figure loads passed offline checks. The teaching HTML remains disposable
-  outside Git. Preserve both runs, all failed gates and unrelated edits. The
-  authorized draft PR remains the publication step; no merge/further fit queued.
+  outside Git. Preserve both runs, all failed gates and unrelated edits. Published as
+  [draft PR31](https://github.com/Hong-yiii/neuro_science/pull/31); no merge/further fit queued.
 
 - **November15 focused source-reuse/width study — completed:** the owner narrowed
   the proposal to two tests with fresh training on existing recordings. The

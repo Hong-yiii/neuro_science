@@ -2,7 +2,7 @@
 
 This follow-up makes the same two-part study visible from input reconstruction to
 training and interpretation. It is a fresh computational reproduction on the same
-recordings and seeds, not another biological replicate. The accepted earlier run
+recordings and seeds, not another biological replicate. Published in [draft PR31](https://github.com/Hong-yiii/neuro_science/pull/31). The accepted earlier run
 and all failure records are preserved.
 
 Start with the reviewed, fully executed [source-reuse notebook](published/source_reuse_20261115.executed.ipynb)

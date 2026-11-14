@@ -28,7 +28,7 @@ provenance; use the reviewed publication copies for the corrected explanation.
 All496browser view checks and final privacy/preservation review passed. Preserve
 new `outputs/source-reuse-width-notebooks-20261115/real-01/`, all failed gate
 attempts, the original accepted run and unrelated sampling/current-state edits.
-Draft-PR publication is authorized; no merge or further fitting is queued.
+Published as [draft PR31](https://github.com/Hong-yiii/neuro_science/pull/31); no merge or further fitting is queued.
 
 **November15 focused reuse/width study — completed original execution:** the owner narrowed
 the wide proposal to2/3/5distinct sources at fixed17columns, then17/49/83columns at
