@@ -157,3 +157,13 @@ merge, issue modification or old-experiment retry is part of this run.
   no remaining scientific/model-path blocker, conditional on refreshed gates.
   Teaching review clarified previous-goal start labels, U3's probability ceiling,
   the shared B3 execution and complete class/secondary-metric tables.
+
+- Invented02passed all298arrays and complete tables,102fits/4,000updates,
+  115.95seconds,699.27MiB. Prefit01stopped before reconstruction for a missing
+  explicit launcher flag; preserved. Corrected prefit02passed48plans/minrank17
+  with fitting blocked,13.72seconds,599.97MiB. Matching gates independently
+  authenticated140files/51codepins/64input hashes and cleared one launch.
+- Started fresh bounded biological reproduction `source-reuse-width-notebooks-
+  20261115/real-01` after both reviews and gates, using4GiB/no swap/two CPUs/
+  three-hour ceiling. The earlier accepted48cases are not used to initialize
+  models and are not pooled as additional biological evidence.
