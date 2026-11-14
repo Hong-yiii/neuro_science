@@ -156,59 +156,63 @@ def continuation(parent, out, parent_hash):
     out.mkdir(parents=True, exist_ok=False, mode=0o700)
     started = time.monotonic()
     status = "failed"
-    preserved = {}
-    for name, digest in original["files_sha256"].items():
-        target_name = (
-            "parent-evidence/" + name
-            if name in ("resources.json", "source-state.json", "attempt-log.jsonl")
-            else name
-        )
-        destination = out / target_name
-        destination.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(parent / name, destination)
-        assert study.sha(destination) == digest
-        preserved[name] = target_name
-    shutil.copyfile(parent / "receipt.json", out / "parent-evidence/receipt.json")
-    shutil.copyfile(parent / "attempt-log.jsonl", out / "attempt-log.jsonl")
-    amendment = (
-        ROOT / "docs/experiments/source-reuse-width-20261114/continuation-20261115.md"
-    )
-    study.write_json(
-        out / "continuation.json",
-        dict(
-            parent_receipt_sha256=parent_hash,
-            inherited_cases=32,
-            new_cases=16,
-            total_unique_cases=48,
-            hard_continuation_seconds=7200,
-            reason="exclusive-create kernel specification handoff failure after complete first notebook; no width case attempted",
-            inherited_path_mapping=preserved,
-            amendment_sha256=study.sha(amendment),
-        ),
-    )
-    shutil.copyfile(amendment, out / "parent-evidence/continuation-amendment.md")
-    own_pins = {str(Path(__file__).relative_to(ROOT)): study.sha(Path(__file__))}
-    study.write_json(out / "continuation-source-pins.json", own_pins)
-    for relative in own_pins:
-        target = out / "continuation-source-snapshot" / relative
-        target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(ROOT / relative, target)
-    study.write_json(
-        out / "source-state.json",
-        dict(
-            execution="bounded width-only continuation",
-            parent_receipt_sha256=parent_hash,
-            code_sha256=pins,
-            continuation_code_sha256=own_pins,
-            git_head=subprocess.check_output(
-                ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
-            ).strip(),
-            git_status=subprocess.check_output(
-                ["git", "status", "--short"], cwd=ROOT, text=True
-            ),
-        ),
-    )
     try:
+        preserved = {}
+        for name, digest in original["files_sha256"].items():
+            target_name = (
+                "parent-evidence/" + name
+                if name in ("resources.json", "source-state.json", "attempt-log.jsonl")
+                else name
+            )
+            destination = out / target_name
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(parent / name, destination)
+            assert study.sha(destination) == digest
+            preserved[name] = target_name
+        shutil.copyfile(parent / "receipt.json", out / "parent-evidence/receipt.json")
+        shutil.copyfile(parent / "attempt-log.jsonl", out / "attempt-log.jsonl")
+        amendment = (
+            ROOT
+            / "docs/experiments/source-reuse-width-20261114/continuation-20261115.md"
+        )
+        study.write_json(
+            out / "continuation.json",
+            dict(
+                parent_receipt_sha256=parent_hash,
+                inherited_cases=32,
+                new_cases=16,
+                total_unique_cases=48,
+                hard_continuation_seconds=7200,
+                reason="exclusive-create kernel specification handoff failure after complete first notebook; no width case attempted",
+                inherited_path_mapping=preserved,
+                amendment_sha256=study.sha(amendment),
+            ),
+        )
+        shutil.copyfile(amendment, out / "parent-evidence/continuation-amendment.md")
+        own_pins = {
+            str(Path(__file__).relative_to(ROOT)): study.sha(Path(__file__)),
+            str(amendment.relative_to(ROOT)): study.sha(amendment),
+        }
+        study.write_json(out / "continuation-source-pins.json", own_pins)
+        for relative in own_pins:
+            target = out / "continuation-source-snapshot" / relative
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(ROOT / relative, target)
+        study.write_json(
+            out / "source-state.json",
+            dict(
+                execution="bounded width-only continuation",
+                parent_receipt_sha256=parent_hash,
+                code_sha256=pins,
+                continuation_code_sha256=own_pins,
+                git_head=subprocess.check_output(
+                    ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
+                ).strip(),
+                git_status=subprocess.check_output(
+                    ["git", "status", "--short"], cwd=ROOT, text=True
+                ),
+            ),
+        )
         env = {
             **os.environ,
             "PYTHONPATH": os.pathsep.join(
@@ -258,6 +262,21 @@ def continuation(parent, out, parent_hash):
         study.write_json(out / "actual-fit-counts.json", counts)
         assert_pins(pins)
         assert_pins(own_pins)
+        assert (
+            study.sha(out / "parent-evidence/continuation-amendment.md")
+            == own_pins[str(amendment.relative_to(ROOT))]
+        )
+        expected_ids = {case["id"] for case in study.schedule()}
+        assert {p.name for p in (out / "cases").iterdir()} == expected_ids
+        events = [
+            json.loads(line)
+            for line in (out / "attempt-log.jsonl").read_text().splitlines()
+        ]
+        assert len(events) == 96
+        assert all(
+            [r["status"] for r in events if r["id"] == cid] == ["started", "completed"]
+            for cid in expected_ids
+        )
         for name, target in preserved.items():
             assert study.sha(out / target) == original["files_sha256"][name]
         assert study.sha(parent / "receipt.json") == parent_hash
