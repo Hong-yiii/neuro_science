@@ -1,0 +1,179 @@
+{
+  "selection": {
+    "contributor_overlap": 0,
+    "development_contributor_union": 5872,
+    "directed_edges": {
+      "dev->dev": 658,
+      "dev->train": 2465,
+      "external->dev": 166,
+      "external->train": 597,
+      "train->dev": 2441,
+      "train->train": 9226
+    },
+    "edge_direction": "predecessor->current",
+    "eligible": 15553,
+    "embargo_removed_train": 4427,
+    "exclusion_counts": {
+      "cue_not_full_nominal_second": 248,
+      "current_not_success": 464,
+      "current_or_previous_qc": 32,
+      "previous_unavailable_or_not_success": 562
+    },
+    "external_predecessors": 763,
+    "global_one_pools": 73,
+    "global_two_plus_pools": 1654,
+    "global_zero_pools": 13,
+    "original_development": 3265,
+    "original_sessions": 58,
+    "original_train": 12288,
+    "original_units": 195,
+    "selected_development": 551,
+    "selected_sessions": 10,
+    "selected_train": 1415,
+    "selected_units": 27,
+    "surviving_train": 7861
+  },
+  "neural_event_accounting": {
+    "counts_accepted": 5309,
+    "counts_rejected": 75574,
+    "counts_seen": 80883,
+    "events_accepted": 28116,
+    "events_rejected": 517789,
+    "events_seen": 545905,
+    "tail_spikes": 518
+  },
+  "training_usage": {
+    "observed_seed0_full": {
+      "eligible_sources": 1415,
+      "repeated_sources": 1157,
+      "reuse_histogram": {
+        "0": 64,
+        "1": 194,
+        "2": 277,
+        "3": 278,
+        "4": 236,
+        "5": 169,
+        "6": 80,
+        "7": 50,
+        "8": 31,
+        "9": 19,
+        "10": 10,
+        "11": 4,
+        "12": 3
+      },
+      "unused_sources": 64,
+      "used_sources": 1351
+    },
+    "observed_seed0_reduced": {
+      "eligible_sources": 638,
+      "repeated_sources": 632,
+      "reuse_histogram": {
+        "1": 6,
+        "2": 29,
+        "3": 46,
+        "4": 44,
+        "5": 84,
+        "6": 101,
+        "7": 72,
+        "8": 58,
+        "9": 52,
+        "10": 41,
+        "11": 19,
+        "12": 6,
+        "13": 3,
+        "14": 1,
+        "16": 76
+      },
+      "unused_sources": 0,
+      "used_sources": 638
+    },
+    "observed_seed1_full": {
+      "eligible_sources": 1415,
+      "repeated_sources": 1154,
+      "reuse_histogram": {
+        "0": 71,
+        "1": 190,
+        "2": 267,
+        "3": 269,
+        "4": 245,
+        "5": 165,
+        "6": 99,
+        "7": 46,
+        "8": 36,
+        "9": 13,
+        "10": 11,
+        "11": 3
+      },
+      "unused_sources": 71,
+      "used_sources": 1344
+    },
+    "observed_seed1_reduced": {
+      "eligible_sources": 638,
+      "repeated_sources": 628,
+      "reuse_histogram": {
+        "0": 1,
+        "1": 9,
+        "2": 21,
+        "3": 37,
+        "4": 69,
+        "5": 75,
+        "6": 80,
+        "7": 80,
+        "8": 73,
+        "9": 62,
+        "10": 30,
+        "11": 16,
+        "12": 6,
+        "13": 1,
+        "14": 2,
+        "16": 76
+      },
+      "unused_sources": 1,
+      "used_sources": 637
+    },
+    "permuted_seed0_full": {
+      "eligible_sources": 1415,
+      "repeated_sources": 1157,
+      "reuse_histogram": {
+        "0": 64,
+        "1": 194,
+        "2": 277,
+        "3": 278,
+        "4": 236,
+        "5": 169,
+        "6": 80,
+        "7": 50,
+        "8": 31,
+        "9": 19,
+        "10": 10,
+        "11": 4,
+        "12": 3
+      },
+      "unused_sources": 64,
+      "used_sources": 1351
+    },
+    "permuted_seed0_reduced": {
+      "eligible_sources": 638,
+      "repeated_sources": 632,
+      "reuse_histogram": {
+        "1": 6,
+        "2": 29,
+        "3": 46,
+        "4": 44,
+        "5": 84,
+        "6": 101,
+        "7": 72,
+        "8": 58,
+        "9": 52,
+        "10": 41,
+        "11": 19,
+        "12": 6,
+        "13": 3,
+        "14": 1,
+        "16": 76
+      },
+      "unused_sources": 0,
+      "used_sources": 638
+    }
+  }
+}

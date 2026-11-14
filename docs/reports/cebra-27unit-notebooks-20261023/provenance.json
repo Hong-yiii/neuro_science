@@ -1,0 +1,208 @@
+{
+  "study_date": "2026-10-23",
+  "report_prepared": "2026-11-02",
+  "receipt_sha256": "bbc59a6899cb2c42b20a985baaaf7b55cec4f7d37c3e92f076d73c8325dafebe",
+  "source_run": "outputs/fresh-notebooks-20261023/real",
+  "source_notebooks": {
+    "01_pseudopopulation": "32e2c4cddc29b3a91a9eab1e0f792d331f5af7bfeb970016672c697306c42a6d",
+    "02_pca_lda": "40024397216e4f529d51ffc1b2ec88ba467841493508c173ef44d7736e3669e8",
+    "03_cebra": "679899a3f8b4c43916f3487535e3f433fe87c1447a9640f1026f9b269e5197b5"
+  },
+  "renderer": "scripts/render_fresh_notebook_report.py",
+  "renderer_sha256": "926494077396f7677f08590b05878762facd0b38039cf3ea83739aa6ca414a3a",
+  "method": "Authenticated saved JSON text and PNG extraction; new charts summarize saved scalar rows only. No fitting, model loading, raw input access or biological replay.",
+  "metric_rows": {
+    "B": 36,
+    "C": 54,
+    "duplicates_checked_equal": 24,
+    "unique_exported": 66
+  },
+  "historical_fit_counts": {
+    "cebra": 6,
+    "lda": 12,
+    "logistic": 78,
+    "optimizer_updates": 6000,
+    "pca": 10
+  },
+  "historical_replayed_splits": 180,
+  "saved_images": [
+    {
+      "file": "images/source_audit.png",
+      "source_notebook": "01_pseudopopulation",
+      "cell_index": 8,
+      "output_index": 0,
+      "sha256": "d8be5d4cab38c5190c531112af933ba2c4c9d14d9688da65c863dea20d782fd0"
+    },
+    {
+      "file": "images/construction.png",
+      "source_notebook": "01_pseudopopulation",
+      "cell_index": 10,
+      "output_index": 1,
+      "sha256": "923a19d6994dc320433a5eaab50d44abbad5de0754413daccf42e32a4d33fd5d"
+    },
+    {
+      "file": "images/source_reuse.png",
+      "source_notebook": "01_pseudopopulation",
+      "cell_index": 12,
+      "output_index": 1,
+      "sha256": "b7af72970e6992f52322882a3018ab3f9812d7a3ec8b3865a7bfad3c4f976015"
+    },
+    {
+      "file": "images/b_observed_seed0_full_confusions.png",
+      "source_notebook": "02_pca_lda",
+      "cell_index": 8,
+      "output_index": 2,
+      "sha256": "c86922d7a80f28c898ab5b84bf248009721d1cd9b430ee30d33921d0ad98e02e"
+    },
+    {
+      "file": "images/b_observed_seed0_reduced_confusions.png",
+      "source_notebook": "02_pca_lda",
+      "cell_index": 8,
+      "output_index": 5,
+      "sha256": "bfba9094c275176644d8af95e571080a278ea952e20493ad08544eef267a86bd"
+    },
+    {
+      "file": "images/b_observed_seed1_full_confusions.png",
+      "source_notebook": "02_pca_lda",
+      "cell_index": 8,
+      "output_index": 8,
+      "sha256": "34dac0b717b5abf64d76cbd4aa3cb74c00c6dec9b0e83e436eb35aa697ce59f8"
+    },
+    {
+      "file": "images/b_observed_seed1_reduced_confusions.png",
+      "source_notebook": "02_pca_lda",
+      "cell_index": 8,
+      "output_index": 11,
+      "sha256": "ee74ff4b125750d3459a9a8774fffac00c8964adb75937d8d8dd921cac08432c"
+    },
+    {
+      "file": "images/pca_observed_seed1_reduced_projection.png",
+      "source_notebook": "02_pca_lda",
+      "cell_index": 10,
+      "output_index": 1,
+      "sha256": "196a40724ea91cac68b9edee450748c9d675a72a135c2fb8a8d9192946cdd879"
+    },
+    {
+      "file": "images/c_observed_seed0_full_learning.png",
+      "source_notebook": "03_cebra",
+      "cell_index": 8,
+      "output_index": 2,
+      "sha256": "546416840956dc81e42ec3939dcd9a00fbac8194ddfd5fd7a4656907bd23a237"
+    },
+    {
+      "file": "images/c_observed_seed0_full_confusions.png",
+      "source_notebook": "03_cebra",
+      "cell_index": 8,
+      "output_index": 3,
+      "sha256": "7fe5cc7f184f81043fa1947f8560bbac4f22943a3129628187a6ff2275030b05"
+    },
+    {
+      "file": "images/c_observed_seed0_reduced_learning.png",
+      "source_notebook": "03_cebra",
+      "cell_index": 8,
+      "output_index": 6,
+      "sha256": "a201913dc4e1cf5b062f1c5ad1c39495b407df2c8bf38a89ab8b733db25453fb"
+    },
+    {
+      "file": "images/c_observed_seed0_reduced_confusions.png",
+      "source_notebook": "03_cebra",
+      "cell_index": 8,
+      "output_index": 7,
+      "sha256": "c1ac93ae05d13e722d5a2f2ed1fee70d8e9b9989c25b304257058e6b6a74cab3"
+    },
+    {
+      "file": "images/c_observed_seed1_full_learning.png",
+      "source_notebook": "03_cebra",
+      "cell_index": 8,
+      "output_index": 10,
+      "sha256": "a8d1b1ccc323bf87e877246ddfbe27c1f697696f3ea0190f1075ea3256124dff"
+    },
+    {
+      "file": "images/c_observed_seed1_full_confusions.png",
+      "source_notebook": "03_cebra",
+      "cell_index": 8,
+      "output_index": 11,
+      "sha256": "8dec0610093188bf3e850f340a6abe7e68c09c365c91c19629e09edf61577c01"
+    },
+    {
+      "file": "images/c_observed_seed1_reduced_learning.png",
+      "source_notebook": "03_cebra",
+      "cell_index": 8,
+      "output_index": 14,
+      "sha256": "b393de38c9e989e3a621fb3f424c811418f8238811d3136f5673db5b931c7a8e"
+    },
+    {
+      "file": "images/c_observed_seed1_reduced_confusions.png",
+      "source_notebook": "03_cebra",
+      "cell_index": 8,
+      "output_index": 15,
+      "sha256": "6372444ac6b81644086b2804f620b651072941dba3c98b4adbb6ec132379c03c"
+    },
+    {
+      "file": "images/c_permuted_seed0_full_learning.png",
+      "source_notebook": "03_cebra",
+      "cell_index": 8,
+      "output_index": 18,
+      "sha256": "3334b4129770a9b7bd59c086e6868c629cc9a463719e583bffa896591fd000c0"
+    },
+    {
+      "file": "images/c_permuted_seed0_full_confusions.png",
+      "source_notebook": "03_cebra",
+      "cell_index": 8,
+      "output_index": 19,
+      "sha256": "9aafcb684877e523772fdbdd5f537311b9012474a1f0fcded90967f1084ad986"
+    },
+    {
+      "file": "images/c_permuted_seed0_reduced_learning.png",
+      "source_notebook": "03_cebra",
+      "cell_index": 8,
+      "output_index": 22,
+      "sha256": "5640a50bc124f4e3c1602878d5322294b4b2d8ec41f50ba637997dd65821e4d8"
+    },
+    {
+      "file": "images/c_permuted_seed0_reduced_confusions.png",
+      "source_notebook": "03_cebra",
+      "cell_index": 8,
+      "output_index": 23,
+      "sha256": "59c081b4b5c875f53462db12ce7a79fa66539ae4c0136b3716fa379b992ab91a"
+    },
+    {
+      "file": "images/cebra_permuted_seed0_reduced_projection.png",
+      "source_notebook": "03_cebra",
+      "cell_index": 10,
+      "output_index": 0,
+      "sha256": "ba88f2dfdf067007790f5edf0356759144acaa21afa8043e2cb711f6c2b412e5"
+    }
+  ],
+  "outputs": {
+    "README.md": "9d12d102d7c706b20d60977093d49acafb144564780d9bf0dffce60d58a88dd5",
+    "images/b_observed_seed0_full_confusions.png": "c86922d7a80f28c898ab5b84bf248009721d1cd9b430ee30d33921d0ad98e02e",
+    "images/b_observed_seed0_reduced_confusions.png": "bfba9094c275176644d8af95e571080a278ea952e20493ad08544eef267a86bd",
+    "images/b_observed_seed1_full_confusions.png": "34dac0b717b5abf64d76cbd4aa3cb74c00c6dec9b0e83e436eb35aa697ce59f8",
+    "images/b_observed_seed1_reduced_confusions.png": "ee74ff4b125750d3459a9a8774fffac00c8964adb75937d8d8dd921cac08432c",
+    "images/c_observed_seed0_full_confusions.png": "7fe5cc7f184f81043fa1947f8560bbac4f22943a3129628187a6ff2275030b05",
+    "images/c_observed_seed0_full_learning.png": "546416840956dc81e42ec3939dcd9a00fbac8194ddfd5fd7a4656907bd23a237",
+    "images/c_observed_seed0_reduced_confusions.png": "c1ac93ae05d13e722d5a2f2ed1fee70d8e9b9989c25b304257058e6b6a74cab3",
+    "images/c_observed_seed0_reduced_learning.png": "a201913dc4e1cf5b062f1c5ad1c39495b407df2c8bf38a89ab8b733db25453fb",
+    "images/c_observed_seed1_full_confusions.png": "8dec0610093188bf3e850f340a6abe7e68c09c365c91c19629e09edf61577c01",
+    "images/c_observed_seed1_full_learning.png": "a8d1b1ccc323bf87e877246ddfbe27c1f697696f3ea0190f1075ea3256124dff",
+    "images/c_observed_seed1_reduced_confusions.png": "6372444ac6b81644086b2804f620b651072941dba3c98b4adbb6ec132379c03c",
+    "images/c_observed_seed1_reduced_learning.png": "b393de38c9e989e3a621fb3f424c811418f8238811d3136f5673db5b931c7a8e",
+    "images/c_permuted_seed0_full_confusions.png": "9aafcb684877e523772fdbdd5f537311b9012474a1f0fcded90967f1084ad986",
+    "images/c_permuted_seed0_full_learning.png": "3334b4129770a9b7bd59c086e6868c629cc9a463719e583bffa896591fd000c0",
+    "images/c_permuted_seed0_reduced_confusions.png": "59c081b4b5c875f53462db12ce7a79fa66539ae4c0136b3716fa379b992ab91a",
+    "images/c_permuted_seed0_reduced_learning.png": "5640a50bc124f4e3c1602878d5322294b4b2d8ec41f50ba637997dd65821e4d8",
+    "images/cebra_permuted_seed0_reduced_projection.png": "ba88f2dfdf067007790f5edf0356759144acaa21afa8043e2cb711f6c2b412e5",
+    "images/construction.png": "923a19d6994dc320433a5eaab50d44abbad5de0754413daccf42e32a4d33fd5d",
+    "images/pca_observed_seed1_reduced_projection.png": "196a40724ea91cac68b9edee450748c9d675a72a135c2fb8a8d9192946cdd879",
+    "images/permutation_diagnostic.png": "84c1d2afc7585455c898a966cd258dc2e42651218d13d38e1b6b231de8f161f8",
+    "images/source_audit.png": "d8be5d4cab38c5190c531112af933ba2c4c9d14d9688da65c863dea20d782fd0",
+    "images/source_reuse.png": "b7af72970e6992f52322882a3018ab3f9812d7a3ec8b3865a7bfad3c4f976015",
+    "images/training_development_gap.png": "ed0bb547fb31c26534c351e37726a11d6d867ad73936a1fffd3b09604ccce519",
+    "images/wholecue_balanced_accuracy.png": "1c8642b8047506ef106b5d3941df1d29b023a57e5782a13ac452d1a83da3c0e3",
+    "images/wholecue_log_loss.png": "12bbd5b8ddf7dcec12dad2e17552706ca460a6f1e1588f8a80fef0a08d58d27a",
+    "report.html": "09c668d4b545add722935bf0d0355a024473f8c73bc4eec4eb89e33d8a6c9f6a",
+    "tables/metrics_by_seed.csv": "8ad3c5993982279d05fca6fc7dd672b867c586ed12a3c077ce8cd3c469f172a6",
+    "tables/source_accounting.json": "6dca19aa8fa957e80bab5fe691163daec8b804572cd752bfaa78351b9c9c6536"
+  }
+}
