@@ -52,6 +52,28 @@ not independent biological replicates; the development set is historically expos
   its failed receipt; restored an explicit re-export and added an entry-point check.
   Refreshed source-bound preflight/benchmark gates are required after this fix.
   No biological training case was attempted or retried.
+- Corrected entry-point regression and all five scientific tests passed (six total).
+  Refreshed prefit02 passed all48plans (minimum rank17); invented03 completed51fits
+  and2,000updates,59.76s/case,739.72MiB,zero memory events. Independent gate review
+  authenticated matching source/configuration/runtime and approved launch.
+- Started the one planned biological run at `outputs/source-reuse-width-20261114/real-01/`
+  under hard4GiB/zero-swap/two-CPU/10,800-second limits. Study/request date remains
+  November14; Singapore's calendar crossed to November15 during preparation, so
+  actual execution timestamps are retained rather than backdated.
+- All12 observed source-reuse cases completed without fit/replay failures; the
+  corresponding20source-label control cases are finishing. The first notebook
+  then collates its evidence before the width notebook starts16new cases. The
+  downstream auditor is being independently reviewed; it checks complete numeric
+  tables, exact ties, saved source-block consistency and all report matrix views.
+- The source experiment completed all32cases, its9executed code cells and34figures.
+  The runner then failed at the notebook handoff: exclusive-create JSON correctly
+  refused to overwrite an existing kernel specification. No width fit started.
+  The failed `real-01` receipt and every completed case remain unchanged.
+- The bounded [continuation amendment](continuation-20261115.md) preserves this
+  boundary and permits only the16unattempted width cases in a fresh output directory,
+  with32inherited cases distinguished from new execution. An invented two-kernel
+  handoff smoke passed with separate immutable specs and no biological reads/fits.
+  Independent continuation review is pending; no automatic biological retry.
 
 ## Preservation
 
