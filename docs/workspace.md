@@ -5,6 +5,14 @@ Read [agent instructions](../AGENTS.md) before changing scientific code or artif
 
 ## Current state
 
+- **November15 complete notebook follow-up — in progress:** after `/teach max`, the
+  owner requested two fuller end-to-end real-data executed notebooks and adding
+  them to a PR. The [bounded plan](experiments/source-reuse-width-20261114/notebook-execution-20261115.md)
+  reproduces the same48cases with visible first-case model fitting, fresh gates,
+  independent review and a separate output root. The accepted execution below
+  remains immutable; the prior no-fit/no-publication checkpoint does not block
+  this explicit follow-up. No merge is authorized.
+
 - **November15 focused source-reuse/width study — completed:** the owner narrowed
   the proposal to two tests with fresh training on existing recordings. The
   [results and two dated notebooks](experiments/source-reuse-width-20261114/README.md)

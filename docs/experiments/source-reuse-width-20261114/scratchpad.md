@@ -2,10 +2,17 @@
 
 Started November 14, 2026. Classification: **exploratory analysis**.
 
-**Current status — November 15: completed.** All48unique cases trained, all numeric
+**Original study status — November 15: completed.** All48unique cases trained, all numeric
 evidence independently checked, both dated notebooks/reports delivered. Start with
 [results and artifact links](README.md) and [validation](validation.md). The entries
 below preserve intermediate states; old pending flags are not a new run queue.
+
+**New follow-up in progress:** after `/teach max`, the owner requested fuller
+end-to-end real-data notebooks and adding the completed work to a PR. The
+[notebook execution plan](notebook-execution-20261115.md) fixes the same48-case
+scope, separate fresh execution, visible first-case stages and publication review.
+The earlier no-fit/no-publication closure remains history for the original run;
+this new explicit request authorizes the bounded notebook follow-up. No merge.
 
 ## Owner's goal and scope
 
@@ -121,3 +128,32 @@ not independent biological replicates; the development set is historically expos
 Prior outputs/runtimes and unrelated `src/neuro/_cebra_sampling.py` edits and
 `docs/reports/current-state-20260927/` remain untouched. No publication, push,
 merge, issue modification or old-experiment retry is part of this run.
+
+## November15 end-to-end notebook follow-up
+
+- `/teach max` completed first: self-contained interactive lesson at
+  `/tmp/pi-teach/20261115-015340-reuse-width-max/results.html`, SHA256
+  `f60c2f9d85356f29ce8641fbc56196124ce39b08ff30f23b1a4b3b2fafeafd93`.
+  Independent methods/claims reviews and94browser states passed. The cmux
+  terminal had no unique owning pane, so no native tab/server was created;
+  explicit SSH-copy/open instructions were supplied. The lesson stays disposable.
+- Implemented two richer notebook sources in `walkthrough_20261115/`, preserving
+  original study sources and outputs. First-case numerical fitting is visible in
+  separate cells; all later cases retain the fixed schedule. New local persistence
+  code reuses maintained estimators, with no shared-package API changes.
+- Three fit-blocked invented orchestration tests passed: distinct immutable
+  kernels and exact bridge,48cases with first cases once, and staged failure
+  accounting/no retry. Ruff passed new Python and notebook sources.
+- Started the bounded invented full-width equivalence benchmark in
+  `outputs/source-reuse-width-notebooks-20261115/invented-01/`. It executes the
+  exact seven notebook fitting/arithmetic/diagnostic cells and compares the
+  maintained routine. Independent code/notebook review is ongoing; no fresh
+  biological fit for this follow-up has started.
+
+- Invented01preserved as failed after both complete paths (102fits/4,000updates):
+  strict archive-key ordering differed although all298saved arrays were bitwise
+  equal. Corrected the staged serializer to preserve the original key order;
+  no numerical tolerance or prediction changed. Independent code review found
+  no remaining scientific/model-path blocker, conditional on refreshed gates.
+  Teaching review clarified previous-goal start labels, U3's probability ceiling,
+  the shared B3 execution and complete class/secondary-metric tables.

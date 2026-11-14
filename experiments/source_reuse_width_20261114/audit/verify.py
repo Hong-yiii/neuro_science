@@ -16,7 +16,7 @@ from .. import study
 from .tables import assembly_tables, compare_table, derived_reports, read_rows
 
 
-def verify(run, receipt_hash):
+def verify(run, receipt_hash, *, notebook_factory=None, notebook_names=None):
     run = Path(run).resolve()
     assert study.sha(run / "receipt.json") == receipt_hash
     receipt = json.loads((run / "receipt.json").read_text())
@@ -564,14 +564,20 @@ def verify(run, receipt_hash):
                         numeric_features[names[arm]]["development"],
                         numeric_features[f"{world}_seed0_{arm}"]["development"],
                     )
-    for part, filename, cases in (
-        ("reuse", "source_reuse_20261114", 32),
-        ("width", "population_width_20261114", 24),
-    ):
-        notebook = nbformat.read(run / (filename + ".executed.ipynb"), as_version=4)
+    if notebook_factory is None:
         from ..build_notebooks import make_notebook
 
-        frozen = make_notebook(part)
+        notebook_factory = make_notebook
+    if notebook_names is None:
+        notebook_names = {
+            "reuse": "source_reuse_20261114",
+            "width": "population_width_20261114",
+        }
+    assert set(notebook_names) == {"reuse", "width"}
+    for part, cases in (("reuse", 32), ("width", 24)):
+        filename = notebook_names[part]
+        notebook = nbformat.read(run / (filename + ".executed.ipynb"), as_version=4)
+        frozen = notebook_factory(part)
         assert [(c.cell_type, c.source) for c in notebook.cells] == [
             (c.cell_type, c.source) for c in frozen.cells
         ]
