@@ -4,6 +4,40 @@ Updated 2026-10-12. Current focus is the
 [retrospective and its evidence](../docs/reports/README.md), not restarting runs.
 This map classifies existing entry points; it is not execution authorization.
 
+**November11 addition — completed class × session study:**
+`run_population_grid_study.py` guards the complete new fit grid;
+`build_population_grid_notebook.py` generates Notebook06;
+`population_grid_report.py` builds all aggregate figures/tables.
+`verify_population_grid_results.py` authenticates the completed run and checks
+saved arrays, predictions, metric/error accounting and exact assembly relationships
+without fitting or loading models. `collate_population_grid_deliverables.py` adds
+reviewed interpretation while preserving every executed notebook cell/output.
+Implementation: `neuro.studies.population_grid` and `population_models`;
+invented checks: `test_population_grid.py`. See the
+[frozen protocol](../docs/population-grid-protocol-20261111.md) and
+[completed results/validation](../docs/reports/population-grid-20261111/README.md).
+All 111 cases finished; no fit or automatic retry is queued.
+The saved-result follow-up uses `population_grid_error_analysis.py` to authenticate
+and summarize truth/prediction members without reading neural feature arrays or
+loading models. `population_grid_error_handoff.py` and
+`population_grid_error_explorer.js` add reviewed confusion/selection/reuse views to
+a new report/notebook and temporary teaching artifact. The
+[error-analysis ledger](../docs/reports/population-grid-20261111/error-analysis-validation.md)
+identifies accepted analysis02 and its superseded first descriptive calculation.
+
+**November10 addition — completed source-support study:**
+`run_source_support_study.py` runs the separately guarded benchmark or biological
+notebook under hard cgroup limits; `build_source_support_notebook.py` generates
+Notebook05; `source_support_report.py` renders new numeric results;
+`collate_source_support_deliverables.py` authenticates a completed run and adds
+reviewed interpretation without importing/fitting/replaying models. The scientific
+implementation lives in `neuro.studies.source_support_ablation`, with invented
+checks in `test_source_support_ablation.py`. See the
+[frozen protocol](../docs/source-support-protocol-20261110.md) and
+[completed results](../docs/reports/source-support-ablation-20261110/README.md).
+All39cases finished; these entry points are not a pending run queue. The older
+family map below retains its historical scope.
+
 **Three-study package implemented:** full-trial transfer, endpoint-time and cue-time
 scientific bodies now live in [`neuro.studies`](../src/neuro/README.md), beside the
 shared split gate and equivalent execution/provenance seams. Their `cebra_*.py`

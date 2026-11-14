@@ -1,10 +1,106 @@
 # Workspace and recovery
 
-Updated November2, 2026. Canonical checkout: **`~/neuro_science`**. Owner: Hongyi.
+Updated November14, 2026. Canonical checkout: **`~/neuro_science`**. Owner: Hongyi.
 Read [agent instructions](../AGENTS.md) before changing scientific code or artifacts.
 
 ## Current state
 
+- **November14 experiment closure / publication:** the owner authorized merging
+  [PR28](https://github.com/Hong-yiii/neuro_science/pull/28) and its report-only
+  [PR27 dependency](https://github.com/Hong-yiii/neuro_science/pull/27) into `main`;
+  those PRs own the authoritative merge status. The experiment lives mainly under
+  `src/neuro/studies/`, with dedicated scripts, notebooks and reports. Shared changes
+  in `place195.py`, `cue_source.py` and `pseudopopulation.py` add explicit class/support
+  panels and validated balanced/without-replacement plans while preserving defaults.
+  Merge preparation tested committed revision `2f4f81b` in an isolated source archive:
+  24 invented-data tests passed with fitting blocked, the report renderer's invented
+  self-test passed, and the complete range passed whitespace checks. Subsequent
+  closure edits are documentation only. No GitHub checks or review threads were
+  registered at inspection; earlier independent scientific/artifact reviews remain
+  recorded in the validation ledgers. Unrelated sampling-code and current-state
+  notes are excluded. The next experiment's knobs and analyses will be discussed
+  later; this merge does not start a new study or implement #29/#30.
+
+- **November14 professor-feedback assessment — proposed next work:** GitHub's
+  newest issues are #29 (lost place-field coverage versus errors) and #30 (minimum
+  selectivity/coverage in population selection), both opened November11 and still
+  open. The [assessment and recommended sequence](professor-feedback-next-steps-20261114.md)
+  prioritizes authenticated field maps and a retrospective coverage/error atlas,
+  then fixed-class coverage/support feasibility, then one matched learning comparison.
+  Unit tuning quality and coverage of every required region are distinct; navigation
+  tuning is not automatically cue-goal selectivity. This is a recommendation, not a
+  frozen protocol or new run. Only issues, source and existing reports were read;
+  no neural analysis, model fit/replay or GitHub issue change occurred. Preserve the
+  completed evidence and unrelated working changes.
+
+- **November11 confusion/error follow-up — completed:** the owner requested
+  confusion matrices inside the handoff and relationships between removed classes/
+  sessions, source reuse and mistakes. The [new interpretation](reports/population-grid-20261111/error-analysis.md)
+  and [validation](reports/population-grid-20261111/error-analysis-validation.md)
+  describe a saved-result-only, post-hoc analysis: no new fits, model loading,
+  biological replay or neural value/feature-array reads. Accepted
+  `outputs/population-grid-20261111/error-analysis-02/` passed independent checks
+  of169inputs,7outputs,9,216included matrices,6,480correlations and56,160paired
+  change records. Preserve superseded01, whose harmonic ties were corrected using
+  exact rational arithmetic. Updated `handoff-errors-01/` contains the complete
+  report, interactive confusions and notebook with17newfigures, preserving all25
+  earlier cells/12executed code cells. Original run/first deliverables remain intact.
+  Removed classes were not uniformly difficult; reuse/lower coverage often
+  accompanies errors but cannot be separated causally here. Roster changes do
+  not identify individually bad sessions. The disposable teaching HTML is recorded
+  in the validation ledger; native Mac rendering is unverified because no unique
+  owning cmux pane was available. No new fitting, push, merge or issue edit is queued.
+
+- **November11 replacement study — completed:** the corrected design is three
+  class requirements × three session rosters, with U2/R16/F16 source-use policies,
+  CEBRA-Time/native multisession and logistic/RBF-SVM/kNN/LDA. All 111 cases
+  completed: 5,661 model-fit calls and 222,000 updates, with no biological failure
+  or retry. Run time 117.58 minutes, peak 2,648.25 MiB under 4-GiB/no-swap/two-core/
+  six-hour limits; memory-event counters were zero. All 12 notebook cells completed.
+  The no-fit audit authenticated 7,210 files, all 5,328 metric/confusion records and
+  3,666,288 source-error records; independent scientific/results/privacy reviews
+  passed. [Interpreted results and artifact links](reports/population-grid-20261111/README.md)
+  and [validation ledger](reports/population-grid-20261111/validation.md) own the
+  conclusions, exact hashes and presentation limits. Immutable run:
+  `outputs/population-grid-20261111/real-01/`; complete report and executed notebook:
+  sibling `deliverables/`. Notebook06's source outputs stay empty. Raw/PCA/Time
+  endpoint association survives once-only assembly with SVM; width/reuse effects
+  vary by task/model, and the configured native comparator is weaker. Exposed,
+  known-label development limits all claims. Preserve failed rank8/budget receipts,
+  prior experiments, runtimes and unrelated sampling edits. No further fit,
+  automatic retry, push or merge is queued.
+
+- **November10 source-support experiment — completed, replaced as current design:** after the issue assessment,
+  the owner explicitly requested new model training, a smaller start–goal panel,
+  wider populations and reuse controls, with an executed notebook/report and
+  trajectories. The [frozen protocol](source-support-protocol-20261110.md) defines
+  eight observed arms ×three seeds plus15source-label diagnostic cases. All39cases
+  completed:39CEBRA/39PCA/351logistic/117LDA,39,000updates. Newly saved pipelines
+  passed936 composed train/development checks with fitting blocked. Independent
+  protocol/code/results/privacy reviews passed, including all1,167receipt-bound
+  files and157figures. The complete run took452.55s, peak1,218.6MiB under4GiB,
+  zero swap/two-core limits, no OOM or biological failures. Read the
+  [interpreted results and artifact links](reports/source-support-ablation-20261110/README.md).
+  The [independent validation record](reports/source-support-ablation-20261110/validation.md)
+  binds the final report/notebook hashes and confirms their unchanged executed cells.
+  Immutable biological output: `outputs/source-support-20261110/real-01/`;
+  interpreted report/executed notebook: sibling `deliverables/`. Repeated assembly
+  draws are not necessary for endpoint recovery; balancing and added columns
+  matter, while exposed/reused development limits the claim. No further fit,
+  automatic retry, historical replay, push or merge is queued.
+- **November10 research-group issue assessment:** the owner requested a review of
+  the latest notebook evidence and the November2 issue batch. The
+  [assessment and proposed sequence](research-group-tests-20261110.md) maps #25
+  source reuse, #26 errors/exclusions and #24 panel/support ablations; #23 remains
+  deferred. Public metadata checks reproduced the fixed 30/27, 20/108 and 15/140
+  class/unit panels and their infeasibility under a five-training-source minimum.
+  Public report consistency and its invented self-test passed. No private artifacts,
+  neural arrays, model replay or new fits were accessed/run; no GitHub issue changed.
+  That assessment's proposed work was subsequently superseded by the authorized
+  execution above. All20nine-class rectangles proved infeasible at minimum five;
+  the study instead reported minimum-two and minimum-three panels without changing
+  the frozen splits. GitHub inspection at assessment time found PR22 merged and
+  PR27 open; neither was changed by this study.
 - **November2 report request:** the owner requested a dedicated report of the
   completed October23 27-unit study, similar in presentation to the historical195-unit
   endpoint report. [New report](reports/cebra-27unit-notebooks-20261023/README.md)

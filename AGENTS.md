@@ -12,6 +12,70 @@ PR status, recovery records and safe verification commands. Do not recreate old
 sibling worktrees or restart experiments from historical pending-work flags.
 Keep new durable decisions in Git-backed notes, not only in a chat transcript.
 
+**November14 experiment closure / publication:** the owner authorized landing
+the completed experiment unit in [PR28](https://github.com/Hong-yiii/neuro_science/pull/28),
+including its report-only [PR27](https://github.com/Hong-yiii/neuro_science/pull/27)
+dependency. GitHub records the authoritative merge result. This supersedes older
+no-push/no-merge checkpoints for those PRs. The change is chiefly study modules,
+runners, notebooks and reports, with three small shared-helper extensions for
+explicit panels and validated sampling policies; existing defaults are preserved.
+Merge preparation passed 24 invented-data tests with fitting blocked in a clean
+committed-source archive and the report renderer's invented self-test. Preserve
+all results and unrelated sampling/current-state edits. The owner intends another
+experiment set but will discuss its knobs and analyses later: #29/#30 and
+`docs/professor-feedback-next-steps-20261114.md` remain proposals, not a run queue.
+
+**November11 saved-result error follow-up — latest handoff:** the owner requested
+confusion matrices and associations between removed classes/sessions, source reuse
+and errors. Start at `docs/reports/population-grid-20261111/error-analysis.md` and
+`error-analysis-validation.md`. Accepted `outputs/population-grid-20261111/error-analysis-02/`
+uses authenticated saved predictions only: no fits, model loads, biological replay
+or neural feature/value-array reads. It includes9,216confusion matrices and verified
+class-deletion/source-reuse/paired-error tables. Independent code/numeric/claim
+reviews passed. `handoff-errors-01/` adds17figures and one labelled post-execution
+notebook cell while preserving all25prior cells and12executed code cells. Preserve
+superseded error-analysis01 (corrected exact harmonic ties), original run/first
+deliverables and the earlier teaching artifact. Deleted classes are unevaluated in
+reduced tasks; F16 reuse is algebraically inverse to source coverage; session-group
+changes do not identify individually bad sessions. No new fitting, push or merge.
+
+**November11 replacement class × session study — completed/current:** the owner
+corrected 3×3 to mean three class requirements × three session rosters, requested
+fresh fits/results/report/trajectories/executed notebook and `/teach max`, and added
+RBF-SVM/other readouts plus native multisession CEBRA. Start at
+`docs/reports/population-grid-20261111/README.md` and `validation.md`; the frozen
+protocol/design retain prospective decisions. All 111 cases completed with
+5,661 fit calls and 222,000 updates: raw/PCA7/CEBRA-Time7/native multisession7,
+logistic/SVM/kNN5/SVD-LDA and pair/start/goal heads. Nine populations span8–138
+columns; all keep the two-source training bottleneck. Once-only assembly retains
+raw/PCA/Time endpoint association with SVM; roster/reuse effects vary and native
+results are weaker/mixed. No natural-trial or biological independence claim.
+Immutable run: `outputs/population-grid-20261111/real-01/`; interpreted artifacts:
+sibling `deliverables/`; source Notebook06 remains unexecuted in Git. All7,210
+receipt files and complete metrics/source errors passed audit; independent
+scientific/results/privacy reviews passed. Preserve failed rank8/invented-budget
+receipts and all older results/runtimes/unrelated edits. The November10 design is
+history, not this run's evidence. No further fit, automatic retry, push or merge
+is queued. See `docs/workspace.md` for delivery and review details.
+
+**November10 completed source-support experiment:** the owner explicitly requested
+fresh biological model training, smaller start–goal panels (including a3×3 design),
+larger populations and source-reuse controls, followed by all results, a report,
+cue-time trajectories and an executed notebook. The bounded exploratory protocol is
+`docs/source-support-protocol-20261110.md`: eight observed arms ×three computational
+seeds and five pair-label diagnostic worlds for three arms;39CEBRA/39PCA/351logistic/
+117LDA fits,39,000updates. Use frozen splits/global predecessor embargo and public
+compact sources only. All39cases completed, with936 composed saved-pipeline checks,
+12successful notebook cells and157figures; independent protocol/code/results/privacy
+reviews passed. Run: `outputs/source-support-20261110/real-01/`; interpreted report
+and executed notebook: sibling `deliverables/`. Start with
+`docs/reports/source-support-ablation-20261110/README.md`. Learning survived once-only
+training assembly; source allocation and recorded width matter, but exposed/reused
+development and condition matching limit generalization. No further fit or retry
+is queued. Prior no-new-fit statements below are historical for this explicitly
+authorized study. Preserve all prior results/runtimes and unrelated edits. No push,
+merge or unrelated model sweep is authorized by this request.
+
 **October27 standalone course:** the owner requested deeper foundations and visible
 implementation and allowed splitting into multiple notebooks. Start with the seven
 chapters in `notebooks/README.md`: overview, experiment foundations, executed invented

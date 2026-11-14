@@ -8,6 +8,29 @@ CEBRA is a central tool, not a required winner. The repository brings together
 [editable retrospective](report/README.md), accepted exploratory evidence and an
 [installable Python package](src/neuro/README.md).
 
+## Latest experiment: class requirements × session rosters
+
+The [November11 results](docs/reports/population-grid-20261111/README.md) implement
+Hongyi's corrected **3 class requirements × 3 session rosters**: nine populations
+with 8–138 recorded columns, three source-use policies and three observed seeds.
+All 111 new cases completed, including source-label controls, CEBRA-Time and
+native multisession CEBRA, with logistic, RBF-SVM, kNN and LDA readouts.
+The [executed evidence notebook](outputs/population-grid-20261111/handoff-errors-01/population_grid.executed.ipynb)
+and [complete local report](outputs/population-grid-20261111/handoff-errors-01/report.html#error-explorer)
+retain the original 246 figures and add17error-comparison figures. The
+[error follow-up](docs/reports/population-grid-20261111/error-analysis.md) adds
+9,216training/development confusion matrices, class-removal comparisons, source
+reuse/error associations and matched prediction switches, using saved predictions
+only. Deleted classes are not scored in reduced tasks; reuse and coverage remain
+confounded.
+
+Endpoint recovery survives once-only training assembly for raw/PCA/Time with SVM.
+Wider rosters and repeated rows have mixed effects; native multisession does not
+show an advantage under this configuration. Class changes define different tasks,
+and exposed, label-conditioned development limits the claim. The previous
+[November10 experiment](docs/reports/source-support-ablation-20261110/README.md)
+is preserved as history and is not pooled with the replacement study.
+
 ## Start here: the research course
 
 Begin with the [standalone research guide](notebooks/00_research_guide.ipynb): the

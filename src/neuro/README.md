@@ -54,6 +54,17 @@ fit-blocked model replay. Scientific configuration/experiment loops remain visib
 notebooks. `_cebra_sampling` contains the unchanged shared dataset/samplers extracted
 from full-trial; that study re-exports them for existing callers.
 
+The November10 `studies.source_support_ablation` composes these APIs for explicit
+class/support panels, paired column projections, balanced/once-only/recombined
+source plans and fresh fitted-model controls. The adapter's opt-in `analysis_panel`
+filters only after the global contributor embargo; default historical selection
+is unchanged. `materialize` validates the declared replacement, balanced-cycle or
+without-replacement policy against actual source use. The
+[protocol](../../docs/source-support-protocol-20261110.md) and
+[completed evidence](../../docs/reports/source-support-ablation-20261110/README.md)
+define this experiment's scope; those additions do not certify arbitrary sampling
+designs or create a general experiment framework.
+
 Observed zeros are distinct from unavailable measurements. Source×unit masks require
 complete observed bins; unsupported dropout fails. Source labels/contributors are
 explicit, not inferred from neural activity. The current notebook CSV adapter is not
