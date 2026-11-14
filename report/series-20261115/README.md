@@ -8,6 +8,8 @@ to explain why the questions and evaluation changed.
 All three [blind manuscript auditors](audit/README.md) passed the final PDF and
 explicitly found it understandable. The [validation ledger](validation.md)
 records the exact reviewed hashes and isolated package build.
+Published for review as [PR32](https://github.com/Hong-yiii/neuro_science/pull/32),
+stacked on the completed experiment in PR31; no merge.
 
 This is an exploratory research synthesis of existing evidence, not a new
 experiment or biological replication. Work began only after the completed,

@@ -2,8 +2,9 @@
 
 Status: **completed — all three blind auditors pass the final ten-page PDF and
 explicitly find it understandable**. The publication package also passes an
-isolated Git-tree build. GitHub owns the PR publication status; no merge is
-authorized or performed.
+isolated Git-tree build. Published for review as
+[PR32](https://github.com/Hong-yiii/neuro_science/pull/32), stacked on PR31.
+GitHub owns the current publication status; no merge is authorized or performed.
 
 ## Authority and evidence boundary
 
