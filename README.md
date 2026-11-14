@@ -27,7 +27,7 @@ preserve the complete execution history.
 
 Raw/PCA SVM pair association survives once-only assembly. More distinct sources
 help some pipelines; repeating the same sources is not consistently helpful. PCA
-mean accuracy increases across both width steps for every readout, while raw/native
+mean pair balanced accuracy increases across both width steps for every readout, while raw/native
 effects depend on the pipeline. Development remains exposed and label-conditioned;
 source reuse is not independent sample size. The spatial-field explanation in #29
 awaits authenticated maps. Implementation stays under

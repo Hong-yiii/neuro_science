@@ -93,7 +93,7 @@ not independent biological replicates; the development set is historically expos
   Independent review separately reproduced metrics with count-based formulas,
   verified exact best/worst ties and authenticated every inherited parent byte.
 - Results are mixed by pipeline: Raw/PCA SVM pair association survives once-only
-  assembly; broader source support helps Raw/Time SVM. PCA mean pair performance
+  assembly; broader source support helps Raw/Time SVM. PCA mean pair balanced accuracy
   rises at both width steps across all4readouts. Repetition and native width effects
   are not uniformly beneficial. Best/worst class errors were collated; missing
   spatial maps remain unknown and do not establish the#29place-field explanation.
@@ -111,6 +111,10 @@ not independent biological replicates; the development set is historically expos
 - Durable results/validation and workspace pointers now identify the completed
   study. Source notebook outputs stay empty; generated neural evidence stays local.
   No new model sweep, fitting, retry, publication or issue modification is queued.
+- Local closure commit `dd7de7f` saves the full audited handoff. Final independent
+  provenance review reconciled all24available ledger hashes, historical auditor
+  identity, both audit count sets, phase resources and all102delivery files. Entry
+  points now explicitly qualify PCA width gains as mean pair balanced accuracy.
 
 ## Preservation
 

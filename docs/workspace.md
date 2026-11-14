@@ -13,7 +13,8 @@ Read [agent instructions](../AGENTS.md) before changing scientific code or artif
   All48unique cases completed:2,448fits excluding scalers,96,000updates,
   18executed code cells,61original figures plus4supplements. Raw/PCA SVM pair
   association survives once-only assembly; repetition effects vary. PCA mean
-  width gains occur across all four readouts; raw/native effects vary by pipeline.
+  pair balanced-accuracy gains across both width steps occur with all four readouts;
+  raw/native effects vary by pipeline.
   Spatial-field attribution remains unavailable; class errors and retained-column
   evidence are included. The [validation ledger](experiments/source-reuse-width-20261114/validation.md)
   records all3,155receipt-bound files and complete independent numeric/claim/privacy

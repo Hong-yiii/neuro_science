@@ -22,7 +22,8 @@ columns at three sources, plus once-only and fixed model/readout/source-label
 controls. All48unique cases completed,2,448fits and96,000updates. Two dated
 executed notebooks and offline reports include learning curves, trajectories,
 all matrices and paired/best-worst errors. Raw/PCA SVM pair association survives
-once-only assembly; PCA mean width gains extend across all four readouts, while
+once-only assembly; PCA mean pair balanced-accuracy gains across both width steps
+extend across all four readouts, while
 other effects vary. Spatial-map attribution remains unavailable. The
 [validation ledger](../experiments/source-reuse-width-20261114/validation.md) records
 independent review, immutable evidence and the preserved orchestration failure

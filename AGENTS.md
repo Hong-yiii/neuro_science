@@ -20,7 +20,8 @@ and `scratchpad.md`. Study defined November14; actual training/delivery November
 All48unique cases completed:2,448fits excluding scalers,96,000updates,18executed
 code cells. Existing recordings only; no hyperparameter sweep. Raw/PCA SVM pair
 association survives once-only assembly; source-budget and width effects depend on
-pipeline, with PCA mean width gains across all four readouts. No general sampling
+pipeline, with PCA mean pair balanced-accuracy gains across both width steps and
+all four readouts. No general sampling
 validity, natural-trial or biological-independence claim. Spatial #29/#30 needs
 authenticated maps; best/worst errors and retained-column evidence are included.
 Accepted run: `outputs/source-reuse-width-20261114/complete-01/`; dated notebooks,

@@ -267,3 +267,11 @@ reports six existing E401/E701/E702 import/statement style findings. Their exact
 executed source is preserved rather than reformatted after the scientific run.
 Whitespace checks pass. The unrelated sampling-code hash remains unchanged and
 generated evidence remains ignored by Git.
+
+Local closure commit `dd7de7f` records the audited handoff. Final independent
+provenance review (`protocol_review`) reconciled all24directly available SHA256s
+listed above; the historical audit01 source identity was recovered by reverting
+only the documented runner-drift exception in memory. Both numeric-audit count
+sets, phase durations/peaks and all102delivery hashes match. No provenance, count,
+resource or runner-repair blocker remained. Subsequent entry-point wording makes
+the PCA finding explicitly mean **pair balanced accuracy** across width steps.
