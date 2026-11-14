@@ -12,6 +12,19 @@ PR status, recovery records and safe verification commands. Do not recreate old
 sibling worktrees or restart experiments from historical pending-work flags.
 Keep new durable decisions in Git-backed notes, not only in a chat transcript.
 
+**November14 focused reuse/width execution — current:** the owner narrowed the
+wide proposal and explicitly requested new training, a scratchpad and two dated
+experiment files with documentation. Start at
+`docs/experiments/source-reuse-width-20261114/protocol.md` and `scratchpad.md`.
+Existing recordings only; six unique arms compare2/3/5training sources at17columns,
+a once-only three-source control, and17/49/83columns at three sources. Keep the
+standard raw/PCA/Time/native and logistic/SVM/kNN/LDA comparisons plus source-label
+controls; no hyperparameter sweep. Implementation/notebooks are one unit under
+`experiments/source_reuse_width_20261114/`. Independent review and bounded gates
+precede the authorized fresh fits. Earlier no-new-fit checkpoints and the broad
+coverage-first proposal do not supersede this explicit new request. Preserve all
+old studies, runtimes and unrelated edits; no push/merge or issue change requested.
+
 **November14 experiment closure / publication:** the owner authorized landing
 the completed experiment unit in [PR28](https://github.com/Hong-yiii/neuro_science/pull/28),
 including its report-only [PR27](https://github.com/Hong-yiii/neuro_science/pull/27)

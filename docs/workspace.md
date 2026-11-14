@@ -5,6 +5,17 @@ Read [agent instructions](../AGENTS.md) before changing scientific code or artif
 
 ## Current state
 
+- **November14 focused source-reuse/width study — authorized, in progress:** the
+  owner narrowed the wide proposal and requested actual fresh training, a scratchpad
+  and two dated experiment files with documentation. The
+  [protocol](experiments/source-reuse-width-20261114/protocol.md) freezes one
+  nine-class task: 2/3/5 training sources at fixed17columns, then17/49/83columns at
+  three sources, plus one once-only control and the established model/readout/null
+  comparisons. [Progress scratchpad](experiments/source-reuse-width-20261114/scratchpad.md).
+  Existing recordings only; no new biological observations. Metadata design is
+  complete; code/review/resource gates precede new fits. The coverage-first knob
+  draft below is superseded. Preserve all old evidence and unrelated edits.
+
 - **November14 next-experiment knobs — draft:** the owner clarified that there are
   no new recordings; the next work should construct new pseudopopulations from the
   existing recordings, train fresh models and evaluate them. The

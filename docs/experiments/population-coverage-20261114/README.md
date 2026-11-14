@@ -1,5 +1,9 @@
 # Population coverage: proposed knobs and analyses
 
+**Superseded November 14 by owner steering:** execute the focused
+[source-reuse then population-width experiment](../source-reuse-width-20261114/protocol.md).
+The broader inventory below is historical proposal context, not an active run queue.
+
 **November 14, 2026 · Draft exploratory design · Fresh construction, training and evaluation intended.**
 
 Hongyi requested a concrete definition of the next experiment's knobs and analyses

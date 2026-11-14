@@ -1,0 +1,98 @@
+{
+  "classification": "exploratory",
+  "date": "2026-11-14",
+  "metadata_sha256": {
+    "inner_splits.csv.gz": "34fa1c5a0f5c6d9443d435c98ba64830c68f2792306172c12d53ad60792f219f",
+    "manifest.json": "8af267ca189a98a3bcc3c24e498259d36079e41402a6cf2fdb9a0d9e5291ed11",
+    "outer_splits.csv.gz": "c42b2dd2bf184dca8f9ed86908d35f16caf40bd52b4221d17380a2156d1eee56"
+  },
+  "panel": {
+    "class_count": 9,
+    "conditions": [
+      "1->2",
+      "1->4",
+      "2->5",
+      "2->6",
+      "3->1",
+      "4->6",
+      "5->3",
+      "5->4",
+      "6->2"
+    ],
+    "maximum_columns_min3_at_min5_optimum": 83,
+    "maximum_columns_min5": 17,
+    "mip_gap": 0.0,
+    "solver_status": "optimal"
+  },
+  "rosters": {
+    "core": {
+      "available_development_sources": 56,
+      "available_train_sources": 160,
+      "development_singleton_pools": 5,
+      "minimum_development_sources": 1,
+      "minimum_train_sources": 5,
+      "session_aliases": [
+        "S16",
+        "S27",
+        "S34"
+      ],
+      "sessions": 3,
+      "units": 17
+    },
+    "full": {
+      "available_development_sources": 365,
+      "available_train_sources": 912,
+      "development_singleton_pools": 41,
+      "minimum_development_sources": 1,
+      "minimum_train_sources": 3,
+      "session_aliases": [
+        "S05",
+        "S06",
+        "S07",
+        "S08",
+        "S16",
+        "S20",
+        "S23",
+        "S25",
+        "S27",
+        "S28",
+        "S29",
+        "S32",
+        "S34",
+        "S38",
+        "S40",
+        "S42",
+        "S43",
+        "S44",
+        "S49",
+        "S50"
+      ],
+      "sessions": 20,
+      "units": 83
+    },
+    "middle": {
+      "available_development_sources": 210,
+      "available_train_sources": 543,
+      "development_singleton_pools": 18,
+      "minimum_development_sources": 1,
+      "minimum_train_sources": 3,
+      "session_aliases": [
+        "S05",
+        "S06",
+        "S07",
+        "S16",
+        "S20",
+        "S23",
+        "S27",
+        "S28",
+        "S34",
+        "S38",
+        "S44"
+      ],
+      "sessions": 11,
+      "units": 49
+    }
+  },
+  "selection": "maximize minimum-five width, then minimum-three width, then lexicographic class list; balanced endpoint degree; exact harmonic order for added sessions",
+  "study": "source-reuse-width-20261114"
+}
