@@ -5,10 +5,11 @@ helps a lab interpret CEBRA's performance under different choices of recorded
 sources, population construction and readout. It covers the research series through
 November 15, with the November 16 class-panel explanation and language revision.
 
-**Start with pages 1–2.** They define the task and data units, then show which
-representation has the highest mean for each construction and readout. Pages 16–17
-state the source-budget and width results directly. The methods and checks explain
-how those results were obtained and which uses they support.
+**Start with pages 1–2.** They define the task and data units, then explain what
+improves with more recorded trials, repeated row assembly and larger populations.
+The overview describes each comparison in plain language without arm codes or a
+score-ranking table. Page 6 names every construction beside its figure code.
+Pages 16–17 retain the exact results, individual repeats and controls.
 
 The current revision has 14 figures and 11 tables. Three fresh independent AI-agent
 reviews—scientific, quantitative and newcomer—passed and found the paper
@@ -39,7 +40,8 @@ biological interpretation alongside the practical findings.
 
 ## Reading route
 
-- Pages 1–2: task, terminology, CEBRA comparison table and practical implications.
+- Pages 1–2: task, terminology, three data-construction comparisons and qualitative
+  interpretation for using CEBRA.
 - Pages 3–6: data inventory, trial eligibility, contributor separation, history
   and the six fixed constructions.
 - Pages 7–11: class-panel feasibility, complete session support, block assembly
@@ -71,17 +73,18 @@ The existing result tables, figures and completed notebook outputs are unchanged
   the full pair grids and class-count frontier.
 - [summarize_model_comparisons.py](summarize_model_comparisons.py) reads the
   authenticated scalar score CSV. It writes 96 representation/readout means
-  with all three seed values and ranges, 24 within-arm rankings and the early
-  LaTeX table. [Comparison provenance](model-comparison-provenance.json) states
+  with all three seed values and ranges, 24 within-arm rankings and an accompanying
+  LaTeX ranking table. [Comparison provenance](model-comparison-provenance.json) states
   the exact arithmetic, tie handling and interpretation.
 - [Class-panel study explanation](../../docs/experiments/source-reuse-width-20261114/class-panel-20261116.md)
   gives the complete distribution tables and selection rationale.
 - [Current reviews](audit/README.md) and [validation](validation.md) record the
-  language revision. The [preceding validation](validation-pre-language-20261116.md)
-  and [earlier reviews](audit/class-panel-index-20261116.md) retain their original
-  artifact identities.
+  qualitative overview revision. The [preceding full language validation](validation-language-20261116.md)
+  and [its reviews](audit/language-index-20261116.md) retain their original artifact
+  identities and complete numerical checks. The earlier class-panel records remain
+  linked from those ledgers.
 
-The new comparison table reports mean rankings after inspecting the completed
+The accompanying ranking table reports mean rankings after inspecting the completed
 study. It supplies a benchmark set for further evaluation. Seed ranges describe
 computational variation. They provide no estimate of biological uncertainty.
 
@@ -93,13 +96,12 @@ From this directory:
 make TECTONIC=/path/to/tectonic
 ```
 
-Tectonic 0.17.0 builds the PDF from the TeX, committed figures and generated
-comparison-table macro. First use may download the TeX/font bundle. To regenerate
-only the scalar comparison table:
+Tectonic 0.17.0 builds the PDF from the TeX and committed figures. First use may
+download the TeX/font bundle. The numerical ranking tables are preserved alongside
+the paper. To regenerate only those scalar summaries:
 
 ```sh
 make comparisons
-make TECTONIC=/path/to/tectonic
 ```
 
 The summary uses Python's standard library and rejects a changed input identity.

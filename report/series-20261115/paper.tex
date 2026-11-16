@@ -29,7 +29,6 @@
 \newcommand{\panelrepo}[2]{\href{https://github.com/Hong-yiii/neuro_science/blob/082b5e1a3cb9a87bc22a9ce80006d2e882adc404/#1}{#2}}
 \newcommand{\key}[1]{\vspace{3pt}\noindent\colorbox{wash}{\parbox{\dimexpr\linewidth-2\fboxsep\relax}{\small #1}}\vspace{3pt}}
 \newcommand{\figurefile}[2][]{\includegraphics[#1]{figures/#2}}
-\input{data/model_pair_best_rows.tex}
 
 \begin{document}
 \thispagestyle{empty}
@@ -48,39 +47,41 @@
 \section{The prediction task and the recorded observations}
 The task records a cue period followed by navigation in a virtual maze. The latest analysis uses the first second after cue onset to classify an ordered start--goal pair, such as $1\to2$. A \emph{class} is one such pair. A \emph{path} specifies the ordered movement through the maze; several paths can share the same endpoints. The earlier research asked about path information beyond endpoints. The recent experiments concentrate on endpoint decoding and the data construction needed to interpret it \cite{history,contract}.
 
-A \emph{session} groups the stored trials and recorded unit identities from a recording block. A \emph{unit} is a putative neuronal source identified by grouping recorded electrical events, called spikes; it contributes one column of counts over time. A \emph{source} is one eligible recorded trial response. To make a pseudopopulation row for a class, the procedure selects one source from each included session and concatenates their unit columns. All selected sources have the same known pair label. The classifier then predicts that label from the assembled cue responses. The score measures how well these constructed, label-matched vectors can be distinguished. Applying the model to an unknown-label natural trial requires a separate evaluation procedure.
+A \emph{session} groups the stored trials and recorded unit identities from a recording block. A \emph{unit} is a putative neuronal source identified by grouping recorded electrical events, called spikes; it contributes one column of counts over time. A \emph{source} is one eligible recorded trial response. A \emph{source pool} contains the eligible trials for one class in one session. To make a pseudopopulation row for a class, the procedure selects one source from each included session and concatenates their unit columns. All selected sources have the same known pair label. The classifier then predicts that label from the assembled cue responses. The score measures how well these constructed, label-matched vectors can be distinguished. Applying the model to an unknown-label natural trial requires a separate evaluation procedure.
 
 An \emph{encoder} transforms spike counts into features; a \emph{decoder}, also called a readout, predicts the class from those features. CEBRA learns an encoder with a neural network. Raw standardized counts and principal component analysis (PCA) provide comparison features. We report \emph{balanced accuracy}: compute the fraction correct within each true class, then average equally across classes. A \emph{computational repeat} changes the random seed for source selection, row construction and learning while reusing the recordings. Observed runs keep the original trial labels. Source-label shuffle controls reassign those labels before construction and fitting, providing reference scores after the original response--label relation is disrupted. Some figure legends call these control settings \emph{worlds}.
 
 \key{\textbf{How to read a result.} Each score belongs to a specified class set, recorded-source pool, construction rule and encoder--readout pair. \emph{Development} means the source-separated data used to evaluate the fitted pipeline. Those data were already inspected in this research series. The following overview states the practical findings; later sections explain the construction, checks and limits.}
 
 \clearpage
-\section{What the results imply for a lab considering CEBRA}
-The strongest representation depends on the readout and available recordings. Table~\ref{tab:choices} compares the highest mean pair score within each tested readout and construction. CEBRA-Time leads the kNN and LDA comparisons at 17 columns with three or five sources per pool. Raw counts lead the logistic and SVM comparisons in those same arms. At 49 and 83 columns, PCA leads all four readouts. These are descriptive rankings of three repeats on the shared development construction.
+\section{What helps CEBRA, and which processing choices worked best}
+CEBRA-Time improved as the study used more distinct recorded trials. For larger populations, PCA produced the strongest mean decoding scores. CEBRA's advantage appeared with particular classifiers and construction rules; raw counts or PCA gave the highest-scoring complete pipelines among the tested choices. The comparisons below explain what each form of ``more data'' supplied.
 
-The four representations are \textbf{Raw}, standardized spike counts; \textbf{PCA}, seven linear components fitted to training variation; \textbf{Time}, CEBRA-Time with one encoder and adjacent-bin training pairs; and \textbf{Native}, the configured CEBRA multisession method with one encoder per session, pair-label alignment and averaged outputs. The readouts are logistic regression, a radial-basis support-vector machine (SVM), five-nearest-neighbor classification (kNN5) and linear discriminant analysis (LDA). Section~\ref{sec:models} explains their operations.
-
-A \emph{pool} holds eligible sources from one session and one pair class. B2/B3/B5 select two/three/five training sources per pool and construct 16 rows per class. U3 uses B3's three sources once each. Wmid/Wfull retain three sources per pool and add session blocks to reach 49/83 columns. All arms evaluate eight constructed development rows per pair. Section~\ref{sec:design} gives the complete counts.
+\textbf{What is being compared.} CEBRA-Time learns one encoder from adjacent time bins. The configured multisession CEBRA, called Native in later figures, learns one encoder per session and aligns them using pair labels. Raw features are standardized spike counts; PCA compresses those counts into seven linear components. Each representation is evaluated with the same four classifier types: logistic regression, a support-vector machine (SVM), nearest neighbors (kNN) and linear discriminant analysis (LDA).
 
 \begin{table}[h!]
-\caption{Representation with the highest mean development pair balanced accuracy (\%) in each arm/readout comparison. Each mean uses seeds 0, 1 and 2 and the same nine-class task within its arm. Bold Time/Native entries identify CEBRA variants. The rankings summarize the inspected development results; repeat ranges and all four representation means are supplied in the source table. A fresh evaluation would be needed to validate a selected configuration \cite{latest,reproduction}.}
+\caption{Three ways to enlarge the training input. A recorded unit supplies one feature column; a constructed row combines one recorded trial response from each included session. Every comparison uses the same nine start--goal classes and eight development rows per class. An \emph{arm} is one complete construction setting; Table~\ref{tab:design} supplies the later arm codes and full counts \cite{latest,reproduction}.}
 \label{tab:choices}\small
-\begin{tabularx}{\linewidth}{lYYYY}
+\begin{tabularx}{\linewidth}{L{37mm}Y}
 \toprule
-Arm & Logistic & RBF-SVM & kNN5 & SVD-LDA \\
+Change being tested & What is varied and what stays fixed \\
 \midrule
-\modelChoiceRows
+More distinct recorded trials & Keep the same 17 units from 3 sessions. Use 2, 3 or 5 training trials for each class in each session; assemble 16 training rows per class throughout. \\
+More rows from the same trials & Keep the same 17 units and the same 3 trials per session/class. Compare using each trial once to make 3 rows per class with reusing the trials to make 16 rows per class. \\
+More recorded units and sessions & Expand from 17 to 49 to 83 units by including 3, 11 and 20 sessions. Keep 3 training trials per session/class and 16 constructed rows per class. \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-\textbf{Prioritize distinct recorded trials when testing CEBRA-Time.} Increasing the budget from two to five sources at 17 columns improved its mean with every readout. With SVM the gain was $+29.63\pp$; all three observed gains exceeded all five corresponding source-label shuffle gains. For SVM, repeating the same three sources produced a smaller improvement whose observed and shuffle-control changes overlap. More constructed rows therefore warrant a separate check from more recorded sources.
+\textbf{More distinct trials help CEBRA-Time.} Moving from two to five trials per session/class improved its mean score with every classifier. The model saw a broader set of recorded responses, with less reuse of each response at the fixed row count. This supports prioritizing source coverage when preparing CEBRA-Time inputs. The separate contributions of broader coverage and reduced reuse remain unresolved.
 
-\textbf{Compare complete encoder--readout pairs.} At five sources, Time/kNN reaches 45.37\% and Time/LDA 35.65\%, above their matched Raw/PCA alternatives. Raw/SVM reaches 59.72\%. Across the six arms, the best Raw/PCA mean among the four tested readouts exceeds the best CEBRA mean. This gives the lab a concrete benchmark for assessing whether an embedding improves its chosen downstream classifier.
+\textbf{Repeated assembly has selective benefits.} Making more rows from the same three trials helped CEBRA-Time most clearly with nearest neighbors. Evidence for its SVM gain was weaker: the observed and shuffled-label changes overlapped. Raw/PCA SVM mean scores fell with repetition; both already decoded above the sampled controls with each training trial used once. Reuse therefore needs to be checked with the intended classifier.
 
-\textbf{Use PCA as a strong benchmark for population expansion.} Time/SVM rises from 34.72\% to 48.61\% between 17 and 83 columns; PCA/SVM rises from 33.33\% to 72.22\%. Native/SVM peaks at 49 columns and falls at 83. Wider populations also change session composition, source counts and, for Native, the number of encoders. The tested hyperparameters remain fixed; an optimal preprocessing or training recipe remains unresolved.
+\textbf{Population expansion favors PCA.} PCA and CEBRA-Time improved in mean across both expansions with every classifier; PCA scored highest on both larger populations. The final PCA/SVM expansion improved one repeat and worsened two. The configured multisession CEBRA mean fell at the largest population with every classifier. That expansion also added session-specific networks and changed their contribution to the pooled representation. The data support PCA as a strong benchmark for wider inputs; the multisession configuration needs further validation as sessions are added.
 
-\key{\textbf{Scope of generalization.} These scores measure prediction on separately assigned contributing trials from the same sessions, assembled using known labels. Development results were repeatedly inspected. The findings guide comparisons of source selection, assembly and readout; transfer to new sessions, subjects or unknown-label natural trials remains unevaluated here.}
+\textbf{Choose the embedding together with its classifier.} With five trials per session/class, CEBRA-Time beat raw counts and PCA with kNN and LDA in every repeat. Raw/SVM gave the highest mean in that construction. CEBRA therefore improved particular downstream classifiers, while the best complete pipeline among the tested choices used raw counts or PCA in every construction. Detailed scores, repeat-level changes and controls appear in the results sections; the full ranking table remains in the accompanying data.
+
+\key{\textbf{Scope.} These findings concern different contributing trials from the same sessions, assembled using known pair labels. Development results were repeatedly inspected. They guide processing comparisons; performance on new sessions, subjects or unknown-label natural trials remains unevaluated here.}
 
 \clearpage
 \section{Recorded data and cue-response features}
@@ -220,18 +221,18 @@ The November 14--15 study holds this nine-pair panel fixed across all six arms:
 The count $K=9$ was fixed before the pair identities were selected. Availability-based optimization then selected a panel with a shared five-source core and a wider three-source roster. An \emph{arm} is one complete construction setting in Table~\ref{tab:design}; its fitted models share that setting. The next sections explain why these classes and sessions were feasible \cite{latest,panel}.
 
 \begin{table}[h!]
-\caption{Latest study: six unique arms. B3 is shared by the budget and width comparisons and fitted once per repeat/control. Sources are selected current-trial IDs across all session--class pools. Every arm has 72 constructed development rows (eight per class).}
+\caption{Latest study: six constructions and their figure codes. Trial counts per pool apply to each session and class; trial IDs and training rows are totals across the construction. B3 is shared by the trial-budget and population-width comparisons and fitted once per repeat/control. Every construction has 72 development rows (eight per class).}
 \label{tab:design}\small
-\begin{tabularx}{\linewidth}{lrrrrrY}
+\begin{tabularx}{\linewidth}{L{39mm}rrrrrY}
 \toprule
-Arm & Columns & Sessions & Sources/pool & Selected IDs & Train rows & Uses/source \\
+Construction (code) & Units & Sessions & Trials/pool & Trial IDs & Rows & Uses/trial \\
 \midrule
-B2 & 17 & 3 & 2 & 54 & 144 & 8 \\
-B3 & 17 & 3 & 3 & 81 & 144 & 5 or 6 \\
-B5 & 17 & 3 & 5 & 135 & 144 & 3 or 4 \\
-U3 & 17 & 3 & 3 & 81 & 27 & 1 \\
-Wmid & 49 & 11 & 3 & 297 & 144 & 5 or 6 \\
-Wfull & 83 & 20 & 3 & 540 & 144 & 5 or 6 \\
+Two recorded trials (B2) & 17 & 3 & 2 & 54 & 144 & 8 \\
+Three recorded trials (B3) & 17 & 3 & 3 & 81 & 144 & 5 or 6 \\
+Five recorded trials (B5) & 17 & 3 & 5 & 135 & 144 & 3 or 4 \\
+Three trials used once (U3) & 17 & 3 & 3 & 81 & 27 & 1 \\
+Wider population (Wmid) & 49 & 11 & 3 & 297 & 144 & 5 or 6 \\
+Widest population (Wfull) & 83 & 20 & 3 & 540 & 144 & 5 or 6 \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -607,7 +608,7 @@ The series has established an increasingly explicit link from recordings to clas
 
 \clearpage
 \section*{Evidence, reproducibility and references}
-The source package contains LaTeX, figures, aggregate score/contrast tables, source-support and recipe tables, deterministic summary scripts and hash manifests. Published notebook outputs supply the scores; shared B3 records are deduplicated. Metadata counting reconstructs the global embargo and fixed-panel availability. The dated class-panel verification reproduces the frozen design and records the fixed-K alternatives. The new model-comparison table summarizes the existing scalar scores. This manuscript revision uses those existing records and performs no model fitting, neural-value reconstruction or notebook execution. Repository links pin each evidence source.
+The source package contains LaTeX, figures, aggregate score/contrast tables, source-support and recipe tables, deterministic summary scripts and hash manifests. Published notebook outputs supply the scores; shared B3 records are deduplicated. Metadata counting reconstructs the global embargo and fixed-panel availability. The dated class-panel verification reproduces the frozen design and records the fixed-K alternatives. The accompanying model-comparison tables retain the existing scalar scores and their mean rankings. This manuscript revision uses those existing records and performs no model fitting, neural-value reconstruction or notebook execution. Repository links pin each evidence source.
 
 Separate AI-agent reviewers assess scientific wording, quantitative provenance and readability against the delivered PDF/source hashes. Their reports state the exact scope of each check. The published tables allow readers to verify the scores and construction counts directly. External human peer review and independent biological replication remain separate activities.
 

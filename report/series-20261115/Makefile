@@ -4,7 +4,7 @@ PYTHON ?= python
 .PHONY: all figures class-panel-figures comparisons
 all: paper.pdf
 
-paper.pdf: paper.tex data/model_pair_best_rows.tex $(wildcard figures/*.pdf) figures/historical_time.png figures/first_case_width.png
+paper.pdf: paper.tex $(wildcard figures/*.pdf) figures/historical_time.png figures/first_case_width.png
 	$(TECTONIC) paper.tex --keep-logs
 
 figures:
