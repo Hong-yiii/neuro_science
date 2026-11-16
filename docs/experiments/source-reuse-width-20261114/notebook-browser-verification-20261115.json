@@ -1,0 +1,23 @@
+{
+  "classification": "offline browser rendering and interactive confusion validation; no fits",
+  "status": "passed",
+  "script_sha256": "f5ccba6d20732bde3d052696ce5b4524f7f473986a7463c6e33fa460af60cbe6",
+  "parts": {
+    "reuse": {
+      "status": "passed",
+      "matrices": 3072,
+      "views": 256,
+      "externalResources": [],
+      "figures": 37,
+      "html_sha256": "9e58f73461837b55ba998afe58a649b3500f8495fa449557f3ee0e77615ede04"
+    },
+    "width": {
+      "status": "passed",
+      "matrices": 2304,
+      "views": 240,
+      "externalResources": [],
+      "figures": 30,
+      "html_sha256": "fc0ff3b75516c591682f32e07c15bac02d04011cefcfca355a3ebdbef65e903d"
+    }
+  }
+}

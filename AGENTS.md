@@ -12,6 +12,47 @@ PR status, recovery records and safe verification commands. Do not recreate old
 sibling worktrees or restart experiments from historical pending-work flags.
 Keep new durable decisions in Git-backed notes, not only in a chat transcript.
 
+**November15 complete notebook reproduction — completed:** after `/teach max`,
+the owner requested full end-to-end real-data notebooks and a PR. Start with
+`experiments/source_reuse_width_20261114/walkthrough_20261115/README.md` and
+`docs/experiments/source-reuse-width-20261114/notebook-validation-20261115.md`.
+Fresh reproduction completed48cases/2,448fits/96,000updates with38executed code
+cells. All3,188files and complete numeric/source/error tables passed independent
+review; all14,304saved numeric arrays equal the accepted execution (no additional
+biological replication). The two reviewed notebooks/HTML copies and six curated
+figures are versioned under `walkthrough_20261115/published/`. Every executed code
+cell/output is unchanged; one Markdown simultaneity overstatement is explicitly
+corrected, a saved first-case figure supplement replaces no output, and an
+editorial note records the distinction. Frozen source notebooks retain execution
+provenance; use the reviewed publication copies for the corrected explanation.
+All496browser view checks and final privacy/preservation review passed. Preserve
+new `outputs/source-reuse-width-notebooks-20261115/real-01/`, all failed gate
+attempts, the original accepted run and unrelated sampling/current-state edits.
+Published as [draft PR31](https://github.com/Hong-yiii/neuro_science/pull/31); no merge or further fitting is queued.
+
+**November15 focused reuse/width study — completed original execution:** the owner narrowed
+the wide proposal to2/3/5distinct sources at fixed17columns, then17/49/83columns at
+three sources, plus once-only and standard model/readout/source-label controls.
+Start at `docs/experiments/source-reuse-width-20261114/README.md`, `validation.md`
+and `scratchpad.md`. Study defined November14; actual training/delivery November15.
+All48unique cases completed:2,448fits excluding scalers,96,000updates,18executed
+code cells. Existing recordings only; no hyperparameter sweep. Raw/PCA SVM pair
+association survives once-only assembly; source-budget and width effects depend on
+pipeline, with PCA mean pair balanced-accuracy gains across both width steps and
+all four readouts. No general sampling
+validity, natural-trial or biological-independence claim. Spatial #29/#30 needs
+authenticated maps; best/worst errors and retained-column evidence are included.
+Accepted run: `outputs/source-reuse-width-20261114/complete-01/`; dated notebooks,
+offline reports and all confusions: sibling `deliverables-20261115-03/`. Preserve
+failed `real-01`:32successful cases preceded a kernel-file handoff error; reviewed
+continuation fitted only16unattempted width cases, no biological retry. All3,155
+receipt files and full numeric tables passed independent review. Current runner's
+separate-kernel repair was tested without fitting and was not used for these results;
+old gate pins intentionally reject it. Preserve source snapshots, all failures,
+superseded delivery copies, prior studies/runtimes and unrelated edits. No further
+fit, retry, push, merge or issue change is queued. Implementation is one unit under
+`experiments/source_reuse_width_20261114/`, without new shared-package API changes.
+
 **November14 experiment closure / publication:** the owner authorized landing
 the completed experiment unit in [PR28](https://github.com/Hong-yiii/neuro_science/pull/28),
 including its report-only [PR27](https://github.com/Hong-yiii/neuro_science/pull/27)
@@ -25,7 +66,7 @@ all results and unrelated sampling/current-state edits. The owner intends anothe
 experiment set but will discuss its knobs and analyses later: #29/#30 and
 `docs/professor-feedback-next-steps-20261114.md` remain proposals, not a run queue.
 
-**November11 saved-result error follow-up — latest handoff:** the owner requested
+**November11 saved-result error follow-up — completed handoff:** the owner requested
 confusion matrices and associations between removed classes/sessions, source reuse
 and errors. Start at `docs/reports/population-grid-20261111/error-analysis.md` and
 `error-analysis-validation.md`. Accepted `outputs/population-grid-20261111/error-analysis-02/`
@@ -39,7 +80,7 @@ deliverables and the earlier teaching artifact. Deleted classes are unevaluated 
 reduced tasks; F16 reuse is algebraically inverse to source coverage; session-group
 changes do not identify individually bad sessions. No new fitting, push or merge.
 
-**November11 replacement class × session study — completed/current:** the owner
+**November11 replacement class × session study — completed:** the owner
 corrected 3×3 to mean three class requirements × three session rosters, requested
 fresh fits/results/report/trajectories/executed notebook and `/teach max`, and added
 RBF-SVM/other readouts plus native multisession CEBRA. Start at

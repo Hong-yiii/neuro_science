@@ -1,6 +1,6 @@
 # Report and supporting evidence
 
-Updated 2026-11-11. This is the evidence catalog, not an experiment queue.
+Updated 2026-11-15. This is the evidence catalog, not an experiment queue.
 Use [weekly history](../../history/README.md) for the main historical reading flow;
 source packages below stay in place during the first physical migration slice.
 
@@ -15,6 +15,23 @@ source packages below stay in place during the first physical migration slice.
    revision 03; `outline.html` is the older frozen revision 02, not the current draft.
 
 ## Separate later notebook studies
+
+**[Source reuse, then population width — November15](../experiments/source-reuse-width-20261114/README.md)**
+holds one nine-class task fixed:2/3/5distinct sources at17columns, then17/49/83
+columns at three sources, plus once-only and fixed model/readout/source-label
+controls. All48unique cases completed,2,448fits and96,000updates. Two dated
+executed notebooks and offline reports include learning curves, trajectories,
+all matrices and paired/best-worst errors. Raw/PCA SVM pair association survives
+once-only assembly; PCA mean pair balanced-accuracy gains across both width steps
+extend across all four readouts, while
+other effects vary. Spatial-map attribution remains unavailable. The
+[original validation ledger](../experiments/source-reuse-width-20261114/validation.md)
+records the first execution and its preserved orchestration failure/continuation.
+The [complete notebook reproduction](../experiments/source-reuse-width-20261114/notebook-validation-20261115.md)
+trained the same48cases afresh with38successful code cells and exactly matching
+numeric outputs. Reviewed notebooks/HTML/curated figures are versioned, with
+independent numeric/privacy review. This adds computational reproducibility,
+not biological replication.
 
 **[Class requirements × session rosters — November11](population-grid-20261111/README.md)**
 replaces the previous nine-pair interpretation with nine metadata-selected population

@@ -1,0 +1,51 @@
+{
+  "actual_fit_counts": {
+    "cebra": 48,
+    "knn": 576,
+    "lda": 576,
+    "logistic": 576,
+    "native": 48,
+    "optimizer_updates": 96000,
+    "pca": 48,
+    "svm": 576
+  },
+  "authenticated_files": 3188,
+  "checks": {
+    "aggregate_class_error_rows": 16128,
+    "cases": 48,
+    "executed_notebook_code_cells": 38,
+    "learning_curves": 96,
+    "map_availability_rows": 498,
+    "native_session_encoders": 344,
+    "overlap_rows": 864,
+    "pool_usage_rows": 6192,
+    "report_best_worst_rows": 32,
+    "report_class_recall_rows": 37632,
+    "report_contrast_rows": 2688,
+    "report_error_switch_rows": 18816,
+    "report_figures": 61,
+    "report_matrix_views": 5376,
+    "report_metric_rows": 2688,
+    "report_pool_usage_rows": 6624,
+    "report_summary_rows": 336,
+    "saved_source_block_consistency_checks": 71496,
+    "source_error_rows": 299904,
+    "source_usage_rows": 15896,
+    "split_metric_checks": 4608,
+    "trajectory_class_means": 1296
+  },
+  "classification": "no-fit numeric/lineage audit of this new run; no historical replay",
+  "post_execution_orchestration_changes": {},
+  "receipt_sha256": "717d49dc5d061be3f7933ea6684115939cfb8aa72375e1b41b6ba758957a27d3",
+  "reproduction_comparison": {
+    "accepted_files_authenticated": 3155,
+    "accepted_receipt_sha256": "bd057c05a842a702d6d8c3fd2259ee4e54918fb3b49951b57f782b08e876c17b",
+    "cases": 48,
+    "conclusion": "same recorded data and seeds; no added biological replication",
+    "continuous_arrays": 4992,
+    "exact_arrays": 9312,
+    "maximum_continuous_difference": 0.0,
+    "stage_checkpoints": 18
+  },
+  "status": "passed"
+}

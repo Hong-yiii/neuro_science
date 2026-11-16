@@ -1,9 +1,58 @@
 # Workspace and recovery
 
-Updated November14, 2026. Canonical checkout: **`~/neuro_science`**. Owner: Hongyi.
+Updated November15, 2026. Canonical checkout: **`~/neuro_science`**. Owner: Hongyi.
 Read [agent instructions](../AGENTS.md) before changing scientific code or artifacts.
 
 ## Current state
+
+- **November15 complete notebook reproduction — completed:** after `/teach max`,
+  the owner requested fuller end-to-end real-data notebooks and a PR. The
+  [reviewed executed notebooks](../experiments/source_reuse_width_20261114/walkthrough_20261115/README.md)
+  expose first-case assembly/scaling/PCA/Time/native/readout fitting and complete
+  the fixed48cases. All38code cells,2,448fits and96,000updates completed in22.71min,
+  peak1,388.875MiB, zero memory events. The [new validation ledger](experiments/source-reuse-width-20261114/notebook-validation-20261115.md)
+  records3,188authenticated files, complete independent numeric/source/privacy
+  review and14,304numeric arrays identical to the accepted run. This is computational
+  reproduction, not new biological replication. Versioned notebooks/HTML/curated
+  figures are self-contained. One explicit Markdown correction avoids asserting
+  simultaneity; two saved first-case figure supplements repair Agg's text-only
+  display while preserving every executed code cell/output. All496browser views
+  and67figure loads passed offline checks. The teaching HTML remains disposable
+  outside Git. Preserve both runs, all failed gates and unrelated edits. Published as
+  [draft PR31](https://github.com/Hong-yiii/neuro_science/pull/31); no merge/further fit queued.
+
+- **November15 focused source-reuse/width study — completed:** the owner narrowed
+  the proposal to two tests with fresh training on existing recordings. The
+  [results and two dated notebooks](experiments/source-reuse-width-20261114/README.md)
+  compare2/3/5distinct sources at17columns, then17/49/83columns at three sources,
+  with once-only, raw/PCA/Time/native, four readouts and source-label controls.
+  All48unique cases completed:2,448fits excluding scalers,96,000updates,
+  18executed code cells,61original figures plus4supplements. Raw/PCA SVM pair
+  association survives once-only assembly; repetition effects vary. PCA mean
+  pair balanced-accuracy gains across both width steps occur with all four readouts;
+  raw/native effects vary by pipeline.
+  Spatial-field attribution remains unavailable; class errors and retained-column
+  evidence are included. The [validation ledger](experiments/source-reuse-width-20261114/validation.md)
+  records all3,155receipt-bound files and complete independent numeric/claim/privacy
+  review, with safe non-fitting verification. Actual phases took22.90minutes,
+  peak1,321.11MiB, no memory events. Accepted `complete-01/` inherits32cases from
+  failed `real-01/` and adds16previously unattempted width cases; the parent kernel
+  handoff failure is preserved, no biological case refitted. Current artifacts:
+  `outputs/source-reuse-width-20261114/deliverables-20261115-03/`. Current normal
+  runner repair has a no-fit regression and intentionally invalidates old launch
+  gate pins; it did not produce the accepted results. Keep the [scratchpad](experiments/source-reuse-width-20261114/scratchpad.md),
+  source snapshots, failures, superseded deliveries, old studies and unrelated
+  sampling-code/current-state edits. No fit, retry, publication or issue edit queued.
+
+- **November14 next-experiment knobs — superseded broad draft:** the owner clarified that there are
+  no new recordings; the next work should construct new pseudopopulations from the
+  existing recordings, train fresh models and evaluate them. The
+  [knob/analysis draft](experiments/population-coverage-20261114/README.md) separates
+  a matched coverage-selection study from source-diversity and model sensitivities.
+  It retains raw/PCA/Time/native models and SVM/other readouts, with explicit map,
+  cohort and budget questions still open. This turn defines the study; no new
+  construction, fit or evaluation has run. Preserve the completed November11
+  artifacts and the unrelated sampling-code/current-state edits.
 
 - **November14 experiment closure / publication:** the owner authorized merging
   [PR28](https://github.com/Hong-yiii/neuro_science/pull/28) and its report-only

@@ -1,0 +1,276 @@
+{
+  "schema": "neuro.population_coverage_design.v0",
+  "status": "draft_not_runner_config",
+  "date": "2026-11-14",
+  "authority": {
+    "requested": "Define knobs and analyses; use existing recordings for newly constructed pseudopopulations, fresh models and evaluation.",
+    "fresh_model_fits_intended": true,
+    "execution_started": false,
+    "no_warm_start": true,
+    "planning_only_artifacts": true
+  },
+  "data": {
+    "recordings": "existing_only",
+    "new_recordings_available": false,
+    "new_biological_holdout_available": false,
+    "existing_development": "historically_exposed",
+    "preserve_outer_assignments": true,
+    "preserve_global_predecessor_embargo": true,
+    "map_availability": "unverified",
+    "map_requirement": "authenticated identities, coordinates, occupancy, phase, reliability, source trials",
+    "selection_maps": "training_sources_or_independent_localizer; exposed historical maps descriptive only",
+    "field_map_source_accounting": "report map/localizer sources, model-fit sources and overlap separately; b is not automatically total pipeline data",
+    "inner_validation": "re-estimate training-derived map selection and learned preprocessing within each inner-training fold; independent localizer may remain fixed only after independence audit",
+    "map_contributor_gate": "map/localizer sources also respect protected current/predecessor contributors; verify independent-localizer separation"
+  },
+  "primary": {
+    "question": "Does preserving reliable spatial coverage improve condition-level decoding at matched recording/source budgets?",
+    "class_panel_candidates": [
+      30,
+      20,
+      15
+    ],
+    "class_lists": "existing_frozen_lists",
+    "class_choice": "largest K with admissible matched comparison, using metadata/maps only",
+    "exact_K": null,
+    "session_budget_fractions": [
+      0.3333333333333333,
+      0.6666666666666666
+    ],
+    "session_budget_count": 2,
+    "exact_session_column_budgets": null,
+    "minimum_sessions": 2,
+    "selection_families": [
+      "support",
+      "coverage",
+      "matched_random"
+    ],
+    "random_roster_repeats": 3,
+    "random_roster_seeds": [
+      101,
+      102,
+      103
+    ],
+    "roster_granularity": "whole_session",
+    "same_columns_across_classes": true,
+    "unit_quality_metric": null,
+    "unit_quality_threshold": null,
+    "occupancy_rule": null,
+    "reliability_rule": null,
+    "required_regions": null,
+    "field_overlap_rule": null,
+    "coverage_minimum_candidates": [
+      0,
+      1,
+      2
+    ],
+    "proposed_primary_coverage_minimum": 1,
+    "minimum_sessions_per_region": null,
+    "training_support_candidates": [
+      2,
+      3,
+      5
+    ],
+    "common_used_sources_per_pool": null,
+    "source_budget_rule": "largest of {2,3,5} feasible for every retained session x class in all planned rosters",
+    "training_rows_per_class": 16,
+    "sampling": "balanced_cycle",
+    "development_seed": 0,
+    "development_rows_per_class": 8,
+    "master_plan": "union of admitted sessions; canonical (session,pair,split,repeat) source choices; project arms; no per-roster sequential RNG draws",
+    "model_seeds": [
+      0,
+      1,
+      2
+    ],
+    "primary_metric": "pair_balanced_accuracy_difference_with_SVM",
+    "representations": [
+      "raw",
+      "pca7",
+      "cebra_time7",
+      "native_pair_multisession7"
+    ],
+    "readouts": [
+      "logistic",
+      "svm_rbf",
+      "knn5",
+      "svd_lda"
+    ],
+    "heads": [
+      "pair",
+      "start",
+      "goal"
+    ],
+    "encoder": {
+      "iterations": 1000,
+      "dimension": 7,
+      "hidden": 32,
+      "learning_rate": 0.0003,
+      "temperature": 1,
+      "time_batch": 256,
+      "native_batch_rule": "max(2,floor(256/S)) per session",
+      "native_aggregation": "equal_session_mean",
+      "rank_gate": "training-only PCA7 rank in every included arm/control; no per-arm dimension fallback"
+    },
+    "nulls": {
+      "worlds": 5,
+      "seeds": [
+        61000,
+        61001,
+        61002,
+        61003,
+        61004
+      ],
+      "policy_families": [
+        "support",
+        "coverage"
+      ],
+      "model_seed": 0,
+      "conditional_on_fixed_roster": true,
+      "rebuild_label_dependent_assembly_and_refit": true,
+      "p_value_claim": false,
+      "reference_repeat": 0,
+      "plan_matching": "permute each session x split label map once on union before b-subsetting; canonical map/development plan shared across arms in each world"
+    },
+    "conditional_case_counts": {
+      "observed": 30,
+      "null": 20,
+      "total": 50,
+      "fit_calls_excluding_scalers": 2550,
+      "encoder_updates": 100000,
+      "extra_modules_included": false,
+      "native_member_networks": "25 * (S_small + S_large), conditional on all 50 cases"
+    },
+    "computational_repeats": [
+      {
+        "repeat": 0,
+        "source_subset_seed": 20261114,
+        "assembly_seed": 20261214,
+        "model_seed": 0
+      },
+      {
+        "repeat": 1,
+        "source_subset_seed": 20261115,
+        "assembly_seed": 20261215,
+        "model_seed": 1
+      },
+      {
+        "repeat": 2,
+        "source_subset_seed": 20261116,
+        "assembly_seed": 20261216,
+        "model_seed": 2
+      }
+    ],
+    "repeat_semantics": "combined construction and optimization variation; same tuple across arms within repeat; random memberships fixed across repeats; observed development fixed",
+    "nonnested_comparisons": "record shared/added/removed contributors; corresponding constructed rows are not one unchanged measured trial; no shared blocks means no source-matched claim",
+    "feasibility_priority": [
+      "fixed K lists descending",
+      "two original-gate baseline recording budgets",
+      "matched admissible rosters at both budgets",
+      "largest common b in {2,3,5} on frozen rosters"
+    ]
+  },
+  "source_sensitivity": {
+    "status": "separate_optional_study",
+    "fixed_population": true,
+    "arms": [
+      {
+        "b": 2,
+        "rows": 2
+      },
+      {
+        "b": 2,
+        "rows": 16
+      },
+      {
+        "b": "b_high>2; same population required",
+        "rows": 16
+      }
+    ],
+    "source_subsets": "nested",
+    "if_higher_source_budget_infeasible": "report unavailable; do not change population within comparison"
+  },
+  "model_sensitivities": {
+    "status": "separate_optional_studies; do not cross with selection grid",
+    "duration_checkpoints": [
+      1000,
+      3000,
+      10000
+    ],
+    "checkpoint_semantics": "one seeded training path with separately fitted readouts at checkpoints",
+    "temperature_candidates": [
+      0.1,
+      0.3,
+      1
+    ],
+    "dimension_candidates": [
+      3,
+      7,
+      16
+    ],
+    "time_lag_bins": [
+      1,
+      2,
+      4
+    ],
+    "time_reference_anchor_bins": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "time_bin_ms": 100,
+    "time_lag_applicability": "Time branch only; within-row/phase pairs",
+    "svm_base_C_multipliers": [
+      0.1,
+      1,
+      10
+    ],
+    "svm_gamma": "scale",
+    "svm_C_rule": "base_C * 16*K/N",
+    "hold_initially": [
+      "learning_rate",
+      "hidden_width",
+      "batch_rule",
+      "native_pooling"
+    ],
+    "native_comparison_requires": "concatenated pair-supervised comparator with matched supervision/latent/readout budgets; pooling remains an intervention",
+    "assembly_policy": "one fixed assembly/source subset across hyperparameters and model seeds",
+    "checkpoint_state": "preserve optimizer/sampler/RNG/train mode; evaluate saved copies after the fresh 10000-update path; extra readout fits counted separately",
+    "time_negative_distribution": "fixed same-bin distribution across lags; report actual reference/positive exposure; positive-time marginals differ",
+    "dimension_gate": "omit infeasible dimension from entire matched family if any included training arm/control fails"
+  },
+  "analyses": [
+    "availability_and_coverage_frontier",
+    "retained_lost_gained_maze_coverage_with_confusions",
+    "train_development_confusions_all_heads",
+    "per_class_recall_and_prediction_switches",
+    "source_support_reuse_error_associations",
+    "loss_and_checkpoint_readout_curves",
+    "cue_time_condition_averaged_trajectories",
+    "optional_frozen_readout_train_time_by_test_time_matrix"
+  ],
+  "unresolved_before_execution": [
+    "authenticated map inventory/provenance",
+    "quality and occupancy/reliability rules",
+    "verified regions and endpoint coordinates",
+    "exact fixed class panel and matched rosters/budgets",
+    "common used-source budget",
+    "source-safe inner-validation feasibility",
+    "choice and separate fit counts of optional model/readout studies",
+    "independent code/scientific review",
+    "representative compute benchmark and bounded resource/attempt ledger",
+    "constrained-roster objective and tie rules",
+    "exact support ranking and matching tolerances/quality summaries",
+    "random-roster sampling distribution and insufficient distinct-roster handling"
+  ],
+  "references": [
+    "https://github.com/Hong-yiii/neuro_science/issues/29",
+    "https://github.com/Hong-yiii/neuro_science/issues/30",
+    "https://cebra.ai/docs/usage.html",
+    "https://cebra.ai/docs/demo_notebooks/Demo_hippocampus_multisession.html"
+  ],
+  "review": "independent read-only design review; conditional arithmetic and exploratory scope accepted with recorded clarifications; execution preflight outstanding"
+}

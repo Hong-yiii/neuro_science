@@ -1,0 +1,66 @@
+{
+  "classification": "post-execution publication; one explicit Markdown correction; no fits or altered code/outputs",
+  "files_sha256": {
+    "figures/first_case_reuse.png": "ed0bca9d4e9521a9ad47d40c16de5dae557faa24d64a26e108f8e273beb7b7b6",
+    "figures/first_case_width.png": "d7ff2a209eee470b0a5380c0dac754151d95af4db561f8fc6d0344d0a80d2e44",
+    "figures/reuse_paired_svm_changes.png": "e1d07e18346bd9b57d1d5ef89d59723c1e705fb617279ecd634ea2773eb4d7b9",
+    "figures/width_all_model_changes.png": "20e869414f89316dd1cc5360c4ed34b066425e726e2b9eb28f61637e3caff78b",
+    "figures/width_class_changes.png": "2f4eaf73eca5556b61f4e0f1f663983dad29ed8b8186328e28411828a02955ac",
+    "figures/width_design.png": "e3a88d45578df3577decf5dae358bf3190afaf5752c548b494c063958e332de9",
+    "population_width_20261115.executed.html": "fc0ff3b75516c591682f32e07c15bac02d04011cefcfca355a3ebdbef65e903d",
+    "population_width_20261115.executed.ipynb": "8fab810ce58d6bebc579d66033268b1cbca89da873e089b70f5c4886f7cc9c13",
+    "source_reuse_20261115.executed.html": "9e58f73461837b55ba998afe58a649b3500f8495fa449557f3ee0e77615ede04",
+    "source_reuse_20261115.executed.ipynb": "64f05b415c99b702299e735076e5c04aabd3d3194400631c63428f01a268480c"
+  },
+  "notebooks": [
+    {
+      "added_editorial_note": true,
+      "added_saved_figure_after_original_cell": 22,
+      "code_cells": 19,
+      "editorial_markdown_cells": [
+        2
+      ],
+      "executed_code_unchanged": true,
+      "executed_source_sha256": "123d8242a6e7bb55e4039e16e2b8f795c9faf6e3d22f094bb11671315dc40236",
+      "file": "source_reuse_20261115.executed.ipynb",
+      "outputs_unchanged": true,
+      "sha256": "64f05b415c99b702299e735076e5c04aabd3d3194400631c63428f01a268480c"
+    },
+    {
+      "added_editorial_note": true,
+      "added_saved_figure_after_original_cell": 22,
+      "code_cells": 19,
+      "editorial_markdown_cells": [
+        2
+      ],
+      "executed_code_unchanged": true,
+      "executed_source_sha256": "f6da5200c15d7fb87a843400f09f6e00900761c09baa324a6b534b202e30a785",
+      "file": "population_width_20261115.executed.ipynb",
+      "outputs_unchanged": true,
+      "sha256": "8fab810ce58d6bebc579d66033268b1cbca89da873e089b70f5c4886f7cc9c13"
+    }
+  ],
+  "numeric_verification_sha256": "73030f75359f06fdbedab556eab12a17e2aed23ad9adb88784d7b02de35a8fe5",
+  "post_execution_figures": [
+    {
+      "caption": "Post-execution rendering of the same first case: B2, observed seed0, 17columns/3sessions; 144constructed training rows from 54 distinct training source identities; 72constructed exposed-development rows, nine ordered endpoint classes, cue[0,1)s in100msbins. Training curves have1,000updates each and different sampling objectives; compare within each curve. Raw/logistic pair balanced accuracy=47.22%, uniform reference11.11%. Matrix text=counts; color=row-normalized fraction; diagonal=recall. No biological uncertainty interval. Sources: authenticated case learning.json and confusions.json; no refitting or neural-array reads.",
+      "file": "figures/first_case_reuse.png",
+      "sha256": "ed0bca9d4e9521a9ad47d40c16de5dae557faa24d64a26e108f8e273beb7b7b6",
+      "source_sha256": {
+        "cases/observed_seed0_B2/confusions.json": "8792fbc3b433ca535c88f159d6ee7feba457746d91907ed952d9bc7cc6f7329e",
+        "cases/observed_seed0_B2/learning.json": "04413e9bba3fd708eb34ae6a96b9dc5558036e9063f112d2b7ee617af600da00"
+      }
+    },
+    {
+      "caption": "Post-execution rendering of the same first case: Wmid, observed seed0, 49columns/11sessions; 144constructed training rows from 297 distinct training source identities; 72constructed exposed-development rows, nine ordered endpoint classes, cue[0,1)s in100msbins. Training curves have1,000updates each and different sampling objectives; compare within each curve. Raw/logistic pair balanced accuracy=66.67%, uniform reference11.11%. Matrix text=counts; color=row-normalized fraction; diagonal=recall. No biological uncertainty interval. Sources: authenticated case learning.json and confusions.json; no refitting or neural-array reads.",
+      "file": "figures/first_case_width.png",
+      "sha256": "d7ff2a209eee470b0a5380c0dac754151d95af4db561f8fc6d0344d0a80d2e44",
+      "source_sha256": {
+        "cases/observed_seed0_Wmid/confusions.json": "cd6e11edb7d0895765421a9073082912bee1141fb2a4140f53d08435a5b3d9aa",
+        "cases/observed_seed0_Wmid/learning.json": "e635c19c02129f7025b7e231d4928640b514c91d8343a4e4eb4c194abf539a29"
+      }
+    }
+  ],
+  "publication_code_sha256": "ba94ee7e3594339eb9955ab5ffbc8b443081d11f8df46b5b14ab8185081c8e4d",
+  "run_receipt_sha256": "717d49dc5d061be3f7933ea6684115939cfb8aa72375e1b41b6ba758957a27d3"
+}
