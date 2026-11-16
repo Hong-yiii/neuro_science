@@ -60,6 +60,14 @@ selection maximized the width supporting five training sources per session–cla
 pool, then the width supporting three, then used a fixed class-order tie-break.
 The selection used source availability, not neural accuracy.
 
+The dated [class-panel design explanation](class-panel-20261116.md) adds the full
+30-pair source distribution, per-pair session-support grid and fixed-class-count
+feasibility frontier. It explains why complete support depends on the intersection
+of sessions across all selected pairs, and distinguishes the prior choice of K=9
+from the subsequent optimization of class identities. All counts were verified
+with the study's own metadata and selection functions on November 16. This is
+metadata context only; the frozen design and all 48-case results remain unchanged.
+
 | Arm | Recorded columns / sessions | Distinct training sources per session × class | Total selected training source IDs | Constructed training rows | Uses per selected source |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | B2 | 17 / 3 | 2 | 54 | 144 | 8 |
