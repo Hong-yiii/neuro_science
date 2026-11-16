@@ -1,42 +1,43 @@
-# Independent audit of the qualitative overview — November 16, 2026
+# Independent audit of the cover, geometry and appendices — November 16, 2026
 
-Three fresh independent AI-agent reviewers give the changed explanation
+Three fresh independent AI-agent reviewers give the final revision
 **PASS / UNDERSTANDABLE**, with no required revisions.
 
 | Role | Report | Verdict |
 | --- | --- | --- |
-| ML-literate newcomer | [Readability and prerequisites](overview-newcomer-20261116.md) | PASS; understandable |
-| Neuroscience researcher | [Scientific interpretation](overview-scientific-20261116.md) | PASS; understandable |
-| Quantitative/provenance auditor | [Scalar claims and construction counts](overview-quantitative-20261116.md) | PASS; understandable |
+| ML-literate newcomer | [Cover, explanation and layout](geometry-newcomer-20261116.md) | PASS; understandable |
+| Neuroscience researcher | [Geometry, loss and scientific interpretation](geometry-scientific-20261116.md) | PASS; understandable |
+| Quantitative/provenance auditor | [Saved values, plotting and preservation](geometry-quantitative-20261116.md) | PASS; understandable |
 
-The scope is the qualitative overview, source-pool definition, descriptive
-construction names and accompanying-data statement. Reviewers received the
-artifact paths and criteria without the drafting transcript, earlier detailed
-audits, author/probe memos or one another's findings. They used the supporting
-results and primary scalar/design evidence as needed. Their reports disclose
-which pages, numerical tables and original scalar outputs they checked.
+The scope is the UROP cover, four saved 3D CEBRA views and matching loss curves,
+and relocation of detailed verification into Appendices A and B. Reviewers
+received artifact paths and criteria without the drafting transcript, author/probe
+memos, earlier detailed audits or one another's findings. They used primary
+source and aggregate evidence as needed. Each report states its actual reading,
+visual and numerical scope.
 
-The newcomer confirmed that the three comparisons can be understood without arm
-codes and inspected the changed layout. Scientific and quantitative reviews
-independently checked the interpretation against existing scores. Two clarifications
-were adopted and verified: the final PCA/SVM expansion improved one repeat and
-worsened two; the opening avoids conflating repeated and once-only three-trial
-constructions. The complete result sections and numerical artifacts are unchanged.
+The newcomer checked the cover against the supplied sample, prerequisites,
+figure explanations and appendix navigation. The scientific and quantitative
+reviewers independently authenticated the saved aggregate source chain and
+confirmed exact preservation of all 1,080 coordinates and 4,000 loss values. The
+quantitative review checked all plotted artists, deterministic rerendering and
+baseline evidence preservation. Both reviewers confirmed that the appendix bodies
+are unchanged apart from their added heading labels.
 
 | Final artifact | SHA256 |
 | --- | --- |
-| `paper.pdf` | `ed5c207f3fd85a4e0d41f0d39d6c9b1219d85def770eede716947586615ac72c` |
-| `paper.tex` | `8f30636542bee0768208a5536d1bdb7428b8445dfc798378bbda57cc5030204c` |
+| `paper.pdf` | `2d1b9efe6b370ae631c5888c2b4261646449d049ef11d8dac3f347f960c390d7` |
+| `paper.tex` | `0dc9d74a49bf2fa994df46ef33e0cd3f71c260b24bc1c7f1adf9afed9bec4aea` |
 
 [Current validation](../validation.md) and
-[overview artifact checks](overview-artifact-checks-20261116.json) record the
-isolated build, preservation and review identities. The preceding
-[full language audit index](language-index-20261116.md) retains its original
-artifact hashes and links to earlier methods/class-panel reviews. All earlier
-detailed audit files remain intact.
+[geometry artifact checks](geometry-artifact-checks-20261116.json) record the
+24-page build, exact figure regeneration, preservation and reviewer identities.
+The [preceding overview audit index](overview-index-20261116.md) retains its
+original artifact hashes and links to the full language, methods and class-panel
+reviews. All earlier detailed review files remain intact.
 
-These AI reviews assess the changed artifact and its scalar support. They do not
-repeat every historical measurement or execution audit. External human peer
-review, fresh prospective evaluation and biological replication remain separate
-steps. The manuscript retains its known-label construction and development-data
-limitations.
+These AI reviews assess the revised artifact and its saved aggregate support.
+They do not repeat every historical measurement or execution audit. External
+human peer review, prospective evaluation and biological replication remain
+separate steps. The manuscript retains its known-label construction,
+development-data and interpretation limits.

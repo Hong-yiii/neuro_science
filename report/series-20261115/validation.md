@@ -1,75 +1,102 @@
-# Qualitative CEBRA overview — November 16, 2026
+# UROP cover, trained CEBRA figures and appendices — November 16, 2026
 
-**Complete: all three fresh independent AI-agent reviews pass and find the
-changed explanation understandable.** The paper remains 21 pages with 14 figures
-and 11 tables. [PR32](https://github.com/Hong-yiii/neuro_science/pull/32) remains
-open against `main`.
+**Complete: three fresh independent AI-agent reviews return PASS / UNDERSTANDABLE,
+with no required revisions.** The delivered PDF has 24 A4 pages: an unnumbered
+cover and 23 numbered report pages, with 16 figures and 11 tables.
+[PR32](https://github.com/Hong-yiii/neuro_science/pull/32) remains open against
+`main`.
 
 ## Change and evidence
 
-Page 2 now explains what improves with distinct recorded trials, repeated row
-assembly and larger populations. A plain-language comparison table states what
-changes and what stays fixed. The overview uses descriptive constructions; page
-6 pairs each later figure code with its construction name. Page 1 adds the
-source-pool definition before later uses. The exact mean rankings remain in the
-unchanged accompanying CSV/LaTeX artifacts, and pages 16–17 retain the detailed
-results, repeats and controls. The PDF build now uses only TeX and figures.
+The cover follows the supplied UROP sample and names **Lin Hong Yi**, **Semester 1,
+AY 2026/2027**. The project title is **Evaluating CEBRA for Hippocampal Cue Decoding:
+Effects of Trial Sampling and Population Construction**. The institution block
+uses the wording in the sample. PDF title and author metadata agree with the cover.
 
-The interpretation remains specific to the tested constructions and classifiers:
-CEBRA-Time benefits from more distinct trials; repeated assembly helps selectively;
-PCA has the strongest wider-population means; and the configured multisession
-CEBRA mean falls at the final expansion. The overview explicitly retains the
-one-improving/two-declining PCA/SVM repeats and the scope of the development data.
-The opening avoids conflating once-only and repeated three-trial constructions.
+Printed pages 13–14 show four trained CEBRA examples, each paired with its own
+1,000-update training-loss curve. The examples are CEBRA-Time at two and five
+sources per session/class with 17 columns, followed by Time and native multisession
+CEBRA with 49 columns. All use observed seed 0. This selection follows the
+source-budget endpoints and the first wider walkthrough case. It illustrates
+the design without claiming to represent variation across repeats.
 
-This is an editorial change. No fitting, model loading/replay, neural-array read,
-notebook execution or metadata optimizer rerun occurred. Review arithmetic used
-existing saved scalar scores. The completed 48 cases and all experimental outputs
-are preserved.
+Each 3D view shows the saved development class means in coordinates 1–3 of a
+seven-coordinate encoder. Each class mean averages eight constructed rows at each
+of ten cue bins. Circle/cross markers identify the 50/950-ms bin centers. The
+figures use equal coordinate spans within each panel, independent limits between
+panels and a fixed orthographic camera. No projection, alignment, normalization
+or smoothing was added. Native averages corresponding session outputs before
+forming the class mean. The text distinguishes class-mean appearance, training
+objective progress and development decoding performance.
 
-## Checks and review
+The new curated input copies **1,080 coordinates and 4,000 loss values** from
+authenticated original delivery JSON records. The original study ledger pins the
+delivery manifest; that manifest binds all four source files. The original
+geometry/loss PNGs also match the reviewed published notebook images. The numeric
+traces come from the saved JSON records. Their values were compared exactly by
+the independent scientific and quantitative reviewers.
 
-The [fresh review panel](audit/README.md) assessed the changed interpretation,
-construction clarity and saved-scalar evidence without the drafting transcript,
-prior audit findings or one another's reports. All three returned
-**PASS / UNDERSTANDABLE**, with no required revisions. The newcomer visually
-checked pages 1, 2 and 6 and read the supporting results. The scientific reviewer
-matched all 768 pair scores and 96 means to original saved scalars. The quantitative
-reviewer independently checked all 96 summaries, 24 rankings, 896 pair contrasts
-and the six construction counts. These are scoped AI artifact reviews; they do
-not repeat the historical biological execution audits.
+The former measurement/construction and numerical-check sections now appear as
+Appendices A and B on printed pages 21–22. Their bodies match the preceding
+version exactly after allowing the added appendix labels. This preserves their
+tables, original first-case learning figure, values, citations and limits. The
+main controls section summarizes the checks and points to both appendices.
 
-Tectonic 0.17.0 produces 21 A4 pages with 40 embedded fonts and no warnings,
-unresolved references or bad boxes. An isolated archive of Git tree
-`f032bbf6902a4a863f15518f39020a925ef3778b`, containing TeX, Makefile and figures,
-builds with identical extracted text. All 33 pinned repository paths resolve.
-Only pages 1, 2, 6 and 21 have changed extracted text relative to
-`3416df8f085b4fce76951e922c61663e3147f5a2`; all other page text is identical.
+## Checks and independent review
+
+The [fresh review panel](audit/README.md) assessed the final artifact without the
+drafting transcript, author/probe memos, prior audit findings or one another's
+reports. The newcomer compared the cover with the supplied image and inspected
+the geometry, controls, appendix and reference pages. The scientific reviewer
+checked source definitions, saved aggregates, construction counts and claim
+boundaries. The quantitative reviewer checked all 5,080 copied values, plotted
+artists, source identities, deterministic regeneration and preservation. These
+are scoped AI artifact audits of this revision. Earlier full-paper and execution
+reviews retain their original artifact identities.
+
+Tectonic 0.17.0 builds the final PDF with 45 embedded fonts and no warnings,
+unresolved references, duplicate anchors or bad boxes. An isolated archive of Git
+tree `fa2b98e592f895e72fbf42998bb88291c43edce5` contains only the TeX, Makefile,
+figures, geometry renderer and curated aggregate input. It reproduces both new
+PDF/PNG pairs and their provenance byte for byte, then builds a complete PDF with
+identical extracted text. The delivered PDF remains the reviewed original build.
+The renderer passes Ruff. All 33 pinned repository paths resolve.
 
 | Delivered artifact | SHA256 |
 | --- | --- |
-| `paper.pdf` | `ed5c207f3fd85a4e0d41f0d39d6c9b1219d85def770eede716947586615ac72c` |
-| `paper.tex` | `8f30636542bee0768208a5536d1bdb7428b8445dfc798378bbda57cc5030204c` |
+| `paper.pdf` | `2d1b9efe6b370ae631c5888c2b4261646449d049ef11d8dac3f347f960c390d7` |
+| `paper.tex` | `0dc9d74a49bf2fa994df46ef33e0cd3f71c260b24bc1c7f1adf9afed9bec4aea` |
+| `data/cebra_geometry_examples.json` | `82838f544adcb15ba60517cc7b2cc196965d38fd4f686194c2edbf77eba4e67c` |
 
-The [artifact checks](audit/overview-artifact-checks-20261116.json) bind the build,
-preservation checks and reviewer identities. All 97 pre-existing files in the
-protected evidence scope match their baseline bytes: report data/figures and
-generators, study implementation, source/executed notebooks and study records.
-This includes all 41 package data/figure artifacts. No numerical artifact was
-regenerated for this revision.
+The [artifact checks](audit/geometry-artifact-checks-20261116.json) record the
+build, preservation, pinned links and reviewer hashes. The
+[geometry provenance](geometry-figure-provenance.json) binds the original
+sources, curated input, renderer, exact plot limits and generated figures.
 
-## Preserved records and limits
+## Preservation and limits
 
-The [preceding full language validation](validation-language-20261116.md) and
-[its audit index](audit/language-index-20261116.md) are exact copies of their
-baseline versions. Their 268-check full quantitative review remains attached to
-its original PDF/source identities. All prior detailed reviews remain unchanged.
+All 97 pre-existing files in the protected evidence scope match baseline
+`414496280088f9400114938c3b9ad65e417f82c2`: report data/figures and generators,
+study implementation, source/executed notebooks and study records. All 28 earlier
+detailed audit/check files remain unchanged. The
+[preceding overview validation](validation-overview-20261116.md) and
+[its audit index](audit/overview-index-20261116.md) are exact copies of the previous
+current ledgers. They retain the earlier full-language, class-panel and methods
+reviews and their original hashes.
 
-The prior development-utilization, acquisition/task-context, spatial-evidence,
-PDF-accessibility and cross-version limits remain recorded in the earlier
-ledgers. The PDF remains untagged; a full grayscale/print audit is outside these
-checks. Known-label assembly, shared sessions, source dependence and inspected
-development data still constrain interpretation.
+This revision reads saved aggregate geometry and loss. It performs no fitting,
+model loading/replay, neural-observation or individual-feature-array read,
+notebook execution or metadata optimizer rerun. The completed 48 cases, original
+outputs and failures remain preserved.
+
+The existing development-utilization, acquisition/task-context, spatial-evidence,
+PDF-accessibility and cross-version limits remain. The PDF is untagged; a full
+grayscale/print audit is outside these checks. The cover was checked against the
+provided sample; broader institutional formatting requirements were not assessed.
+Known-label assembly, shared sessions, dependent sources and inspected development
+data still constrain interpretation. Class-mean geometry leaves individual-row
+overlap unshown. Loss curves alone establish neither decoding quality nor
+convergence.
 
 The unrelated `src/neuro/_cebra_sampling.py` edit remains at SHA256
 `63489315c5a21257ed037edd77161f639beb23199321719d8fe22a562c1659f5`.

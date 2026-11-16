@@ -9,8 +9,8 @@
 \definecolor{muted}{HTML}{526574}
 \definecolor{wash}{HTML}{EAF2F4}
 \hypersetup{colorlinks=true,linkcolor=accent,citecolor=accent,urlcolor=accent,
- pdftitle={Evaluating CEBRA for hippocampal cue decoding},
- pdfauthor={Hongyi's neuroscience workspace}}
+ pdftitle={Evaluating CEBRA for Hippocampal Cue Decoding: Effects of Trial Sampling and Population Construction},
+ pdfauthor={Lin Hong Yi}}
 \pagestyle{fancy}\fancyhf{}
 \fancyhead[L]{\small\color{muted}Hippocampal cue decoding: research synthesis}
 \fancyhead[R]{\small\color{muted}16 November 2026}
@@ -31,14 +31,43 @@
 \newcommand{\figurefile}[2][]{\includegraphics[#1]{figures/#2}}
 
 \begin{document}
+\hypersetup{pageanchor=false}
+\begin{titlepage}
+\thispagestyle{empty}
+\centering\sffamily
+\vspace*{10mm}
+{\fontsize{14}{18}\selectfont\bfseries
+UNDERGRADUATE RESEARCH OPPORTUNITIES PROGRAMME\par
+(UROP)\par}
+\vspace{6mm}
+{\Large\bfseries PROJECT REPORT\par}
+\vspace{28mm}
+{\fontsize{17}{22}\selectfont\bfseries
+Evaluating CEBRA for\par
+Hippocampal Cue Decoding\par}
+\vspace{4mm}
+{\large\bfseries Effects of Trial Sampling and\par Population Construction\par}
+\vspace{21mm}
+{\large Lin Hong Yi\par}
+\vspace{27mm}
+{\itshape Department of Electrical Engineering,\par
+College of Design and Engineering\par}
+\vspace{3mm}
+{\itshape National University of Singapore\par}
+\vspace{25mm}
+{\itshape Semester 1, AY 2026/2027\par}
+\vfill
+\end{titlepage}
+\hypersetup{pageanchor=true}
+\setcounter{page}{1}
 \thispagestyle{empty}
 {\small\color{accent}\textbf{RESEARCH SYNTHESIS}\hfill Evidence through 15 November 2026}\par
 \vspace{5mm}
 {\LARGE\bfseries\color{ink}Evaluating CEBRA for\par hippocampal cue decoding}\par
 \vspace{3mm}
-{\large Source selection, population construction and comparisons with raw counts and PCA}\par
+{\large Effects of trial sampling and population construction}\par
 \vspace{2mm}
-{\small Hongyi's neuroscience workspace \quad\textbullet\quad Exploratory evidence synthesis}
+{\small Lin Hong Yi \quad\textbullet\quad Exploratory evidence synthesis}
 
 \begin{abstract}
 \noindent Using more distinct recorded training trials improved CEBRA-Time decoding in the latest nine-class study. With 17 recorded units, increasing from two to five training trials per session and class raised mean start--goal balanced accuracy from 16.67\% to 46.30\% with a support-vector classifier. Choosing CEBRA also requires comparing the complete encoder--classifier combination: at five trials, raw counts with the same classifier reached 59.72\%, while CEBRA-Time led the nearest-neighbor and linear-discriminant comparisons. Expanding the population from 17 to 49 to 83 units raised PCA/support-vector means from 33.33\% to 68.06\% to 72.22\%; the last step improved one of three repeats. This synthesis explains how those results depend on source availability, class selection and assembly of cross-session \emph{pseudopopulations}: vectors whose recording blocks are selected using a known start--goal label. Evaluation uses different contributing trials from the training set, drawn from the same sessions. The development data have been examined repeatedly during the research series, so the results guide exploratory comparisons. Earlier path and endpoint studies explain the present design; complete notebook reproduction confirms repeatability on the same recordings. The evidence supports decisions about the tested input constructions and readouts. Performance on unknown-label natural trials, biological replication and recovery of ordered navigation paths remain open.
@@ -396,66 +425,40 @@ Balanced accuracy averages the recall of each true class:
 The confusion matrix entry $C_{kj}$ counts true class $k$ predicted as $j$; recall is the fraction correct within a true class. Uniform guessing gives references $1/9$ for pairs and $1/6$ for starts or goals. A percentage-point change subtracts two percentage scores. Five source-label shuffle controls provide a second, construction-specific reference. They support descriptive comparisons; calibrated significance testing and biological uncertainty estimation remain outside this analysis.
 
 \clearpage
-\section{Completed checks of labels, measurements and construction}
-The completed checks address specific ways the input construction could fail: incorrect endpoint labels, mismatched events, changed exported values, overlapping contributors and infeasible source pools. Table~\ref{tab:measurementchecks} reports the outcome of each check and the question it leaves open. These are recorded checks from the original work and reproduction.
+\section{What trained CEBRA representations look like}\label{sec:geometry}
+Figures~\ref{fig:sourcegeometry} and~\ref{fig:modelgeometry} show saved outputs from trained seven-coordinate encoders, with the recorded training loss of each model below its 3D view. The examples use observed seed 0 and are chosen from the study design: the two source-budget endpoints, followed by the first wider-population case. The complete score comparisons retain all repeats and controls.
 
-\begin{table}[h!]
-\caption{Completed measurement and construction checks. Each row uses its own cohort and denominator. The outcomes verify particular measurement or software properties; biological sampling requires separate acquisition evidence. Exact source records are linked in the references.}
-\label{tab:measurementchecks}\small
-\begin{tabularx}{\linewidth}{L{30mm}L{67mm}Y}
-\toprule
-Check & Recorded evidence & What it establishes / leaves open \\
-\midrule
-Goal-marker interpretation (September 1) & Nearest Unity end poster matched the current marker digit in 23,200/23,200 successful trials. & Corroborates endpoint markers on these records. Formal task documentation and independent cue-identity validation remain missing \cite{markers}. \\
-Predecessor-start interpretation (September 1) & Nearest navigation-start poster matched the previous marker in 22,740/22,740 successful-after-successful trials; no equal start/goal marker pairs. Without requiring predecessor success: 22,856/23,144 matched. & Supports the inclusion rule and contributor accounting. The check used dense Unity positions absent from the compact copy; it is not repeated here \cite{markers}. \\
-Cross-stream event/QC audit (August 30) & Among 23,901 records: 24 Ripple/Unity navigation-duration discrepancy flags, one cue-duration outlier, one Eye marker mismatch and one Eye nonmonotonic-time flag. Flags may overlap. & Retained flags preserve the anomalies for review. Fine clock alignment remains unresolved by these coarse duration/marker checks \cite{importqc}. \\
-Compact export conservation (October 26) & All 370 native inputs checked before/after export; 1,098 session arrays compared bit-exact; all spike/Unity values preserved. All 23,901 metadata records and 195 unit identities reconciled. & Supports fidelity to the received inputs. Largest native-versus-CSV cue-duration difference was $3.33\times10^{-9}$ s; equivalence to historical rounded bins/scores remains unclaimed \cite{compact}. \\
-Latest real-data preflight (November 15) & All 48 scheduled plans passed source nesting, projected values, budgets, quotas and contributor checks with fitting blocked. Minimum training rank 17 (required $\geq7$). & Confirms feasibility and declared construction. Biological independence, label validity and separation of correlated behavioral variables remain separate questions \cite{reproduction}. \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-Three original Eye events from one trial are masked as missing under the inherited QC policy; none belongs to a selected contributor in the compact validation. This preserves the difference between an unavailable event and an observed zero. Invented-data checks and the compact reconstruction audit covered half-open spike-bin boundaries, explicit event axes and timestamp precision. All 25 compact-source software tests passed \cite{compact}.
-
-The latest observed seed-0 preflight reports zero constant columns and zero overlapping contributors in every arm. Training-bin matrix ranks are 17 for B2/B3/B5/U3, 49 for Wmid and 83 for Wfull. Rank counts the linearly independent directions available to fitting; the minimum of 17 exceeds the required seven PCA directions. U3 has 27 whole-cue rows, each contributing ten bin vectors to this rank calculation. Source-mask totals and complete pool support also match Figures~\ref{fig:support}--\ref{fig:structure}.
-
-These outcomes support the operational label rule, preservation of recorded values, explicit handling of unavailable responses, contributor separation and compliance with the declared budgets. Whether seven latent coordinates capture the relevant biological variables remains open. Calibration on independent natural trials and a representative acquisition design would address broader sampling validity.
-
-\clearpage
-\section{Numerical checks reproduce the fitted computation}
-The executed notebooks expose the first B2 and Wmid cases stage by stage. For $N$ training rows, the feature scaler estimates each unit's mean $\mu_u$ and standard deviation $\sigma_u$ from $10N$ bin vectors, then forms $z_{rub}=(x_{rub}-\mu_u)/\sigma_u$. PCA applies its fitted mean and seven directions; each classifier also receives a separately scaled feature vector. The fitted parameters are then fixed when transforming and scoring development inputs.
-
-\begin{table}[h!]
-\caption{Actual first-case arithmetic checks from the executed notebooks, observed seed 0. Each residual is the maximum absolute difference between a manually calculated output and its library implementation. The two cases were fixed by execution order \cite{reproduction}.}
-\label{tab:arithmetic}\small
-\begin{tabularx}{\linewidth}{Yrr}
-\toprule
-Operation / shape & B2 (17 columns) & Wmid (49 columns) \\
-\midrule
-Training bin vectors used by scaler & 1,440 & 1,440 \\
-Raw whole-cue feature count & 170 & 490 \\
-PCA whole-cue feature count & 70 & 70 \\
-Standardization residual & $4.77\times10^{-7}$ & $9.54\times10^{-7}$ \\
-PCA projection residual & $7.15\times10^{-7}$ & $9.54\times10^{-7}$ \\
-Raw/logistic forward-probability residual & 0 & 0 \\
-\bottomrule
-\end{tabularx}
-\end{table}
+Each colored line joins ten cue-bin means for one start--goal pair. Each point averages eight constructed development rows. Circles mark the first bin center, 50 ms after cue onset; crosses mark the last, 950 ms. The panels display coordinates 1--3 of the fitted seven-coordinate representation. Nearby points have similar values in these displayed coordinates; the other four coordinates and variation among individual rows also matter for decoding.
 
 \begin{figure}[h!]
 \centering
-\figurefile[width=\linewidth,trim=0 0 349bp 26bp,clip]{first_case_width.png}
-\caption{Recorded first-case learning curves: the two loss panels from the unchanged published image, cropped here for legibility. Wmid observed seed 0: 49 columns/11 sessions, 297 selected training IDs, 144 constructed training rows, nine pair classes, cue $[0,1)$ s. Each shows 1,000 updates on its own objective/axis, with no uncertainty interval. Each loss tracks its own training objective. Convergence and comparative decoding performance require separate checks. This predetermined case illustrates execution; the full image, including its Raw/logistic confusion on 72 development rows, remains in the source package \cite{reproduction}.}
-\label{fig:firstcase}
+\figurefile[width=\linewidth]{cebra_source_geometry.pdf}
+\caption{Trained CEBRA-Time with two versus five recorded training trials per session/class. Both use the same 17 units from three sessions, nine pair classes, 144 constructed training rows and 72 development rows. The selected training-source totals are 54 and 135. Top: saved class-mean development cue responses in coordinates 1--3; each line contains ten 100-ms bin means. Bottom: the same models' recorded total training loss over 1,000 updates, shown without smoothing or uncertainty intervals. The examples are B2/B5, observed seed 0. Each 3D plot has equally scaled coordinate axes within its own fitted frame; frames and limits are specific to each model. Source: saved November 15 aggregate geometry and loss records, also displayed in the executed notebook \cite{latest,reproduction}.}
+\label{fig:sourcegeometry}
 \end{figure}
 
-Wmid Time has 3,303 trainable parameters. Over 1,000 updates it draws 256,000 reference inputs, with each of the 144 training rows receiving 1,672--1,890 draws. A reference draw is a resampling of an assembled input for the learning objective. Native uses eleven encoders with 20,653 total parameters, 23 references per session and 253 references per update; its outputs are averaged equally across sessions. These counts show how repeated optimizer sampling persists after once-only assembly and how the two CEBRA configurations differ in capacity and supervision.
+Increasing the trial budget changes which recorded responses supply the training rows and how often each response is reused. The plots make the resulting fitted representation visible. Mean lines summarize cue responses within each class; their appearance alone leaves individual-row overlap and decoding performance unresolved. Figure~\ref{fig:scores} supplies the corresponding source-separated prediction evidence.
 
-Before reproduction on recorded data, invented-input equivalence checks matched 298 numeric arrays across implementations and passed 192 composed split reload checks. An earlier serializer-order failure remains recorded despite matching arrays. The reproduction then completed all 48 cases, 2,448 fits excluding scalers and 96,000 updates across 38 executed code cells. A case is one arm with one observed seed or shuffled-label setting. For each of six arms, three observed repeats and five shuffle settings give $6(3+5)=48$ cases. Each case fits four representations and four readouts for three heads. Saved-model verification covered 192 encoder reloads, 2,304 readout reloads and 4,608 complete train/development pipeline checks, with fitting blocked during replay \cite{reproduction}.
+\clearpage
+\textbf{One shared encoder and session-specific encoders on the same population.}
+Figure~\ref{fig:modelgeometry} compares the two CEBRA configurations for the first width-stage case: 49 units from 11 sessions and three training trials per session/class. CEBRA-Time learns one encoder using adjacent cue bins. Native learns one encoder per session, aligns them with pair labels and averages their outputs across sessions. These choices change supervision, network count and pooling together.
+
+\begin{figure}[h!]
+\centering
+\figurefile[width=\linewidth]{cebra_model_geometry.pdf}
+\caption{Trained CEBRA-Time and configured native multisession CEBRA for the same 49-unit population (Wmid, observed seed 0). Both use 297 selected training-source IDs, 144 constructed training rows, 72 development rows and the same nine pair classes. Geometry shows ten cue-bin class means over eight development rows per pair, using the first three of seven fitted coordinates. Circle/cross markers indicate 50/950 ms after cue onset. Native's displayed coordinates are the equal-session mean of its aligned encoder outputs. Each model has its own coordinate frame and plot limits. Matching loss panels show all 1,000 recorded updates without smoothing; the objectives and sampling rules give the two curves different loss scales. Source: saved November 15 aggregate records and executed width notebook \cite{latest,reproduction}.}
+\label{fig:modelgeometry}
+\end{figure}
+
+\textbf{How to interpret the learning curves.} A loss curve records progress on the encoder's training objective. In these examples, the largest loss decrease occurs early; later updates show smaller, noisy changes. The curve helps identify whether optimization is still changing and whether the recorded updates completed. Comparing the numerical height of Time and Native loss curves would mix their different objectives and sampling rules. The study stopped at the fixed update budget; convergence and the benefit of further training remain open. Development decoding supplies the separate measure of task-label prediction.
+
+\key{\textbf{What the pictures show.} The lines summarize class-average cue responses in learned coordinates. Each fitted model has its own orientation and scale. The panels show a three-coordinate view of seven-coordinate encoders; per-row variability, biological uncertainty and a shared biological coordinate system remain outside these displays.}
 
 \clearpage
 \section{What the completed controls establish}
 The observed runs keep the recorded labels and use three random seeds. The five controls shuffle whole endpoint-pair labels among sources within each session and split, before source selection, assembly and fitting. Each shuffled label map is shared across arms and fitted at model seed 0. This preserves pool sizes and the assembly rule while disrupting the original response--label relation. The operation acts on recorded sources so that their repeated uses inherit the same shuffled label. Cue appearance, gaze and preceding-trial effects remain possible explanations of observed-label performance.
+
+The measurement, construction and numerical checks support the recorded processing chain. Appendices~\ref{app:measurement} and~\ref{app:numerical} give their full outcomes, including label corroboration, contributor checks, arithmetic residuals and computational reproduction on the same recordings.
 
 \begin{table}[h!]
 \caption{Interpretation of completed controls and checks. The result column summarizes the completed exploratory comparisons. Results are detailed in the following sections.}
@@ -606,11 +609,70 @@ The completed checks corroborate operational labels, preserve received values, v
 
 The series has established an increasingly explicit link from recordings to class selection, population assembly, learned features and development scores. A reusable hippocampal task-state representation remains a research objective. Formal observability asks whether the state of a specified dynamical model can be recovered from measurements; the completed classification studies have not demonstrated that property. For the lab's immediate representation choice, the relevant evidence is the measured performance of each construction and encoder--readout pair, together with its reproducibility and evaluation scope.
 
+\appendix
+\clearpage
+\section{Completed checks of labels, measurements and construction}\label{app:measurement}
+The completed checks address specific ways the input construction could fail: incorrect endpoint labels, mismatched events, changed exported values, overlapping contributors and infeasible source pools. Table~\ref{tab:measurementchecks} reports the outcome of each check and the question it leaves open. These are recorded checks from the original work and reproduction.
+
+\begin{table}[h!]
+\caption{Completed measurement and construction checks. Each row uses its own cohort and denominator. The outcomes verify particular measurement or software properties; biological sampling requires separate acquisition evidence. Exact source records are linked in the references.}
+\label{tab:measurementchecks}\small
+\begin{tabularx}{\linewidth}{L{30mm}L{67mm}Y}
+\toprule
+Check & Recorded evidence & What it establishes / leaves open \\
+\midrule
+Goal-marker interpretation (September 1) & Nearest Unity end poster matched the current marker digit in 23,200/23,200 successful trials. & Corroborates endpoint markers on these records. Formal task documentation and independent cue-identity validation remain missing \cite{markers}. \\
+Predecessor-start interpretation (September 1) & Nearest navigation-start poster matched the previous marker in 22,740/22,740 successful-after-successful trials; no equal start/goal marker pairs. Without requiring predecessor success: 22,856/23,144 matched. & Supports the inclusion rule and contributor accounting. The check used dense Unity positions absent from the compact copy; it is not repeated here \cite{markers}. \\
+Cross-stream event/QC audit (August 30) & Among 23,901 records: 24 Ripple/Unity navigation-duration discrepancy flags, one cue-duration outlier, one Eye marker mismatch and one Eye nonmonotonic-time flag. Flags may overlap. & Retained flags preserve the anomalies for review. Fine clock alignment remains unresolved by these coarse duration/marker checks \cite{importqc}. \\
+Compact export conservation (October 26) & All 370 native inputs checked before/after export; 1,098 session arrays compared bit-exact; all spike/Unity values preserved. All 23,901 metadata records and 195 unit identities reconciled. & Supports fidelity to the received inputs. Largest native-versus-CSV cue-duration difference was $3.33\times10^{-9}$ s; equivalence to historical rounded bins/scores remains unclaimed \cite{compact}. \\
+Latest real-data preflight (November 15) & All 48 scheduled plans passed source nesting, projected values, budgets, quotas and contributor checks with fitting blocked. Minimum training rank 17 (required $\geq7$). & Confirms feasibility and declared construction. Biological independence, label validity and separation of correlated behavioral variables remain separate questions \cite{reproduction}. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Three original Eye events from one trial are masked as missing under the inherited QC policy; none belongs to a selected contributor in the compact validation. This preserves the difference between an unavailable event and an observed zero. Invented-data checks and the compact reconstruction audit covered half-open spike-bin boundaries, explicit event axes and timestamp precision. All 25 compact-source software tests passed \cite{compact}.
+
+The latest observed seed-0 preflight reports zero constant columns and zero overlapping contributors in every arm. Training-bin matrix ranks are 17 for B2/B3/B5/U3, 49 for Wmid and 83 for Wfull. Rank counts the linearly independent directions available to fitting; the minimum of 17 exceeds the required seven PCA directions. U3 has 27 whole-cue rows, each contributing ten bin vectors to this rank calculation. Source-mask totals and complete pool support also match Figures~\ref{fig:support}--\ref{fig:structure}.
+
+These outcomes support the operational label rule, preservation of recorded values, explicit handling of unavailable responses, contributor separation and compliance with the declared budgets. Whether seven latent coordinates capture the relevant biological variables remains open. Calibration on independent natural trials and a representative acquisition design would address broader sampling validity.
+
+\clearpage
+\section{Numerical checks reproduce the fitted computation}\label{app:numerical}
+The executed notebooks expose the first B2 and Wmid cases stage by stage. For $N$ training rows, the feature scaler estimates each unit's mean $\mu_u$ and standard deviation $\sigma_u$ from $10N$ bin vectors, then forms $z_{rub}=(x_{rub}-\mu_u)/\sigma_u$. PCA applies its fitted mean and seven directions; each classifier also receives a separately scaled feature vector. The fitted parameters are then fixed when transforming and scoring development inputs.
+
+\begin{table}[h!]
+\caption{Actual first-case arithmetic checks from the executed notebooks, observed seed 0. Each residual is the maximum absolute difference between a manually calculated output and its library implementation. The two cases were fixed by execution order \cite{reproduction}.}
+\label{tab:arithmetic}\small
+\begin{tabularx}{\linewidth}{Yrr}
+\toprule
+Operation / shape & B2 (17 columns) & Wmid (49 columns) \\
+\midrule
+Training bin vectors used by scaler & 1,440 & 1,440 \\
+Raw whole-cue feature count & 170 & 490 \\
+PCA whole-cue feature count & 70 & 70 \\
+Standardization residual & $4.77\times10^{-7}$ & $9.54\times10^{-7}$ \\
+PCA projection residual & $7.15\times10^{-7}$ & $9.54\times10^{-7}$ \\
+Raw/logistic forward-probability residual & 0 & 0 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{figure}[h!]
+\centering
+\figurefile[width=\linewidth,trim=0 0 349bp 26bp,clip]{first_case_width.png}
+\caption{Recorded first-case learning curves: the two loss panels from the unchanged published image, cropped here for legibility. Wmid observed seed 0: 49 columns/11 sessions, 297 selected training IDs, 144 constructed training rows, nine pair classes, cue $[0,1)$ s. Each shows 1,000 updates on its own objective/axis, with no uncertainty interval. Each loss tracks its own training objective. Convergence and comparative decoding performance require separate checks. This predetermined case illustrates execution; the full image, including its Raw/logistic confusion on 72 development rows, remains in the source package \cite{reproduction}.}
+\label{fig:firstcase}
+\end{figure}
+
+Wmid Time has 3,303 trainable parameters. Over 1,000 updates it draws 256,000 reference inputs, with each of the 144 training rows receiving 1,672--1,890 draws. A reference draw is a resampling of an assembled input for the learning objective. Native uses eleven encoders with 20,653 total parameters, 23 references per session and 253 references per update; its outputs are averaged equally across sessions. These counts show how repeated optimizer sampling persists after once-only assembly and how the two CEBRA configurations differ in capacity and supervision.
+
+Before reproduction on recorded data, invented-input equivalence checks matched 298 numeric arrays across implementations and passed 192 composed split reload checks. An earlier serializer-order failure remains recorded despite matching arrays. The reproduction then completed all 48 cases, 2,448 fits excluding scalers and 96,000 updates across 38 executed code cells. A case is one arm with one observed seed or shuffled-label setting. For each of six arms, three observed repeats and five shuffle settings give $6(3+5)=48$ cases. Each case fits four representations and four readouts for three heads. Saved-model verification covered 192 encoder reloads, 2,304 readout reloads and 4,608 complete train/development pipeline checks, with fitting blocked during replay \cite{reproduction}.
+
 \clearpage
 \section*{Evidence, reproducibility and references}
-The source package contains LaTeX, figures, aggregate score/contrast tables, source-support and recipe tables, deterministic summary scripts and hash manifests. Published notebook outputs supply the scores; shared B3 records are deduplicated. Metadata counting reconstructs the global embargo and fixed-panel availability. The dated class-panel verification reproduces the frozen design and records the fixed-K alternatives. The accompanying model-comparison tables retain the existing scalar scores and their mean rankings. This manuscript revision uses those existing records and performs no model fitting, neural-value reconstruction or notebook execution. Repository links pin each evidence source.
+The source package contains LaTeX, figures, aggregate scores and contrasts, construction tables and hash manifests. Published notebook outputs supply the scores; shared B3 records are counted once. The dated metadata verification reproduces the frozen panel and fixed-$K$ alternatives. Geometry and learning figures use saved class-mean coordinates and loss records; curated inputs and extraction/rendering provenance accompany the paper. This revision performs no fitting, model replay, neural-input reconstruction or notebook execution. Repository links pin the original evidence.
 
-Separate AI-agent reviewers assess scientific wording, quantitative provenance and readability against the delivered PDF/source hashes. Their reports state the exact scope of each check. The published tables allow readers to verify the scores and construction counts directly. External human peer review and independent biological replication remain separate activities.
+Independent AI reviewers assess scientific wording, quantitative provenance and readability against the delivered PDF/source hashes. Their reports define the verification scope. The source tables support direct checking. External human peer review and independent biological replication remain separate activities.
 
 \begingroup\small
 \begin{thebibliography}{99}
