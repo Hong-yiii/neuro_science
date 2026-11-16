@@ -1,0 +1,102 @@
+{
+  "classification": "exploratory post-hoc saved-score summary",
+  "generator": {
+    "path": "report/series-20261115/summarize_model_comparisons.py",
+    "sha256": "cee166f6418adf1316c64b75684a6a38ce33e3ed2c008204a8dab97fe9d7e70e"
+  },
+  "input": {
+    "path": "report/series-20261115/data/case_scores.csv",
+    "commit": "6f362603d302d07de6cc33d80c846e1df92efe17",
+    "sha256": "1661ff9d7b55644d586ad8efb21a440032c23d18f0121767100fd162acb89249",
+    "bytes": 292209,
+    "rows": 2304,
+    "schema": [
+      "world",
+      "seed",
+      "arm",
+      "encoder",
+      "decoder",
+      "head",
+      "balanced_accuracy",
+      "accuracy",
+      "macro_f1",
+      "log_loss",
+      "train_BA",
+      "train_development_gap"
+    ],
+    "matches_committed_bytes": true
+  },
+  "selection": {
+    "world": "observed",
+    "head": "pair",
+    "seeds": [
+      "0",
+      "1",
+      "2"
+    ],
+    "arms": [
+      "B2",
+      "B3",
+      "B5",
+      "U3",
+      "Wmid",
+      "Wfull"
+    ],
+    "decoders": [
+      "logistic",
+      "svm",
+      "knn",
+      "lda"
+    ],
+    "encoder_labels": {
+      "raw": "Raw",
+      "pca": "PCA",
+      "cebra": "Time",
+      "native": "Native"
+    },
+    "selected_score_rows": 288
+  },
+  "numeric_policy": {
+    "metric": "development pair balanced accuracy, percentage scale",
+    "aggregation": "exact rational arithmetic on source decimal strings; equal seed weights",
+    "csv_precision": "17 significant decimal digits",
+    "table_precision": "two decimal places, round half to even",
+    "ranking": "highest unrounded three-seed mean within each arm and decoder",
+    "ties": "retain every exactly tied highest mean; join labels with / in Raw/PCA/Time/Native order",
+    "display_ties": "rounding may show equal values whose unrounded means differ",
+    "range": "minimum and maximum of the three computational seed scores"
+  },
+  "interpretation": [
+    "Rankings are post-hoc descriptions of three computational repeats.",
+    "The rankings provide no validated model-selection procedure or significance test.",
+    "All observed seeds share the same historically exposed development arrays at a fixed roster.",
+    "Known-label construction and shared exposed development limit generalization claims.",
+    "Seed ranges describe computational variation; biological uncertainty remains unestimated.",
+    "A representation's ranking is conditional on the arm and readout."
+  ],
+  "execution_scope": {
+    "scientific_input": "case_scores.csv only",
+    "new_fits": 0,
+    "model_loads": 0,
+    "notebooks_executed": 0,
+    "metadata_or_old_results_regenerated": false
+  },
+  "exact_top_mean_ties": 0,
+  "outputs": {
+    "report/series-20261115/data/model_pair_means.csv": {
+      "sha256": "1f0d976f1cd648bdb938d3511dfa5fa34312e7935f1c90af80aaef82708ca16d",
+      "bytes": 11876,
+      "rows": 96
+    },
+    "report/series-20261115/data/model_pair_best_means.csv": {
+      "sha256": "b115a3f52d43c40d349d06e62684abee357478b61cc931f4c32894178f556d49",
+      "bytes": 2716,
+      "rows": 24
+    },
+    "report/series-20261115/data/model_pair_best_rows.tex": {
+      "sha256": "4de3731c616b262e31532b88a744c3e227af91929d3cfa4c3545957dc804017c",
+      "bytes": 439,
+      "rows": 6
+    }
+  }
+}

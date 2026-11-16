@@ -1,129 +1,115 @@
-# Research-series synthesis — November 15, 2026
+# Evaluating CEBRA for hippocampal cue decoding
 
-Read [the paper](paper.pdf), **From cue activity to defensible condition-level
-decoding**. Its [LaTeX source](paper.tex) is editable. The synthesis centers the
-November source-support, reuse and width experiments and uses the earlier series
-to explain why the questions and evaluation changed.
+Read the [paper](paper.pdf) and its [LaTeX source](paper.tex). The 21-page synthesis
+helps a lab interpret CEBRA's performance under different choices of recorded
+sources, population construction and readout. It covers the research series through
+November 15, with the November 16 class-panel explanation and language revision.
 
-The expanded **20-page** paper puts its data, source distributions, construction and
-completed validity checks before the results. The November 16 addition explains
-the fixed nine-class choice, the full pair distributions and the common-session
-intersection that limits population width. All three fresh [blind reviewers](audit/README.md)
-give this revision **PASS / UNDERSTANDABLE**, with no material blockers.
-Earlier approvals remain attached to the preceding 18-page version.
-The [validation ledger](validation.md) records current checks separately from the
-preserved [earlier validation](validation-pre-panel-20261116.md) and
-[November 16 follow-up](audit/followup-20261116.md).
+**Start with pages 1–2.** They define the task and data units, then show which
+representation has the highest mean for each construction and readout. Pages 16–17
+state the source-budget and width results directly. The methods and checks explain
+how those results were obtained and which uses they support.
 
-Published for review as [PR32](https://github.com/Hong-yiii/neuro_science/pull/32).
-PR31 merged into `main` at `ec730ee8d024a959d30520cb9f41bdb98882de81` on
-November 16; PR32 now reviews against that merged base and remains unmerged.
+The current revision has 14 figures and 11 tables. Three fresh independent AI-agent
+reviews—scientific, quantitative and newcomer—passed and found the paper
+understandable. The [audit index](audit/README.md) and [validation ledger](validation.md)
+bind those reviews to the delivered version and state their scope.
+[PR32](https://github.com/Hong-yiii/neuro_science/pull/32) reviews against `main`
+after PR31 merged. PR32 remains unmerged.
 
-This is an exploratory research synthesis of existing evidence, not a new
-experiment or biological replication. Work began only after the completed,
-independently reviewed experiment appeared as [PR31](https://github.com/Hong-yiii/neuro_science/pull/31).
-The experimental evidence cutoff is `a0ca80180e2bb52b90e499357d3d6965b26806da`.
-No model fitting, notebook execution, raw-neural reconstruction, model loading or
-new literature research is part of this paper. The new source-distribution plots
-count authenticated public frozen assignment metadata under the accepted design.
-A separate [class-panel metadata verification](../../docs/experiments/source-reuse-width-20261114/class-panel-20261116.md)
-calls the original study's `metadata()` and `select_panel()` at other fixed class
-counts to explain feasibility. It reproduces the frozen K=9 design exactly;
-the other counts are not decoding experiments and do not replace that design.
-Neither workflow inspects spike/event values.
+## Main findings
 
-## Reading the methods
+- At 17 columns, increasing from two to five recorded training sources per session
+  and class raises CEBRA-Time/SVM mean pair balanced accuracy from 16.67% to 46.30%.
+  Raw/SVM reaches 59.72% with five sources.
+- CEBRA-Time gives higher scores than matched Raw/PCA features with kNN and LDA
+  under the five-source construction. Choosing the readout changes the ranking.
+- At 49 and 83 columns, PCA has the highest mean with each of the four readouts.
+  At 83 columns, PCA/SVM reaches 72.22%, compared with Time/SVM's 48.61%.
+- Across each of the six arms, the best Raw/PCA mean among the four tested
+  readouts exceeds the best configured CEBRA mean. These are retrospective
+  descriptions of the inspected development scores.
 
-- Pages 2–3: what was recorded, clock units, label derivation, eligibility counts
-  and current/predecessor protection.
-- Pages 5–10: the fixed design, full 30-pair distributions and class-count
-  feasibility frontier, all 20-session × 9-class support counts, missing
-  source–unit entries, actual two-row recipes, source reuse and development
-  singleton pools.
-- Pages 11–14: model operations, existing label/measurement corroboration,
-  preflight results, manual numerical checks, learning curves, controls and
-  computational reproduction.
-- Pages 15–19: every displayed seed/control, width contrasts, training–development
-  gaps, separately fitted endpoint heads, confusions and scientific limits.
+Development uses different contributing trials from training, drawn from the same
+sessions. Known pair labels are used to assemble each population vector. The
+recordings and development results have been examined during the research series.
+These facts define the evaluated task and the scope of its performance claims.
+The paper states the remaining questions about new sessions, natural trials and
+biological interpretation alongside the practical findings.
 
-The paper has 14 labeled figures and 10 tables. Data plots are distinguished from
-schematics. Source IDs, session blocks, constructed rows and optimizer draws have
-separate meanings; the paper does not treat them as independent biological trials.
+## Reading route
 
-## Contents and traceability
+- Pages 1–2: task, terminology, CEBRA comparison table and practical implications.
+- Pages 3–6: data inventory, trial eligibility, contributor separation, history
+  and the six fixed constructions.
+- Pages 7–11: class-panel feasibility, complete session support, block assembly
+  and reuse of recorded responses.
+- Pages 12–15: encoder/readout operations and completed measurement, numerical,
+  reproduction and shuffle-control checks.
+- Pages 16–20: measured results, training/development gaps, endpoint classifiers,
+  errors, temporal evaluation and conclusions for using CEBRA.
+- Page 21: evidence sources and reproducibility references.
 
-- [paper.pdf](paper.pdf) and [paper.tex](paper.tex): manuscript and source, including
-  labeled method diagrams, quantitative figures, source accounting, claims and
-  limitations, and pinned evidence references.
-- [build_figures.py](build_figures.py): authenticates the two published notebooks,
-  manifest, fixed design and public split metadata. It extracts aggregate tables,
-  independently repeats the declared global embargo for source-count displays,
-  deduplicates shared B3 records and draws figures. It never executes notebook
-  cells or imports scientific study code.
-- [data/](data/): all 2,304 unique development score rows and 2,688 matched
-  contrasts; 360 session/class/split source counts; complete displayed recipe and
-  reuse evidence; 216 observed SVM head rows and 72 summaries; arm, width and
-  confusion tables. No neural features, fitted states, per-example predictions
-  or full source lineage are exported.
-- [figure-provenance.json](figure-provenance.json): source hashes, exact extraction
-  locations, figure identities and deterministic output hashes.
-- [build_class_panel_figures.py](build_class_panel_figures.py) and its
-  [provenance](class-panel-figure-provenance.json): two figures and two CSVs from
-  the authenticated metadata-verification receipt. This renderer does not import
-  the study or run the optimizer. The separate verification script and receipt
-  are retained in the study record.
-- [audit/](audit/): independent manuscript audit records and reviewed identities.
-- [validation.md](validation.md): scope, rendering/numeric checks and publication
-  status for this synthesis.
+## Evidence and source files
 
-The displayed Wfull confusion uses the predeclared seed 0. It happens to be the highest
-Wfull PCA/SVM repeat (88.89%); it is labeled as a high-score illustration. The
-main score figure retains all repeats, including the two that worsen in the final
-PCA width step. The [full-size historical time figure](figures/historical_time.png)
-is an unchanged public image from a distinct 195-unit cohort, with its own source
-counts and interpretation. The paper adds a readable external legend and links the full-size source from
-the PDF caption. The first-case Wmid image is also retained unchanged; LaTeX
-crops its two learning panels for larger printed labels, as the caption states.
+The experimental evidence is pinned at
+`a0ca80180e2bb52b90e499357d3d6965b26806da`. The class-panel note is pinned at
+`082b5e1a3cb9a87bc22a9ce80006d2e882adc404`; its original metadata verification
+receipt and all numbers are preserved. The new representation/readout table
+summarizes the public scores from `6f362603d302d07de6cc33d80c846e1df92efe17`.
+The existing result tables, figures and completed notebook outputs are unchanged.
+
+- [data/](data/) contains all 2,304 unique score rows, 2,688 matched contrasts,
+  source counts, assembly recipes, reuse summaries, endpoint-head diagnostics,
+  confusions and the new model-comparison summaries.
+- [build_figures.py](build_figures.py) authenticates the published notebooks and
+  metadata, extracts aggregate outputs and renders the existing result and
+  construction figures. [Figure provenance](figure-provenance.json) records
+  their sources and hashes.
+- [build_class_panel_figures.py](build_class_panel_figures.py) renders the recorded
+  feasibility receipt. Its [provenance](class-panel-figure-provenance.json) binds
+  the full pair grids and class-count frontier.
+- [summarize_model_comparisons.py](summarize_model_comparisons.py) reads the
+  authenticated scalar score CSV. It writes 96 representation/readout means
+  with all three seed values and ranges, 24 within-arm rankings and the early
+  LaTeX table. [Comparison provenance](model-comparison-provenance.json) states
+  the exact arithmetic, tie handling and interpretation.
+- [Class-panel study explanation](../../docs/experiments/source-reuse-width-20261114/class-panel-20261116.md)
+  gives the complete distribution tables and selection rationale.
+- [Current reviews](audit/README.md) and [validation](validation.md) record the
+  language revision. The [preceding validation](validation-pre-language-20261116.md)
+  and [earlier reviews](audit/class-panel-index-20261116.md) retain their original
+  artifact identities.
+
+The new comparison table reports mean rankings after inspecting the completed
+study. It supplies a benchmark set for further evaluation. Seed ranges describe
+computational variation. They provide no estimate of biological uncertainty.
 
 ## Build
 
-From this directory, using Tectonic 0.17.0 (or a compatible installation):
+From this directory:
 
 ```sh
 make TECTONIC=/path/to/tectonic
 ```
 
-The PDF builds from committed figures and requires no neural-analysis runtime.
-On first use, Tectonic may download its TeX/font bundle. To regenerate the
-aggregate figures from the pinned notebooks in a full repository checkout:
+Tectonic 0.17.0 builds the PDF from the TeX, committed figures and generated
+comparison-table macro. First use may download the TeX/font bundle. To regenerate
+only the scalar comparison table:
 
 ```sh
-PYTHONDONTWRITEBYTECODE=1 python build_figures.py
-PYTHONDONTWRITEBYTECODE=1 python build_class_panel_figures.py
+make comparisons
 make TECTONIC=/path/to/tectonic
 ```
 
-The figure script uses Python, NumPy and Matplotlib. It rejects changed notebook
-identities instead of silently updating the paper's evidence. Its figure-PDF
-metadata is fixed to support repeatable hashes under the recorded software
-environment; cross-version binary identity is not promised. In the November 16
-follow-up, all 16 numeric CSVs were byte-identical under different Python,
-NumPy and Matplotlib versions, while some figure binaries changed without a
-numerical or meaningful visual difference. The TeX PDF's own build timestamps
-can vary, so the audit binds the delivered PDF and source hashes, not a claim of
-byte-identical TeX output across machines.
+The summary uses Python's standard library and rejects a changed input identity.
+The optional `figures` and `class-panel-figures` targets rebuild the established
+figures with Python, NumPy and Matplotlib. Their numerical evidence stays pinned.
+Neither rendering workflow fits models or executes notebooks.
 
-The requested three-persona audit panel consists of separate AI agents: a newcomer,
-an experienced neuroscience researcher and a quantitative/provenance reviewer.
-The expanded-methods review used three fresh contexts with no drafting transcript,
-evidence-probe memos, old approval records or other reviewers' findings. The
-November 16 follow-up repeated those roles and boundaries; its quantitative
-blinding limitation and the remaining transparency/accessibility gaps are
-recorded in the [follow-up synthesis](audit/followup-20261116.md). These are AI
-manuscript checks, not external human peer review. Publication required all
-three original reviewers to pass and explicitly find the paper understandable.
-Those reports remain attached to their original artifact hashes. The class-panel
-addition has a separate fresh-context panel and validation record. PR32 remains
-unmerged. The follow-up's remaining development-utilization, task-orientation,
-accessibility and cross-version binary-reproducibility limits remain recorded;
-adding class feasibility does not close those separate gaps.
+Reproducibility claims apply to the recorded software environment. TeX timestamps
+and cross-version plotting changes can alter binary hashes; reviews identify the
+actual delivered PDF. The [earlier follow-up](audit/followup-20261116.md) retains
+its remaining development-utilization, task-orientation, accessibility and
+cross-version limitations. The current PDF remains untagged and the historical
+time figure retains its full-size link for zoomed reading.
