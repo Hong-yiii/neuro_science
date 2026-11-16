@@ -1,11 +1,15 @@
 # Synthesis validation — methods expansion, November 15, 2026
 
-Status: **complete — all three fresh blind auditors approve the final 18-page
-manuscript and explicitly find it understandable**.
-The [original ten-page validation](validation-initial.md) and its exact approvals
+Status: **complete — all three original fresh blind auditors approve the final
+18-page manuscript and explicitly find it understandable**. A [November 16
+fresh-context follow-up](audit/followup-20261116.md) also returns PASS /
+UNDERSTANDABLE in all three roles, with no material finding and a disclosed
+quantitative blinding limitation. The
+[original ten-page validation](validation-initial.md) and its exact approvals
 are preserved separately. [PR32](https://github.com/Hong-yiii/neuro_science/pull/32)
-remains stacked on the completed experiment in PR31. This revision updates
-that PR after approval; no merge is authorized or performed.
+was originally stacked on PR31. PR31 subsequently merged into `main` at
+`ec730ee8d024a959d30520cb9f41bdb98882de81`; PR32 now reviews against that base
+and remains unmerged.
 
 ## Authority and scope
 
@@ -71,7 +75,8 @@ The aggregate membership count is checked against the executed notebook mask
 summary; no elementwise neural mask was read. Both notebooks' printed recipe,
 prefit and use tables are authenticated and extracted with exact schema checks.
 
-The builder reproduced all 32 CSV/figure artifacts deterministically. The
+The builder reproduced all 32 CSV/figure artifacts deterministically under the
+recorded environment. The
 source manifest and [figure-provenance.json](figure-provenance.json) record
 input hashes, cell/output indices, output hashes, meanings and limitations.
 The working environment uses Python3.13.2, NumPy2.3.4, Matplotlib3.10.7/Agg and
@@ -134,7 +139,12 @@ byte-identical TeX output on different machines.
 Changes remain confined to `report/series-20261115/` and its reading link in
 `report/README.md`, on `docs/series-paper-20261115`. Existing studies, completed
 runs, raw inputs, source notebooks, failures and runtimes are untouched. The
-unrelated `src/neuro/_cebra_sampling.py` edit remains at SHA256
-`63489315c5a21257ed037edd77161f639beb23199321719d8fe22a562c1659f5`;
-untracked `docs/reports/current-state-20260927/` is excluded. PR32 stays stacked
-on PR31 and neither PR is merged by this task.
+November 15 working-tree record named an unrelated
+`src/neuro/_cebra_sampling.py` edit at SHA256
+`63489315c5a21257ed037edd77161f639beb23199321719d8fe22a562c1659f5` and
+untracked `docs/reports/current-state-20260927/`; neither was present during the
+November 16 follow-up. The current tracked sampling file has SHA256
+`be5467607ec2766f3f8b0ff906de7d9f2f55898cd6d583f45b8d0f16fbd7d7b5`.
+PR31 has since merged; PR32 remains unmerged after this documentation-only
+follow-up. Exact checkout differences and preservation boundaries are recorded
+in the [follow-up synthesis](audit/followup-20261116.md).

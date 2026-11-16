@@ -34,6 +34,23 @@ the final PDF/source and retained approval.
 [Artifact checks](artifact-checks.json) and the [validation ledger](../validation.md)
 record build, extraction, rendering and preservation evidence.
 
+## November 16 fresh-context follow-up
+
+The [follow-up synthesis](followup-20261116.md) repeats the same three roles in
+fresh Pi contexts after PR31 merged. All three reviewers again return **PASS /
+UNDERSTANDABLE**, with no material finding. The quantitative reviewer disclosed
+incidental exposure to this package README's old blanket approval headline, so
+the follow-up does not claim perfect blinding for that role. Separate reports:
+
+- [Newcomer](followup-newcomer-20261116.md)
+- [Experienced neuroscience researcher](followup-researcher-20261116.md)
+- [Quantitative/provenance](followup-quantitative-20261116.md)
+
+The follow-up also regenerates the aggregate package in isolation, records
+environment-dependent figure-binary differences despite identical numeric CSVs,
+and lists the remaining development-utilization, task-orientation and
+accessibility gaps. The reviewed PDF/TeX hashes above are unchanged.
+
 ## Preserved first version and methods critique
 
 The original ten-page version and its approvals are historical. Its

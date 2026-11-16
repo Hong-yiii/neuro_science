@@ -6,12 +6,17 @@ November source-support, reuse and width experiments and uses the earlier series
 to explain why the questions and evaluation changed.
 
 The expanded **18-page** paper puts its data, source distributions, construction
-and completed validity checks before the results. All three fresh
+and completed validity checks before the results. All three original fresh
 [blind manuscript auditors](audit/README.md) approve the final version and
-explicitly find it understandable. The [validation ledger](validation.md)
-records the exact reviewed identities and isolated package build.
-Published for review as [PR32](https://github.com/Hong-yiii/neuro_science/pull/32),
-stacked on the completed experiment in PR31; no merge.
+explicitly find it understandable. A [November 16 fresh-context follow-up
+panel](audit/followup-20261116.md) also returned PASS / UNDERSTANDABLE in all
+three roles; its quantitative review's incidental exposure to the old approval
+headline is disclosed there. The [validation ledger](validation.md) records
+the exact reviewed identities and isolated package build.
+
+Published for review as [PR32](https://github.com/Hong-yiii/neuro_science/pull/32).
+PR31 merged into `main` at `ec730ee8d024a959d30520cb9f41bdb98882de81` on
+November 16; PR32 now reviews against that merged base and remains unmerged.
 
 This is an exploratory research synthesis of existing evidence, not a new
 experiment or biological replication. Work began only after the completed,
@@ -87,14 +92,22 @@ make TECTONIC=/path/to/tectonic
 ```
 
 The figure script uses Python, NumPy and Matplotlib. It rejects changed notebook
-identities instead of silently updating the paper's evidence. Its PDF metadata is
-fixed so figure hashes repeat. The TeX PDF's own build timestamps can vary, so the
-audit binds the delivered PDF and source hashes, not a claim of byte-identical TeX
-output across machines.
+identities instead of silently updating the paper's evidence. Its figure-PDF
+metadata is fixed to support repeatable hashes under the recorded software
+environment; cross-version binary identity is not promised. In the November 16
+follow-up, all 16 numeric CSVs were byte-identical under different Python,
+NumPy and Matplotlib versions, while some figure binaries changed without a
+numerical or meaningful visual difference. The TeX PDF's own build timestamps
+can vary, so the audit binds the delivered PDF and source hashes, not a claim of
+byte-identical TeX output across machines.
 
 The requested three-persona audit panel consists of separate AI agents: a newcomer,
 an experienced neuroscience researcher and a quantitative/provenance reviewer.
-The expanded-methods review uses three fresh contexts with no drafting transcript,
-evidence-probe memos, old approval records or other reviewers' findings. This is a blinded manuscript check, not
-external human peer review. Publication requires all three to pass and explicitly
-find the paper understandable. No merge is requested.
+The expanded-methods review used three fresh contexts with no drafting transcript,
+evidence-probe memos, old approval records or other reviewers' findings. The
+November 16 follow-up repeated those roles and boundaries; its quantitative
+blinding limitation and the remaining transparency/accessibility gaps are
+recorded in the [follow-up synthesis](audit/followup-20261116.md). These are AI
+manuscript checks, not external human peer review. Publication required all
+three original reviewers to pass and explicitly find the paper understandable.
+PR32 remains unmerged after the follow-up update.
