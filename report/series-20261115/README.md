@@ -5,14 +5,15 @@ decoding**. Its [LaTeX source](paper.tex) is editable. The synthesis centers the
 November source-support, reuse and width experiments and uses the earlier series
 to explain why the questions and evaluation changed.
 
-The expanded **18-page** paper puts its data, source distributions, construction
-and completed validity checks before the results. All three original fresh
-[blind manuscript auditors](audit/README.md) approve the final version and
-explicitly find it understandable. A [November 16 fresh-context follow-up
-panel](audit/followup-20261116.md) also returned PASS / UNDERSTANDABLE in all
-three roles; its quantitative review's incidental exposure to the old approval
-headline is disclosed there. The [validation ledger](validation.md) records
-the exact reviewed identities and isolated package build.
+The expanded **20-page** paper puts its data, source distributions, construction and
+completed validity checks before the results. The November 16 addition explains
+the fixed nine-class choice, the full pair distributions and the common-session
+intersection that limits population width. All three fresh [blind reviewers](audit/README.md)
+give this revision **PASS / UNDERSTANDABLE**, with no material blockers.
+Earlier approvals remain attached to the preceding 18-page version.
+The [validation ledger](validation.md) records current checks separately from the
+preserved [earlier validation](validation-pre-panel-20261116.md) and
+[November 16 follow-up](audit/followup-20261116.md).
 
 Published for review as [PR32](https://github.com/Hong-yiii/neuro_science/pull/32).
 PR31 merged into `main` at `ec730ee8d024a959d30520cb9f41bdb98882de81` on
@@ -21,26 +22,31 @@ November 16; PR32 now reviews against that merged base and remains unmerged.
 This is an exploratory research synthesis of existing evidence, not a new
 experiment or biological replication. Work began only after the completed,
 independently reviewed experiment appeared as [PR31](https://github.com/Hong-yiii/neuro_science/pull/31).
-The evidence cutoff is `a0ca80180e2bb52b90e499357d3d6965b26806da`.
+The experimental evidence cutoff is `a0ca80180e2bb52b90e499357d3d6965b26806da`.
 No model fitting, notebook execution, raw-neural reconstruction, model loading or
 new literature research is part of this paper. The new source-distribution plots
-count authenticated public frozen assignment metadata under the accepted design;
-they do not select a new panel or inspect spike/event values.
+count authenticated public frozen assignment metadata under the accepted design.
+A separate [class-panel metadata verification](../../docs/experiments/source-reuse-width-20261114/class-panel-20261116.md)
+calls the original study's `metadata()` and `select_panel()` at other fixed class
+counts to explain feasibility. It reproduces the frozen K=9 design exactly;
+the other counts are not decoding experiments and do not replace that design.
+Neither workflow inspects spike/event values.
 
 ## Reading the methods
 
 - Pages 2–3: what was recorded, clock units, label derivation, eligibility counts
   and current/predecessor protection.
-- Pages 5–8: the fixed design, all 20-session × 9-class support counts, missing
+- Pages 5–10: the fixed design, full 30-pair distributions and class-count
+  feasibility frontier, all 20-session × 9-class support counts, missing
   source–unit entries, actual two-row recipes, source reuse and development
   singleton pools.
-- Pages 9–12: model operations, existing label/measurement corroboration,
+- Pages 11–14: model operations, existing label/measurement corroboration,
   preflight results, manual numerical checks, learning curves, controls and
   computational reproduction.
-- Pages 13–17: every displayed seed/control, width contrasts, training–development
+- Pages 15–19: every displayed seed/control, width contrasts, training–development
   gaps, separately fitted endpoint heads, confusions and scientific limits.
 
-The paper has 12 labeled figures and 9 tables. Data plots are distinguished from
+The paper has 14 labeled figures and 10 tables. Data plots are distinguished from
 schematics. Source IDs, session blocks, constructed rows and optimizer draws have
 separate meanings; the paper does not treat them as independent biological trials.
 
@@ -61,6 +67,11 @@ separate meanings; the paper does not treat them as independent biological trial
   or full source lineage are exported.
 - [figure-provenance.json](figure-provenance.json): source hashes, exact extraction
   locations, figure identities and deterministic output hashes.
+- [build_class_panel_figures.py](build_class_panel_figures.py) and its
+  [provenance](class-panel-figure-provenance.json): two figures and two CSVs from
+  the authenticated metadata-verification receipt. This renderer does not import
+  the study or run the optimizer. The separate verification script and receipt
+  are retained in the study record.
 - [audit/](audit/): independent manuscript audit records and reviewed identities.
 - [validation.md](validation.md): scope, rendering/numeric checks and publication
   status for this synthesis.
@@ -88,6 +99,7 @@ aggregate figures from the pinned notebooks in a full repository checkout:
 
 ```sh
 PYTHONDONTWRITEBYTECODE=1 python build_figures.py
+PYTHONDONTWRITEBYTECODE=1 python build_class_panel_figures.py
 make TECTONIC=/path/to/tectonic
 ```
 
@@ -110,4 +122,8 @@ blinding limitation and the remaining transparency/accessibility gaps are
 recorded in the [follow-up synthesis](audit/followup-20261116.md). These are AI
 manuscript checks, not external human peer review. Publication required all
 three original reviewers to pass and explicitly find the paper understandable.
-PR32 remains unmerged after the follow-up update.
+Those reports remain attached to their original artifact hashes. The class-panel
+addition has a separate fresh-context panel and validation record. PR32 remains
+unmerged. The follow-up's remaining development-utilization, task-orientation,
+accessibility and cross-version binary-reproducibility limits remain recorded;
+adding class feasibility does not close those separate gaps.

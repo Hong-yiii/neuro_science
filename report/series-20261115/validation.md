@@ -1,150 +1,129 @@
-# Synthesis validation — methods expansion, November 15, 2026
+# Class-panel context validation — November 16, 2026
 
-Status: **complete — all three original fresh blind auditors approve the final
-18-page manuscript and explicitly find it understandable**. A [November 16
-fresh-context follow-up](audit/followup-20261116.md) also returns PASS /
-UNDERSTANDABLE in all three roles, with no material finding and a disclosed
-quantitative blinding limitation. The
-[original ten-page validation](validation-initial.md) and its exact approvals
-are preserved separately. [PR32](https://github.com/Hong-yiii/neuro_science/pull/32)
-was originally stacked on PR31. PR31 subsequently merged into `main` at
-`ec730ee8d024a959d30520cb9f41bdb98882de81`; PR32 now reviews against that base
-and remains unmerged.
+Status: **complete — the final 20-page manuscript passes all three fresh blind
+reviews; every reviewer explicitly finds it understandable**.
+The [preceding 18-page validation](validation-pre-panel-20261116.md), its exact
+approvals and the [earlier November 16 follow-up](audit/followup-20261116.md)
+remain intact. [PR32](https://github.com/Hong-yiii/neuro_science/pull/32) reviews
+against `main` after PR31 merged; this task does not merge either PR.
 
-## Authority and scope
+## Authorized addition and evidence boundary
 
-The original request was a paper-quality LaTeX synthesis of the complete series,
-weighted toward recent work, after today's experiment completed and appeared as
-a PR. That gate was met at PR31 revision
-`a0ca80180e2bb52b90e499357d3d6965b26806da`, before paper work began.
-The owner subsequently required stronger visible methodology: what data exist,
-how sources/samples are distributed, actual pseudopopulation construction, and
-the results of existing validity checks. The owner asked the researcher agent
-what evidence was missing, then directed work to continue until approval and the
-draft update. The [critical gap review](audit/methods-gap-review.md) changed the
-assessment to REVISE under that criterion. Earlier passes were not reused.
+The owner requested a defensible explanation of the frozen nine-class task:
+full 6×6 source distributions, per-pair session support, the fixed-K frontier,
+and why complete class support constrains population width. This is dated
+**metadata feasibility**, not a new decoding experiment. K=9 was fixed before
+selecting its pairs. Other class counts contextualize the design; they do not
+replace it or alter any of the completed 48-case results.
 
-This revision adds presentation and explanation of existing evidence. It reads
-tracked reports, code, public aggregate notebooks, and authenticated public
-frozen assignment metadata. No raw spike/event value arrays, private outputs,
-fitted models, prediction replay, notebook execution, model fitting or new
-literature research are used. Metadata-only counting is a new display of the
-accepted design, not a new panel, selection procedure or biological study.
+The [study note](../../docs/experiments/source-reuse-width-20261114/class-panel-20261116.md),
+[verification script](../../docs/experiments/source-reuse-width-20261114/verify_class_panel_20261116.py)
+and [receipt](../../docs/experiments/source-reuse-width-20261114/class-panel-metadata-20261116.json)
+are pinned in the manuscript at commit `5a9e54cb75efa1ca1e9d1e918fa9defd57967ee4`.
+Experimental evidence remains pinned at `a0ca80180e2bb52b90e499357d3d6965b26806da`.
 
-## What the revision makes visible
+## Verification actually performed
 
-The 18-page manuscript has 12 labeled figures and 9 tables. It adds the measured
-stream inventory and physical units; inherited eligibility attrition and global
-current/predecessor embargo; all latest session/class source counts and singleton
-pools; the sparse source–unit membership pattern; actual published two-row B2 and
-Wmid recipes; realized source use and whole-tuple repetition; and recorded
-measurement, construction and numerical validation results.
+The script calls the study's own `metadata()` and `select_panel()` on
+`data/cue-source-v1`. All 90 off-diagonal counts in the three matrices agree
+with the supplied expectations. All nine fixed-K frontier rows agree; the
+returned panels report optimal, zero-gap outcomes. Direct checks reconcile
+session membership, width, class cardinality and endpoint incidence. At K=9,
+the complete panel and all three `derive_rosters()` outputs match the frozen
+`design.json` exactly. A direct training-only check confirms that no session
+has three training sources in every one of the 30 classes.
 
-The paper now includes the existing marker-to-Unity endpoint corroboration and
-QC findings, first-case scaler/PCA/logistic residuals, actual learning curves,
-all-case preflight/reload/reproduction results and their limits. A diagnostic
-table shows training/development gaps and separately fitted start/goal heads.
-Existing per-seed/control results, negative contrasts, confusions and historical
-context remain. Acquisition unknowns, label-conditioned construction, exposed
-development, serial/session dependence and absent spatial/transfer evidence
-remain explicit. No completed software check is promoted into general biological
-sampling validity.
+Only the public manifest and frozen outer/inner assignment tables were read
+from the compact source. Named fitting entrypoints, `study.materialize()`,
+`study.prepare_design()` and `numpy.load()` were blocked, with an audit hook
+rejecting other compact data and local output reads. These are explicit checks,
+not a universal filesystem sandbox. Scikit-learn definitions were imported;
+Torch and CEBRA were not. No model fit/replay, notebook execution or neural-array
+access occurred. The input, original code and frozen design hashes authenticate.
 
-## Extraction and independent reconciliation
+The initial successful receipt and verifier are preserved under ignored
+`work/class-panel-20261116/`. A second metadata-only verification corrected an
+overly broad runtime-field name and added direct inventory/incidence checks;
+its final receipt is the tracked one. Both agree on every displayed number.
+No completed scientific run was repeated.
 
-The figure builder authenticates inputs against the fixed source revision and
-recorded manifest hashes before parsing. The original 2,304 unique score rows,
-2,688 matched contrasts, selected aggregate confusions and 13 original generated
-artifacts remain byte-identical. The four new vector figures display source
-support, structural membership, actual recipes and sampling realization. The
-first-case image is copied byte-for-byte from the published supplement; LaTeX
-crops only its two learning panels for readable printed labels. The full image
-remains in the package.
+## Paper and figures
 
-New tables contain 360 session/class/split counts, 20 session summaries, 3 roster
-summaries, 28 published recipe entries, 14 block-width entries, 6 published prefit
-rows, one observed-mask scalar summary, 6 sampling summaries, 216 observed SVM
-head/seed rows and 72 derived head summaries. Source identities are used only to
-count and apply the frozen embargo; no full current/predecessor lineage is
-exported. The code does not import scientific study implementations.
+The paper now has **20 A4 pages, 14 labeled figures and 10 tables**. Pages 6–7
+add the all-pair distribution and session-support figure, the intersection
+formula, exact optimizer hierarchy, class-count plot/table and endpoint-only
+6/K ceiling. The 16/8 training/development row counts explicitly apply to the
+primary arms. The once-only arm and every completed result retain their prior
+values and interpretation.
 
-A separate evidence probe independently counted every metadata entry from the
-public inputs. All 360 pool rows, 20 session rows and 3 roster summaries matched,
-including 5,375 observed source–unit entries out of 105,991 possible entries.
-The aggregate membership count is checked against the executed notebook mask
-summary; no elementwise neural mask was read. Both notebooks' printed recipe,
-prefit and use tables are authenticated and extracted with exact schema checks.
+The new renderer consumes the authenticated receipt, without importing study
+code or invoking optimization. Its 30-row marginal CSV, nine-row frontier CSV
+and four vector/preview figures authenticate in
+[class-panel-figure-provenance.json](class-panel-figure-provenance.json).
+Deterministic rebuilding passed in the recorded environment. The prior 32
+CSV/figure artifacts, original renderer and original provenance are unchanged.
+Cross-version figure-binary identity is not promised.
 
-The builder reproduced all 32 CSV/figure artifacts deterministically under the
-recorded environment. The
-source manifest and [figure-provenance.json](figure-provenance.json) record
-input hashes, cell/output indices, output hashes, meanings and limitations.
-The working environment uses Python3.13.2, NumPy2.3.4, Matplotlib3.10.7/Agg and
-Tectonic0.17.0; no scientific runtime was changed. Ruff and whitespace checks
-passed. A fresh LaTeX build has 18 A4 pages and zero warnings, unresolved
-references or overfull/underfull boxes. All pages were rendered and inspected;
-labels and crops were corrected before the blind panel received the candidate.
+A Tectonic 0.17.0 build passed with zero warnings, unresolved references or
+bad boxes. All pages were rendered; the added pages and changed reference page
+were inspected at full-page size. An isolated archive of Git tree
+`fa96cbabed22e44485fd05e48014fdeedee5a3b3`, containing only TeX, Makefile and
+figures, rebuilt with identical extracted text and no scientific runtime or
+notebooks. All 39 PDF fonts are embedded and all 33 pinned repository links
+resolve in Git. TeX timestamps can change PDF bytes between builds; review
+binds the delivered artifact below.
 
-## Fresh blind panel
-
-Three new AI-agent contexts independently review the expanded manuscript:
-ML-literate neuroscience newcomer, experienced neuroscience researcher, and
-quantitative/provenance auditor. They receive the PDF/source identities and
-review criteria, not the drafting transcript, probes, old approval records or
-one another's findings. These are manuscript/evidence audits, not external
-human peer review or independent biological replication.
-
-Final approved identities:
-
-| Artifact | SHA256 |
+| Delivered artifact | SHA256 |
 | --- | --- |
-| `paper.pdf` | `a12d4936438baa79322a8c615db2112d8d0980f621a94c0fbbb45cb541812956` |
-| `paper.tex` | `ee2027cac9a0d9c2ae911a6355a74016c5a76fe519f3221888e1e0f6aa740923` |
-| `figure-provenance.json` | `1e9503f18f3f67804feb1db02ab3f60d70076e8fe16cd0670524062686002eb4` |
+| `paper.pdf` | `f5a1783a3673ff5a788af8210bfb876e7045fb531d06354f1a248dbd4ba270f9` |
+| `paper.tex` | `a3df343e3add19089e7e497d872d4d45eb36aca74ef4a79ddfe65aebe6667d28` |
+| Metadata receipt | `8f6560aa172c86a53f211596bce9333ee410281210f2c518ad3a8503a572316a` |
+| New figure provenance | `dee2b1ccb57194dccd1bbcc8db4650084486a7d7a8a3c6e85191229e76d549b5` |
 
-| Reviewer | Final verdict | Understandable |
-| --- | --- | --- |
-| [Newcomer](audit/methods-newcomer.md) | PASS — APPROVED | Yes |
-| [Researcher](audit/methods-researcher.md) | PASS — APPROVED | Yes |
-| [Quantitative](audit/methods-quantitative.md) | PASS — APPROVED | Yes |
+## Independent review
 
-Every reviewer read all 18 pages and inspected rendered figures. The researcher
-independently reconciled all 2,304 score rows, 2,688 contrasts and source
-accounting; the quantitative reviewer also checked all 360 source counts,
-4,608 aggregate-confusion balanced accuracies, 2,304 accuracy/F1 records, new
-recipe/reuse/prefit/head tables and historical receipt claims. These checks used
-only public metadata and aggregate outputs, not the underlying private arrays.
+Fresh newcomer, neuroscience-researcher and quantitative/provenance agents review
+the changed paper and its evidence without the drafting transcript, author-side
+probe, old review findings or one another's reports. Their final artifact-bound
+verdicts are recorded in the [audit index](audit/README.md). These are AI
+manuscript/evidence audits, not external human peer review or new biological
+replication. The earlier 18-page approvals are not reused as approval of this
+revision.
 
-All three suggested only optional clarity improvements. The final pass names
-the immediate predecessor and event-code families, makes development sampling
-with replacement explicit, and adds a paper-native historical plot legend.
-The original image bytes and all numerical tables are unchanged. Each reviewer
-then independently checked the final hashes, affected pages and relevant source
-and retained APPROVED / UNDERSTANDABLE. Earlier reports and the initial methods
-candidate verdicts remain in their own records; no prior approval is relabeled.
+All three reviewers returned PASS / UNDERSTANDABLE for the exact hashes above.
+The newcomer read and inspected all 20 pages. The researcher independently
+recounted the three matrices and all returned-panel gates, while the quantitative
+reviewer additionally reproduced both width optima with a separately formulated
+binary optimization and reran the exact metadata verifier to an identical receipt.
+Both checked the frozen rosters and the interpretation of the endpoint-only bound.
+The primary-arm wording finding was corrected before final approval. A disposable
+page-6 preview was refreshed to match the unchanged final PDF; the newcomer
+confirmed pixel equality. The optional diagonal-legend wording suggestion remains
+nonblocking because the caption already identifies excluded self-pairs.
 
-An isolated archive of Git tree `020f20436acdf503eb6fd2fe79131b1524e27202`
-compiled with `make -B` and Tectonic0.17.0. All source and figure bytes match the
-reviewed package; the resulting 18-page PDF has identical extracted text and
-zero TeX warnings. The scientific runtime and source notebooks were absent.
-Only audit/administrative records changed after this build. All 30 pinned
-repository links resolve, all PDF fonts are embedded, and all 32 generated
-CSV/figure artifacts authenticate. [Artifact checks](audit/artifact-checks.json)
-record these results and the three final review identities. TeX build timestamps
-can change PDF bytes; the review binds the delivered PDF, not a promise of
-byte-identical TeX output on different machines.
+[Class-panel artifact checks](audit/class-panel-artifact-checks-20261116.json)
+bind the final artifact, input and review identities. No scientific outputs
+changed during the review.
 
-## Preservation and publication
+## Preservation and remaining limits
 
-Changes remain confined to `report/series-20261115/` and its reading link in
-`report/README.md`, on `docs/series-paper-20261115`. Existing studies, completed
-runs, raw inputs, source notebooks, failures and runtimes are untouched. The
-November 15 working-tree record named an unrelated
-`src/neuro/_cebra_sampling.py` edit at SHA256
-`63489315c5a21257ed037edd77161f639beb23199321719d8fe22a562c1659f5` and
-untracked `docs/reports/current-state-20260927/`; neither was present during the
-November 16 follow-up. The current tracked sampling file has SHA256
-`be5467607ec2766f3f8b0ff906de7d9f2f55898cd6d583f45b8d0f16fbd7d7b5`.
-PR31 has since merged; PR32 remains unmerged after this documentation-only
-follow-up. Exact checkout differences and preservation boundaries are recorded
-in the [follow-up synthesis](audit/followup-20261116.md).
+All 45 pre-existing study files other than the two deliberately extended entry
+notes are byte-identical to `5ac3e5a681e0eee3229adc8f36088c1c37906f48`. This covers
+the frozen protocol/design, study implementation, source notebooks, published
+executed notebooks/HTML, aggregate figures and prior validation records. No
+original output directory, failure or model state was accessed or modified.
+The follow-up audit already on the remote branch was fast-forwarded into this
+checkout before adding the new record, preserving its text and remaining gaps.
+
+The earlier follow-up's development-utilization, task-orientation, accessibility
+and cross-version binary limits remain; this addition addresses class feasibility.
+The PDF remains untagged, and a full grayscale/print audit is not claimed.
+Known-label construction, exposed development, source dependence and missing
+acquisition/spatial evidence still bound the scientific conclusions.
+
+The current checkout's unrelated `src/neuro/_cebra_sampling.py` edit remains at
+SHA256 `63489315c5a21257ed037edd77161f639beb23199321719d8fe22a562c1659f5`;
+untracked `docs/reports/current-state-20260927/` is excluded. The earlier follow-up
+records a different checkout state; its historical preservation account is not
+rewritten. No new fits, notebook outputs, model results or merge accompany this
+publication update.

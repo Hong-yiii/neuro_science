@@ -13,7 +13,7 @@
  pdfauthor={Hongyi's neuroscience workspace}}
 \pagestyle{fancy}\fancyhf{}
 \fancyhead[L]{\small\color{muted}Hippocampal cue decoding: research synthesis}
-\fancyhead[R]{\small\color{muted}15 November 2026}
+\fancyhead[R]{\small\color{muted}16 November 2026}
 \fancyfoot[C]{\small\thepage}
 \renewcommand{\headrulewidth}{0.3pt}
 \setlength{\parindent}{0pt}\setlength{\parskip}{5pt}
@@ -26,6 +26,7 @@
 \newcommand{\BA}{\operatorname{BA}}
 \newcommand{\pp}{\,\mathrm{pp}}
 \newcommand{\repo}[2]{\href{https://github.com/Hong-yiii/neuro_science/blob/a0ca80180e2bb52b90e499357d3d6965b26806da/#1}{#2}}
+\newcommand{\panelrepo}[2]{\href{https://github.com/Hong-yiii/neuro_science/blob/5a9e54cb75efa1ca1e9d1e918fa9defd57967ee4/#1}{#2}}
 \newcommand{\key}[1]{\vspace{3pt}\noindent\colorbox{wash}{\parbox{\dimexpr\linewidth-2\fboxsep\relax}{\small #1}}\vspace{3pt}}
 \newcommand{\figurefile}[2][]{\includegraphics[#1]{figures/#2}}
 
@@ -48,7 +49,7 @@ The original ambition was to ask whether activity during the cue predicts the su
 
 The central object is a \emph{pseudopopulation}: a vector assembled from recordings made in different sessions, choosing contributions that share a known task condition. Such an object can test condition-level response differences. It is not a population measured during one natural trial. The label is used to build the vector before a decoder predicts that label; consequently, a successful decoder evaluates a conditional assay, not an operational system that receives an unknown trial and discovers its condition. Source separation is necessary for this assay, but does not remove that distinction.
 
-This paper integrates the completed series rather than reporting a new experiment. Older work supplies the reasons for the current design; November's support, reuse and width studies supply the main quantitative evidence. The source cutoff is the completed experiment in PR~31, revision \texttt{a0ca801} \cite{latest}. Displays use existing published aggregates and authenticated frozen metadata; new source-count displays reproduce the accepted design. No fitting, raw-neural reconstruction, model replay, new literature search or new biological experiment was performed for this synthesis.
+This paper integrates the completed series rather than reporting a new experiment. Older work supplies the reasons for the current design; November's support, reuse and width studies supply the main quantitative evidence. The experimental cutoff is PR~31, revision \texttt{a0ca801} \cite{latest}. Displays use published aggregates and authenticated frozen metadata. A separately dated November~16 metadata comparison explains class-panel feasibility without changing the frozen task or its results \cite{panel}. No fitting, raw-neural reconstruction, model replay, new literature search or new biological experiment was performed for this synthesis.
 
 \key{\textbf{Reading rule.} Recorded spikes are measurements. Counts, constructed populations and embeddings are derived objects. Decoding is an association under a declared evaluation procedure. Each step needs its own justification.}
 
@@ -187,7 +188,7 @@ The latest study therefore fixes nine ordered pairs:
 \[
 \mathcal C=\{1\!\to\!2,1\!\to\!4,2\!\to\!5,2\!\to\!6,3\!\to\!1,4\!\to\!6,5\!\to\!3,5\!\to\!4,6\!\to\!2\}.
 \]
-This is a sparse endpoint panel, not a Cartesian $3\times3$ grid and not nine measured paths. A \emph{pool} contains eligible sources sharing a session and endpoint class. Metadata-only optimization first maximized width with at least five training sources per pool, then width with at least three, with a deterministic tie-break. Exposed development availability entered eligibility; neural accuracy did not enter panel selection \cite{latest}.
+This is a sparse endpoint panel, not a Cartesian $3\times3$ grid or nine measured paths. A \emph{pool} contains eligible sources sharing a session and endpoint class. The study fixed $K=9$ before selecting pairs. At that count, metadata optimization first maximized five-source width, then three-source width within that optimum, then broke class-list ties. Development availability entered eligibility; neural accuracy did not \cite{latest,panel}.
 
 \begin{table}[h!]
 \caption{Latest study: six unique arms. B3 is the shared bridge, fitted once per seed/world. Sources are selected current-trial IDs across all session--class pools. Every arm has 72 constructed development rows (eight per class).}
@@ -211,6 +212,64 @@ Before selection, the core/middle/full rosters contain 160/543/912 eligible trai
 Training source sets are nested $2\subset3\subset5$ on the core. U3 uses exactly B3's selected sources once. Width arms add whole-session blocks in a fixed support-based order; shared columns and their development assignments match exactly. The same observed development recipe is reused across three computational seeds, which jointly vary source selection, assembly and optimization. Frozen assignments remain inside original outer training; a global embargo removes training contributors that overlap development current or predecessor contributors \cite{latest}.
 
 \key{\textbf{What each contrast estimates.} B2/B3/B5 changes response diversity, repetitions, weights and combinations at fixed row count. B3/U3 holds source identities fixed but changes rows, combinations and exposure. Width adds sessions and measured sources as well as columns. These are controlled \emph{pipeline} contrasts, not isolated causal effects of duplication or neuron count.}
+
+\clearpage
+\section{Why common pairs still yield a small usable population}
+There are $6\times5=30$ possible ordered endpoint pairs, excluding start equal to goal. After frozen eligibility and the global embargo, their totals across all 58 sessions are nearly flat: 236--291 training and 97--122 development sources per pair. The most common training pair, $3\to6$ (291/114), was not selected. Figure~\ref{fig:panel-support} shows why ranking marginal frequency cannot recover the actual selection rule.
+
+\begin{figure}[h!]
+\centering
+\figurefile[width=\linewidth]{class_panel_support.pdf}
+\caption{All-class metadata before panel selection. Left: eligible training/development current-source totals across all 58 sessions; right: sessions meeting five training and one development source for that \emph{single} pair. Rows are starts, columns goals; diagonals are excluded self-pairs. Outlines mark the frozen nine classes. These exact metadata counts are neither constructed-row counts nor decoding scores; there are no uncertainty intervals. The marginal support of a pair does not give the all-class session intersection. Verified November~16 with the original study's \texttt{metadata()} and authenticated inputs \cite{panel}.}
+\label{fig:panel-support}
+\end{figure}
+
+Let $t_{sc}$ and $d_{sc}$ count eligible training and development sources in session $s$, class $c$, and let $u_s$ be its recorded columns. The admissible sessions and width for panel $\mathcal C$ are
+\begin{equation}
+ A_m(\mathcal C)=\bigcap_{c\in\mathcal C}\{s:t_{sc}\ge m,\ d_{sc}\ge1\},
+ \qquad W_m(\mathcal C)=\sum_{s\in A_m(\mathcal C)}u_s .
+\label{eq:panel-intersection}
+\end{equation}
+The core uses $m=5$ and the wider roster $m=3$. Every pair individually has many qualifying sessions, but they need not be the \emph{same} sessions. One deficient pool excludes that session's entire column block. Responses in other sessions cannot fill that missing block, and changing the column roster by class would change the construction. The nine-class intersection leaves only S16, S27 and S34 at five sources: 3 sessions/17 columns. At three sources it expands to 20 sessions/83 columns. The archive's 195 columns therefore cannot all participate simply because each class has abundant marginal counts.
+
+At fixed $K$, each start and each goal must appear between $\lfloor K/6\rfloor$ and $\lceil K/6\rceil$ times. The optimizer maximizes $W_5$, then maximizes $W_3$ \emph{conditional on that optimum}, then takes the lexicographically first class list. It uses availability and recorded width, not neural features or accuracy. It does not maximize session count. At $K=9$, the original functions reproduced the complete frozen panel and all three rosters exactly \cite{panel}.
+
+\key{\textbf{Why nine was workable.} The frozen task keeps all six starts and goals, each once or twice, while retaining a shared multisession core for the 2/3/5-source comparison and a wider three-source population. Nine was fixed before class selection; it was not selected by optimizing width across class counts.}
+
+\clearpage
+\section{The class-count frontier is feasibility, not decoding}
+The November~16 comparison applies the same optimizer separately at other fixed class counts. It contextualizes the frozen design; it does not make those counts part of the original 48-case experiment. Every gate still requires one development source per selected pair, and the three-source width remains conditional on maximum five-source width.
+
+\begin{figure}[h!]
+\centering
+\figurefile[width=\linewidth]{class_panel_frontier.pdf}
+\caption{Recorded width and session count of the returned panels under the same metadata rules. $K=9$ is the executed task; other points are metadata feasibility only. Panels are separately selected and need not be nested. Counts are exact, with no biological uncertainty or model performance. Source: actual \texttt{select\_panel()} calls on authenticated compact metadata, verified November~16 \cite{panel}.}
+\label{fig:panel-frontier}
+\end{figure}
+
+\begin{table}[h!]
+\caption{Exact frontier; each entry is sessions / recorded columns. The primary optimum is width at five training sources, not session count.}
+\label{tab:panel-frontier}\small
+\begin{tabularx}{\linewidth}{rYY}
+\toprule
+Fixed $K$ & At $\ge5$ training sources & At $\ge3$, conditional on the first optimum \\
+\midrule
+6 & 4 / 18 & 29 / 108 \\
+8 & 3 / 19 & 23 / 95 \\
+\textbf{9} & \textbf{3 / 17} & \textbf{20 / 83} \\
+10 & 3 / 17 & 13 / 58 \\
+12 & 1 / 8 & 15 / 66 \\
+15 & 1 / 8 & 12 / 51 \\
+18 & 0 / 0 & 10 / 44 \\
+24 & 0 / 0 & 2 / 12 \\
+30 & 0 / 0 & 0 / 0 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+$K=10$ adds $4\to1$: the same 17-column core survives, but the wider roster falls from 20/83 to 13/58. The returned $K=12$ and $15$ optima retain one eight-column core session; those panels cannot supply the same native multisession comparison and shared budget study. This does not prove every alternative panel of either size infeasible. The displayed $K\ge18$ panels have no five-source session; all 30 classes have no three-source session. $K=8$ is wider than nine, and $K=6$ is wider still at three sources, but at six each endpoint has degree one and alone determines the pair.
+
+For a deterministic rule knowing only start, at most one pair in each of six start groups can be correct: pair $\BA\le6/K$. The same holds for goal alone (or in expectation for a randomized rule). Thus nine has ceiling $6/9$, ten $6/10$. These are algebraic limits, not fitted scores. In the primary arms, equal 16/8 train/development rows per pair make pair accuracy equal pair BA; endpoint heads are uneven because twice-used endpoints have twice the rows. A different $K$ also changes the uniform reference $1/K$, so this frontier supplies no comparable decoding scores.
 
 \clearpage
 \section{The available responses are unevenly distributed}
@@ -519,7 +578,7 @@ The series has progressed toward a more inspectable conditional assay. A reusabl
 
 \clearpage
 \section*{Evidence, reproducibility and references}
-The source package contains this LaTeX manuscript, vector figures, full-precision aggregate score/contrast tables, source-support and recipe tables, a figure-building script and a source-hash manifest. Figures re-present public notebook outputs and frozen metadata, with shared B3 records deduplicated. The metadata-only count implementation independently repeats the global contributor embargo and fixed-panel projection, reconciling all roster totals and mask membership with the published record. It does not inspect spike/event values, run model code or optimize another panel. Repository links below pin the evidence revision; unlike cohorts are not silently harmonized.
+The source package contains LaTeX, vector figures, aggregate score/contrast tables, source-support and recipe tables, renderers and source-hash manifests. Figures re-present public notebook outputs and frozen metadata, with shared B3 records deduplicated. The count implementation repeats the global embargo and fixed-panel projection, reconciling roster totals and mask membership. Separately, the dated class-panel verification calls the original metadata/selection functions at fixed class counts and reconciles the frozen nine-class design exactly; its receipt records all returned panels, inputs and zero-gap solver outcomes. Neither workflow reads neural values, fits models or executes notebooks. Links pin experimental evidence and the later metadata addendum separately.
 
 The three requested manuscript audits are recorded separately with the exact reviewed PDF/source hashes. They are independent AI-agent reading and evidence audits (newcomer, experienced researcher and quantitative/provenance reviewer), not journal peer review or external biological replication. The paper's source tables permit independent checking of the latest displayed numbers without accepting its narrative on authority.
 
@@ -540,6 +599,7 @@ The three requested manuscript audits are recorded separately with the exact rev
 \bibitem{grid} Neuroscience workspace. \repo{docs/reports/population-grid-20261111/README.md}{Class requirements, session rosters and learning}, November 11, 2026; \repo{docs/population-grid-protocol-20261111.md}{protocol}. 111 cases, 5,661 model fits and 222,000 updates; distinct from the latest 48-case design.
 \bibitem{errors} Neuroscience workspace. \repo{docs/reports/population-grid-20261111/error-analysis.md}{Saved-result confusion, class-deletion and source-reuse analysis}; \repo{docs/reports/population-grid-20261111/error-analysis-validation.md}{validation}. Prediction-only follow-up; no new fitting.
 \bibitem{latest} Neuroscience workspace. \repo{docs/experiments/source-reuse-width-20261114/README.md}{Source reuse, then population width: results}; \repo{docs/experiments/source-reuse-width-20261114/protocol.md}{frozen protocol}; \repo{experiments/source_reuse_width_20261114/study.py}{matched-plan implementation}; \repo{src/neuro/pseudopopulation.py}{source sampler}; \href{https://github.com/Hong-yiii/neuro_science/pull/31}{PR 31}. Defined November 14; executed and delivered November 15, 2026.
+\bibitem{panel} Neuroscience workspace. \panelrepo{docs/experiments/source-reuse-width-20261114/class-panel-20261116.md}{Class-panel design explanation}; \panelrepo{docs/experiments/source-reuse-width-20261114/class-panel-metadata-20261116.json}{complete metadata verification receipt}; \panelrepo{docs/experiments/source-reuse-width-20261114/verify_class_panel_20261116.py}{verification code}. November 16, 2026. Retrospective metadata feasibility; original task and all 48-case evidence preserved.
 \bibitem{reproduction} Neuroscience workspace. \repo{docs/experiments/source-reuse-width-20261114/notebook-validation-20261115.md}{Complete notebook reproduction and validation}; \repo{experiments/source_reuse_width_20261114/walkthrough_20261115/published/manifest.json}{published artifact manifest}. Two complete executed notebooks; explicit post-execution editorial correction and saved-figure supplement.
 \bibitem{cebra} Schneider, S., Lee, J. H. and Mathis, M. W. Learnable latent embeddings for joint behavioural and neural analysis. \emph{Nature} \textbf{617}, 360--368 (2023). \href{https://doi.org/10.1038/s41586-023-06031-6}{doi:10.1038/s41586-023-06031-6}. Method reference inherited from the existing manuscript, not evidence for this dataset's biological claims.
 \bibitem{dimred} Cunningham, J. P. and Yu, B. M. Dimensionality reduction for large-scale neural recordings. \emph{Nature Neuroscience} \textbf{17}, 1500--1509 (2014). \href{https://doi.org/10.1038/nn.3776}{doi:10.1038/nn.3776}. Existing methodological context for interpreting derived coordinates.

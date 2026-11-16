@@ -1,7 +1,7 @@
 TECTONIC ?= tectonic
 PYTHON ?= python
 
-.PHONY: all figures
+.PHONY: all figures class-panel-figures
 all: paper.pdf
 
 paper.pdf: paper.tex $(wildcard figures/*.pdf) figures/historical_time.png figures/first_case_width.png
@@ -9,3 +9,6 @@ paper.pdf: paper.tex $(wildcard figures/*.pdf) figures/historical_time.png figur
 
 figures:
 	PYTHONDONTWRITEBYTECODE=1 $(PYTHON) build_figures.py
+
+class-panel-figures:
+	PYTHONDONTWRITEBYTECODE=1 $(PYTHON) build_class_panel_figures.py

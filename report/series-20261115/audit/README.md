@@ -1,67 +1,50 @@
-# Final methods-manuscript audit panel
+# Class-panel manuscript audit — November 16, 2026
 
-All three fresh independent AI-agent reviewers give the expanded 18-page
-manuscript **PASS — APPROVED and UNDERSTANDABLE**, with no material blockers.
-They independently confirmed the final clarity revision against its new hashes.
+All three fresh independent AI-agent reviewers give the 20-page class-panel
+revision **PASS / UNDERSTANDABLE**, with no material blockers.
+Earlier approvals bind the preceding artifacts;
+they are preserved in the [18-page audit index](methods-index-pre-panel-20261116.md)
+and [November 16 follow-up](followup-20261116.md).
 
-| Role | Independent review and final-version addendum |
+| Role | Independent report | Verdict |
+| --- | --- | --- |
+| ML-literate neuroscience newcomer | [Newcomer](class-panel-newcomer-20261116.md) | PASS; understandable |
+| Experienced neuroscience researcher | [Researcher](class-panel-researcher-20261116.md) | PASS; understandable |
+| Quantitative/provenance auditor | [Quantitative](class-panel-quantitative-20261116.md) | PASS; understandable |
+
+Reviewers received the artifact paths and review criteria, without the drafting
+transcript, author-side probe, old detailed audit findings or one another's reports.
+The researcher who advised the author was not reused as the final researcher
+auditor. This panel assesses the class-panel addition and its integration with the
+paper; it does not claim a fresh reanalysis of every historical experiment. The
+newcomer reads the complete paper; the scientific and quantitative roles focus on
+the changed methods, evidence and surrounding interpretation. These are AI artifact
+audits, not external human peer review or biological replication.
+
+The central checks are fixed K versus class identities; full marginal support versus
+the common-session intersection; the conditional second width objective; endpoint
+incidence and metric arithmetic; actual metadata provenance; preservation of the
+48-case evidence; and figure/readability checks. Any final manuscript changes must
+be checked against the delivered hashes below.
+
+The researcher and quantitative reviewer independently recounted every displayed
+metadata entry and returned-panel gate. The quantitative reviewer additionally
+verified both width objectives with a separately formulated binary optimization
+and reproduced the exact-function receipt. The primary-arm wording was corrected
+before final approval; a stale disposable page preview was refreshed. The newcomer
+records one optional diagonal-legend refinement, already resolved in meaning by
+the caption. It is not a condition of passing.
+
+| Delivered artifact | SHA256 |
 | --- | --- |
-| ML-literate neuroscience newcomer | [Newcomer](methods-newcomer.md) |
-| Experienced neuroscience researcher | [Researcher](methods-researcher.md) |
-| Quantitative/provenance auditor | [Quantitative](methods-quantitative.md) |
+| `paper.pdf` | `f5a1783a3673ff5a788af8210bfb876e7045fb531d06354f1a248dbd4ba270f9` |
+| `paper.tex` | `a3df343e3add19089e7e497d872d4d45eb36aca74ef4a79ddfe65aebe6667d28` |
+| Metadata receipt | `8f6560aa172c86a53f211596bce9333ee410281210f2c518ad3a8503a572316a` |
+| New figure provenance | `dee2b1ccb57194dccd1bbcc8db4650084486a7d7a8a3c6e85191229e76d549b5` |
 
-The new panel received no drafting transcript, author/probe memos, earlier
-manuscript approval records or other reviewers' findings. Every reviewer read
-all 18 pages and inspected rendered figures. The researcher and quantitative
-reviewers independently checked public source accounting and complete score/
-contrast tables; the quantitative review additionally reconciled all 4,608
-published aggregate confusion matrices and all new methods tables. Their scopes
-separate inherited run-receipt evidence from checks actually performed here.
-These are AI manuscript audits, not external human peer review or independent
-biological replication.
-
-The final clarity pass identifies the immediate predecessor and task marker
-codes, spells out development sampling with replacement and possible unused
-eligible sources, and adds a readable paper-native historical figure legend.
-No numerical table or figure source bytes changed. All three reviewers checked
-the final PDF/source and retained approval.
-
-| Final artifact | SHA256 |
-| --- | --- |
-| `paper.pdf` | `a12d4936438baa79322a8c615db2112d8d0980f621a94c0fbbb45cb541812956` |
-| `paper.tex` | `ee2027cac9a0d9c2ae911a6355a74016c5a76fe519f3221888e1e0f6aa740923` |
-
-[Artifact checks](artifact-checks.json) and the [validation ledger](../validation.md)
-record build, extraction, rendering and preservation evidence.
-
-## November 16 fresh-context follow-up
-
-The [follow-up synthesis](followup-20261116.md) repeats the same three roles in
-fresh Pi contexts after PR31 merged. All three reviewers again return **PASS /
-UNDERSTANDABLE**, with no material finding. The quantitative reviewer disclosed
-incidental exposure to this package README's old blanket approval headline, so
-the follow-up does not claim perfect blinding for that role. Separate reports:
-
-- [Newcomer](followup-newcomer-20261116.md)
-- [Experienced neuroscience researcher](followup-researcher-20261116.md)
-- [Quantitative/provenance](followup-quantitative-20261116.md)
-
-The follow-up also regenerates the aggregate package in isolation, records
-environment-dependent figure-binary differences despite identical numeric CSVs,
-and lists the remaining development-utilization, task-orientation and
-accessibility gaps. The reviewed PDF/TeX hashes above are unchanged.
-
-## Preserved first version and methods critique
-
-The original ten-page version and its approvals are historical. Its
-[newcomer](newcomer.md), [researcher](researcher.md) and
-[quantitative](quantitative.md) reviews, [artifact checks](initial-artifact-checks.json)
-and [validation](../validation-initial.md) remain intact.
-
-The owner's stronger methodology criterion led to the
-[researcher gap review](methods-gap-review.md), which requested revision despite
-the earlier bounded-claims approval. The expanded version addresses the data
-inventory, eligibility accounting, source distributions, real construction
-recipes, visible validation outcomes and training/development diagnostics.
-The fresh panel's approvals above apply to that expanded final artifact;
-earlier passes were not reused.
+The [current validation](../validation.md) and
+[class-panel artifact checks](class-panel-artifact-checks-20261116.json) record
+execution, rendering and preservation. The original [artifact checks](artifact-checks.json)
+remain attached to the earlier 18-page review. The earlier follow-up's residual
+gaps remain visible; class feasibility does not establish natural-trial prediction,
+biological independence or broader sampling validity.
