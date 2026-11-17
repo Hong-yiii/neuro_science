@@ -1,0 +1,330 @@
+{
+  "status": "passed",
+  "date": "2026-11-16",
+  "scope": "CEBRA interpretation, prerequisites and language revision; post-hoc summary of existing scalar scores",
+  "baseline_revision": "6f362603d302d07de6cc33d80c846e1df92efe17",
+  "experimental_revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+  "class_panel_note_revision": "082b5e1a3cb9a87bc22a9ce80006d2e882adc404",
+  "artifact_sha256": {
+    "report/series-20261115/paper.pdf": "d99b2d02cc25f15e6d5354ff684f376441563e159d8b23c49ddb6f8e5d6b27f5",
+    "report/series-20261115/paper.tex": "088d75baa04f4cf29fbb7b496fe09641c71a79d2c4042683d09ff1feaf9e2353",
+    "report/series-20261115/summarize_model_comparisons.py": "cee166f6418adf1316c64b75684a6a38ce33e3ed2c008204a8dab97fe9d7e70e",
+    "report/series-20261115/model-comparison-provenance.json": "d691b4caa7f8b4738c700d28155a6d9f175e87ff11b4cd709ad9879de82719d8",
+    "report/series-20261115/data/case_scores.csv": "1661ff9d7b55644d586ad8efb21a440032c23d18f0121767100fd162acb89249",
+    "report/series-20261115/data/model_pair_means.csv": "1f0d976f1cd648bdb938d3511dfa5fa34312e7935f1c90af80aaef82708ca16d",
+    "report/series-20261115/data/model_pair_best_means.csv": "b115a3f52d43c40d349d06e62684abee357478b61cc931f4c32894178f556d49",
+    "report/series-20261115/data/model_pair_best_rows.tex": "4de3731c616b262e31532b88a744c3e227af91929d3cfa4c3545957dc804017c",
+    "docs/experiments/source-reuse-width-20261114/class-panel-20261116.md": "172fb39d25af45057f65232e1ef5c16a514df7a7c546be933a894af14da823de",
+    "docs/experiments/source-reuse-width-20261114/class-panel-metadata-20261116.json": "8f6560aa172c86a53f211596bce9333ee410281210f2c518ad3a8503a572316a",
+    "docs/experiments/source-reuse-width-20261114/verify_class_panel_20261116.py": "c615e32feaa652d0960fe01d2b9b8ba9b67708ba01a085528c7de5b09f3e16df"
+  },
+  "build": {
+    "pdf_sha256": "d99b2d02cc25f15e6d5354ff684f376441563e159d8b23c49ddb6f8e5d6b27f5",
+    "tex_sha256": "088d75baa04f4cf29fbb7b496fe09641c71a79d2c4042683d09ff1feaf9e2353",
+    "pages": 21,
+    "page_size": "A4",
+    "figures": 14,
+    "tables": 11,
+    "embedded_fonts": 40,
+    "all_fonts_embedded": true,
+    "tex_log_findings": {
+      "report/series-20261115/paper.log": [],
+      "work/language-revision-20261116/clean-build-01/report/series-20261115/paper.log": []
+    },
+    "isolated_build": {
+      "source_tree": "e1190ecff6f981725c414671b336c87b58f99658",
+      "paths": [
+        "report/series-20261115/paper.tex",
+        "report/series-20261115/Makefile",
+        "report/series-20261115/data/model_pair_best_rows.tex",
+        "report/series-20261115/figures"
+      ],
+      "archive_sha256": "513effd9bd35415cc0155821eb22905276ff730b917a83e3a898f04b96acbb46"
+    },
+    "isolated_pdf_sha256": "a6087f895ee489fb589c7388d6240791e343cd5c0923f3be9ba5549b26ae6f20",
+    "isolated_extracted_text_identical": true
+  },
+  "model_summary": {
+    "input_rows": 2304,
+    "selected_score_rows": 288,
+    "mean_rows": 96,
+    "rankings": 24,
+    "latex_rows": 6,
+    "byte_identical_regeneration": true,
+    "ruff": "passed"
+  },
+  "independent_quantitative_checks": {
+    "count": 268,
+    "all_passed": true,
+    "receipt_path": "work/language-quantitative-20261116/independent-receipt.json",
+    "receipt_sha256": "075beba6f7cf14e1cbe7e5b8879a6be64939124034b7faf2edc85626d7753eb3",
+    "scope": "Existing scalar arithmetic and artifact preservation; underlying biological fits and neural arrays were not revalidated"
+  },
+  "pinned_repository_links": [
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "docs/reports/cebra-endpoint-time-readout-20261006/figures/time_balanced_accuracy.png"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "history/README.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "docs/reports/cebra-research-synthesis-20261011.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "docs/reports/path-generalization-completed-state-20260907.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "docs/professor_updates/path_generalization_20260907/CORRECTIONS.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "docs/analysis-contract.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "docs/project-direction.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "docs/dataset-card.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "data/README.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "context/previous-student-analysis.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "docs/compact-cue-source-20261026.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "notes/data_inspection/place195_split_behavior_audit_20260830.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "docs/reports/cebra-27unit-notebooks-20261023/tables/source_accounting.json"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "notes/data_inspection/place195_marker_semantics_probe_20260901.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "notes/data_inspection/place195_all_sessions_import_20260830.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "docs/reports/cebra-endpoint-time-readout-20261006/README.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "report/README.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "docs/reports/cebra-27unit-notebooks-20261023/README.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "docs/reports/source-support-ablation-20261110/README.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "docs/source-support-protocol-20261110.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "docs/reports/population-grid-20261111/README.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "docs/population-grid-protocol-20261111.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "docs/reports/population-grid-20261111/error-analysis.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "docs/reports/population-grid-20261111/error-analysis-validation.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "docs/experiments/source-reuse-width-20261114/README.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "docs/experiments/source-reuse-width-20261114/protocol.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "experiments/source_reuse_width_20261114/study.py"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "src/neuro/pseudopopulation.py"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "docs/experiments/source-reuse-width-20261114/notebook-validation-20261115.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "experiments/source_reuse_width_20261114/walkthrough_20261115/published/manifest.json"
+    },
+    {
+      "revision": "082b5e1a3cb9a87bc22a9ce80006d2e882adc404",
+      "path": "docs/experiments/source-reuse-width-20261114/class-panel-20261116.md"
+    },
+    {
+      "revision": "082b5e1a3cb9a87bc22a9ce80006d2e882adc404",
+      "path": "docs/experiments/source-reuse-width-20261114/class-panel-metadata-20261116.json"
+    },
+    {
+      "revision": "082b5e1a3cb9a87bc22a9ce80006d2e882adc404",
+      "path": "docs/experiments/source-reuse-width-20261114/verify_class_panel_20261116.py"
+    }
+  ],
+  "preservation": {
+    "preexisting_files_unchanged": 83,
+    "paths": [
+      "docs/experiments/source-reuse-width-20261114/class-panel-metadata-20261116.json",
+      "docs/experiments/source-reuse-width-20261114/design.json",
+      "docs/experiments/source-reuse-width-20261114/protocol.md",
+      "docs/experiments/source-reuse-width-20261114/verify_class_panel_20261116.py",
+      "experiments/source_reuse_width_20261114/README.md",
+      "experiments/source_reuse_width_20261114/audit/continue_width.py",
+      "experiments/source_reuse_width_20261114/audit/deliver.py",
+      "experiments/source_reuse_width_20261114/audit/tables.py",
+      "experiments/source_reuse_width_20261114/audit/test_orchestration.py",
+      "experiments/source_reuse_width_20261114/audit/verify.py",
+      "experiments/source_reuse_width_20261114/build_notebooks.py",
+      "experiments/source_reuse_width_20261114/population_width_20261114.ipynb",
+      "experiments/source_reuse_width_20261114/report.py",
+      "experiments/source_reuse_width_20261114/run.py",
+      "experiments/source_reuse_width_20261114/self_test_report.py",
+      "experiments/source_reuse_width_20261114/source_reuse_20261114.ipynb",
+      "experiments/source_reuse_width_20261114/study.py",
+      "experiments/source_reuse_width_20261114/test_study.py",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/README.md",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/benchmark.py",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/build_notebooks.py",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/execution.py",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/interpret.py",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/population_width_20261115.ipynb",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/publication/deliver.py",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/published/figures/first_case_reuse.png",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/published/figures/first_case_width.png",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/published/figures/reuse_paired_svm_changes.png",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/published/figures/width_all_model_changes.png",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/published/figures/width_class_changes.png",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/published/figures/width_design.png",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/published/manifest.json",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/published/population_width_20261115.executed.html",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/published/population_width_20261115.executed.ipynb",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/published/source_reuse_20261115.executed.html",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/published/source_reuse_20261115.executed.ipynb",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/run.py",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/source_reuse_20261115.ipynb",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/staging.py",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/test_execution.py",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/verify.py",
+      "report/series-20261115/build_class_panel_figures.py",
+      "report/series-20261115/build_figures.py",
+      "report/series-20261115/class-panel-figure-provenance.json",
+      "report/series-20261115/data/arm_design.csv",
+      "report/series-20261115/data/arm_sampling_realization.csv",
+      "report/series-20261115/data/case_scores.csv",
+      "report/series-20261115/data/class_panel_frontier.csv",
+      "report/series-20261115/data/class_panel_marginals.csv",
+      "report/series-20261115/data/matched_contrasts.csv",
+      "report/series-20261115/data/pca_svm_seed0_class_recalls.csv",
+      "report/series-20261115/data/pca_svm_seed0_confusions.csv",
+      "report/series-20261115/data/published_assembly_recipes.csv",
+      "report/series-20261115/data/published_prefit_arm_checks.csv",
+      "report/series-20261115/data/published_recipe_block_columns.csv",
+      "report/series-20261115/data/published_source_observation.csv",
+      "report/series-20261115/data/roster_support_summary.csv",
+      "report/series-20261115/data/session_class_source_counts.csv",
+      "report/series-20261115/data/source_session_structure.csv",
+      "report/series-20261115/data/svm_head_diagnostic_means.csv",
+      "report/series-20261115/data/svm_head_diagnostics.csv",
+      "report/series-20261115/data/width_pair_changes.csv",
+      "report/series-20261115/figure-provenance.json",
+      "report/series-20261115/figures/assembly_recipe.pdf",
+      "report/series-20261115/figures/assembly_recipe.png",
+      "report/series-20261115/figures/class_panel_frontier.pdf",
+      "report/series-20261115/figures/class_panel_frontier.png",
+      "report/series-20261115/figures/class_panel_support.pdf",
+      "report/series-20261115/figures/class_panel_support.png",
+      "report/series-20261115/figures/errors.pdf",
+      "report/series-20261115/figures/errors.png",
+      "report/series-20261115/figures/first_case_width.png",
+      "report/series-20261115/figures/historical_time.png",
+      "report/series-20261115/figures/recent_svm.pdf",
+      "report/series-20261115/figures/recent_svm.png",
+      "report/series-20261115/figures/sampling_realization.pdf",
+      "report/series-20261115/figures/sampling_realization.png",
+      "report/series-20261115/figures/source_structure.pdf",
+      "report/series-20261115/figures/source_structure.png",
+      "report/series-20261115/figures/source_support.pdf",
+      "report/series-20261115/figures/source_support.png",
+      "report/series-20261115/figures/width_readouts.pdf",
+      "report/series-20261115/figures/width_readouts.png"
+    ],
+    "old_generated_artifacts_unchanged": 38,
+    "old_renderers_and_provenance_unchanged": 4,
+    "prior_audit_files_unchanged": 18,
+    "prior_validation_and_index_preserved_as_exact_copies": true,
+    "class_note_numeric_token_sequence_unchanged": true,
+    "class_note_all_27_table_lines_and_code_blocks_unchanged": true,
+    "unrelated_sampling_sha256": "63489315c5a21257ed037edd77161f639beb23199321719d8fe22a562c1659f5",
+    "untracked_current_state_excluded": true
+  },
+  "reviews": {
+    "newcomer": {
+      "path": "report/series-20261115/audit/language-newcomer-20261116.md",
+      "sha256": "e2c5aeedfc50e23282e2a59e235ebc1b5e7469006b96a290b3405744626101da",
+      "verdict": "PASS",
+      "understandable": true
+    },
+    "researcher": {
+      "path": "report/series-20261115/audit/language-researcher-20261116.md",
+      "sha256": "43726915eae4da1fad2688b5c24f7d1f7e19edd430a6809d7f2709632177c6f9",
+      "verdict": "PASS",
+      "understandable": true
+    },
+    "quantitative": {
+      "path": "report/series-20261115/audit/language-quantitative-20261116.md",
+      "sha256": "2d40a2573c9d599d11a4ec410e8274b2478da2b30738b5f961ae9d406ed79e7a",
+      "verdict": "PASS",
+      "understandable": true
+    }
+  },
+  "review_scope": "Fresh independent AI manuscript, saved-scalar and readability reviews; historical measurement and execution findings retain original evidence",
+  "execution_scope": {
+    "new_fits": 0,
+    "model_loads_or_replays": 0,
+    "neural_arrays_read": 0,
+    "notebooks_executed": 0,
+    "metadata_optimizer_reruns": 0,
+    "scientific_results_changed": false,
+    "merge_performed": false
+  },
+  "remaining_limits": [
+    "Realized development utilization is less fully exported than training reuse.",
+    "Physical task orientation and acquisition metadata remain incomplete.",
+    "PDF is untagged; full grayscale and print checks were not performed.",
+    "Cross-version figure-binary identity is not guaranteed.",
+    "Known-label construction, shared sessions, dependent sources and inspected development limit performance claims."
+  ]
+}

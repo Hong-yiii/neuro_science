@@ -1,0 +1,127 @@
+{
+  "status": "passed",
+  "date": "2026-11-16",
+  "scope": "Class-panel metadata context and manuscript presentation; no experimental results changed",
+  "baseline_revision": "5ac3e5a681e0eee3229adc8f36088c1c37906f48",
+  "experimental_revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+  "class_panel_record_revision": "5a9e54cb75efa1ca1e9d1e918fa9defd57967ee4",
+  "artifact_sha256": {
+    "report/series-20261115/paper.pdf": "f5a1783a3673ff5a788af8210bfb876e7045fb531d06354f1a248dbd4ba270f9",
+    "report/series-20261115/paper.tex": "a3df343e3add19089e7e497d872d4d45eb36aca74ef4a79ddfe65aebe6667d28",
+    "report/series-20261115/build_class_panel_figures.py": "40243cbff31f396ca1f900ba241d163793d67c794864ece473b08e8cc3bea594",
+    "report/series-20261115/class-panel-figure-provenance.json": "dee2b1ccb57194dccd1bbcc8db4650084486a7d7a8a3c6e85191229e76d549b5",
+    "docs/experiments/source-reuse-width-20261114/class-panel-20261116.md": "45deee5bb81b6c4fb7a71ff109674655ef06e1eedce071edccc1ebbc3954712a",
+    "docs/experiments/source-reuse-width-20261114/class-panel-metadata-20261116.json": "8f6560aa172c86a53f211596bce9333ee410281210f2c518ad3a8503a572316a",
+    "docs/experiments/source-reuse-width-20261114/verify_class_panel_20261116.py": "c615e32feaa652d0960fe01d2b9b8ba9b67708ba01a085528c7de5b09f3e16df"
+  },
+  "checks": {
+    "pages": 20,
+    "fonts_embedded": 39,
+    "clean_build_text_identical": true,
+    "clean_build_tree": "fa96cbabed22e44485fd05e48014fdeedee5a3b3",
+    "old_generated_artifacts_unchanged": 32,
+    "new_generated_artifacts_authenticated": 6,
+    "protected_study_files_unchanged": 45,
+    "protected_study_paths": [
+      "docs/experiments/source-reuse-width-20261114/continuation-20261115.md",
+      "docs/experiments/source-reuse-width-20261114/design.json",
+      "docs/experiments/source-reuse-width-20261114/notebook-browser-verification-20261115.json",
+      "docs/experiments/source-reuse-width-20261114/notebook-execution-20261115.md",
+      "docs/experiments/source-reuse-width-20261114/notebook-numeric-verification-20261115.json",
+      "docs/experiments/source-reuse-width-20261114/notebook-validation-20261115.md",
+      "docs/experiments/source-reuse-width-20261114/protocol.md",
+      "docs/experiments/source-reuse-width-20261114/validation.md",
+      "experiments/source_reuse_width_20261114/README.md",
+      "experiments/source_reuse_width_20261114/audit/continue_width.py",
+      "experiments/source_reuse_width_20261114/audit/deliver.py",
+      "experiments/source_reuse_width_20261114/audit/tables.py",
+      "experiments/source_reuse_width_20261114/audit/test_orchestration.py",
+      "experiments/source_reuse_width_20261114/audit/verify.py",
+      "experiments/source_reuse_width_20261114/build_notebooks.py",
+      "experiments/source_reuse_width_20261114/population_width_20261114.ipynb",
+      "experiments/source_reuse_width_20261114/report.py",
+      "experiments/source_reuse_width_20261114/run.py",
+      "experiments/source_reuse_width_20261114/self_test_report.py",
+      "experiments/source_reuse_width_20261114/source_reuse_20261114.ipynb",
+      "experiments/source_reuse_width_20261114/study.py",
+      "experiments/source_reuse_width_20261114/test_study.py",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/README.md",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/benchmark.py",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/build_notebooks.py",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/execution.py",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/interpret.py",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/population_width_20261115.ipynb",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/publication/deliver.py",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/published/figures/first_case_reuse.png",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/published/figures/first_case_width.png",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/published/figures/reuse_paired_svm_changes.png",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/published/figures/width_all_model_changes.png",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/published/figures/width_class_changes.png",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/published/figures/width_design.png",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/published/manifest.json",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/published/population_width_20261115.executed.html",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/published/population_width_20261115.executed.ipynb",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/published/source_reuse_20261115.executed.html",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/published/source_reuse_20261115.executed.ipynb",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/run.py",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/source_reuse_20261115.ipynb",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/staging.py",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/test_execution.py",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/verify.py"
+    ],
+    "pinned_repository_links": 33,
+    "original_figure_provenance_unchanged": true,
+    "unrelated_sampling_edit_unchanged": true
+  },
+  "figures": 14,
+  "tables": 10,
+  "reviews": {
+    "newcomer": {
+      "path": "report/series-20261115/audit/class-panel-newcomer-20261116.md",
+      "sha256": "731a894136fb866346052e48b7cef9ae06c93193c03534e14b132e0c9a4a339e",
+      "verdict": "PASS",
+      "understandable": true
+    },
+    "researcher": {
+      "path": "report/series-20261115/audit/class-panel-researcher-20261116.md",
+      "sha256": "9ccd27f29a4312e0a044d7583cb4c348d9012b0cb1eee2ef4824ce5241e01c2c",
+      "verdict": "PASS",
+      "understandable": true
+    },
+    "quantitative": {
+      "path": "report/series-20261115/audit/class-panel-quantitative-20261116.md",
+      "sha256": "2b225b1553f7cb2d5b869ccbdc67346835011bc5a1deaf42daba0f63b2455ec9",
+      "verdict": "PASS",
+      "understandable": true
+    }
+  },
+  "review_scope": "Fresh independent artifact reviews of the addition and integration; newcomer read all 20 pages; not a new audit of all historical fits",
+  "original_18page_audits_and_remote_followup_preserved": true,
+  "metadata_verification": {
+    "actual_study_functions": true,
+    "independent_matrix_recounts": 2,
+    "independent_width_objective_formulation_checked": true,
+    "K9_full_design_exact": true,
+    "model_fits": 0,
+    "notebooks_executed": 0,
+    "neural_value_arrays_read": 0,
+    "model_replay": 0
+  },
+  "rendering": {
+    "all_pages_rendered": true,
+    "newcomer_visually_read_all_pages": true,
+    "stale_page6_work_preview_refreshed": true,
+    "pdf_tagged": false,
+    "full_grayscale_print_audit": false,
+    "cross_version_binary_identity_promised": false
+  },
+  "nonblocking_notes": [
+    "Figure 3 diagonal legend says unavailable; caption explicitly identifies excluded self-pairs",
+    "Earlier follow-up development-utilization, task-orientation, accessibility and cross-version binary limits remain"
+  ],
+  "publication": {
+    "pull_request": "https://github.com/Hong-yiii/neuro_science/pull/32",
+    "base": "main",
+    "merge_performed": false
+  }
+}

@@ -1,0 +1,11 @@
+*.aux
+*.log
+*.out
+*.synctex.gz
+*.xdv
+*.toc
+*.fls
+*.fdb_latexmk
+!figures/
+!figures/*.pdf
+!figures/*.png

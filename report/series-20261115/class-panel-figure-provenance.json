@@ -1,0 +1,101 @@
+{
+  "classification": "Presentation of an authenticated retrospective metadata-feasibility receipt; no new optimization or experiment",
+  "source_receipt": {
+    "path": "docs/experiments/source-reuse-width-20261114/class-panel-metadata-20261116.json",
+    "sha256": "8f6560aa172c86a53f211596bce9333ee410281210f2c518ad3a8503a572316a",
+    "verification_date": "2026-11-16",
+    "status": "passed",
+    "source_revision_recorded_by_receipt": "a0ca80180e2bb52b90e499357d3d6965b26806da"
+  },
+  "source_locations": {
+    "class_panel_marginals.csv": [
+      "/eligible_training_sources",
+      "/eligible_development_sources",
+      "/sessions_passing_single_pair_gate5",
+      "/frontier/2/panel/conditions"
+    ],
+    "class_panel_frontier.csv": "/frontier (all nine entries, unchanged order)"
+  },
+  "validation": {
+    "marginal_rows": 30,
+    "frontier_rows": 9,
+    "selected_K9_cells": 9,
+    "diagonal": "null/unavailable, never counted as zero",
+    "total_eligible_training_sources": 7861,
+    "total_eligible_development_sources": 3265,
+    "all_receipt_solver_statuses_optimal_with_zero_gap": true,
+    "all_panel_endpoint_degrees_balanced": true,
+    "K9_columns_gate5_gate3": [
+      17,
+      83
+    ],
+    "K9_sessions_gate5_gate3": [
+      3,
+      20
+    ]
+  },
+  "figures": {
+    "class_panel_support": {
+      "width_inches": 7.0,
+      "height_inches": 3.9,
+      "png_dpi": 240,
+      "pdf_raster_image_objects": 0,
+      "scope": "All 58 recorded sessions, all 30 nonself ordered endpoint classes; eligible after frozen split/global contributor embargo",
+      "left_text": "Training count above development count; color encodes training count",
+      "right": "Number of sessions with at least 5 training and 1 development source for each pair considered separately",
+      "selected_outline": "Nine classes of the already fixed/executed K9 design",
+      "single_pair_support_is_not_joint_panel_feasibility": true
+    },
+    "class_panel_frontier": {
+      "width_inches": 7.0,
+      "height_inches": 3.2,
+      "png_dpi": 240,
+      "pdf_raster_image_objects": 0,
+      "K_values": [
+        6,
+        8,
+        9,
+        10,
+        12,
+        15,
+        18,
+        24,
+        30
+      ],
+      "x_spacing": "Equally spaced fixed-K categories; lines only guide the eye",
+      "marker_offsets": "Small fixed horizontal offsets distinguish the two gates; no y values altered",
+      "gate5": "Maximum admitted recorded columns under at least 5 train and 1 development source for every selected class/session",
+      "gate3": "Maximum admitted columns under at least 3 train and 1 development source, conditional on achieving the gate5 width optimum",
+      "sessions": "Session counts for the chosen panels, not separately maximized session objectives",
+      "execution": "Only K9 is the fixed/executed study; all other K values are retrospective metadata-only alternatives",
+      "uncertainty_intervals": "None; these are deterministic metadata counts"
+    }
+  },
+  "limits": [
+    "K9 was fixed before class selection; this retrospective frontier does not show that nine globally maximizes width or decoding performance",
+    "No alternative K was evaluated by fitting or decoding in this receipt",
+    "Class panels can differ across K and are constrained by balanced start/goal degree; frontier points are not nested-class interventions",
+    "Neither marginal source totals nor passing single-pair gates establish a joint multisession population",
+    "Counts do not establish biological independence, simultaneity or natural-trial prediction"
+  ],
+  "execution": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 python report/series-20261115/build_class_panel_figures.py",
+    "python_version": "3.13.2",
+    "numpy_version": "2.3.4",
+    "matplotlib_version": "3.10.7",
+    "model_fits": 0,
+    "optimizer_calls": 0,
+    "study_imports": 0,
+    "notebooks_executed": 0,
+    "neural_or_assignment_value_files_read": 0
+  },
+  "script_sha256": "40243cbff31f396ca1f900ba241d163793d67c794864ece473b08e8cc3bea594",
+  "generated_files_sha256": {
+    "report/series-20261115/data/class_panel_marginals.csv": "ea9b89a7c39b6f76157e7ed2fe00c4106afbe0b4b2f8d14a93699ac823e643ff",
+    "report/series-20261115/data/class_panel_frontier.csv": "130967e57dd54818417f48320fb64a1193f094b4e8bc7611f2628bacaa4aa482",
+    "report/series-20261115/figures/class_panel_support.pdf": "3b28afec262b3b5466f5214d26586dc52caed4b65522137d02fddb74a88398fd",
+    "report/series-20261115/figures/class_panel_support.png": "b82ec0b1c3e6c950b8e6a69ea6725fab28363db4eaec0c7323056e82dda53d13",
+    "report/series-20261115/figures/class_panel_frontier.pdf": "3313082cc9e79a21eada603f1edca1a69b93c632022aa4b12a24c507113222e4",
+    "report/series-20261115/figures/class_panel_frontier.png": "17cf448f73ceed93d5a0e64002e8670492611fdf4d125b3ea6d069d3c5c6808f"
+  }
+}

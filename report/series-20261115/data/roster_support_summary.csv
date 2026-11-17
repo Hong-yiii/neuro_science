@@ -1,0 +1,4 @@
+roster,sessions,columns,session_class_pools,available_train_sources,available_development_sources,minimum_train_sources,minimum_development_sources,development_singleton_pools
+core,3,17,27,160,56,5,1,5
+middle,11,49,99,543,210,3,1,18
+full,20,83,180,912,365,3,1,41

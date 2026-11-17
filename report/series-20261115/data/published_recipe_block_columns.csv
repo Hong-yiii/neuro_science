@@ -1,0 +1,15 @@
+arm,seed,block,columns
+B2,0,S16,3
+B2,0,S27,8
+B2,0,S34,6
+Wmid,0,S05,1
+Wmid,0,S06,2
+Wmid,0,S07,5
+Wmid,0,S16,3
+Wmid,0,S20,6
+Wmid,0,S23,6
+Wmid,0,S27,8
+Wmid,0,S28,4
+Wmid,0,S34,6
+Wmid,0,S38,4
+Wmid,0,S44,4

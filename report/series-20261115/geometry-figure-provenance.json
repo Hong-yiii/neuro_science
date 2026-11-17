@@ -1,0 +1,426 @@
+{
+  "schema_version": 1,
+  "classification": "Presentation-only excerpts from completed exploratory study; no new analysis or fitting",
+  "renderer": "report/series-20261115/build_geometry_figures.py",
+  "renderer_sha256": "420d322c80bc9d1ef1edcaf99a8ef393400e0d36af7183b419283ecb82baec4f",
+  "curated_input": "report/series-20261115/data/cebra_geometry_examples.json",
+  "curated_input_sha256": "82838f544adcb15ba60517cc7b2cc196965d38fd4f686194c2edbf77eba4e67c",
+  "selection_rule": "Predetermined observed seed0: Time B2/B5 source-budget endpoints at17 columns; Time/native Wmid first width case at49 columns. Not selected by scores, apparent geometry or loss, and not representative seeds.",
+  "semantics": {
+    "geometry": "Per endpoint-class means of eight constructed exposed-development rows at each of ten cue bins, using first3 of7 fitted coordinates; not individual observations or whole-cue display PCA.",
+    "native": "Fixed equal-session mean of corresponding7D bin embeddings from pair-supervised session encoders, followed by the same eight-row class mean.",
+    "time": "CEBRA-Time uses adjacent-bin positives within constructed training rows.",
+    "loss": "Saved unsmoothed own-objective total training loss, one value for updates1 through1000; not development loss or decoder accuracy. Objectives differ between Time and native.",
+    "precision": "Selected JSON numeric values copied through Python float round-trip with no explicit rounding; plot conversion to float64 only. No new PCA, alignment, embedding transform or neural-array read.",
+    "claim_limits": "Known-label construction; historically exposed contributor-disjoint development. No simultaneous population, natural-trial inference, biological uncertainty or geometry-comparison claim."
+  },
+  "source_provenance": {
+    "tracked_ledger": "docs/experiments/source-reuse-width-20261114/validation.md",
+    "tracked_ledger_sha256_at_extraction": "aec97273385e2ecc32d8c2ff3f000484b125f320cb30bd29f8bbaba2fdb09db2",
+    "tracked_ledger_anchor": "Dated delivery table: delivery_manifest.json (102 files)",
+    "original_delivery_directory": "outputs/source-reuse-width-20261114/deliverables-20261115-03",
+    "original_delivery_manifest_sha256": "85e05fa820232245f37332e38bb70155507e869f1da69f0abb0d98cd1b4a0b37",
+    "original_accepted_run_receipt_sha256": "bd057c05a842a702d6d8c3fd2259ee4e54918fb3b49951b57f782b08e876c17b",
+    "original_numeric_audit_sha256": "92b667fd5b23a1a202bd1f29ec2e0d35f4160a6fd7dac345a548f133122a785f",
+    "aggregate_files_sha256": {
+      "source_reuse/trajectories.json": "87afb9c46d122b5923eaba1318c50862c7c17efc3899d6c788d638640ab5cf1c",
+      "source_reuse/learning.json": "cc7ec11399ea5bb63c0f4ca8c2958eb4ddc70aaa213b3d2a707596b22f22ef99",
+      "population_width/trajectories.json": "152b842bae05027dcba33441abab518a9d055182bb52ee3db24333db938a061e",
+      "population_width/learning.json": "216da27a4ce80127397d83fea14f661fad925046839b87ff6f68a7e54d290a00"
+    },
+    "report_manifests_sha256": {
+      "source_reuse/report_manifest.json": "58189ef6461392697369d5e20adf95796256649ab15622899fb559b7fcfc9278",
+      "population_width/report_manifest.json": "a52901082c46e7afacb4704847ac3e90906609a1e3ab2cb24863803f34aa16b6"
+    },
+    "publication_manifest": "experiments/source_reuse_width_20261114/walkthrough_20261115/published/manifest.json",
+    "publication_manifest_sha256": "8ef3a28e687e657c6429632b6a2011bfaa57dfadd62ff94fc276f21bef9a9e93",
+    "reproduction_run_receipt_sha256": "717d49dc5d061be3f7933ea6684115939cfb8aa72375e1b41b6ba758957a27d3",
+    "published_png_cross_checks": [
+      {
+        "view": "time_B2",
+        "published_notebook": "experiments/source_reuse_width_20261114/walkthrough_20261115/published/source_reuse_20261115.executed.ipynb",
+        "published_notebook_sha256": "64f05b415c99b702299e735076e5c04aabd3d3194400631c63428f01a268480c",
+        "original_geometry_figure": "source_reuse/figures/trajectory_observed_seed0_B2.png",
+        "geometry_png_sha256": "67e05c7c36f7418ee120ca897afa457ad7d93018c4f1bf0a413d183d5455455d",
+        "all_learning_curves_png_sha256": "494539202dff0054f2a01c5acc0e99998d4bd79a80bcbecc86f7d7faae736311",
+        "check": "Accepted report PNG equals embedded reviewed publication PNG; no pixel digitization"
+      },
+      {
+        "view": "time_B5",
+        "published_notebook": "experiments/source_reuse_width_20261114/walkthrough_20261115/published/source_reuse_20261115.executed.ipynb",
+        "published_notebook_sha256": "64f05b415c99b702299e735076e5c04aabd3d3194400631c63428f01a268480c",
+        "original_geometry_figure": "source_reuse/figures/trajectory_observed_seed0_B5.png",
+        "geometry_png_sha256": "972811ed76a8aa5ef08e83ed2980ee6097c100bf95fc7ed5436801d44b343c20",
+        "all_learning_curves_png_sha256": "494539202dff0054f2a01c5acc0e99998d4bd79a80bcbecc86f7d7faae736311",
+        "check": "Accepted report PNG equals embedded reviewed publication PNG; no pixel digitization"
+      },
+      {
+        "view": "time_Wmid",
+        "published_notebook": "experiments/source_reuse_width_20261114/walkthrough_20261115/published/population_width_20261115.executed.ipynb",
+        "published_notebook_sha256": "8fab810ce58d6bebc579d66033268b1cbca89da873e089b70f5c4886f7cc9c13",
+        "original_geometry_figure": "population_width/figures/trajectory_observed_seed0_Wmid.png",
+        "geometry_png_sha256": "a456d8fa8885507e5ac2739372d239e938183e417c63f0a856ab9b4af31f1e94",
+        "all_learning_curves_png_sha256": "90ef581eefe3d8322ccb8ef8b63603c16348edcc5a76f00b9c331e1386712fec",
+        "check": "Accepted report PNG equals embedded reviewed publication PNG; no pixel digitization"
+      },
+      {
+        "view": "native_Wmid",
+        "published_notebook": "experiments/source_reuse_width_20261114/walkthrough_20261115/published/population_width_20261115.executed.ipynb",
+        "published_notebook_sha256": "8fab810ce58d6bebc579d66033268b1cbca89da873e089b70f5c4886f7cc9c13",
+        "original_geometry_figure": "population_width/figures/trajectory_observed_seed0_Wmid.png",
+        "geometry_png_sha256": "a456d8fa8885507e5ac2739372d239e938183e417c63f0a856ab9b4af31f1e94",
+        "all_learning_curves_png_sha256": "90ef581eefe3d8322ccb8ef8b63603c16348edcc5a76f00b9c331e1386712fec",
+        "check": "Accepted report PNG equals embedded reviewed publication PNG; no pixel digitization"
+      }
+    ],
+    "complete_original_cases_preserved": 48,
+    "class_mean_definition_source": "experiments/source_reuse_width_20261114/walkthrough_20261115/staging.py:328; development z[pair==label,:,:3].mean(0)",
+    "native_pooling_definition_source": "src/neuro/studies/population_models.py:82; equal-session mean before row-class averaging",
+    "cohort_counts_source": "docs/experiments/source-reuse-width-20261114/README.md: What was held fixed and what changed"
+  },
+  "validation": [
+    {
+      "view": "time_B2",
+      "coordinate_shape": [
+        9,
+        10,
+        3
+      ],
+      "loss_entries": 1000,
+      "all_finite": true
+    },
+    {
+      "view": "time_B5",
+      "coordinate_shape": [
+        9,
+        10,
+        3
+      ],
+      "loss_entries": 1000,
+      "all_finite": true
+    },
+    {
+      "view": "time_Wmid",
+      "coordinate_shape": [
+        9,
+        10,
+        3
+      ],
+      "loss_entries": 1000,
+      "all_finite": true
+    },
+    {
+      "view": "native_Wmid",
+      "coordinate_shape": [
+        9,
+        10,
+        3
+      ],
+      "loss_entries": 1000,
+      "all_finite": true
+    }
+  ],
+  "rendering": {
+    "geometry": "Saved coordinates drawn unchanged; first and last bins use circle/cross. Same fixed orthographic camera and cubic box aspect for every panel.",
+    "scaling": "Independently for each panel, equal x/y/z limit spans equal1.16 times that panel's largest coordinate range; each axis is centered on its own min/max midpoint. No coordinate normalization, PCA or cross-fit alignment. All actual bounds are recorded below.",
+    "loss": "All1000 unsmoothed total-loss values; independent y limits for each own-objective trace. No loss-scale ranking between objectives.",
+    "colors": {
+      "1->2": "#1f77b4",
+      "1->4": "#ff7f0e",
+      "2->5": "#2ca02c",
+      "2->6": "#d62728",
+      "3->1": "#9467bd",
+      "4->6": "#8c564b",
+      "5->3": "#e377c2",
+      "5->4": "#7f7f7f",
+      "6->2": "#bcbd22"
+    },
+    "camera": {
+      "elevation_degrees": 24,
+      "azimuth_degrees": -58,
+      "projection": "orthographic",
+      "box_aspect": [
+        1,
+        1,
+        1
+      ]
+    },
+    "pdf_metadata": {
+      "Creator": "build_geometry_figures.py",
+      "CreationDate": null,
+      "ModDate": null
+    },
+    "python": "3.13.2",
+    "numpy": "2.3.4",
+    "matplotlib": "3.10.7",
+    "default_build_access": "Curated input only; no original delivery tree, notebooks or model/source files read"
+  },
+  "figures": [
+    {
+      "name": "cebra_source_geometry",
+      "views": [
+        "time_B2",
+        "time_B5"
+      ],
+      "geometry_panels": [
+        {
+          "view": "time_B2",
+          "coordinate_minimum": [
+            -0.6800271272659302,
+            -0.28458619117736816,
+            -0.6060906648635864
+          ],
+          "coordinate_maximum": [
+            0.725936770439148,
+            0.19445380568504333,
+            0.5086476802825928
+          ],
+          "axis_limits": [
+            [
+              -0.7925042390823364,
+              0.8384138822555541
+            ],
+            [
+              -0.8605252534151077,
+              0.7703928679227828
+            ],
+            [
+              -0.8641805529594421,
+              0.7667375683784484
+            ]
+          ],
+          "equal_axis_span": 1.6309181213378905,
+          "camera": {
+            "elevation_degrees": 24,
+            "azimuth_degrees": -58,
+            "projection": "orthographic",
+            "box_aspect": [
+              1,
+              1,
+              1
+            ]
+          }
+        },
+        {
+          "view": "time_B5",
+          "coordinate_minimum": [
+            -0.7387478351593018,
+            -0.32034069299697876,
+            -0.5944907665252686
+          ],
+          "coordinate_maximum": [
+            0.6816967725753784,
+            0.30671340227127075,
+            0.5365090370178223
+          ],
+          "axis_limits": [
+            [
+              -0.8523834037780761,
+              0.7953323411941527
+            ],
+            [
+              -0.8306715178489684,
+              0.8170442271232604
+            ],
+            [
+              -0.8528487372398376,
+              0.7948670077323913
+            ]
+          ],
+          "equal_axis_span": 1.6477157449722288,
+          "camera": {
+            "elevation_degrees": 24,
+            "azimuth_degrees": -58,
+            "projection": "orthographic",
+            "box_aspect": [
+              1,
+              1,
+              1
+            ]
+          }
+        }
+      ],
+      "loss_panels": [
+        {
+          "view": "time_B2",
+          "x_limits": [
+            0.0,
+            1000.0
+          ],
+          "y_limits": [
+            4.867933750152588,
+            5.593489646911621
+          ],
+          "entries_drawn": 1000,
+          "smoothing": null
+        },
+        {
+          "view": "time_B5",
+          "x_limits": [
+            0.0,
+            1000.0
+          ],
+          "y_limits": [
+            5.054721031188965,
+            5.578879680633545
+          ],
+          "entries_drawn": 1000,
+          "smoothing": null
+        }
+      ],
+      "files": [
+        {
+          "file": "figures/cebra_source_geometry.pdf",
+          "sha256": "c7873acb28bf0a0b0e2e18878e6e39c563ca0502840e19c776b957c8c320f0ce",
+          "width_inches": 7,
+          "height_inches": 6,
+          "vector": true
+        },
+        {
+          "file": "figures/cebra_source_geometry.png",
+          "sha256": "b5435653ee27684bf2c5d21c65e99931bda2ea400b57c3d32e9009281718f34c",
+          "width_inches": 7,
+          "height_inches": 6,
+          "vector": false
+        }
+      ]
+    },
+    {
+      "name": "cebra_model_geometry",
+      "views": [
+        "time_Wmid",
+        "native_Wmid"
+      ],
+      "geometry_panels": [
+        {
+          "view": "time_Wmid",
+          "coordinate_minimum": [
+            -0.6079431772232056,
+            -0.521263599395752,
+            -0.6517098546028137
+          ],
+          "coordinate_maximum": [
+            0.703850507736206,
+            0.48290178179740906,
+            0.6852416396141052
+          ],
+          "axis_limits": [
+            [
+              -0.7274782013893127,
+              0.8233855319023132
+            ],
+            [
+              -0.7946127754449844,
+              0.7562509578466415
+            ],
+            [
+              -0.7586659741401672,
+              0.7921977591514587
+            ]
+          ],
+          "equal_axis_span": 1.550863733291626,
+          "camera": {
+            "elevation_degrees": 24,
+            "azimuth_degrees": -58,
+            "projection": "orthographic",
+            "box_aspect": [
+              1,
+              1,
+              1
+            ]
+          }
+        },
+        {
+          "view": "native_Wmid",
+          "coordinate_minimum": [
+            -0.32222819328308105,
+            -0.5662931799888611,
+            -0.7186018824577332
+          ],
+          "coordinate_maximum": [
+            -0.259482204914093,
+            -0.4834318161010742,
+            -0.6470441222190857
+          ],
+          "axis_limits": [
+            [
+              -0.3389147901535034,
+              -0.24279560804367067
+            ],
+            [
+              -0.5729220890998841,
+              -0.4768029069900513
+            ],
+            [
+              -0.7308825933933258,
+              -0.634763411283493
+            ]
+          ],
+          "equal_axis_span": 0.09611918210983275,
+          "camera": {
+            "elevation_degrees": 24,
+            "azimuth_degrees": -58,
+            "projection": "orthographic",
+            "box_aspect": [
+              1,
+              1,
+              1
+            ]
+          }
+        }
+      ],
+      "loss_panels": [
+        {
+          "view": "time_Wmid",
+          "x_limits": [
+            0.0,
+            1000.0
+          ],
+          "y_limits": [
+            4.811229343414307,
+            5.599218254089355
+          ],
+          "entries_drawn": 1000,
+          "smoothing": null
+        },
+        {
+          "view": "native_Wmid",
+          "x_limits": [
+            0.0,
+            1000.0
+          ],
+          "y_limits": [
+            5.502689037322998,
+            5.710124816894531
+          ],
+          "entries_drawn": 1000,
+          "smoothing": null
+        }
+      ],
+      "files": [
+        {
+          "file": "figures/cebra_model_geometry.pdf",
+          "sha256": "4444458b0fe0beba736ff73ee66413ead872d11ced9668781a3f2d2322d91071",
+          "width_inches": 7,
+          "height_inches": 6,
+          "vector": true
+        },
+        {
+          "file": "figures/cebra_model_geometry.png",
+          "sha256": "da9b3116c31e0a65c1a39ab37f5db32cfe64da206feff0093e3da1e610316798",
+          "width_inches": 7,
+          "height_inches": 6,
+          "vector": false
+        }
+      ]
+    }
+  ],
+  "scope_checks": {
+    "new_model_fits": 0,
+    "model_loads": 0,
+    "notebooks_executed": 0,
+    "neural_feature_or_observation_arrays_read": 0,
+    "scientific_model_libraries_imported": false,
+    "original_results_modified": false
+  }
+}

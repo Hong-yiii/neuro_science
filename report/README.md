@@ -1,5 +1,10 @@
 # CEBRA-Time review notebook and retrospective
 
+For the research series through November 15 and its November 16 interpretation,
+read the [CEBRA UROP report](series-20261115/paper.pdf), with
+[editable source, aggregate evidence and independent audits](series-20261115/README.md).
+The October notebook and manuscript below remain preserved historical artifacts.
+
 **Start with the [executed review notebook](endpoint_walkthrough.ipynb).** It follows
 saved standardized cue → fitted PCA/CEBRA → readouts → verified evidence, with inline
 equations, tensor diagrams, source-count views, confusions and all-seed comparisons.

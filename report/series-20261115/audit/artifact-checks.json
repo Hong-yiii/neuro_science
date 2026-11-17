@@ -1,0 +1,45 @@
+{
+  "status": "passed",
+  "source_tree": "020f20436acdf503eb6fd2fe79131b1524e27202",
+  "pages": 18,
+  "figures": 12,
+  "tables": 9,
+  "tex_warnings": 0,
+  "pinned_repository_links": 30,
+  "all_pinned_links_resolve": true,
+  "generated_files_authenticated": 32,
+  "text_identical_to_delivered_pdf": true,
+  "source_and_figure_files_identical": true,
+  "scientific_runtime_required": false,
+  "notebook_sources_required": false,
+  "delivered_pdf_sha256": "a12d4936438baa79322a8c615db2112d8d0980f621a94c0fbbb45cb541812956",
+  "compiled_pdf_sha256": "9c18526154e96bdc46df8603275c11daae8453967727848ad5bf24acc0ae6251",
+  "tex_sha256": "ee2027cac9a0d9c2ae911a6355a74016c5a76fe519f3221888e1e0f6aa740923",
+  "figure_provenance_sha256": "1e9503f18f3f67804feb1db02ab3f60d70076e8fe16cd0670524062686002eb4",
+  "all_pages_visually_inspected": true,
+  "all_final_reviewers_confirmed": {
+    "newcomer": {
+      "verdict": "PASS \u2014 APPROVED and UNDERSTANDABLE",
+      "file": "audit/methods-newcomer.md",
+      "sha256": "d9c02cb1ad2541a0741ce60017dd6fa72076566520b690e755f8f3fce53fb4f5"
+    },
+    "researcher": {
+      "verdict": "PASS \u2014 APPROVED and UNDERSTANDABLE",
+      "file": "audit/methods-researcher.md",
+      "sha256": "5e80b87f42448f2f40b3cf746f89aec6413e96b407225ff4fe39a107a89daf78"
+    },
+    "quantitative": {
+      "verdict": "PASS \u2014 APPROVED and UNDERSTANDABLE",
+      "file": "audit/methods-quantitative.md",
+      "sha256": "24ff4c55d375f42b8b0fdd2f71447ec94ff2d8f6d18d537fa1b66681e271e4d5"
+    }
+  },
+  "numerical_tables_and_original_figures_changed_by_final_clarity_pass": false,
+  "build_command_template": [
+    "make",
+    "-B",
+    "TECTONIC=/path/to/tectonic"
+  ],
+  "tectonic_version": "0.17.0",
+  "fonts_embedded": true
+}

@@ -1,0 +1,353 @@
+{
+  "status": "passed",
+  "date": "2026-11-16",
+  "scope": "UROP cover; four saved aggregate CEBRA views and matching loss curves; relocation of detailed verification to Appendices A and B",
+  "baseline_revision": "414496280088f9400114938c3b9ad65e417f82c2",
+  "artifact_sha256": {
+    "report/series-20261115/paper.pdf": "2d1b9efe6b370ae631c5888c2b4261646449d049ef11d8dac3f347f960c390d7",
+    "report/series-20261115/paper.tex": "0dc9d74a49bf2fa994df46ef33e0cd3f71c260b24bc1c7f1adf9afed9bec4aea",
+    "report/series-20261115/build_geometry_figures.py": "420d322c80bc9d1ef1edcaf99a8ef393400e0d36af7183b419283ecb82baec4f",
+    "report/series-20261115/data/cebra_geometry_examples.json": "82838f544adcb15ba60517cc7b2cc196965d38fd4f686194c2edbf77eba4e67c",
+    "report/series-20261115/geometry-figure-provenance.json": "a3b4d5f262a2ad05c4a3eb76f3d65d16d06316c9f7e9174ce9547b14f99f09c0",
+    "report/series-20261115/figures/cebra_source_geometry.pdf": "c7873acb28bf0a0b0e2e18878e6e39c563ca0502840e19c776b957c8c320f0ce",
+    "report/series-20261115/figures/cebra_source_geometry.png": "b5435653ee27684bf2c5d21c65e99931bda2ea400b57c3d32e9009281718f34c",
+    "report/series-20261115/figures/cebra_model_geometry.pdf": "4444458b0fe0beba736ff73ee66413ead872d11ced9668781a3f2d2322d91071",
+    "report/series-20261115/figures/cebra_model_geometry.png": "da9b3116c31e0a65c1a39ab37f5db32cfe64da206feff0093e3da1e610316798"
+  },
+  "build": {
+    "physical_pages": 24,
+    "numbered_pages": 23,
+    "cover_unnumbered": true,
+    "cover_name": "Lin Hong Yi",
+    "cover_term": "Semester 1, AY 2026/2027",
+    "page_size": "A4",
+    "figures": 16,
+    "tables": 11,
+    "fonts_embedded": 45,
+    "all_fonts_embedded": true,
+    "tex_log_findings": {
+      "report/series-20261115/paper.log": [],
+      "work/appendix-geometry-20261116/clean-build-01/report/series-20261115/paper.log": []
+    },
+    "isolated_build": {
+      "source_tree": "fa2b98e592f895e72fbf42998bb88291c43edce5",
+      "paths": [
+        "report/series-20261115/paper.tex",
+        "report/series-20261115/Makefile",
+        "report/series-20261115/figures",
+        "report/series-20261115/build_geometry_figures.py",
+        "report/series-20261115/data/cebra_geometry_examples.json"
+      ],
+      "archive_sha256": "a0b5b892bf988b73da379c4e2163e2cda59cd86b624738cf373979d755067b51"
+    },
+    "isolated_geometry_and_provenance_byte_identical": true,
+    "isolated_pdf_text_identical": true,
+    "isolated_pdf_sha256": "4fa76ee5416ca91e4d19b0a21be2cd9de4aa77c305958fdd7ac22c88eddfa2a7",
+    "delivered_pdf_sha256": "2d1b9efe6b370ae631c5888c2b4261646449d049ef11d8dac3f347f960c390d7",
+    "delivered_tex_sha256": "0dc9d74a49bf2fa994df46ef33e0cd3f71c260b24bc1c7f1adf9afed9bec4aea",
+    "rendered_physical_pages": 24,
+    "artifacts": {
+      "figures/cebra_source_geometry.pdf": "c7873acb28bf0a0b0e2e18878e6e39c563ca0502840e19c776b957c8c320f0ce",
+      "figures/cebra_source_geometry.png": "b5435653ee27684bf2c5d21c65e99931bda2ea400b57c3d32e9009281718f34c",
+      "figures/cebra_model_geometry.pdf": "4444458b0fe0beba736ff73ee66413ead872d11ced9668781a3f2d2322d91071",
+      "figures/cebra_model_geometry.png": "da9b3116c31e0a65c1a39ab37f5db32cfe64da206feff0093e3da1e610316798",
+      "geometry-figure-provenance.json": "a3b4d5f262a2ad05c4a3eb76f3d65d16d06316c9f7e9174ce9547b14f99f09c0"
+    }
+  },
+  "preservation": {
+    "baseline": "414496280088f9400114938c3b9ad65e417f82c2",
+    "preexisting_evidence_files_unchanged": 97,
+    "protected_paths": [
+      "docs/experiments/source-reuse-width-20261114/README.md",
+      "docs/experiments/source-reuse-width-20261114/class-panel-20261116.md",
+      "docs/experiments/source-reuse-width-20261114/class-panel-metadata-20261116.json",
+      "docs/experiments/source-reuse-width-20261114/continuation-20261115.md",
+      "docs/experiments/source-reuse-width-20261114/design.json",
+      "docs/experiments/source-reuse-width-20261114/notebook-browser-verification-20261115.json",
+      "docs/experiments/source-reuse-width-20261114/notebook-execution-20261115.md",
+      "docs/experiments/source-reuse-width-20261114/notebook-numeric-verification-20261115.json",
+      "docs/experiments/source-reuse-width-20261114/notebook-validation-20261115.md",
+      "docs/experiments/source-reuse-width-20261114/protocol.md",
+      "docs/experiments/source-reuse-width-20261114/scratchpad.md",
+      "docs/experiments/source-reuse-width-20261114/validation.md",
+      "docs/experiments/source-reuse-width-20261114/verify_class_panel_20261116.py",
+      "experiments/source_reuse_width_20261114/README.md",
+      "experiments/source_reuse_width_20261114/audit/continue_width.py",
+      "experiments/source_reuse_width_20261114/audit/deliver.py",
+      "experiments/source_reuse_width_20261114/audit/tables.py",
+      "experiments/source_reuse_width_20261114/audit/test_orchestration.py",
+      "experiments/source_reuse_width_20261114/audit/verify.py",
+      "experiments/source_reuse_width_20261114/build_notebooks.py",
+      "experiments/source_reuse_width_20261114/population_width_20261114.ipynb",
+      "experiments/source_reuse_width_20261114/report.py",
+      "experiments/source_reuse_width_20261114/run.py",
+      "experiments/source_reuse_width_20261114/self_test_report.py",
+      "experiments/source_reuse_width_20261114/source_reuse_20261114.ipynb",
+      "experiments/source_reuse_width_20261114/study.py",
+      "experiments/source_reuse_width_20261114/test_study.py",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/README.md",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/benchmark.py",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/build_notebooks.py",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/execution.py",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/interpret.py",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/population_width_20261115.ipynb",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/publication/deliver.py",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/published/figures/first_case_reuse.png",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/published/figures/first_case_width.png",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/published/figures/reuse_paired_svm_changes.png",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/published/figures/width_all_model_changes.png",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/published/figures/width_class_changes.png",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/published/figures/width_design.png",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/published/manifest.json",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/published/population_width_20261115.executed.html",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/published/population_width_20261115.executed.ipynb",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/published/source_reuse_20261115.executed.html",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/published/source_reuse_20261115.executed.ipynb",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/run.py",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/source_reuse_20261115.ipynb",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/staging.py",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/test_execution.py",
+      "experiments/source_reuse_width_20261114/walkthrough_20261115/verify.py",
+      "report/series-20261115/build_class_panel_figures.py",
+      "report/series-20261115/build_figures.py",
+      "report/series-20261115/class-panel-figure-provenance.json",
+      "report/series-20261115/data/arm_design.csv",
+      "report/series-20261115/data/arm_sampling_realization.csv",
+      "report/series-20261115/data/case_scores.csv",
+      "report/series-20261115/data/class_panel_frontier.csv",
+      "report/series-20261115/data/class_panel_marginals.csv",
+      "report/series-20261115/data/matched_contrasts.csv",
+      "report/series-20261115/data/model_pair_best_means.csv",
+      "report/series-20261115/data/model_pair_best_rows.tex",
+      "report/series-20261115/data/model_pair_means.csv",
+      "report/series-20261115/data/pca_svm_seed0_class_recalls.csv",
+      "report/series-20261115/data/pca_svm_seed0_confusions.csv",
+      "report/series-20261115/data/published_assembly_recipes.csv",
+      "report/series-20261115/data/published_prefit_arm_checks.csv",
+      "report/series-20261115/data/published_recipe_block_columns.csv",
+      "report/series-20261115/data/published_source_observation.csv",
+      "report/series-20261115/data/roster_support_summary.csv",
+      "report/series-20261115/data/session_class_source_counts.csv",
+      "report/series-20261115/data/source_session_structure.csv",
+      "report/series-20261115/data/svm_head_diagnostic_means.csv",
+      "report/series-20261115/data/svm_head_diagnostics.csv",
+      "report/series-20261115/data/width_pair_changes.csv",
+      "report/series-20261115/figure-provenance.json",
+      "report/series-20261115/figures/assembly_recipe.pdf",
+      "report/series-20261115/figures/assembly_recipe.png",
+      "report/series-20261115/figures/class_panel_frontier.pdf",
+      "report/series-20261115/figures/class_panel_frontier.png",
+      "report/series-20261115/figures/class_panel_support.pdf",
+      "report/series-20261115/figures/class_panel_support.png",
+      "report/series-20261115/figures/errors.pdf",
+      "report/series-20261115/figures/errors.png",
+      "report/series-20261115/figures/first_case_width.png",
+      "report/series-20261115/figures/historical_time.png",
+      "report/series-20261115/figures/recent_svm.pdf",
+      "report/series-20261115/figures/recent_svm.png",
+      "report/series-20261115/figures/sampling_realization.pdf",
+      "report/series-20261115/figures/sampling_realization.png",
+      "report/series-20261115/figures/source_structure.pdf",
+      "report/series-20261115/figures/source_structure.png",
+      "report/series-20261115/figures/source_support.pdf",
+      "report/series-20261115/figures/source_support.png",
+      "report/series-20261115/figures/width_readouts.pdf",
+      "report/series-20261115/figures/width_readouts.png",
+      "report/series-20261115/model-comparison-provenance.json",
+      "report/series-20261115/summarize_model_comparisons.py"
+    ],
+    "prior_audit_files_unchanged": 28,
+    "preceding_validation_and_index_preserved_exactly": true,
+    "appendix_bodies_unchanged_except_added_labels": true,
+    "appendix_preservation": {
+      "baseline": "414496280088f9400114938c3b9ad65e417f82c2",
+      "measurement_and_numerical_bodies_moved_exactly": true,
+      "old_body_sha256": "a309f86a55f069c828075268bd7d3a96522c33c0c06a333421f0115c84a65e9a",
+      "appended_section_labels_only": true,
+      "unrelated_sampling_preserved": true
+    },
+    "unrelated_sampling_sha256": "63489315c5a21257ed037edd77161f639beb23199321719d8fe22a562c1659f5",
+    "untracked_current_state_directory_excluded": true
+  },
+  "pinned_repository_paths_resolve": 33,
+  "pinned_repository_paths": [
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "docs/reports/cebra-endpoint-time-readout-20261006/figures/time_balanced_accuracy.png"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "history/README.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "docs/reports/cebra-research-synthesis-20261011.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "docs/reports/path-generalization-completed-state-20260907.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "docs/professor_updates/path_generalization_20260907/CORRECTIONS.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "docs/analysis-contract.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "docs/project-direction.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "docs/dataset-card.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "data/README.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "context/previous-student-analysis.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "docs/compact-cue-source-20261026.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "notes/data_inspection/place195_split_behavior_audit_20260830.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "docs/reports/cebra-27unit-notebooks-20261023/tables/source_accounting.json"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "notes/data_inspection/place195_marker_semantics_probe_20260901.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "notes/data_inspection/place195_all_sessions_import_20260830.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "docs/reports/cebra-endpoint-time-readout-20261006/README.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "report/README.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "docs/reports/cebra-27unit-notebooks-20261023/README.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "docs/reports/source-support-ablation-20261110/README.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "docs/source-support-protocol-20261110.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "docs/reports/population-grid-20261111/README.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "docs/population-grid-protocol-20261111.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "docs/reports/population-grid-20261111/error-analysis.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "docs/reports/population-grid-20261111/error-analysis-validation.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "docs/experiments/source-reuse-width-20261114/README.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "docs/experiments/source-reuse-width-20261114/protocol.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "experiments/source_reuse_width_20261114/study.py"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "src/neuro/pseudopopulation.py"
+    },
+    {
+      "revision": "082b5e1a3cb9a87bc22a9ce80006d2e882adc404",
+      "path": "docs/experiments/source-reuse-width-20261114/class-panel-20261116.md"
+    },
+    {
+      "revision": "082b5e1a3cb9a87bc22a9ce80006d2e882adc404",
+      "path": "docs/experiments/source-reuse-width-20261114/class-panel-metadata-20261116.json"
+    },
+    {
+      "revision": "082b5e1a3cb9a87bc22a9ce80006d2e882adc404",
+      "path": "docs/experiments/source-reuse-width-20261114/verify_class_panel_20261116.py"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "docs/experiments/source-reuse-width-20261114/notebook-validation-20261115.md"
+    },
+    {
+      "revision": "a0ca80180e2bb52b90e499357d3d6965b26806da",
+      "path": "experiments/source_reuse_width_20261114/walkthrough_20261115/published/manifest.json"
+    }
+  ],
+  "reviews": {
+    "newcomer": {
+      "path": "report/series-20261115/audit/geometry-newcomer-20261116.md",
+      "sha256": "cf1a681e3a4573ff3c75175caf2d7c3ff1128b57eab6a8603b45341c3b678db0",
+      "verdict": "PASS",
+      "understandable": true
+    },
+    "scientific": {
+      "path": "report/series-20261115/audit/geometry-scientific-20261116.md",
+      "sha256": "ae0820ea7e65fd87c2e82935def605ef38b7c72099b6d37809b656f535b018ea",
+      "verdict": "PASS",
+      "understandable": true
+    },
+    "quantitative": {
+      "path": "report/series-20261115/audit/geometry-quantitative-20261116.md",
+      "sha256": "b5f7369e9eb6f24b804705a815f3915a4a09606dcf877b572f01e830d17d46cf",
+      "verdict": "PASS",
+      "understandable": true
+    }
+  },
+  "independent_numeric_review": {
+    "coordinate_values_exact": 1080,
+    "loss_values_exact": 4000,
+    "total_values_exact": 5080,
+    "source": "Authenticated original delivery aggregate JSON records; original PNG bytes also match published notebook figures",
+    "model_examples": [
+      "Time B2 observed seed 0",
+      "Time B5 observed seed 0",
+      "Time Wmid observed seed 0",
+      "Native Wmid observed seed 0"
+    ],
+    "curated_input_sha256": "82838f544adcb15ba60517cc7b2cc196965d38fd4f686194c2edbf77eba4e67c",
+    "figures_and_provenance_regenerated_byte_identically": true
+  },
+  "review_scope": "Fresh independent AI artifact audits of the geometry, loss, appendix and cover revision, using primary saved aggregate evidence; earlier full-paper audits retain their original identities",
+  "execution_scope": {
+    "new_fits": 0,
+    "model_loads_or_replays": 0,
+    "neural_observation_or_individual_feature_arrays_read": 0,
+    "saved_aggregate_geometry_and_loss_read": true,
+    "notebooks_executed": 0,
+    "metadata_optimizer_reruns": 0,
+    "original_results_changed": false,
+    "merge_performed": false
+  },
+  "remaining_limits": "Known-label construction, dependent sources, common sessions and inspected development remain. Geometry is class means in coordinates 1\u20133 of seven, with independent model frames and panel limits. Loss does not establish decoding quality or convergence. Earlier acquisition, utilization, accessibility and cross-version limitations remain."
+}

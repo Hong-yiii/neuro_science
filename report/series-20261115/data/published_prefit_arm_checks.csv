@@ -1,0 +1,7 @@
+arm,constant_columns,distinct_train_sources,overlapping_contributors,rows_per_class,seed,sessions,source_budget,training_rank,training_source_extra_draw_fraction,units,world
+B2,0,54,0,16,0,3,2,17,0.875,17,observed
+B3,0,81,0,16,0,3,3,17,0.8125,17,observed
+B5,0,135,0,16,0,3,5,17,0.6875,17,observed
+U3,0,81,0,3,0,3,3,17,0,17,observed
+Wfull,0,540,0,16,0,20,3,83,0.8125,83,observed
+Wmid,0,297,0,16,0,11,3,49,0.8125,49,observed

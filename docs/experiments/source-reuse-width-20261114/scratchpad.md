@@ -208,3 +208,23 @@ merge, issue modification or old-experiment retry is part of this run.
   the existing authenticated CLI completed the authorized action. Unrelated
   sampling whitespace/current-state notes remain untouched and excluded.
   No merge, issue edit, further fit or retry remains queued.
+
+## November 16 — class-panel design context
+
+The owner requested the missing full 30-pair source distribution, per-pair
+session-support grid and fixed-K feasibility frontier, including why the frozen
+nine-class task permits the shared source-budget and width comparison. Added
+the dated [class-panel explanation](class-panel-20261116.md) and a complete
+[metadata receipt](class-panel-metadata-20261116.json). The actual study
+`metadata()` and `select_panel()` functions reproduce all supplied matrices and
+all nine fixed-K frontier rows; K=9 reproduces the full frozen panel and rosters
+exactly. A direct check also confirms no session has three training sources in
+every one of the 30 classes. Endpoint bounds and zero-gap outcomes are recorded.
+
+This is metadata feasibility, not new decoding. K=9 was fixed before selecting
+pairs. The three-source optimum is conditional on the five-source optimum;
+one-session width optima do not establish universal multisession infeasibility.
+An independent researcher checked that interpretation and the endpoint-only
+6/K ceiling. Only metadata were read; no fits, notebook execution, neural-array
+access or result replay occurred. The design, original protocol, implementation,
+completed 48-case results and executed notebook outputs remain unchanged.
